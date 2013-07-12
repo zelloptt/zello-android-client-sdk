@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	android:id="@+id/talk_root"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:context=".TalkActivity">
+
+	<TextView
+		android:id="@+id/app_state"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:padding="10dip"
+		android:text="@string/ptt_app_not_installed"/>
+
+	<LinearLayout
+		android:id="@+id/talk_screen"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:background="#ffffff">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:background="#dddddd">
+
+			<FrameLayout
+				android:layout_width="0dip"
+				android:layout_weight="1"
+				android:layout_height="wrap_content"
+				android:padding="10dip"
+				android:gravity="center_vertical"
+				android:clipChildren="false"
+				android:clipToPadding="false">
+
+				<LinearLayout
+					android:id="@+id/contact_info"
+					android:gravity="center_vertical"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:orientation="horizontal"
+					android:clipChildren="false">
+
+					<ImageView
+						android:id="@+id/contact_image"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginRight="10dip"
+						android:src="@drawable/user_offline"/>
+
+					<LinearLayout
+						android:gravity="center_vertical"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:orientation="vertical"
+						android:clipChildren="false">
+
+						<TextView
+							android:id="@+id/contact_name"
+							style="?attr/textStyle"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_toRightOf="@+id/contact_image"/>
+
+						<TextView
+							android:id="@+id/contact_status"
+							style="?attr/textStyle"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_toRightOf="@+id/contact_image"
+							android:layout_below="@+id/contact_name"
+							android:layout_marginTop="5dip"/>
+					</LinearLayout>
+
+				</LinearLayout>
+
+				<TextView
+					android:id="@+id/contact_not_selected"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center_vertical"
+					android:text="@string/contact_not_selected"/>
+
+			</FrameLayout>
+
+			<Button
+				android:id="@+id/select_contact"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginRight="10dip"
+				android:layout_gravity="center_vertical"
+				android:text="@string/select_contact_button"/>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="0dip"
+			android:layout_weight="1"
+			android:gravity="center"
+			android:padding="10dip"
+			android:orientation="horizontal">
+
+			<com.zello.sdk.sample.SquareButton
+				android:id="@+id/talk"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:maxHeight="100dip"
+				android:maxWidth="100dip"
+				android:text="@string/talk_button"
+				android:background="@drawable/button_talk"
+				android:longClickable="false"/>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/message_info"
+			android:gravity="center_vertical"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="10dip"
+			android:orientation="horizontal"
+			android:background="#dddddd"
+			android:visibility="invisible"
+			android:clipChildren="false"
+			android:clipToPadding="false">
+
+			<ImageView
+				android:id="@+id/message_image"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginRight="10dip"
+				android:src="@drawable/message_in"/>
+
+			<LinearLayout
+				android:gravity="center_vertical"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:clipChildren="false"
+				android:orientation="vertical">
+
+				<TextView
+					android:id="@+id/message_name"
+					style="?attr/textStyle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_toRightOf="@+id/contact_image"/>
+
+				<TextView
+					android:id="@+id/message_status"
+					style="?attr/textStyle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_toRightOf="@+id/contact_image"
+					android:layout_below="@+id/contact_name"
+					android:layout_marginTop="5dip"/>
+			</LinearLayout>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+</FrameLayout>

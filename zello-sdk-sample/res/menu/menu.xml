@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+	<item
+		android:id="@+id/menu_set_busy"
+		android:title="@string/menu_set_busy"/>
+
+	<item
+		android:id="@+id/menu_set_available"
+		android:title="@string/menu_set_available"/>
+</menu>
