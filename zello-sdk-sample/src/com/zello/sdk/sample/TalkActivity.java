@@ -69,7 +69,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			}
 		});
 
-		_sdk.onCreate("net.loudtalks", this, this);
+		_sdk.onCreate("com.pttsdk", this, this);
 		updateAppState();
 		updateMessageState();
 		updateSelectedContact();
@@ -155,7 +155,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		// Initially active tab; optional; can be RECENTS, USERS or CHANNELS
 		com.zello.sdk.Tab tab = _activeTab;
 		// Visual theme; optional; can be DARK or LIGHT
-		com.zello.sdk.Theme theme = Theme.LIGHT;
+		com.zello.sdk.Theme theme = Theme.DARK;
 
 		_sdk.selectContact(title, tabs, tab, theme);
 	}
