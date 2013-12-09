@@ -16,6 +16,7 @@ class Constants {
 	static final String EXTRA_STATE_WAITING_FOR_NETWORK = "STATE_WAITING_FOR_NETWORK";
 	static final String EXTRA_STATE_SHOW_CONTACTS = "STATE_SHOW_CONTACTS";
 	static final String EXTRA_STATE_BUSY = "STATE_BUSY";
+	static final String EXTRA_STATE_SOLO = "STATE_SOLO";
 	static final String EXTRA_STATE_STATUS_MESSAGE = "STATE_STATUS_MESSAGE";
 	static final String EXTRA_CONTACT_NAME = "CONTACT_NAME";
 	static final String EXTRA_CONTACT_FULL_NAME = "CONTACT_FULL_NAME";

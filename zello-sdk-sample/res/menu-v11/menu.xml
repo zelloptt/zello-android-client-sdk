@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu
+	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<item
-		android:id="@+id/menu_set_busy"
+		android:id="@+id/menu_available"
 		android:title="@string/menu_available"
-		android:showAsAction="always|withText"/>
+		android:showAsAction="always"
+		android:icon="@drawable/user_online"/>
 
 	<item
-		android:id="@+id/menu_set_available"
-		android:title="@string/menu_busy"
-		android:showAsAction="always|withText"/>
+		android:id="@+id/menu_solo"
+		android:title="@string/menu_solo"
+		android:showAsAction="always"
+		android:icon="@drawable/user_solo"/>
 
+	<item
+		android:id="@+id/menu_busy"
+		android:title="@string/menu_busy"
+		android:showAsAction="always"
+		android:icon="@drawable/user_busy"/>
 </menu>

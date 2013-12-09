@@ -10,6 +10,7 @@ public class AppState {
 	boolean _waitingForNetwork;
 	boolean _showContacts;
 	boolean _busy;
+	boolean _solo;
 	String _statusMessage;
 
 	public void reset() {
@@ -21,6 +22,7 @@ public class AppState {
 		_waitingForNetwork = false;
 		_showContacts = false;
 		_busy = false;
+		_solo = false;
 		_statusMessage = null;
 	}
 
@@ -41,6 +43,7 @@ public class AppState {
 			state._waitingForNetwork = _waitingForNetwork;
 			state._showContacts = _showContacts;
 			state._busy = _busy;
+			state._solo = _solo;
 			state._statusMessage = _statusMessage;
 		}
 	}
@@ -77,8 +80,8 @@ public class AppState {
 		return _showContacts;
 	}
 
-	public boolean isBusy() {
-		return _busy;
+	public Status getStatus() {
+		return _busy ? Status.BUSY : (_solo ? Status.SOLO : Status.AVAILABLE);
 	}
 
 	public String getStatusMessage() {

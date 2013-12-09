@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Zello SDK Sample</string>
-    <string name="select_contact_button">Select...</string>
+    <string name="select_contact_button">Select…</string>
     <string name="select_contact_title">Select a contact</string>
     <string name="contact_not_selected">Contact is not selected</string>
     <string name="talk_button">Push to talk</string>
@@ -13,18 +13,18 @@
     <string name="status_connecting">Standby</string>
     <string name="status_channel_users_count" formatted="false">Users online: %count%</string>
     <string name="status_group_users_count" formatted="false">Users online: %count%/%total%</string>
-    <string name="message_connecting">Connecting...</string>
-    <string name="message_receiving">Receiving...</string>
-    <string name="message_sending">Sending...</string>
+    <string name="message_connecting">Connecting…</string>
+    <string name="message_receiving">Receiving…</string>
+    <string name="message_sending">Sending…</string>
     <string name="ptt_app_not_installed">PTT app is not installed</string>
     <string name="ptt_app_is_signed_out">Offline</string>
-    <string name="ptt_app_is_signing_in">Signing in...</string>
-    <string name="ptt_app_is_signing_out">Signing out...</string>
+    <string name="ptt_app_is_signing_in">Signing in…</string>
+    <string name="ptt_app_is_signing_out">Signing out…</string>
     <string name="ptt_app_is_waiting_to_reconnect">Waiting for network to recover</string>
-    <string name="ptt_app_is_reconnecting" formatted="false">Reconnecting in %seconds%...</string>
+    <string name="ptt_app_is_reconnecting" formatted="false">Reconnecting in %seconds%…</string>
     <string name="menu_available">Available</string>
-    <string name="menu_busy">Busy</string>
-    <string name="menu_set_available">Set available</string>
-    <string name="menu_set_busy">Set busy</string>
+	<string name="menu_solo">Solo</string>
+	<string name="menu_busy">Busy</string>
+    <string name="menu_set_status">Set status</string>
 
 </resources>

@@ -1,11 +1,15 @@
 package com.zello.sdk.sample;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.zello.sdk.Status;
 import com.zello.sdk.Theme;
 
 public class TalkActivity extends Activity implements com.zello.sdk.Events {
@@ -103,10 +107,18 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		menu.clear();
 		if (_appState.isAvailable() && _appState.isSignedIn() && !_appState.isSigningIn() && !_appState.isSigningOut()) {
 			getMenuInflater().inflate(R.menu.menu, menu);
-			if (_appState.isBusy()) {
-				menu.findItem(R.id.menu_set_busy).setVisible(false);
-			} else {
-				menu.findItem(R.id.menu_set_available).setVisible(false);
+			Status status = _appState.getStatus();
+			MenuItem itemAvailable = menu.findItem(R.id.menu_available);
+			if (itemAvailable != null) {
+				itemAvailable.setVisible(status == Status.AVAILABLE);
+			}
+			MenuItem itemSolo = menu.findItem(R.id.menu_solo);
+			if (itemSolo != null) {
+				itemSolo.setVisible(status == Status.SOLO);
+			}
+			MenuItem itemBusy = menu.findItem(R.id.menu_busy);
+			if (itemBusy != null) {
+				itemBusy.setVisible(status == Status.BUSY);
 			}
 		}
 		return true;
@@ -115,12 +127,11 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.menu_set_busy: {
-				_sdk.setStatusBusy(true);
-				return true;
-			}
-			case R.id.menu_set_available: {
-				_sdk.setStatusBusy(false);
+			case R.id.menu_set_status:
+			case R.id.menu_available:
+			case R.id.menu_solo:
+			case R.id.menu_busy: {
+				chooseStatus();
 				return true;
 			}
 		}
@@ -158,6 +169,37 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		com.zello.sdk.Theme theme = Theme.DARK;
 
 		_sdk.selectContact(title, tabs, tab, theme);
+	}
+
+	private void chooseStatus() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		Resources res = getResources();
+		Status status = _appState.getStatus();
+		int selection = status == Status.BUSY ? 2 : (status == Status.SOLO ? 1 : 0);
+		String[] items = new String[]{res.getString(R.string.menu_available), res.getString(R.string.menu_solo), res.getString(R.string.menu_busy)};
+		builder.setSingleChoiceItems(items, selection, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch (which) {
+					case 0: {
+						_sdk.setStatus(Status.AVAILABLE);
+						break;
+					}
+					case 1: {
+						_sdk.setStatus(Status.SOLO);
+						break;
+					}
+					case 2: {
+						_sdk.setStatus(Status.BUSY);
+						break;
+					}
+				}
+				dialog.dismiss();
+			}
+		});
+		builder.setCancelable(true).setTitle(res.getString(R.string.menu_set_status));
+		final AlertDialog dialog = builder.create();
+		dialog.show();
 	}
 
 	private void cancelMessageOut() {

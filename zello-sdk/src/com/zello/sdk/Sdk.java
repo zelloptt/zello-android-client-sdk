@@ -216,12 +216,13 @@ public class Sdk implements SafeHandlerEvents {
 		}
 	}
 
-	public void setStatusBusy(boolean busy) {
+	public void setStatus(Status status) {
 		Activity activity = _activity;
 		if (activity != null) {
 			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
 			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_STATUS);
-			intent.putExtra(Constants.EXTRA_STATE_BUSY, busy);
+			intent.putExtra(Constants.EXTRA_STATE_BUSY, status == Status.BUSY);
+			intent.putExtra(Constants.EXTRA_STATE_SOLO, status == Status.SOLO);
 			activity.sendBroadcast(intent);
 		}
 	}
@@ -309,6 +310,7 @@ public class Sdk implements SafeHandlerEvents {
 			_appState._waitingForNetwork = intent.getBooleanExtra(Constants.EXTRA_STATE_WAITING_FOR_NETWORK, false);
 			_appState._showContacts = intent.getBooleanExtra(Constants.EXTRA_STATE_SHOW_CONTACTS, false);
 			_appState._busy = intent.getBooleanExtra(Constants.EXTRA_STATE_BUSY, false);
+			_appState._solo = intent.getBooleanExtra(Constants.EXTRA_STATE_SOLO, false);
 			_appState._statusMessage = intent.getStringExtra(Constants.EXTRA_STATE_STATUS_MESSAGE);
 		}
 		Events events = _events;
