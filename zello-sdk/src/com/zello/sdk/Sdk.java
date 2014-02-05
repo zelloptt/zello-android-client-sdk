@@ -51,6 +51,7 @@ public class Sdk implements SafeHandlerEvents {
 		_appState.copyTo(state);
 	}
 
+	@SuppressWarnings("deprecation")
 	public void onCreate(String packageName, Activity activity, Events events) {
 		_package = Util.toLowerCaseLexicographically(Util.emptyIfNull(packageName));
 		_activity = activity;
