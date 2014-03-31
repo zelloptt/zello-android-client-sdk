@@ -415,29 +415,31 @@ public class Sdk implements SafeHandlerEvents {
 
 	private static ContactType intToContactType(int type) {
 		switch (type) {
-		case 1:
-			return ContactType.CHANNEL;
-		case 3:
-			return ContactType.GROUP;
-		case 2:
-			return ContactType.GATEWAY;
-		default:
-			return ContactType.USER;
+			case 1:
+				return ContactType.CHANNEL;
+			case 3:
+				return ContactType.GROUP;
+			case 2:
+				return ContactType.GATEWAY;
+			default:
+				return ContactType.USER;
 		}
 	}
 
 	private static ContactStatus intToContactStatus(int status) {
 		switch (status) {
-		case 1:
-			return ContactStatus.STANDBY;
-		case 2:
-			return ContactStatus.AVAILABLE;
-		case 3:
-			return ContactStatus.BUSY;
-		case 6:
-			return ContactStatus.CONNECTING;
-		default:
-			return ContactStatus.OFFLINE;
+			case 1:
+				return ContactStatus.STANDBY;
+			case 2:
+			case 4:
+			case 5:
+				return ContactStatus.AVAILABLE;
+			case 3:
+				return ContactStatus.BUSY;
+			case 6:
+				return ContactStatus.CONNECTING;
+			default:
+				return ContactStatus.OFFLINE;
 		}
 	}
 
