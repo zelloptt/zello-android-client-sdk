@@ -19,4 +19,9 @@
 		android:title="@string/menu_busy"
 		android:showAsAction="always"
 		android:icon="@drawable/user_busy"/>
+
+	<item
+		android:id="@+id/menu_select_contact"
+		android:title="@string/menu_select_contact"
+		android:showAsAction="never"/>
 </menu>

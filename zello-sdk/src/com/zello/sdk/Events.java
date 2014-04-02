@@ -10,4 +10,6 @@ public interface Events {
 
 	public void onLastContactsTabChanged(Tab tab);
 
+	public void onContactsChanged();
+
 }

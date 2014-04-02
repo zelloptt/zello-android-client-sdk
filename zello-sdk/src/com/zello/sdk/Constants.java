@@ -44,6 +44,7 @@ class Constants {
 	static final String VALUE_END_MESSAGE = "END_MESSAGE";
 	static final String VALUE_SET_STATUS = "SET_STATUS";
 	static final String VALUE_STAY_AWAKE = "STAY_AWAKE";
+	static final String VALUE_SELECT_CONTACT = "SELECT_CONTACT";
 	static final String VALUE_ZELLO = "ZELLO";
 	static final String VALUE_LIGHT = "LIGHT";
 	static final String VALUE_USERS = "USERS";

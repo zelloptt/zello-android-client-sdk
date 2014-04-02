@@ -6,15 +6,19 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.*;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import com.zello.sdk.Status;
 import com.zello.sdk.Theme;
 
 public class TalkActivity extends Activity implements com.zello.sdk.Events {
 
-	private TextView _txtAppState;
+	private TextView _txtState;
+	private View _viewContent;
+	private ListView _listContacts;
 	private View _viewTalkScreen;
 	private SquareButton _btnTalk;
 	private ImageView _imgContactStatus;
@@ -26,6 +30,9 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private TextView _txtMessageName;
 	private TextView _txtMessageStatus;
 	private View _viewMessageInfo;
+
+	private boolean _active; // Activity is resumed and visible to the user
+	private boolean _dirtyContacts; // Contact list needs to be refreshed next time before it's presented to the user
 
 	private com.zello.sdk.Sdk _sdk = new com.zello.sdk.Sdk();
 	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
@@ -39,18 +46,20 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_talk);
-		_txtAppState = (TextView) findViewById(R.id.app_state);
-		_viewTalkScreen = findViewById(R.id.talk_screen);
-		_btnTalk = (SquareButton) findViewById(R.id.talk);
-		_imgContactStatus = (ImageView) findViewById(R.id.contact_image);
-		_txtContactName = (TextView) findViewById(R.id.contact_name);
-		_txtContactStatus = (TextView) findViewById(R.id.contact_status);
-		_viewContactNotSelected = findViewById(R.id.contact_not_selected);
-		_viewContactInfo = findViewById(R.id.contact_info);
-		_imgMessageStatus = (ImageView) findViewById(R.id.message_image);
-		_txtMessageName = (TextView) findViewById(R.id.message_name);
-		_txtMessageStatus = (TextView) findViewById(R.id.message_status);
+		_txtState = (TextView) findViewById(R.id.state);
+		_viewContent = findViewById(R.id.content);
+		_listContacts = (ListView) _viewContent.findViewById(R.id.contact_list);
+		_viewTalkScreen = _viewContent.findViewById(R.id.talk_screen);
+		_viewContactInfo = _viewTalkScreen.findViewById(R.id.contact_info);
+		_btnTalk = (SquareButton) _viewTalkScreen.findViewById(R.id.talk);
+		_imgContactStatus = (ImageView) _viewContactInfo.findViewById(R.id.contact_image);
+		_txtContactName = (TextView) _viewContactInfo.findViewById(R.id.contact_name);
+		_txtContactStatus = (TextView) _viewContactInfo.findViewById(R.id.contact_status);
+		_viewContactNotSelected = _viewTalkScreen.findViewById(R.id.contact_not_selected);
 		_viewMessageInfo = findViewById(R.id.message_info);
+		_imgMessageStatus = (ImageView) _viewMessageInfo.findViewById(R.id.message_image);
+		_txtMessageName = (TextView) _viewMessageInfo.findViewById(R.id.message_name);
+		_txtMessageStatus = (TextView) _viewMessageInfo.findViewById(R.id.message_status);
 
 		_btnTalk.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
 		_btnTalk.setOnTouchListener(new View.OnTouchListener() {
@@ -66,13 +75,14 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			}
 		});
 
-		findViewById(R.id.select_contact).setOnClickListener(new View.OnClickListener() {
+		findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				chooseActiveContact();
+				_sdk.setSelectedContact(null);
 			}
 		});
 
+		_dirtyContacts = true;
 		_sdk.onCreate("com.pttsdk", this, this);
 		updateAppState();
 		updateMessageState();
@@ -89,12 +99,15 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	protected void onResume() {
 		super.onResume();
 		_sdk.onResume();
+		_active = true;
+		updateContactList();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		_sdk.onPause();
+		_active = false;
 	}
 
 	@Override
@@ -134,6 +147,10 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				chooseStatus();
 				return true;
 			}
+			case R.id.menu_select_contact: {
+				chooseActiveContact();
+				return true;
+			}
 		}
 		return false;
 	}
@@ -156,6 +173,11 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	public void onLastContactsTabChanged(com.zello.sdk.Tab tab) {
 		_activeTab = tab;
+	}
+
+	@Override
+	public void onContactsChanged() {
+		updateContactList();
 	}
 
 	private void chooseActiveContact() {
@@ -214,41 +236,26 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		boolean canTalk = false;
 		if (selected) {
 			// Update info
-			String displayName = _selectedContact.getDisplayName(); // Contact name or a full name if not empty
+			ListAdapter.configureView(_viewContactInfo, _selectedContact);
 			com.zello.sdk.ContactType type = _selectedContact.getType();
 			com.zello.sdk.ContactStatus status = _selectedContact.getStatus();
-			_imgContactStatus.setImageDrawable(statusToDrawable(status, type));
-			_txtContactName.setText(displayName);
 			switch (type) {
 				case USER:
 				case GATEWAY: {
 					// User or radio gateway
 					canTalk = status != com.zello.sdk.ContactStatus.OFFLINE; // Not offline
-					String message = _selectedContact.getStatusMessage(); // User-defined status message
-					_txtContactStatus.setText(message == null || message.length() == 0 ? statusToText(status) : message);
 					break;
 				}
 				case CHANNEL: {
 					if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
-						int count = _selectedContact.getUsersCount();
-						String countText = Integer.toString(count);
 						canTalk = true; // Channel is online
-						_txtContactStatus.setText(getResources().getString(R.string.status_channel_users_count).replace("%count%", countText));
-					} else {
-						_txtContactStatus.setText(statusToText(status));
 					}
 					break;
 				}
 				case GROUP: {
 					int count = _selectedContact.getUsersCount();
 					if (status == com.zello.sdk.ContactStatus.AVAILABLE && count > 0) {
-						int total = _selectedContact.getUsersTotal();
-						String countText = Integer.toString(count);
-						String totalText = Integer.toString(total);
 						canTalk = true; // Group is online and there are online contacts in it
-						_txtContactStatus.setText(getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText));
-					} else {
-						_txtContactStatus.setText(statusToText(com.zello.sdk.ContactStatus.OFFLINE));
 					}
 					break;
 				}
@@ -257,6 +264,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_viewContactNotSelected.setVisibility(selected ? View.INVISIBLE : View.VISIBLE);
 		_viewContactInfo.setVisibility(selected ? View.VISIBLE : View.INVISIBLE);
 		_btnTalk.setEnabled(canTalk);
+		updateActiveScreen();
 	}
 
 	private void updateMessageState() {
@@ -287,13 +295,10 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private void updateAppState() {
 		_sdk.getAppState(_appState);
 		String state = "";
-		boolean available = false;
 		if (!_appState.isAvailable()) {
 			state = getString(R.string.ptt_app_not_installed);
-		} else {
-			if (_appState.isSignedIn()) {
-				available = true;
-			} else if (_appState.isSigningIn()) {
+		} else if (!_appState.isSignedIn()) {
+			if (_appState.isSigningIn()) {
 				state = getString(R.string.ptt_app_is_signing_in);
 			} else if (_appState.isSigningOut()) {
 				state = getString(R.string.ptt_app_is_signing_out);
@@ -305,80 +310,60 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				state = getString(R.string.ptt_app_is_signed_out);
 			}
 		}
-		if (available) {
-			_txtAppState.setVisibility(View.GONE);
-			_viewTalkScreen.setVisibility(View.VISIBLE);
-		} else {
-			_txtAppState.setText(state);
-			_txtAppState.setVisibility(View.VISIBLE);
-			_viewTalkScreen.setVisibility(View.GONE);
-		}
+		_txtState.setText(state);
+		updateActiveScreen();
 		Helper.invalidateOptionsMenu(this);
 	}
 
-	private String statusToText(com.zello.sdk.ContactStatus status) {
-		int id = R.string.status_offline;
-		switch (status) {
-			case STANDBY:
-				id = R.string.status_standby;
-				break;
-			case AVAILABLE:
-				id = R.string.status_online;
-				break;
-			case BUSY:
-				id = R.string.status_busy;
-				break;
-			case CONNECTING:
-				id = R.string.status_connecting;
-				break;
-			default:
+	private void updateActiveScreen() {
+		int stateFlag = View.GONE;
+		int contentFlag = View.GONE;
+		int listFlag = View.GONE;
+		int talkFlag = View.GONE;
+		if (!_appState.isAvailable() || !_appState.isSignedIn()) {
+			stateFlag = View.VISIBLE;
+		} else {
+			contentFlag = View.VISIBLE;
+			String name = _selectedContact.getName();
+			if (name != null && name.length() != 0) {
+				talkFlag = View.VISIBLE;
+			} else {
+				listFlag = View.VISIBLE;
+			}
 		}
-		return getResources().getString(id);
+
+		_txtState.setVisibility(stateFlag);
+		_viewContent.setVisibility(contentFlag);
+		_listContacts.setVisibility(listFlag);
+		_viewTalkScreen.setVisibility(talkFlag);
+
+		if (listFlag == View.VISIBLE) {
+			updateContactList();
+		}
 	}
 
-	private Drawable statusToDrawable(com.zello.sdk.ContactStatus status, com.zello.sdk.ContactType type) {
-		int id = 0;
-		switch (type) {
-			case USER: {
-				// User
-				switch (status) {
-					case STANDBY:
-						id = R.drawable.user_standby;
-						break;
-					case AVAILABLE:
-						id = R.drawable.user_online;
-						break;
-					case BUSY:
-						id = R.drawable.user_busy;
-						break;
-					default:
-						id = R.drawable.user_offline;
-				}
-				break;
+	private void updateContactList() {
+		// Avoid updating contact list when it's not visible
+		if (_active && _dirtyContacts && _listContacts != null && _listContacts.getVisibility() == View.VISIBLE) {
+			_dirtyContacts = false;
+			ListAdapter adapter = (ListAdapter) _listContacts.getAdapter();
+			boolean newAdapter = false;
+			if (adapter == null) {
+				newAdapter = true;
+				adapter = new ListAdapter();
 			}
-			case CHANNEL: {
-				// Channel
-				switch (status) {
-					case AVAILABLE:
-						id = R.drawable.channel_online;
-						break;
-					default:
-						id = R.drawable.channel_offline;
-				}
-				break;
+			adapter.setItems(_sdk.getContacts());
+			Parcelable state = _listContacts.onSaveInstanceState();
+			if (newAdapter) {
+				_listContacts.setAdapter(adapter);
+			} else {
+				adapter.notifyDataSetChanged();
 			}
-			case GATEWAY: {
-				// Radio gateway
-				id = R.drawable.gateway_online;
-				break;
+			if (state != null) {
+				_listContacts.onRestoreInstanceState(state);
 			}
-			case GROUP: {
-				// Group
-				id = R.drawable.group_online;
-				break;
-			}
+			_listContacts.setFocusable(adapter.getCount() > 0);
 		}
-		return getResources().getDrawable(id);
 	}
 
 }

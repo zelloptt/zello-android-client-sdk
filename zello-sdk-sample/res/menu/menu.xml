@@ -5,4 +5,8 @@
 	<item
 		android:id="@+id/menu_set_status"
 		android:title="@string/menu_set_status"/>
+
+	<item
+		android:id="@+id/menu_select_contact"
+		android:title="@string/menu_select_contact"/>
 </menu>

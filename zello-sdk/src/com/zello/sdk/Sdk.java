@@ -22,6 +22,7 @@ public class Sdk implements SafeHandlerEvents {
 	private Contact _selectedContact = new Contact();
 	private MessageIn _messageIn = new MessageIn();
 	private MessageOut _messageOut = new MessageOut();
+	private Contacts _contacts;
 	private AppState _appState = new AppState();
 	private BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
 	private BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
@@ -39,6 +40,24 @@ public class Sdk implements SafeHandlerEvents {
 	public void getSelectedContact(Contact contact) {
 		_selectedContact.copyTo(contact);
 	}
+
+	public void setSelectedContact(Contact contact) {
+		if (contact != null) {
+			ContactType type = contact.getType();
+			selectContact(type == ContactType.CHANNEL || type == ContactType.GROUP ? 1 : 0, contact.getName());
+		} else {
+			selectContact(0, null);
+		}
+	}
+
+	public void setSelectedUserOrGateway(String name) {
+		selectContact(0, name);
+	}
+
+	public void setSelectedChannelOrGroup(String name) {
+		selectContact(1, name);
+	}
+
 
 	public void getMessageIn(MessageIn message) {
 		_messageIn.copyTo(message);
@@ -72,9 +91,10 @@ public class Sdk implements SafeHandlerEvents {
 							if (action.equals(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE) || action.equals(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE)) {
 								String[] pkgs = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
 								if (pkgs != null) {
-									for (int i = 0; i < pkgs.length; ++i) {
-										if (pkgs[i].equalsIgnoreCase(_package)) {
+									for (String pkg : pkgs) {
+										if (pkg.equalsIgnoreCase(_package)) {
 											updateSelectedContact(null);
+											updateContacts();
 											break;
 										}
 									}
@@ -85,6 +105,7 @@ public class Sdk implements SafeHandlerEvents {
 									String pkg = data.getSchemeSpecificPart();
 									if (pkg != null && pkg.equalsIgnoreCase(_package)) {
 										updateSelectedContact(null);
+										updateContacts();
 									}
 								}
 							}
@@ -113,6 +134,7 @@ public class Sdk implements SafeHandlerEvents {
 			};
 			Intent intentStickyAppState = activity.registerReceiver(_receiverAppState, new IntentFilter(_package + "." + Constants.ACTION_APP_STATE));
 			updateAppState(intentStickyAppState);
+			updateContacts();
 			// Register to receive message state broadcasts
 			_receiverMessageState = new BroadcastReceiver() {
 				@Override
@@ -144,13 +166,17 @@ public class Sdk implements SafeHandlerEvents {
 
 	public void onDestroy() {
 		_resumed = false;
-		Activity activity = _activity;
+		Context activity = _activity;
 		if (activity != null) {
 			activity.unregisterReceiver(_receiverPackage);
 			activity.unregisterReceiver(_receiverAppState);
 			activity.unregisterReceiver(_receiverMessageState);
 			activity.unregisterReceiver(_receiverContactSelected);
 			activity.unregisterReceiver(_receiverActiveTab);
+		}
+		Contacts contacts = _contacts;
+		if (contacts != null) {
+			contacts.close();
 		}
 		_receiverPackage = null;
 		_receiverAppState = null;
@@ -162,6 +188,7 @@ public class Sdk implements SafeHandlerEvents {
 		_activity = null;
 		_events = null;
 		_package = "";
+		_contacts = null;
 	}
 
 	public void onResume() {
@@ -194,7 +221,7 @@ public class Sdk implements SafeHandlerEvents {
 						intent.putExtra(Constants.EXTRA_THEME, Constants.VALUE_LIGHT);
 					}
 					activity.startActivityForResult(intent, 0);
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 					// ActivityNotFoundException
 				}
 			}
@@ -215,6 +242,19 @@ public class Sdk implements SafeHandlerEvents {
 		if (activity != null) {
 			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
 			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_END_MESSAGE);
+			activity.sendBroadcast(intent);
+		}
+	}
+
+	public void selectContact(int type, String name) {
+		Activity activity = _activity;
+		if (activity != null) {
+			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SELECT_CONTACT);
+			if (name != null && name.length() > 0) {
+				intent.putExtra(Constants.EXTRA_CONTACT_NAME, name);
+				intent.putExtra(Constants.EXTRA_CONTACT_TYPE, type);
+			}
 			activity.sendBroadcast(intent);
 		}
 	}
@@ -246,10 +286,14 @@ public class Sdk implements SafeHandlerEvents {
 			try {
 				Intent LaunchIntent = activity.getPackageManager().getLaunchIntentForPackage(_package);
 				activity.startActivity(LaunchIntent);
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 				// PackageManager.NameNotFoundException, ActivityNotFoundException
 			}
 		}
+	}
+
+	public Contacts getContacts() {
+		return _contacts;
 	}
 
 	private void sendStayAwake() {
@@ -369,6 +413,17 @@ public class Sdk implements SafeHandlerEvents {
 		}
 	}
 
+	private void updateContacts() {
+		Contacts contacts = _contacts;
+		_contacts = null;
+		if (contacts != null) {
+			contacts.close();
+		}
+		if (_activity != null) {
+			_contacts = new Contacts(_package, _activity, _handler, _events);
+		}
+	}
+
 	private void updateSelectedContact(Intent intent) {
 		String name = intent != null ? intent.getStringExtra(Constants.EXTRA_CONTACT_NAME) : null; // Contact name
 		boolean selected = name != null && name.length() > 0;
@@ -413,7 +468,7 @@ public class Sdk implements SafeHandlerEvents {
 		return false;
 	}
 
-	private static ContactType intToContactType(int type) {
+	static ContactType intToContactType(int type) {
 		switch (type) {
 			case 1:
 				return ContactType.CHANNEL;
@@ -426,7 +481,7 @@ public class Sdk implements SafeHandlerEvents {
 		}
 	}
 
-	private static ContactStatus intToContactStatus(int status) {
+	static ContactStatus intToContactStatus(int status) {
 		switch (status) {
 			case 1:
 				return ContactStatus.STANDBY;
@@ -443,7 +498,7 @@ public class Sdk implements SafeHandlerEvents {
 		}
 	}
 
-	private static String tabToString(Tab tab) {
+	static String tabToString(Tab tab) {
 		switch (tab) {
 			case RECENTS:
 				return Constants.VALUE_RECENTS;
@@ -455,16 +510,16 @@ public class Sdk implements SafeHandlerEvents {
 		return null;
 	}
 
-	private static String tabsToString(Tab[] tabs) {
+	static String tabsToString(Tab[] tabs) {
 		String s = null;
 		if (tabs != null) {
-			for (int i = 0; i < tabs.length; ++i) {
-				String tab = tabToString(tabs[i]);
-				if (tab != null) {
+			for (Tab tab : tabs) {
+				String name = tabToString(tab);
+				if (name != null) {
 					if (s == null) {
-						s = tab;
+						s = name;
 					} else {
-						s += "," + tab;
+						s += "," + name;
 					}
 				}
 			}
@@ -472,7 +527,7 @@ public class Sdk implements SafeHandlerEvents {
 		return s;
 	}
 
-	private static Tab stringToTab(String s) {
+	static Tab stringToTab(String s) {
 		if (s.equals(Constants.VALUE_USERS)) {
 			return Tab.USERS;
 		}
