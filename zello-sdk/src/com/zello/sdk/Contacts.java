@@ -7,11 +7,11 @@ import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 
-public class Contacts extends ContentObserver {
+public class Contacts {
 
 	private static final String _authoritySuffix = ".provider";
 	private static final String _contactsPath = "/contacts";
-	private static final String _contactPath = "/contacts/#";
+	//private static final String _contactPath = "/contacts/#";
 	private static final String _columnName = "name";
 	private static final String _columnFullName = "fullname";
 	private static final String _columnDisplayName = "displayname";
@@ -21,7 +21,7 @@ public class Contacts extends ContentObserver {
 	private static final String _columnUsersCount = "userscount";
 	private static final String _columnUsersTotal = "userstotal";
 
-	private Events _events;
+	private ContentObserver _observer;
 	private Cursor _cursor;
 	private int _indexName;
 	private int _indexFullName;
@@ -35,8 +35,7 @@ public class Contacts extends ContentObserver {
 	private static Uri _uri;
 
 	Contacts(String packageName, Context context, Handler handler, Events events) {
-		super(handler);
-		_events = events;
+		_observer = ContactsObserver.create(events, handler);
 		Uri uri = _uri;
 		if (uri == null) {
 			uri = Uri.parse("content://" + packageName + _authoritySuffix + _contactsPath);
@@ -44,7 +43,7 @@ public class Contacts extends ContentObserver {
 		}
 		Cursor cursor = null;
 		try {
-			cursor = context.getContentResolver().query(uri, new String[]{_columnName, _columnDisplayName, _columnFullName, _columnType, _columnStatus}, null, null, _columnType + " DEC," + _columnDisplayName + " INC");
+			cursor = context.getContentResolver().query(uri, null, null, null, null);
 			_indexName = cursor.getColumnIndex(_columnName);
 			_indexFullName = cursor.getColumnIndex(_columnFullName);
 			_indexDisplayName = cursor.getColumnIndex(_columnDisplayName);
@@ -53,10 +52,10 @@ public class Contacts extends ContentObserver {
 			_indexStatus = cursor.getColumnIndex(_columnStatus);
 			_indexUsersCount = cursor.getColumnIndex(_columnUsersCount);
 			_indexUsersTotal = cursor.getColumnIndex(_columnUsersTotal);
-			cursor.registerContentObserver(this);
+			cursor.registerContentObserver(_observer);
 		} catch (Throwable t) {
 			try {
-				cursor.unregisterContentObserver(this);
+				cursor.unregisterContentObserver(_observer);
 			} catch (Throwable ignored) {
 			}
 			try {
@@ -69,21 +68,14 @@ public class Contacts extends ContentObserver {
 		_cursor = cursor;
 	}
 
-	@Override
-	public void onChange(boolean selfChange) {
-		Events events = _events;
-		if (events != null) {
-			events.onContactsChanged();
-		}
-	}
-
 	public void close() {
-		_events = null;
+		ContentObserver observer = _observer;
+		_observer = null;
 		Cursor cursor = _cursor;
 		_cursor = null;
 		if (cursor != null) {
 			try {
-				cursor.unregisterContentObserver(this);
+				cursor.unregisterContentObserver(observer);
 			} catch (Throwable t) {
 				Log.i("zello sdk", "Error in Contacts.close: " + t.toString());
 			}

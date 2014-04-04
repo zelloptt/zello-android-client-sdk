@@ -48,7 +48,6 @@
 						android:layout_width="0dip"
 						android:layout_weight="1"
 						android:layout_height="wrap_content"
-						android:padding="10dip"
 						android:gravity="center_vertical"
 						android:clipChildren="false"
 						android:clipToPadding="false">
@@ -125,20 +124,19 @@
 				android:orientation="vertical">
 
 				<TextView
-					android:id="@+id/message_name"
 					style="?attr/textStyle"
+					android:id="@+id/message_name"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_toRightOf="@+id/contact_image"/>
 
 				<TextView
-					android:id="@+id/message_status"
 					style="?attr/textStyle"
+					android:id="@+id/message_status"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_toRightOf="@+id/contact_image"
-					android:layout_below="@+id/contact_name"
-					android:layout_marginTop="5dip"/>
+					android:layout_below="@+id/contact_name"/>
 			</LinearLayout>
 		</LinearLayout>
 	</LinearLayout>

@@ -26,6 +26,7 @@
 	<string name="menu_busy">Busy</string>
     <string name="menu_set_status">Set status</string>
 	<string name="menu_select_contact">Select contact</string>
+	<string name="menu_sign_out">Sign out</string>
 	<string name="button_close">Close</string>
 
 </resources>

@@ -4,15 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.*;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.zello.sdk.Status;
-import com.zello.sdk.Theme;
 
 public class TalkActivity extends Activity implements com.zello.sdk.Events {
 
@@ -21,9 +19,6 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private ListView _listContacts;
 	private View _viewTalkScreen;
 	private SquareButton _btnTalk;
-	private ImageView _imgContactStatus;
-	private TextView _txtContactName;
-	private TextView _txtContactStatus;
 	private View _viewContactNotSelected;
 	private View _viewContactInfo;
 	private ImageView _imgMessageStatus;
@@ -52,16 +47,16 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_viewTalkScreen = _viewContent.findViewById(R.id.talk_screen);
 		_viewContactInfo = _viewTalkScreen.findViewById(R.id.contact_info);
 		_btnTalk = (SquareButton) _viewTalkScreen.findViewById(R.id.talk);
-		_imgContactStatus = (ImageView) _viewContactInfo.findViewById(R.id.contact_image);
-		_txtContactName = (TextView) _viewContactInfo.findViewById(R.id.contact_name);
-		_txtContactStatus = (TextView) _viewContactInfo.findViewById(R.id.contact_status);
 		_viewContactNotSelected = _viewTalkScreen.findViewById(R.id.contact_not_selected);
 		_viewMessageInfo = findViewById(R.id.message_info);
 		_imgMessageStatus = (ImageView) _viewMessageInfo.findViewById(R.id.message_image);
 		_txtMessageName = (TextView) _viewMessageInfo.findViewById(R.id.message_name);
 		_txtMessageStatus = (TextView) _viewMessageInfo.findViewById(R.id.message_status);
 
+		// Constrain PTT button size
 		_btnTalk.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
+
+		// PTT button push/release handler
 		_btnTalk.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -75,6 +70,21 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			}
 		});
 
+		// Contact list pick handler
+		_listContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				ListAdapter adapter = (ListAdapter) _listContacts.getAdapter();
+				if (adapter != null) {
+					com.zello.sdk.Contact contact = (com.zello.sdk.Contact) adapter.getItem(position);
+					if (contact != null) {
+						_sdk.setSelectedContact(contact);
+					}
+				}
+			}
+		});
+
+		// Deselect contact
 		findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -120,18 +130,18 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		menu.clear();
 		if (_appState.isAvailable() && _appState.isSignedIn() && !_appState.isSigningIn() && !_appState.isSigningOut()) {
 			getMenuInflater().inflate(R.menu.menu, menu);
-			Status status = _appState.getStatus();
+			com.zello.sdk.Status status = _appState.getStatus();
 			MenuItem itemAvailable = menu.findItem(R.id.menu_available);
 			if (itemAvailable != null) {
-				itemAvailable.setVisible(status == Status.AVAILABLE);
+				itemAvailable.setVisible(status == com.zello.sdk.Status.AVAILABLE);
 			}
 			MenuItem itemSolo = menu.findItem(R.id.menu_solo);
 			if (itemSolo != null) {
-				itemSolo.setVisible(status == Status.SOLO);
+				itemSolo.setVisible(status == com.zello.sdk.Status.SOLO);
 			}
 			MenuItem itemBusy = menu.findItem(R.id.menu_busy);
 			if (itemBusy != null) {
-				itemBusy.setVisible(status == Status.BUSY);
+				itemBusy.setVisible(status == com.zello.sdk.Status.BUSY);
 			}
 		}
 		return true;
@@ -177,6 +187,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 
 	@Override
 	public void onContactsChanged() {
+		_dirtyContacts = true;
 		updateContactList();
 	}
 
@@ -188,7 +199,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		// Initially active tab; optional; can be RECENTS, USERS or CHANNELS
 		com.zello.sdk.Tab tab = _activeTab;
 		// Visual theme; optional; can be DARK or LIGHT
-		com.zello.sdk.Theme theme = Theme.DARK;
+		com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
 
 		_sdk.selectContact(title, tabs, tab, theme);
 	}
@@ -196,23 +207,27 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private void chooseStatus() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		Resources res = getResources();
-		Status status = _appState.getStatus();
-		int selection = status == Status.BUSY ? 2 : (status == Status.SOLO ? 1 : 0);
-		String[] items = new String[]{res.getString(R.string.menu_available), res.getString(R.string.menu_solo), res.getString(R.string.menu_busy)};
+		com.zello.sdk.Status status = _appState.getStatus();
+		int selection = status == com.zello.sdk.Status.BUSY ? 2 : (status == com.zello.sdk.Status.SOLO ? 1 : 0);
+		String[] items = new String[]{res.getString(R.string.menu_available), res.getString(R.string.menu_solo), res.getString(R.string.menu_busy), res.getString(R.string.menu_sign_out)};
 		builder.setSingleChoiceItems(items, selection, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 					case 0: {
-						_sdk.setStatus(Status.AVAILABLE);
+						_sdk.setStatus(com.zello.sdk.Status.AVAILABLE);
 						break;
 					}
 					case 1: {
-						_sdk.setStatus(Status.SOLO);
+						_sdk.setStatus(com.zello.sdk.Status.SOLO);
 						break;
 					}
 					case 2: {
-						_sdk.setStatus(Status.BUSY);
+						_sdk.setStatus(com.zello.sdk.Status.BUSY);
+						break;
+					}
+					case 3: {
+						_sdk.signOut();
 						break;
 					}
 				}
@@ -352,7 +367,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				newAdapter = true;
 				adapter = new ListAdapter();
 			}
-			adapter.setItems(_sdk.getContacts());
+			adapter.setContacts(_sdk.getContacts());
 			Parcelable state = _listContacts.onSaveInstanceState();
 			if (newAdapter) {
 				_listContacts.setAdapter(adapter);

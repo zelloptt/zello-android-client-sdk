@@ -1,5 +1,8 @@
 package com.zello.sdk;
 
+import android.os.Build;
+
+import java.lang.reflect.Field;
 import java.util.UUID;
 
 class Util {
@@ -33,6 +36,22 @@ class Util {
 	static String generateUuid() {
 		String s = UUID.randomUUID().toString().replace("-", "");
 		return s;
+	}
+
+	static int _version = -1;
+
+	public static int getApiLevel() {
+		int version = _version;
+		if (version < 0) {
+			try {
+				Field SDK_INT_field = Build.VERSION.class.getField("SDK_INT");
+				version = (Integer) SDK_INT_field.get(null);
+			} catch (Exception e) {
+				version = 3;
+			}
+			_version = version;
+		}
+		return version;
 	}
 
 }

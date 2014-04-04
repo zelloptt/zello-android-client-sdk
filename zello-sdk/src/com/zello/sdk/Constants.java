@@ -39,12 +39,17 @@ class Constants {
 	static final String EXTRA_MESSAGE_OUT = "MESSAGE_OUT";
 	static final String EXTRA_MESSAGE_IN = "MESSAGE_IN";
 	static final String EXTRA_MESSAGE_CONNECTING = "MESSAGE_CONNECTING";
+	static final String EXTRA_NETWORK = "N";
+	static final String EXTRA_USERNAME = "U";
+	static final String EXTRA_PASSWORD = "P";
 
 	static final String VALUE_BEGIN_MESSAGE = "BEGIN_MESSAGE";
 	static final String VALUE_END_MESSAGE = "END_MESSAGE";
 	static final String VALUE_SET_STATUS = "SET_STATUS";
 	static final String VALUE_STAY_AWAKE = "STAY_AWAKE";
 	static final String VALUE_SELECT_CONTACT = "SELECT_CONTACT";
+	static final String VALUE_SIGN_IN = "SIGN_IN";
+	static final String VALUE_SIGN_OUT = "SIGN_OUT";
 	static final String VALUE_ZELLO = "ZELLO";
 	static final String VALUE_LIGHT = "LIGHT";
 	static final String VALUE_USERS = "USERS";

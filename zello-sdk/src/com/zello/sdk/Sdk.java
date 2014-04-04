@@ -10,6 +10,9 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+
+import java.security.MessageDigest;
 
 public class Sdk implements SafeHandlerEvents {
 
@@ -255,6 +258,31 @@ public class Sdk implements SafeHandlerEvents {
 				intent.putExtra(Constants.EXTRA_CONTACT_NAME, name);
 				intent.putExtra(Constants.EXTRA_CONTACT_TYPE, type);
 			}
+			activity.sendBroadcast(intent);
+		}
+	}
+
+	public boolean signIn(String network, String username, String password) {
+		Activity activity = _activity;
+		if (activity != null) {
+			if (network != null && network.length() > 0 && username != null && username.length() > 0 && password != null && password.length() > 0) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SIGN_IN);
+				intent.putExtra(Constants.EXTRA_NETWORK, network);
+				intent.putExtra(Constants.EXTRA_USERNAME, username);
+				intent.putExtra(Constants.EXTRA_PASSWORD, md5(password));
+				activity.sendBroadcast(intent);
+				return true;
+			}
+		}
+		return true;
+	}
+
+	public void signOut() {
+		Activity activity = _activity;
+		if (activity != null) {
+			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SIGN_OUT);
 			activity.sendBroadcast(intent);
 		}
 	}
@@ -535,6 +563,43 @@ public class Sdk implements SafeHandlerEvents {
 			return Tab.CHANNELS;
 		}
 		return Tab.RECENTS;
+	}
+
+	static String bytesToHex(byte[] data) {
+		if (data != null) {
+			StringBuffer buf = new StringBuffer();
+			for (int i = 0; i < data.length; i++) {
+				int halfbyte = (data[i] >>> 4) & 0x0F;
+				int two_halfs = 0;
+				do {
+					if ((0 <= halfbyte) && (halfbyte <= 9))
+						buf.append((char) ('0' + halfbyte));
+					else
+						buf.append((char) ('a' + (halfbyte - 10)));
+					halfbyte = data[i] & 0x0F;
+				} while (two_halfs++ < 1);
+			}
+			return buf.toString();
+		}
+		return null;
+	}
+
+	static String md5(String s) {
+		if (s != null && s.length() > 0) {
+			try {
+				MessageDigest digester = MessageDigest.getInstance("MD5");
+				byte[] bytes = s.getBytes("UTF-8");
+				digester.update(bytes, 0, bytes.length);
+				byte[] digest = digester.digest();
+				String hex = bytesToHex(digest);
+				if (hex != null) {
+					return hex;
+				}
+			} catch (Throwable t) {
+				Log.i("zello sdk", "Error in Helper.md5: " + t.toString());
+			}
+		}
+		return "";
 	}
 
 }
