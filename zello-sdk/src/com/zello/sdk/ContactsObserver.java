@@ -4,14 +4,32 @@ import android.database.ContentObserver;
 import android.os.Build;
 import android.os.Handler;
 
-public abstract class ContactsObserver {
+public abstract class ContactsObserver extends ContentObserver {
 
-	public static ContentObserver create(Events events, Handler handler) {
+	private Contacts _contacts;
+
+	public ContactsObserver(Contacts contacts, Handler handler) {
+		super(handler);
+		_contacts = contacts;
+	}
+
+	public void close() {
+		_contacts = null;
+	}
+
+	protected void invalidate() {
+		Contacts contacts = _contacts;
+		if (contacts != null) {
+			contacts.invalidate();
+		}
+	}
+
+	public static ContactsObserver create(Contacts contacts, Handler handler) {
 		int api = Util.getApiLevel();
 		if (api >= Build.VERSION_CODES.JELLY_BEAN) {
-			return new ContactsObserver16(events, handler);
+			return new ContactsObserver16(contacts, handler);
 		} else {
-			return new ContactsObserver03(events, handler);
+			return new ContactsObserver03(contacts, handler);
 		}
 	}
 

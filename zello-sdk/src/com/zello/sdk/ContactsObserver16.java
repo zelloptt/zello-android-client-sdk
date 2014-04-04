@@ -1,24 +1,17 @@
 package com.zello.sdk;
 
-import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
 
-public class ContactsObserver16 extends ContentObserver {
+public class ContactsObserver16 extends ContactsObserver {
 
-	private Events _events;
-
-	public ContactsObserver16(Events events, Handler handler) {
-		super(handler);
-		_events = events;
+	public ContactsObserver16(Contacts contacts, Handler handler) {
+		super(contacts, handler);
 	}
 
 	@Override
 	public void onChange(boolean selfChange, Uri uri) {
-		Events events = _events;
-		if (events != null) {
-			events.onContactsChanged();
-		}
+		invalidate();
 	}
 
 }
