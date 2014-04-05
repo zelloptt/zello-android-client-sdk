@@ -3,6 +3,7 @@ package com.zello.sdk;
 public class AppState {
 
 	boolean _available;
+	boolean _configuring;
 	boolean _signedIn;
 	boolean _signingIn;
 	boolean _signingOut;
@@ -15,6 +16,7 @@ public class AppState {
 
 	public void reset() {
 		//_available = false;
+		_configuring = false;
 		_signedIn = false;
 		_signingIn = false;
 		_signingOut = false;
@@ -36,6 +38,7 @@ public class AppState {
 	public void copyTo(AppState state) {
 		if (state != null) {
 			state._available = _available;
+			state._configuring = _configuring;
 			state._signedIn = _signedIn;
 			state._signingIn = _signingIn;
 			state._signingOut = _signingOut;
@@ -50,6 +53,10 @@ public class AppState {
 
 	public boolean isAvailable() {
 		return _available;
+	}
+
+	public boolean isConfiguring() {
+		return _configuring;
 	}
 
 	public boolean isSignedIn() {

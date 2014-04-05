@@ -16,6 +16,63 @@
 		android:text="@string/ptt_app_not_installed"/>
 
 	<LinearLayout
+		android:id="@+id/login"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:padding="10dip"
+		android:gravity="center_vertical"
+		android:orientation="vertical">
+
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/username"/>
+
+		<EditText
+			android:id="@+id/username"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:maxLength="40"
+			android:lines="1"
+			android:inputType="text|textNoSuggestions"/>
+
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="5dip"
+			android:text="@string/password"/>
+
+		<EditText
+			android:id="@+id/password"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:maxLength="40"
+			android:lines="1"
+			android:inputType="textPassword"/>
+
+		<TextView
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="5dip"
+			android:text="@string/network"/>
+
+		<EditText
+			android:id="@+id/network"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:maxLength="128"
+			android:lines="1"
+			android:inputType="text|textNoSuggestions"/>
+
+		<Button
+			android:id="@+id/button_login"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:text="@string/button_sigin_in"/>
+	</LinearLayout>
+
+	<LinearLayout
 		android:id="@+id/content"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -67,7 +124,7 @@
 					</FrameLayout>
 
 					<ImageButton
-						android:id="@+id/close"
+						android:id="@+id/button_close"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginRight="10dip"
@@ -94,50 +151,50 @@
 						android:background="@drawable/button_talk"
 						android:longClickable="false"/>
 				</LinearLayout>
+
+				<LinearLayout
+					android:id="@+id/message_info"
+					android:gravity="center_vertical"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:padding="10dip"
+					android:orientation="horizontal"
+					android:background="#dddddd"
+					android:visibility="invisible"
+					android:clipChildren="false"
+					android:clipToPadding="false">
+
+					<ImageView
+						android:id="@+id/message_image"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginRight="10dip"
+						android:src="@drawable/message_in"/>
+
+					<LinearLayout
+						android:gravity="center_vertical"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:clipChildren="false"
+						android:orientation="vertical">
+
+						<TextView
+							style="?attr/textStyle"
+							android:id="@+id/message_name"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_toRightOf="@+id/contact_image"/>
+
+						<TextView
+							style="?attr/textStyle"
+							android:id="@+id/message_status"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_toRightOf="@+id/contact_image"
+							android:layout_below="@+id/contact_name"/>
+					</LinearLayout>
+				</LinearLayout>
 			</LinearLayout>
 		</FrameLayout>
-
-		<LinearLayout
-			android:id="@+id/message_info"
-			android:gravity="center_vertical"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="10dip"
-			android:orientation="horizontal"
-			android:background="#dddddd"
-			android:visibility="invisible"
-			android:clipChildren="false"
-			android:clipToPadding="false">
-
-			<ImageView
-				android:id="@+id/message_image"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginRight="10dip"
-				android:src="@drawable/message_in"/>
-
-			<LinearLayout
-				android:gravity="center_vertical"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:clipChildren="false"
-				android:orientation="vertical">
-
-				<TextView
-					style="?attr/textStyle"
-					android:id="@+id/message_name"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_toRightOf="@+id/contact_image"/>
-
-				<TextView
-					style="?attr/textStyle"
-					android:id="@+id/message_status"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_toRightOf="@+id/contact_image"
-					android:layout_below="@+id/contact_name"/>
-			</LinearLayout>
-		</LinearLayout>
 	</LinearLayout>
 </FrameLayout>

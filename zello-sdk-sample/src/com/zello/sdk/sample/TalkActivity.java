@@ -7,14 +7,15 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.*;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 
 public class TalkActivity extends Activity implements com.zello.sdk.Events {
 
 	private TextView _txtState;
+	private View _viewLogin;
+	private EditText _editUsername;
+	private EditText _editPassword;
+	private EditText _editNetwork;
 	private View _viewContent;
 	private ListView _listContacts;
 	private View _viewTalkScreen;
@@ -36,12 +37,20 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private com.zello.sdk.Contact _selectedContact = new com.zello.sdk.Contact();
 	private com.zello.sdk.Tab _activeTab = com.zello.sdk.Tab.RECENTS;
 
+	private static String _keyUsername = "username";
+	private static String _keyPassword = "password";
+	private static String _keyNetwork = "network";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_talk);
 		_txtState = (TextView) findViewById(R.id.state);
+		_viewLogin = findViewById(R.id.login);
+		_editUsername = (EditText) _viewLogin.findViewById(R.id.username);
+		_editPassword = (EditText) _viewLogin.findViewById(R.id.password);
+		_editNetwork = (EditText) _viewLogin.findViewById(R.id.network);
 		_viewContent = findViewById(R.id.content);
 		_listContacts = (ListView) _viewContent.findViewById(R.id.contact_list);
 		_viewTalkScreen = _viewContent.findViewById(R.id.talk_screen);
@@ -85,10 +94,29 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		});
 
 		// Deselect contact
-		findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
+		findViewById(R.id.button_close).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				_sdk.setSelectedContact(null);
+			}
+		});
+
+		// Login credentials
+		_editUsername.setText(Helper.loadValue(this, _keyUsername));
+		_editPassword.setText(Helper.loadValue(this, _keyPassword));
+		_editNetwork.setText(Helper.loadValue(this, _keyNetwork));
+		_editPassword = (EditText) _viewLogin.findViewById(R.id.password);
+		_editNetwork = (EditText) _viewLogin.findViewById(R.id.network);
+		findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				String username = _editUsername.getText().toString();
+				String password = _editPassword.getText().toString();
+				String network = _editNetwork.getText().toString();
+				Helper.saveValue(TalkActivity.this, _keyUsername, username);
+				Helper.saveValue(TalkActivity.this, _keyPassword, password);
+				Helper.saveValue(TalkActivity.this, _keyNetwork, network);
+				_sdk.signIn(network, username, password);
 			}
 		});
 
@@ -128,7 +156,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
-		if (_appState.isAvailable() && _appState.isSignedIn() && !_appState.isSigningIn() && !_appState.isSigningOut()) {
+		if (_appState.isAvailable() && !_appState.isConfiguring() && _appState.isSignedIn() && !_appState.isSigningIn() && !_appState.isSigningOut()) {
 			getMenuInflater().inflate(R.menu.menu, menu);
 			com.zello.sdk.Status status = _appState.getStatus();
 			MenuItem itemAvailable = menu.findItem(R.id.menu_available);
@@ -312,6 +340,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		String state = "";
 		if (!_appState.isAvailable()) {
 			state = getString(R.string.ptt_app_not_installed);
+		} else if (_appState.isConfiguring()) {
+			state = getString(R.string.ptt_app_configuring);
 		} else if (!_appState.isSignedIn()) {
 			if (_appState.isSigningIn()) {
 				state = getString(R.string.ptt_app_is_signing_in);
@@ -332,11 +362,14 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 
 	private void updateActiveScreen() {
 		int stateFlag = View.GONE;
+		int loginFlag = View.GONE;
 		int contentFlag = View.GONE;
 		int listFlag = View.GONE;
 		int talkFlag = View.GONE;
-		if (!_appState.isAvailable() || !_appState.isSignedIn()) {
+		if (!_appState.isAvailable() || _appState.isConfiguring()) {
 			stateFlag = View.VISIBLE;
+		} else if (!_appState.isSignedIn() && !_appState.isSigningOut() && !_appState.isWaitingForNetwork() && !_appState.isReconnecting()) {
+			loginFlag = View.VISIBLE;
 		} else {
 			contentFlag = View.VISIBLE;
 			String name = _selectedContact.getName();
@@ -348,6 +381,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		}
 
 		_txtState.setVisibility(stateFlag);
+		_viewLogin.setVisibility(loginFlag);
 		_viewContent.setVisibility(contentFlag);
 		_listContacts.setVisibility(listFlag);
 		_viewTalkScreen.setVisibility(talkFlag);

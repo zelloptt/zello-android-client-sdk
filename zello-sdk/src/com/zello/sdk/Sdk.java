@@ -271,7 +271,7 @@ public class Sdk implements SafeHandlerEvents {
 				intent.putExtra(Constants.EXTRA_NETWORK, network);
 				intent.putExtra(Constants.EXTRA_USERNAME, username);
 				intent.putExtra(Constants.EXTRA_PASSWORD, md5(password));
-				activity.sendBroadcast(intent);
+                				activity.sendBroadcast(intent);
 				return true;
 			}
 		}
@@ -378,6 +378,7 @@ public class Sdk implements SafeHandlerEvents {
 	private void updateAppState(Intent intent) {
 		_appState.reset();
 		if (intent != null) {
+			_appState._configuring = intent.getBooleanExtra(Constants.EXTRA_STATE_CONFIGURING, false);
 			_appState._signedIn = intent.getBooleanExtra(Constants.EXTRA_STATE_SIGNED_IN, false);
 			_appState._signingIn = intent.getBooleanExtra(Constants.EXTRA_STATE_SIGNING_IN, false);
 			_appState._signingOut = intent.getBooleanExtra(Constants.EXTRA_STATE_SIGNING_OUT, false);

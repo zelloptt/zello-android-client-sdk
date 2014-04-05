@@ -9,6 +9,7 @@ class Constants {
 	static final String EXTRA_CALLBACK = "CALLBACK";
 	static final String EXTRA_THEME = "THEME";
 	static final String EXTRA_COMMAND = "COMMAND";
+	static final String EXTRA_STATE_CONFIGURING = "STATE_CONFIGURING";
 	static final String EXTRA_STATE_SIGNED_IN = "STATE_SIGNED_IN";
 	static final String EXTRA_STATE_SIGNING_IN = "STATE_SIGNING_IN";
 	static final String EXTRA_STATE_SIGNING_OUT = "STATE_SIGNING_OUT";
