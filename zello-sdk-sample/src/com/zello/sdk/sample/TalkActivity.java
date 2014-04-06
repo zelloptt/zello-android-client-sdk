@@ -368,8 +368,12 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		int talkFlag = View.GONE;
 		if (!_appState.isAvailable() || _appState.isConfiguring()) {
 			stateFlag = View.VISIBLE;
-		} else if (!_appState.isSignedIn() && !_appState.isSigningOut() && !_appState.isWaitingForNetwork() && !_appState.isReconnecting()) {
-			loginFlag = View.VISIBLE;
+		} else if (!_appState.isSignedIn()) {
+			if (_appState.isSigningIn() || _appState.isSigningOut() || _appState.isWaitingForNetwork() || _appState.isReconnecting()) {
+				stateFlag = View.VISIBLE;
+			} else {
+				loginFlag = View.VISIBLE;
+			}
 		} else {
 			contentFlag = View.VISIBLE;
 			String name = _selectedContact.getName();

@@ -2,19 +2,16 @@ package com.zello.sdk;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
 import java.security.MessageDigest;
 
-public class Sdk implements SafeHandlerEvents {
+public class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	private String _package = "";
 	private Activity _activity;
@@ -27,6 +24,7 @@ public class Sdk implements SafeHandlerEvents {
 	private MessageOut _messageOut = new MessageOut();
 	private Contacts _contacts;
 	private AppState _appState = new AppState();
+	private boolean _connected;
 	private BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
 	private BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
 	private BroadcastReceiver _receiverMessageState; // Broadcast receiver for message state broadcasts
@@ -36,6 +34,7 @@ public class Sdk implements SafeHandlerEvents {
 	private static final int AWAKE_TIMER = 1;
 
 	private static final String _pttActivityClass = "com.zello.sdk.Activity";
+	private static Intent _serviceIntent;
 
 	public Sdk() {
 	}
@@ -83,6 +82,17 @@ public class Sdk implements SafeHandlerEvents {
 		_handler = new SafeHandler<Sdk>(this);
 		_appState._available = isAppAvailable();
 		if (activity != null) {
+			// Spin app the main app
+			Intent intent = new Intent(Intent.ACTION_MAIN, null);
+			intent.addCategory(Intent.CATEGORY_LAUNCHER);
+			intent.setClassName(packageName, "com.loudtalks.client.ui.AutoStartActivity");
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intent.putExtra("com.loudtalks.refresh", true);
+			try {
+				activity.startActivity(intent);
+			} catch (Throwable ignored) {
+			}
+			connect();
 			// Register to receive package install broadcasts
 			_receiverPackage = new BroadcastReceiver() {
 				@Override
@@ -96,6 +106,7 @@ public class Sdk implements SafeHandlerEvents {
 								if (pkgs != null) {
 									for (String pkg : pkgs) {
 										if (pkg.equalsIgnoreCase(_package)) {
+											reconnect();
 											updateSelectedContact(null);
 											updateContacts();
 											break;
@@ -107,6 +118,7 @@ public class Sdk implements SafeHandlerEvents {
 								if (data != null) {
 									String pkg = data.getSchemeSpecificPart();
 									if (pkg != null && pkg.equalsIgnoreCase(_package)) {
+										reconnect();
 										updateSelectedContact(null);
 										updateContacts();
 									}
@@ -168,6 +180,7 @@ public class Sdk implements SafeHandlerEvents {
 	}
 
 	public void onDestroy() {
+		disconnect();
 		_resumed = false;
 		Context activity = _activity;
 		if (activity != null) {
@@ -271,7 +284,7 @@ public class Sdk implements SafeHandlerEvents {
 				intent.putExtra(Constants.EXTRA_NETWORK, network);
 				intent.putExtra(Constants.EXTRA_USERNAME, username);
 				intent.putExtra(Constants.EXTRA_PASSWORD, md5(password));
-                				activity.sendBroadcast(intent);
+				activity.sendBroadcast(intent);
 				return true;
 			}
 		}
@@ -348,6 +361,61 @@ public class Sdk implements SafeHandlerEvents {
 		}
 	}
 
+	private void connect() {
+		if (!_connected) {
+			Activity activity = _activity;
+			if (activity != null) {
+				try {
+					_connected = activity.bindService(getServiceIntent(), this, Context.BIND_AUTO_CREATE);
+				} catch (Throwable t) {
+					Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
+				}
+			}
+		}
+	}
+
+	private void disconnect() {
+		if (_connected) {
+			_connected = false;
+			Activity activity = _activity;
+			if (activity != null) {
+				activity.unbindService(this);
+			}
+		}
+	}
+
+	private Intent getServiceIntent() {
+		Intent intent = _serviceIntent;
+		if (intent == null) {
+			intent = new Intent();
+			intent.setClassName(_package, "com.loudtalks.client.ui.Svc");
+			_serviceIntent = intent;
+		}
+		return intent;
+	}
+
+	private void reconnect() {
+		disconnect();
+		connect();
+		Contacts contacts = _contacts;
+		if (contacts != null) {
+			contacts.invalidate();
+		}
+	}
+
+	@Override
+	public void onServiceConnected(ComponentName name, IBinder service) {
+		Activity activity = _activity;
+		if (activity != null) {
+			activity.startService(getServiceIntent());
+		}
+	}
+
+	@Override
+	public void onServiceDisconnected(ComponentName name) {
+		_connected = false;
+	}
+
 	private void startAwakeTimer() {
 		if (_resumed) {
 			Handler h = _handler;
@@ -388,6 +456,10 @@ public class Sdk implements SafeHandlerEvents {
 			_appState._busy = intent.getBooleanExtra(Constants.EXTRA_STATE_BUSY, false);
 			_appState._solo = intent.getBooleanExtra(Constants.EXTRA_STATE_SOLO, false);
 			_appState._statusMessage = intent.getStringExtra(Constants.EXTRA_STATE_STATUS_MESSAGE);
+		}
+		Contacts contacts = _contacts;
+		if (contacts != null) {
+			contacts.invalidate();
 		}
 		Events events = _events;
 		if (events != null) {
@@ -448,8 +520,9 @@ public class Sdk implements SafeHandlerEvents {
 		if (contacts != null) {
 			contacts.close();
 		}
-		if (_activity != null) {
-			_contacts = new Contacts(_package, _activity, _handler, _events);
+		Activity activity = _activity;
+		if (activity != null) {
+			_contacts = new Contacts(_package, activity, _handler, _events);
 		}
 	}
 
@@ -597,10 +670,9 @@ public class Sdk implements SafeHandlerEvents {
 					return hex;
 				}
 			} catch (Throwable t) {
-				Log.i("zello sdk", "Error in Helper.md5: " + t.toString());
+				Log.i("zello sdk", "Error in Sdk.md5: " + t.toString());
 			}
 		}
 		return "";
 	}
-
 }
