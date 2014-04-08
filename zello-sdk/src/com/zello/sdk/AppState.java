@@ -3,7 +3,9 @@ package com.zello.sdk;
 public class AppState {
 
 	boolean _available;
+	boolean _customBuild;
 	boolean _configuring;
+	boolean _locked;
 	boolean _signedIn;
 	boolean _signingIn;
 	boolean _signingOut;
@@ -13,10 +15,15 @@ public class AppState {
 	boolean _busy;
 	boolean _solo;
 	String _statusMessage;
+	String _network;
+	String _networkUrl;
+	String _username;
 
 	public void reset() {
 		//_available = false;
+		_customBuild = false;
 		_configuring = false;
+		_locked = false;
 		_signedIn = false;
 		_signingIn = false;
 		_signingOut = false;
@@ -26,6 +33,8 @@ public class AppState {
 		_busy = false;
 		_solo = false;
 		_statusMessage = null;
+		_network = null;
+		_username = null;
 	}
 
 	@Override
@@ -37,8 +46,10 @@ public class AppState {
 
 	public void copyTo(AppState state) {
 		if (state != null) {
+			state._customBuild = _customBuild;
 			state._available = _available;
 			state._configuring = _configuring;
+			state._locked = _locked;
 			state._signedIn = _signedIn;
 			state._signingIn = _signingIn;
 			state._signingOut = _signingOut;
@@ -48,6 +59,9 @@ public class AppState {
 			state._busy = _busy;
 			state._solo = _solo;
 			state._statusMessage = _statusMessage;
+			state._network = _network;
+			state._networkUrl = _networkUrl;
+			state._username = _username;
 		}
 	}
 
@@ -55,8 +69,16 @@ public class AppState {
 		return _available;
 	}
 
+	public boolean isCustomBuild() {
+		return _customBuild;
+	}
+
 	public boolean isConfiguring() {
 		return _configuring;
+	}
+
+	public boolean isLocked() {
+		return _locked;
 	}
 
 	public boolean isSignedIn() {
@@ -93,6 +115,18 @@ public class AppState {
 
 	public String getStatusMessage() {
 		return _statusMessage;
+	}
+
+	public String getNetwork() {
+		return _network;
+	}
+
+	public String getNetworkUrl() {
+		return _networkUrl;
+	}
+
+	public String getUsername() {
+		return _username;
 	}
 
 }

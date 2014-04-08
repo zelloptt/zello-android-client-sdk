@@ -9,7 +9,9 @@ class Constants {
 	static final String EXTRA_CALLBACK = "CALLBACK";
 	static final String EXTRA_THEME = "THEME";
 	static final String EXTRA_COMMAND = "COMMAND";
+	static final String EXTRA_STATE_CUSTOM_BUILD = "STATE_CUSTOM_BUILD";
 	static final String EXTRA_STATE_CONFIGURING = "STATE_CONFIGURING";
+	static final String EXTRA_STATE_LOCKED = "STATE_LOCKED";
 	static final String EXTRA_STATE_SIGNED_IN = "STATE_SIGNED_IN";
 	static final String EXTRA_STATE_SIGNING_IN = "STATE_SIGNING_IN";
 	static final String EXTRA_STATE_SIGNING_OUT = "STATE_SIGNING_OUT";
@@ -19,6 +21,9 @@ class Constants {
 	static final String EXTRA_STATE_BUSY = "STATE_BUSY";
 	static final String EXTRA_STATE_SOLO = "STATE_SOLO";
 	static final String EXTRA_STATE_STATUS_MESSAGE = "STATE_STATUS_MESSAGE";
+	static final String EXTRA_STATE_NETWORK = "STATE_NETWORK";
+	static final String EXTRA_STATE_NETWORK_URL = "STATE_NETWORK_URL";
+	static final String EXTRA_STATE_USERNAME = "STATE_USERNAME";
 	static final String EXTRA_CONTACT_NAME = "CONTACT_NAME";
 	static final String EXTRA_CONTACT_FULL_NAME = "CONTACT_FULL_NAME";
 	static final String EXTRA_CONTACT_DISPLAY_NAME = "CONTACT_DISPLAY_NAME";
@@ -40,9 +45,11 @@ class Constants {
 	static final String EXTRA_MESSAGE_OUT = "MESSAGE_OUT";
 	static final String EXTRA_MESSAGE_IN = "MESSAGE_IN";
 	static final String EXTRA_MESSAGE_CONNECTING = "MESSAGE_CONNECTING";
-	static final String EXTRA_NETWORK = "N";
+	static final String EXTRA_NETWORK_URL = "N";
 	static final String EXTRA_USERNAME = "U";
 	static final String EXTRA_PASSWORD = "P";
+	static final String EXTRA_APPLICATION = "APP";
+	static final String EXTRA_PACKAGE = "PACKAGE";
 
 	static final String VALUE_BEGIN_MESSAGE = "BEGIN_MESSAGE";
 	static final String VALUE_END_MESSAGE = "END_MESSAGE";
@@ -51,6 +58,7 @@ class Constants {
 	static final String VALUE_SELECT_CONTACT = "SELECT_CONTACT";
 	static final String VALUE_SIGN_IN = "SIGN_IN";
 	static final String VALUE_SIGN_OUT = "SIGN_OUT";
+	static final String VALUE_LOCK = "LOCK";
 	static final String VALUE_ZELLO = "ZELLO";
 	static final String VALUE_LIGHT = "LIGHT";
 	static final String VALUE_USERS = "USERS";

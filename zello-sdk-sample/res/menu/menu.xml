@@ -9,4 +9,12 @@
 	<item
 		android:id="@+id/menu_select_contact"
 		android:title="@string/menu_select_contact"/>
+
+	<item
+		android:id="@+id/menu_lock_ptt_app"
+		android:title="@string/menu_lock_ptt_app"/>
+
+	<item
+		android:id="@+id/menu_unlock_ptt_app"
+		android:title="@string/menu_unlock_ptt_app"/>
 </menu>

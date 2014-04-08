@@ -27,6 +27,8 @@
 	<string name="menu_busy">Busy</string>
 	<string name="menu_set_status">Set status</string>
 	<string name="menu_select_contact">Select contact</string>
+	<string name="menu_lock_ptt_app">Lock PTT app</string>
+	<string name="menu_unlock_ptt_app">Unlock PTT app</string>
 	<string name="menu_sign_out">Sign out</string>
 	<string name="button_close">Close</string>
 	<string name="button_sigin_in">Sign in</string>

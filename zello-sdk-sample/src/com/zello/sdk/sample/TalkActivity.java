@@ -13,6 +13,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 
 	private TextView _txtState;
 	private View _viewLogin;
+	private TextView _txtNetwork;
 	private EditText _editUsername;
 	private EditText _editPassword;
 	private EditText _editNetwork;
@@ -48,6 +49,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		setContentView(R.layout.activity_talk);
 		_txtState = (TextView) findViewById(R.id.state);
 		_viewLogin = findViewById(R.id.login);
+		_txtNetwork = (TextView) _viewLogin.findViewById(R.id.network_label);
 		_editUsername = (EditText) _viewLogin.findViewById(R.id.username);
 		_editPassword = (EditText) _viewLogin.findViewById(R.id.password);
 		_editNetwork = (EditText) _viewLogin.findViewById(R.id.network);
@@ -156,20 +158,30 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
-		if (_appState.isAvailable() && !_appState.isConfiguring() && _appState.isSignedIn() && !_appState.isSigningIn() && !_appState.isSigningOut()) {
+		if (_appState.isAvailable()) {
 			getMenuInflater().inflate(R.menu.menu, menu);
-			com.zello.sdk.Status status = _appState.getStatus();
+			boolean select = false, available = false, solo = false, busy = false;
+			if (!_appState.isConfiguring() && _appState.isSignedIn() && !_appState.isSigningIn() && !_appState.isSigningOut()) {
+				com.zello.sdk.Status status = _appState.getStatus();
+				select = true;
+				available = status == com.zello.sdk.Status.AVAILABLE;
+				solo = status == com.zello.sdk.Status.SOLO;
+				busy = status == com.zello.sdk.Status.BUSY;
+			}
+			menu.findItem(R.id.menu_select_contact).setVisible(select);
+			menu.findItem(R.id.menu_lock_ptt_app).setVisible(!_appState.isLocked());
+			menu.findItem(R.id.menu_unlock_ptt_app).setVisible(_appState.isLocked());
 			MenuItem itemAvailable = menu.findItem(R.id.menu_available);
 			if (itemAvailable != null) {
-				itemAvailable.setVisible(status == com.zello.sdk.Status.AVAILABLE);
+				itemAvailable.setVisible(available);
 			}
 			MenuItem itemSolo = menu.findItem(R.id.menu_solo);
 			if (itemSolo != null) {
-				itemSolo.setVisible(status == com.zello.sdk.Status.SOLO);
+				itemSolo.setVisible(solo);
 			}
 			MenuItem itemBusy = menu.findItem(R.id.menu_busy);
 			if (itemBusy != null) {
-				itemBusy.setVisible(status == com.zello.sdk.Status.BUSY);
+				itemBusy.setVisible(busy);
 			}
 		}
 		return true;
@@ -187,6 +199,14 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			}
 			case R.id.menu_select_contact: {
 				chooseActiveContact();
+				return true;
+			}
+			case R.id.menu_lock_ptt_app: {
+				lockPttApp();
+				return true;
+			}
+			case R.id.menu_unlock_ptt_app: {
+				unlockPttApp();
 				return true;
 			}
 		}
@@ -230,6 +250,16 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
 
 		_sdk.selectContact(title, tabs, tab, theme);
+	}
+
+	private void lockPttApp() {
+		// Configure PTT app to display information screen with the name of this app that can be clicked to open main activity
+		_sdk.lock(getString(R.string.app_name), getPackageName());
+	}
+
+	private void unlockPttApp() {
+		// Switch PTT app back to normal UI mode
+		_sdk.unlock();
 	}
 
 	private void chooseStatus() {
@@ -366,6 +396,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		int contentFlag = View.GONE;
 		int listFlag = View.GONE;
 		int talkFlag = View.GONE;
+		int networkFlag = View.GONE;
 		if (!_appState.isAvailable() || _appState.isConfiguring()) {
 			stateFlag = View.VISIBLE;
 		} else if (!_appState.isSignedIn()) {
@@ -373,6 +404,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				stateFlag = View.VISIBLE;
 			} else {
 				loginFlag = View.VISIBLE;
+				// Network URL controls are only used when PTT app is not hardcoded to work only with particular network
+				networkFlag = _appState.isCustomBuild() ? View.GONE : View.VISIBLE;
 			}
 		} else {
 			contentFlag = View.VISIBLE;
@@ -389,6 +422,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_viewContent.setVisibility(contentFlag);
 		_listContacts.setVisibility(listFlag);
 		_viewTalkScreen.setVisibility(talkFlag);
+		_txtNetwork.setVisibility(networkFlag);
+		_editNetwork.setVisibility(networkFlag);
 
 		if (listFlag == View.VISIBLE) {
 			updateContactList();

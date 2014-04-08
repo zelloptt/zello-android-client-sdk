@@ -83,15 +83,14 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_appState._available = isAppAvailable();
 		if (activity != null) {
 			// Spin app the main app
-			Intent intent = new Intent(Intent.ACTION_MAIN, null);
-			intent.addCategory(Intent.CATEGORY_LAUNCHER);
-			intent.setClassName(packageName, "com.loudtalks.client.ui.AutoStartActivity");
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent.putExtra("com.loudtalks.refresh", true);
-			try {
-				activity.startActivity(intent);
-			} catch (Throwable ignored) {
-			}
+//			Intent intent = new Intent(Intent.ACTION_VIEW, null);
+//			intent.setClassName(packageName, "com.loudtalks.client.ui.AutoStartActivity");
+//			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//			intent.putExtra("com.loudtalks.refresh", true);
+//			try {
+//				activity.startActivity(intent);
+//			} catch (Throwable ignored) {
+//			}
 			connect();
 			// Register to receive package install broadcasts
 			_receiverPackage = new BroadcastReceiver() {
@@ -281,7 +280,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			if (network != null && network.length() > 0 && username != null && username.length() > 0 && password != null && password.length() > 0) {
 				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
 				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SIGN_IN);
-				intent.putExtra(Constants.EXTRA_NETWORK, network);
+				intent.putExtra(Constants.EXTRA_NETWORK_URL, network);
 				intent.putExtra(Constants.EXTRA_USERNAME, username);
 				intent.putExtra(Constants.EXTRA_PASSWORD, md5(password));
 				activity.sendBroadcast(intent);
@@ -296,6 +295,26 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (activity != null) {
 			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
 			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SIGN_OUT);
+			activity.sendBroadcast(intent);
+		}
+	}
+
+	public void lock(String applicationName, String packageName) {
+		Activity activity = _activity;
+		if (activity != null && applicationName != null && applicationName.length() > 0) {
+			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_LOCK);
+			intent.putExtra(Constants.EXTRA_APPLICATION, applicationName);
+			intent.putExtra(Constants.EXTRA_PACKAGE, packageName);
+			activity.sendBroadcast(intent);
+		}
+	}
+
+	public void unlock() {
+		Activity activity = _activity;
+		if (activity != null) {
+			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_LOCK);
 			activity.sendBroadcast(intent);
 		}
 	}
@@ -446,7 +465,9 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private void updateAppState(Intent intent) {
 		_appState.reset();
 		if (intent != null) {
+			_appState._customBuild = intent.getBooleanExtra(Constants.EXTRA_STATE_CUSTOM_BUILD, false);
 			_appState._configuring = intent.getBooleanExtra(Constants.EXTRA_STATE_CONFIGURING, false);
+			_appState._locked = intent.getBooleanExtra(Constants.EXTRA_STATE_LOCKED, false);
 			_appState._signedIn = intent.getBooleanExtra(Constants.EXTRA_STATE_SIGNED_IN, false);
 			_appState._signingIn = intent.getBooleanExtra(Constants.EXTRA_STATE_SIGNING_IN, false);
 			_appState._signingOut = intent.getBooleanExtra(Constants.EXTRA_STATE_SIGNING_OUT, false);
@@ -456,6 +477,9 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_appState._busy = intent.getBooleanExtra(Constants.EXTRA_STATE_BUSY, false);
 			_appState._solo = intent.getBooleanExtra(Constants.EXTRA_STATE_SOLO, false);
 			_appState._statusMessage = intent.getStringExtra(Constants.EXTRA_STATE_STATUS_MESSAGE);
+			_appState._network = intent.getStringExtra(Constants.EXTRA_STATE_NETWORK);
+			_appState._networkUrl = intent.getStringExtra(Constants.EXTRA_STATE_NETWORK_URL);
+			_appState._username = intent.getStringExtra(Constants.EXTRA_STATE_USERNAME);
 		}
 		Contacts contacts = _contacts;
 		if (contacts != null) {
