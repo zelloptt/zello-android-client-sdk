@@ -15,7 +15,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="zello-sdk" />
+    <orderEntry type="library" name="zello-sdk" level="project" />
   </component>
 </module>
 
