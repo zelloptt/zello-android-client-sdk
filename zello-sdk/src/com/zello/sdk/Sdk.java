@@ -356,6 +356,17 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return _contacts;
 	}
 
+	public void setAutoRun(boolean enable) {
+		Activity activity = _activity;
+		if (activity != null) {
+			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUTO_RUN);
+			intent.putExtra(Constants.EXTRA_STATE_AUTO_RUN, enable);
+			activity.sendBroadcast(intent);
+		}
+	}
+
+
 	private void sendStayAwake() {
 		Activity activity = _activity;
 		if (activity != null) {
@@ -476,6 +487,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_appState._showContacts = intent.getBooleanExtra(Constants.EXTRA_STATE_SHOW_CONTACTS, false);
 			_appState._busy = intent.getBooleanExtra(Constants.EXTRA_STATE_BUSY, false);
 			_appState._solo = intent.getBooleanExtra(Constants.EXTRA_STATE_SOLO, false);
+			_appState._autoRun = intent.getBooleanExtra(Constants.EXTRA_STATE_AUTO_RUN, false);
 			_appState._statusMessage = intent.getStringExtra(Constants.EXTRA_STATE_STATUS_MESSAGE);
 			_appState._network = intent.getStringExtra(Constants.EXTRA_STATE_NETWORK);
 			_appState._networkUrl = intent.getStringExtra(Constants.EXTRA_STATE_NETWORK_URL);

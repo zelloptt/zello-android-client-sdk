@@ -34,4 +34,14 @@
 		android:id="@+id/menu_unlock_ptt_app"
 		android:title="@string/menu_unlock_ptt_app"
 		android:showAsAction="never"/>
+
+	<item
+		android:id="@+id/menu_enable_auto_run"
+		android:title="@string/menu_enable_auto_run"
+		android:showAsAction="never"/>
+
+	<item
+		android:id="@+id/menu_disable_auto_run"
+		android:title="@string/menu_disable_auto_run"
+		android:showAsAction="never"/>
 </menu>

@@ -171,6 +171,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			menu.findItem(R.id.menu_select_contact).setVisible(select);
 			menu.findItem(R.id.menu_lock_ptt_app).setVisible(!_appState.isLocked());
 			menu.findItem(R.id.menu_unlock_ptt_app).setVisible(_appState.isLocked());
+			menu.findItem(R.id.menu_enable_auto_run).setVisible(!_appState.isAutoRunEnabled());
+			menu.findItem(R.id.menu_disable_auto_run).setVisible(_appState.isAutoRunEnabled());
 			MenuItem itemAvailable = menu.findItem(R.id.menu_available);
 			if (itemAvailable != null) {
 				itemAvailable.setVisible(available);
@@ -207,6 +209,14 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			}
 			case R.id.menu_unlock_ptt_app: {
 				unlockPttApp();
+				return true;
+			}
+			case R.id.menu_enable_auto_run: {
+				enableAutoRun();
+				return true;
+			}
+			case R.id.menu_disable_auto_run: {
+				disableAutoRun();
 				return true;
 			}
 		}
@@ -260,6 +270,16 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private void unlockPttApp() {
 		// Switch PTT app back to normal UI mode
 		_sdk.unlock();
+	}
+
+	private void enableAutoRun() {
+		// Enable client auto-run option
+		_sdk.setAutoRun(true);
+	}
+
+	private void disableAutoRun() {
+		// Disable client auto-run option
+		_sdk.setAutoRun(false);
 	}
 
 	private void chooseStatus() {

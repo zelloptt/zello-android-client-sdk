@@ -30,6 +30,8 @@
 	<string name="menu_lock_ptt_app">Lock PTT app</string>
 	<string name="menu_unlock_ptt_app">Unlock PTT app</string>
 	<string name="menu_sign_out">Sign out</string>
+	<string name="menu_enable_auto_run">Enable auto-run</string>
+	<string name="menu_disable_auto_run">Disable auto-run</string>
 	<string name="button_close">Close</string>
 	<string name="button_sigin_in">Sign in</string>
 	<string name="username">Username</string>

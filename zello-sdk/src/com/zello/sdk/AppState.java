@@ -14,6 +14,7 @@ public class AppState {
 	boolean _showContacts;
 	boolean _busy;
 	boolean _solo;
+	boolean _autoRun;
 	String _statusMessage;
 	String _network;
 	String _networkUrl;
@@ -32,8 +33,10 @@ public class AppState {
 		_showContacts = false;
 		_busy = false;
 		_solo = false;
+		_autoRun = false;
 		_statusMessage = null;
 		_network = null;
+		_networkUrl = null;
 		_username = null;
 	}
 
@@ -58,6 +61,7 @@ public class AppState {
 			state._showContacts = _showContacts;
 			state._busy = _busy;
 			state._solo = _solo;
+			state._autoRun = _autoRun;
 			state._statusMessage = _statusMessage;
 			state._network = _network;
 			state._networkUrl = _networkUrl;
@@ -111,6 +115,10 @@ public class AppState {
 
 	public Status getStatus() {
 		return _busy ? Status.BUSY : (_solo ? Status.SOLO : Status.AVAILABLE);
+	}
+
+	public boolean isAutoRunEnabled() {
+		return _autoRun;
 	}
 
 	public String getStatusMessage() {
