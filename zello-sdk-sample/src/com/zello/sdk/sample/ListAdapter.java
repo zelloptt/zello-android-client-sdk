@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 public class ListAdapter extends BaseAdapter {
@@ -103,7 +104,7 @@ public class ListAdapter extends BaseAdapter {
 			case CHANNEL: {
 				if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
 					int count = contact.getUsersCount();
-					String countText = Integer.toString(count);
+					String countText = NumberFormat.getInstance().format(count);
 					statusText = context.getResources().getString(R.string.status_channel_users_count).replace("%count%", countText);
 				} else {
 					statusText = statusToText(context, status);
@@ -114,8 +115,8 @@ public class ListAdapter extends BaseAdapter {
 				int count = contact.getUsersCount();
 				if (status == com.zello.sdk.ContactStatus.AVAILABLE && count > 0) {
 					int total = contact.getUsersTotal();
-					String countText = Integer.toString(count);
-					String totalText = Integer.toString(total);
+					String countText = NumberFormat.getInstance().format(count);
+					String totalText = NumberFormat.getInstance().format(total);
 					statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
 				} else {
 					statusText = statusToText(context, com.zello.sdk.ContactStatus.OFFLINE);
