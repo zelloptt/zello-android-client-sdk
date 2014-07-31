@@ -3,7 +3,6 @@
     package="com.zello.sdk" >
 
     <uses-sdk
-        android:minSdkVersion="3"
-        android:targetSdkVersion="19" />
+        android:minSdkVersion="3" />
 
 </manifest>
