@@ -2,7 +2,9 @@ package com.zello.sdk.sample;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -219,6 +221,18 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				disableAutoRun();
 				return true;
 			}
+			case R.id.menu_start_message: {
+				_sdk.beginMessage();
+				return true;
+			}
+			case R.id.menu_stop_message: {
+				_sdk.endMessage();
+				return true;
+			}	
+			case R.id.menu_about: {
+				showAbout();
+				return true;
+			}	
 		}
 		return false;
 	}
@@ -249,6 +263,16 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		updateContactList();
 	}
 
+	private void showAbout() {
+		System.out.println("showAbout");
+		Intent intent = new Intent(this, AnotherActivity.class);
+		try {
+			startActivity(intent);
+		} catch (ActivityNotFoundException ignored) {
+			System.out.println("Exception: " + ignored);
+		}
+	}
+	
 	private void chooseActiveContact() {
 		// Activity title; optional
 		String title = getResources().getString(R.string.select_contact_title);
