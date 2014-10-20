@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.*;
@@ -202,7 +203,10 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				return true;
 			}
 			case R.id.menu_select_contact: {
-				chooseActiveContact();
+				//chooseActiveContact();
+				Uri zelloUri = Uri.parse("zello://The%20Survival%20Podcast%20Network?add_channel");
+				Intent zIntent = new Intent(Intent.ACTION_VIEW, zelloUri);
+				startActivity(zIntent);
 				return true;
 			}
 			case R.id.menu_lock_ptt_app: {
