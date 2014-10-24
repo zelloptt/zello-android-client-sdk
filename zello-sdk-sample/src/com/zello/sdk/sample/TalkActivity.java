@@ -203,10 +203,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				return true;
 			}
 			case R.id.menu_select_contact: {
-				//chooseActiveContact();
-				Uri zelloUri = Uri.parse("zello://The%20Survival%20Podcast%20Network?add_channel");
-				Intent zIntent = new Intent(Intent.ACTION_VIEW, zelloUri);
-				startActivity(zIntent);
+				chooseActiveContact();
 				return true;
 			}
 			case R.id.menu_lock_ptt_app: {
