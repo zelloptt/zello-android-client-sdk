@@ -44,4 +44,19 @@
 		android:id="@+id/menu_disable_auto_run"
 		android:title="@string/menu_disable_auto_run"
 		android:showAsAction="never"/>
+	
+	<item
+		android:id="@+id/menu_start_message"
+		android:title="@string/menu_start_message"
+		android:showAsAction="never"/>
+		
+	<item
+		android:id="@+id/menu_stop_message"
+		android:title="@string/menu_stop_message"
+		android:showAsAction="never"/>
+	
+	<item
+		android:id="@+id/menu_about"
+		android:title="@string/menu_about"
+		android:showAsAction="never"/>
 </menu>

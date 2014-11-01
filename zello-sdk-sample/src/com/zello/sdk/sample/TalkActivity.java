@@ -126,7 +126,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		});
 
 		_dirtyContacts = true;
-		_sdk.onCreate("com.pttsdk", this, this);
+		_sdk.onCreate("com.pttsdk", this, this); // Use with generic apk
+		//_sdk.onCreate("net.loudtalks", this, this); // Use to connect to apk from zellowork.com
 		updateAppState();
 		updateMessageState();
 		updateSelectedContact();
@@ -176,6 +177,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			menu.findItem(R.id.menu_unlock_ptt_app).setVisible(_appState.isLocked());
 			menu.findItem(R.id.menu_enable_auto_run).setVisible(!_appState.isAutoRunEnabled());
 			menu.findItem(R.id.menu_disable_auto_run).setVisible(_appState.isAutoRunEnabled());
+			menu.findItem(R.id.menu_about).setVisible(true);
 			MenuItem itemAvailable = menu.findItem(R.id.menu_available);
 			if (itemAvailable != null) {
 				itemAvailable.setVisible(available);
@@ -264,7 +266,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		updateContactList();
 	}
 
-	private void showAbout() {
+	private void showAbout() {		
 		System.out.println("showAbout");
 		Intent intent = new Intent(this, AnotherActivity.class);
 		try {
