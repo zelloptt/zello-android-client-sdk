@@ -10,15 +10,10 @@ import android.widget.*;
 
 public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 
-
-	private boolean _active; // Activity is resumed and visible to the user
-	private boolean _dirtyContacts; // Contact list needs to be refreshed next time before it's presented to the user
-
 	private com.zello.sdk.Sdk _sdk = new com.zello.sdk.Sdk();
 	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
 	private com.zello.sdk.MessageIn _messageIn = new com.zello.sdk.MessageIn();
 	private com.zello.sdk.MessageOut _messageOut = new com.zello.sdk.MessageOut();
-	private com.zello.sdk.Contact _selectedContact = new com.zello.sdk.Contact();
 	private com.zello.sdk.Tab _activeTab = com.zello.sdk.Tab.RECENTS;
 
 	private ImageView _imgMessageStatus;
@@ -37,7 +32,6 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 		_txtMessageName = (TextView) _viewMessageInfo.findViewById(R.id.message_name);
 		_txtMessageStatus = (TextView) _viewMessageInfo.findViewById(R.id.message_status);
 
-		_dirtyContacts = true;
 		_sdk.onCreate("com.pttsdk", this, this);
 		updateAppState();
 		updateMessageState();
@@ -53,14 +47,12 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 	protected void onResume() {
 		super.onResume();
 		_sdk.onResume();
-		_active = true;
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		_sdk.onPause();
-		_active = false;
 	}
 
 	@Override
@@ -166,8 +158,6 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 
 	@Override
 	public void onContactsChanged() {
-		_dirtyContacts = true;
-
 	}
 
 	private void chooseActiveContact() {
