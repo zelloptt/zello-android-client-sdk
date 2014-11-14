@@ -41,8 +41,8 @@ public class SquareButton extends Button {
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-		int measuredWidth = Math.min(getDefaultSize(Integer.MAX_VALUE, widthMeasureSpec), (int) _maxWidth);
-		int measuredHeight = Math.min(getDefaultSize(Integer.MAX_VALUE, heightMeasureSpec), (int) _maxHeight);
+		int measuredWidth = Math.min(getDefaultSize(Integer.MAX_VALUE, widthMeasureSpec), _maxWidth);
+		int measuredHeight = Math.min(getDefaultSize(Integer.MAX_VALUE, heightMeasureSpec), _maxHeight);
 		int min = Math.min(measuredHeight, measuredWidth);
 		setMeasuredDimension(min, min);
 	}

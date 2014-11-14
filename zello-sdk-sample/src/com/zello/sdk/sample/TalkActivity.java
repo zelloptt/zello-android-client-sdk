@@ -23,6 +23,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private ListView _listContacts;
 	private View _viewTalkScreen;
 	private SquareButton _btnTalk;
+	private ToggleButton _btnConnect;
 	private View _viewContactNotSelected;
 	private View _viewContactInfo;
 	private ImageView _imgMessageStatus;
@@ -60,6 +61,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_viewTalkScreen = _viewContent.findViewById(R.id.talk_screen);
 		_viewContactInfo = _viewTalkScreen.findViewById(R.id.contact_info);
 		_btnTalk = (SquareButton) _viewTalkScreen.findViewById(R.id.talk);
+		_btnConnect = (ToggleButton) findViewById(R.id.button_connect);
 		_viewContactNotSelected = _viewTalkScreen.findViewById(R.id.contact_not_selected);
 		_viewMessageInfo = findViewById(R.id.message_info);
 		_imgMessageStatus = (ImageView) _viewMessageInfo.findViewById(R.id.message_image);
@@ -94,6 +96,14 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 						_sdk.setSelectedContact(contact);
 					}
 				}
+			}
+		});
+
+		// Connect channel
+		_btnConnect.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				connectChannel();
 			}
 		});
 
@@ -230,11 +240,11 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			case R.id.menu_stop_message: {
 				_sdk.endMessage();
 				return true;
-			}	
+			}
 			case R.id.menu_about: {
 				showAbout();
 				return true;
-			}	
+			}
 		}
 		return false;
 	}
@@ -265,7 +275,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		updateContactList();
 	}
 
-	private void showAbout() {		
+	private void showAbout() {
 		System.out.println("showAbout");
 		Intent intent = new Intent(this, AnotherActivity.class);
 		try {
@@ -274,7 +284,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			System.out.println("Exception: " + ignored);
 		}
 	}
-	
+
 	private void chooseActiveContact() {
 		// Activity title; optional
 		String title = getResources().getString(R.string.select_contact_title);
@@ -352,7 +362,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_sdk.getSelectedContact(_selectedContact);
 		String name = _selectedContact.getName(); // Contact name
 		boolean selected = name != null && name.length() > 0;
-		boolean canTalk = false;
+		boolean canTalk = false, showConnect = false, connected = false, canConnect = false;
 		if (selected) {
 			// Update info
 			ListAdapter.configureView(_viewContactInfo, _selectedContact);
@@ -366,8 +376,17 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 					break;
 				}
 				case CHANNEL: {
-					if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
-						canTalk = true; // Channel is online
+					showConnect = true;
+					if (_appState.isSignedIn()) {
+						if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
+							canTalk = true; // Channel is online
+							canConnect = true;
+							connected = true;
+						} else if (status == com.zello.sdk.ContactStatus.OFFLINE) {
+							canConnect = true;
+						} else if (status == com.zello.sdk.ContactStatus.CONNECTING) {
+							connected = true;
+						}
 					}
 					break;
 				}
@@ -383,6 +402,9 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_viewContactNotSelected.setVisibility(selected ? View.INVISIBLE : View.VISIBLE);
 		_viewContactInfo.setVisibility(selected ? View.VISIBLE : View.INVISIBLE);
 		_btnTalk.setEnabled(canTalk);
+		_btnConnect.setEnabled(canConnect);
+		_btnConnect.setChecked(connected);
+		_btnConnect.setVisibility(showConnect ? View.VISIBLE : View.GONE);
 		updateActiveScreen();
 	}
 
@@ -497,6 +519,17 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				_listContacts.onRestoreInstanceState(state);
 			}
 			_listContacts.setFocusable(adapter.getCount() > 0);
+		}
+	}
+
+	private void connectChannel() {
+		if (_selectedContact.getType() == com.zello.sdk.ContactType.CHANNEL) {
+			com.zello.sdk.ContactStatus status = _selectedContact.getStatus();
+			if (status == com.zello.sdk.ContactStatus.OFFLINE) {
+				_sdk.connectChannel(_selectedContact.getName());
+			} else if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
+				_sdk.disconnectChannel(_selectedContact.getName());
+			}
 		}
 	}
 

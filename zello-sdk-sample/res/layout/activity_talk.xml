@@ -124,6 +124,14 @@
 							android:text="@string/contact_not_selected"/>
 					</FrameLayout>
 
+                    <ToggleButton
+                        android:id="@+id/button_connect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dip"
+                        android:layout_gravity="center_vertical"
+                        android:contentDescription="@string/channel_connect"/>
+
 					<ImageButton
 						android:id="@+id/button_close"
 						android:layout_width="wrap_content"
