@@ -88,41 +88,45 @@ public class ListAdapter extends BaseAdapter {
 		if (contact != null) {
 			show = true;
 			String displayName = contact.getDisplayName(); // Contact name or a full name if not empty
+			String title = contact.getTitle();
+			if (title != null && title.length() > 0) {
+				displayName += " (" + title + ")";
+			}
 			String statusText = "";
 			com.zello.sdk.ContactType type = contact.getType();
 			com.zello.sdk.ContactStatus status = contact.getStatus();
 			Context context = view.getContext();
 
 			switch (type) {
-			case USER:
-			case GATEWAY: {
-				// User or radio gateway
-				String message = contact.getStatusMessage(); // User-defined status message
-				statusText = message == null || message.length() == 0 ? statusToText(context, status) : message;
-				break;
-			}
-			case CHANNEL: {
-				if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
+				case USER:
+				case GATEWAY: {
+					// User or radio gateway
+					String message = contact.getStatusMessage(); // User-defined status message
+					statusText = message == null || message.length() == 0 ? statusToText(context, status) : message;
+					break;
+				}
+				case CHANNEL: {
+					if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
+						int count = contact.getUsersCount();
+						String countText = NumberFormat.getInstance().format(count);
+						statusText = context.getResources().getString(R.string.status_channel_users_count).replace("%count%", countText);
+					} else {
+						statusText = statusToText(context, status);
+					}
+					break;
+				}
+				case GROUP: {
 					int count = contact.getUsersCount();
-					String countText = NumberFormat.getInstance().format(count);
-					statusText = context.getResources().getString(R.string.status_channel_users_count).replace("%count%", countText);
-				} else {
-					statusText = statusToText(context, status);
+					if (status == com.zello.sdk.ContactStatus.AVAILABLE && count > 0) {
+						int total = contact.getUsersTotal();
+						String countText = NumberFormat.getInstance().format(count);
+						String totalText = NumberFormat.getInstance().format(total);
+						statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
+					} else {
+						statusText = statusToText(context, com.zello.sdk.ContactStatus.OFFLINE);
+					}
+					break;
 				}
-				break;
-			}
-			case GROUP: {
-				int count = contact.getUsersCount();
-				if (status == com.zello.sdk.ContactStatus.AVAILABLE && count > 0) {
-					int total = contact.getUsersTotal();
-					String countText = NumberFormat.getInstance().format(count);
-					String totalText = NumberFormat.getInstance().format(total);
-					statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
-				} else {
-					statusText = statusToText(context, com.zello.sdk.ContactStatus.OFFLINE);
-				}
-				break;
-			}
 			}
 
 			imgContactStatus.setImageResource(statusToDrawableId(status, type));
@@ -147,57 +151,57 @@ public class ListAdapter extends BaseAdapter {
 	private static String statusToText(Context context, com.zello.sdk.ContactStatus status) {
 		int id = R.string.status_offline;
 		switch (status) {
-		case STANDBY:
-			id = R.string.status_standby;
-			break;
-		case AVAILABLE:
-			id = R.string.status_online;
-			break;
-		case BUSY:
-			id = R.string.status_busy;
-			break;
-		case CONNECTING:
-			id = R.string.status_connecting;
-			break;
-		default:
+			case STANDBY:
+				id = R.string.status_standby;
+				break;
+			case AVAILABLE:
+				id = R.string.status_online;
+				break;
+			case BUSY:
+				id = R.string.status_busy;
+				break;
+			case CONNECTING:
+				id = R.string.status_connecting;
+				break;
+			default:
 		}
 		return context.getResources().getString(id);
 	}
 
 	private static int statusToDrawableId(com.zello.sdk.ContactStatus status, com.zello.sdk.ContactType type) {
 		switch (type) {
-		case USER: {
-			// User
-			switch (status) {
-			case STANDBY:
-				return R.drawable.user_standby;
-			case AVAILABLE:
-				return R.drawable.user_online;
-			case BUSY:
-				return R.drawable.user_busy;
-			default:
-				;
+			case USER: {
+				// User
+				switch (status) {
+					case STANDBY:
+						return R.drawable.user_standby;
+					case AVAILABLE:
+						return R.drawable.user_online;
+					case BUSY:
+						return R.drawable.user_busy;
+					default:
+						;
+				}
+				return R.drawable.user_offline;
 			}
-			return R.drawable.user_offline;
-		}
-		case CHANNEL: {
-			// Channel
-			switch (status) {
-			case AVAILABLE:
-				return R.drawable.channel_online;
-			default:
-				;
+			case CHANNEL: {
+				// Channel
+				switch (status) {
+					case AVAILABLE:
+						return R.drawable.channel_online;
+					default:
+						;
+				}
+				return R.drawable.channel_offline;
 			}
-			return R.drawable.channel_offline;
-		}
-		case GATEWAY: {
-			// Radio gateway
-			return R.drawable.gateway_online;
-		}
-		case GROUP: {
-			// Group
-			return R.drawable.group_online;
-		}
+			case GATEWAY: {
+				// Radio gateway
+				return R.drawable.gateway_online;
+			}
+			case GROUP: {
+				// Group
+				return R.drawable.group_online;
+			}
 		}
 		return R.drawable.user_offline;
 	}

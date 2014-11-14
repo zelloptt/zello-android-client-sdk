@@ -10,6 +10,7 @@ public class Contact {
 	String _statusMessage;
 	int _usersCount;
 	int _usersTotal;
+	String _title;
 
 	public void reset() {
 		_name = null;
@@ -20,6 +21,7 @@ public class Contact {
 		_statusMessage = null;
 		_usersCount = 0;
 		_usersTotal = 0;
+		_title = null;
 	}
 
 	@Override
@@ -39,6 +41,7 @@ public class Contact {
 			contact._statusMessage = _statusMessage;
 			contact._usersCount = _usersCount;
 			contact._usersTotal = _usersTotal;
+			contact._title = _title;
 		}
 	}
 
@@ -72,6 +75,10 @@ public class Contact {
 
 	public int getUsersTotal() {
 		return _usersTotal;
+	}
+
+	public String getTitle() {
+		return _title;
 	}
 
 }

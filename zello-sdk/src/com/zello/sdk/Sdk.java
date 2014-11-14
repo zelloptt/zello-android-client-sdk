@@ -261,6 +261,30 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	public void connectChannel(String channel) {
+		if (channel != null && channel.length() > 0) {
+			Activity activity = _activity;
+			if (activity != null) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_CONNECT);
+				intent.putExtra(Constants.EXTRA_CONTACT_NAME, channel);
+				activity.sendBroadcast(intent);
+			}
+		}
+	}
+
+	public void disconnectChannel(String channel) {
+		if (channel != null && channel.length() > 0) {
+			Activity activity = _activity;
+			if (activity != null) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_DISCONNECT);
+				intent.putExtra(Constants.EXTRA_CONTACT_NAME, channel);
+				activity.sendBroadcast(intent);
+			}
+		}
+	}
+
 	public void selectContact(int type, String name) {
 		Activity activity = _activity;
 		if (activity != null) {

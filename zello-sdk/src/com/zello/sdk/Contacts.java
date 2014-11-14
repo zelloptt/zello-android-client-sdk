@@ -19,6 +19,7 @@ public class Contacts {
 	private static final String _columnStatus = "status";
 	private static final String _columnUsersCount = "userscount";
 	private static final String _columnUsersTotal = "userstotal";
+	private static final String _columnTitle = "title";
 
 	private Events _events;
 	private ContactsObserver _observer;
@@ -33,6 +34,7 @@ public class Contacts {
 	private int _indexStatus;
 	private int _indexUsersCount;
 	private int _indexUsersTotal;
+	private int _indexTitle;
 
 	private static Uri _uri;
 
@@ -81,6 +83,7 @@ public class Contacts {
 				_indexStatus = cursor.getColumnIndex(_columnStatus);
 				_indexUsersCount = cursor.getColumnIndex(_columnUsersCount);
 				_indexUsersTotal = cursor.getColumnIndex(_columnUsersTotal);
+				_indexTitle = cursor.getColumnIndex(_columnTitle);
 				cursor.registerContentObserver(_observer);
 			} catch (Throwable t) {
 				if (cursor != null) {
@@ -146,6 +149,7 @@ public class Contacts {
 				contact._displayName = cursor.getString(_indexDisplayName);
 				contact._type = Sdk.intToContactType(cursor.getInt(_indexType));
 				contact._status = Sdk.intToContactStatus(cursor.getInt(_indexStatus));
+				contact._title = cursor.getString(_indexTitle);
 				switch (contact._type) {
 					case USER:
 					case GATEWAY: {
