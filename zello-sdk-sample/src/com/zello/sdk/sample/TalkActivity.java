@@ -77,6 +77,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			public boolean onTouch(View v, MotionEvent event) {
 				int action = event.getAction();
 				if (action == MotionEvent.ACTION_DOWN) {
+					//_sdk.setExternalId(java.util.UUID.randomUUID().toString());
 					_sdk.beginMessage();
 				} else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
 					_sdk.endMessage();

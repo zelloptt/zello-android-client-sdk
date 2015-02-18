@@ -51,6 +51,7 @@ class Constants {
 	static final String EXTRA_PASSWORD = "P";
 	static final String EXTRA_APPLICATION = "APP";
 	static final String EXTRA_PACKAGE = "PACKAGE";
+	static final String EXTRA_EID = "EID";
 
 	static final String VALUE_BEGIN_MESSAGE = "BEGIN_MESSAGE";
 	static final String VALUE_END_MESSAGE = "END_MESSAGE";
@@ -62,8 +63,8 @@ class Constants {
 	static final String VALUE_SIGN_IN = "SIGN_IN";
 	static final String VALUE_SIGN_OUT = "SIGN_OUT";
 	static final String VALUE_SET_AUTO_RUN = "SET_AUTO_RUN";
+	static final String VALUE_SET_EID = "SET_EID";
 	static final String VALUE_LOCK = "LOCK";
-	static final String VALUE_ZELLO = "ZELLO";
 	static final String VALUE_LIGHT = "LIGHT";
 	static final String VALUE_USERS = "USERS";
 	static final String VALUE_CHANNELS = "CHANNELS";

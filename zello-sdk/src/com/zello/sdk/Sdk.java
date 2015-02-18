@@ -82,7 +82,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_handler = new SafeHandler<Sdk>(this);
 		_appState._available = isAppAvailable();
 		if (activity != null) {
-			// Spin app the main app
+			// Spin up the main app
 //			Intent intent = new Intent(Intent.ACTION_VIEW, null);
 //			intent.setClassName(packageName, "com.loudtalks.client.ui.AutoStartActivity");
 //			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -390,6 +390,15 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	public void setExternalId(String id) {
+		Activity activity = _activity;
+		if (activity != null) {
+			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_EID);
+			intent.putExtra(Constants.EXTRA_EID, id == null ? "" : id);
+			activity.sendBroadcast(intent);
+		}
+	}
 
 	private void sendStayAwake() {
 		Activity activity = _activity;
@@ -735,4 +744,5 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 		return "";
 	}
+
 }
