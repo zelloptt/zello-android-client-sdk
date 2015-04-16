@@ -33,6 +33,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 
 	private boolean _active; // Activity is resumed and visible to the user
 	private boolean _dirtyContacts; // Contact list needs to be refreshed next time before it's presented to the user
+	private com.zello.sdk.Contact _contextContact; // Contact for which currently active context menu is being displayed
 
 	private com.zello.sdk.Sdk _sdk = new com.zello.sdk.Sdk();
 	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
@@ -95,6 +96,31 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 					com.zello.sdk.Contact contact = (com.zello.sdk.Contact) adapter.getItem(position);
 					if (contact != null) {
 						_sdk.setSelectedContact(contact);
+					}
+				}
+			}
+		});
+		_listContacts.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+			@Override
+			public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+				if (menuInfo != null && menuInfo instanceof AdapterView.AdapterContextMenuInfo) {
+					AdapterView.AdapterContextMenuInfo listInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
+					if (listInfo.targetView != null && listInfo.targetView.getParent() == _listContacts) {
+						int position = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
+						android.widget.ListAdapter adapter = _listContacts.getAdapter();
+						if (adapter != null && adapter instanceof ListAdapter) {
+							if (position >= 0 && adapter.getCount() > position) {
+								_contextContact = (com.zello.sdk.Contact) adapter.getItem(position);
+								if (_contextContact != null) {
+									menu.add(0, R.id.menu_talk, 0, getResources().getString(R.string.menu_talk));
+									if (!_contextContact.getMuted()) {
+										menu.add(0, R.id.menu_mute, 1, getResources().getString(R.string.menu_mute));
+									} else {
+										menu.add(0, R.id.menu_unmute, 1, getResources().getString(R.string.menu_unmute));
+									}
+								}
+							}
+						}
 					}
 				}
 			}
@@ -251,6 +277,34 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	}
 
 	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if (item != null) {
+			ContextMenu.ContextMenuInfo menuInfo = item.getMenuInfo();
+			if (menuInfo != null && menuInfo instanceof AdapterView.AdapterContextMenuInfo) {
+				AdapterView.AdapterContextMenuInfo listInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
+				if (listInfo.targetView != null && listInfo.targetView.getParent() == _listContacts && _contextContact != null) {
+					switch (item.getItemId()) {
+						case R.id.menu_talk: {
+							_sdk.setSelectedContact(_contextContact);
+							break;
+						}
+						case R.id.menu_mute: {
+							_sdk.muteContact(_contextContact, true);
+							break;
+						}
+						case R.id.menu_unmute: {
+							_sdk.muteContact(_contextContact, false);
+							break;
+						}
+					}
+					return true;
+				}
+			}
+		}
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
 	public void onSelectedContactChanged() {
 		updateSelectedContact();
 	}
@@ -351,6 +405,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		});
 		builder.setCancelable(true).setTitle(res.getString(R.string.menu_set_status));
 		final AlertDialog dialog = builder.create();
+		dialog.setCanceledOnTouchOutside(true);
 		dialog.show();
 	}
 

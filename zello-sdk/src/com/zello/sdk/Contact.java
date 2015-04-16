@@ -11,6 +11,7 @@ public class Contact {
 	int _usersCount;
 	int _usersTotal;
 	String _title;
+	boolean _muted;
 
 	public void reset() {
 		_name = null;
@@ -22,6 +23,7 @@ public class Contact {
 		_usersCount = 0;
 		_usersTotal = 0;
 		_title = null;
+		_muted = false;
 	}
 
 	@Override
@@ -42,6 +44,7 @@ public class Contact {
 			contact._usersCount = _usersCount;
 			contact._usersTotal = _usersTotal;
 			contact._title = _title;
+			contact._muted = _muted;
 		}
 	}
 
@@ -79,6 +82,10 @@ public class Contact {
 
 	public String getTitle() {
 		return _title;
+	}
+
+	public boolean getMuted() {
+		return _muted;
 	}
 
 }

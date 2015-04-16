@@ -285,7 +285,21 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	public void selectContact(int type, String name) {
+	public void muteContact(Contact contact, boolean mute) {
+		if (contact != null) {
+			Activity activity = _activity;
+			if (activity != null) {
+				ContactType type = contact.getType();
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, mute ? Constants.VALUE_MUTE : Constants.VALUE_UNMUTE);
+				intent.putExtra(Constants.EXTRA_CONTACT_NAME, contact.getName());
+				intent.putExtra(Constants.EXTRA_CONTACT_TYPE, type == ContactType.CHANNEL || type == ContactType.GROUP ? 1 : 0);
+				activity.sendBroadcast(intent);
+			}
+		}
+	}
+
+	private void selectContact(int type, String name) {
 		Activity activity = _activity;
 		if (activity != null) {
 			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);

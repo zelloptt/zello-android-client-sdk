@@ -66,7 +66,7 @@ public class ListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View view = null;
+		View view;
 		if (convertView != null) {
 			view = convertView;
 		} else {
@@ -81,12 +81,11 @@ public class ListAdapter extends BaseAdapter {
 	}
 
 	public static void configureView(View view, com.zello.sdk.Contact contact) {
-		boolean show = false;
 		ImageView imgContactStatus = (ImageView) view.findViewById(R.id.contact_image);
+		View viewContactMute = view.findViewById(R.id.contact_mute);
 		TextView txtContactName = (TextView) view.findViewById(R.id.contact_name);
 		TextView txtContactStatus = (TextView) view.findViewById(R.id.contact_status);
 		if (contact != null) {
-			show = true;
 			String displayName = contact.getDisplayName(); // Contact name or a full name if not empty
 			String title = contact.getTitle();
 			if (title != null && title.length() > 0) {
@@ -130,12 +129,15 @@ public class ListAdapter extends BaseAdapter {
 			}
 
 			imgContactStatus.setImageResource(statusToDrawableId(status, type));
+			viewContactMute.setVisibility(contact.getMuted() ? View.VISIBLE : View.GONE);
 			txtContactName.setText(displayName);
 			txtContactStatus.setText(statusText);
+		} else {
+			imgContactStatus.setVisibility(View.INVISIBLE);
+			viewContactMute.setVisibility(View.GONE);
+			txtContactName.setVisibility(View.INVISIBLE);
+			txtContactStatus.setVisibility(View.INVISIBLE);
 		}
-		imgContactStatus.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-		txtContactName.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-		txtContactStatus.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
 	}
 
 	@Override
@@ -180,9 +182,8 @@ public class ListAdapter extends BaseAdapter {
 					case BUSY:
 						return R.drawable.user_busy;
 					default:
-						;
+						return R.drawable.user_offline;
 				}
-				return R.drawable.user_offline;
 			}
 			case CHANNEL: {
 				// Channel
@@ -190,9 +191,8 @@ public class ListAdapter extends BaseAdapter {
 					case AVAILABLE:
 						return R.drawable.channel_online;
 					default:
-						;
+						return R.drawable.channel_offline;
 				}
-				return R.drawable.channel_offline;
 			}
 			case GATEWAY: {
 				// Radio gateway

@@ -57,6 +57,8 @@ class Constants {
 	static final String VALUE_END_MESSAGE = "END_MESSAGE";
 	static final String VALUE_CONNECT = "CONNECT";
 	static final String VALUE_DISCONNECT = "DISCONNECT";
+	static final String VALUE_MUTE = "MUTE";
+	static final String VALUE_UNMUTE = "UNMUTE";
 	static final String VALUE_SET_STATUS = "SET_STATUS";
 	static final String VALUE_STAY_AWAKE = "STAY_AWAKE";
 	static final String VALUE_SELECT_CONTACT = "SELECT_CONTACT";
