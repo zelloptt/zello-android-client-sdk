@@ -29,6 +29,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
 	private BroadcastReceiver _receiverMessageState; // Broadcast receiver for message state broadcasts
 	private BroadcastReceiver _receiverContactSelected; // Broadcast receiver for selected contact broadcasts
+//	private BroadcastReceiver _receiverContactChanged; // Broadcast receiver for changes in contacts' states
 	private BroadcastReceiver _receiverActiveTab; // Broadcast receiver for last selected contact list tab
 
 	private static final int AWAKE_TIMER = 1;
@@ -79,7 +80,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_package = Util.toLowerCaseLexicographically(Util.emptyIfNull(packageName));
 		_activity = activity;
 		_events = events;
-		_handler = new SafeHandler<Sdk>(this);
+		_handler = new SafeHandler<>(this);
 		_appState._available = isAppAvailable();
 		if (activity != null) {
 			// Spin up the main app
@@ -167,6 +168,14 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			};
 			Intent intentStickySelectedContact = activity.registerReceiver(_receiverContactSelected, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_SELECTED));
 			updateSelectedContact(intentStickySelectedContact);
+			// Register to receive changes in contacts' states
+//			_receiverContactChanged = new BroadcastReceiver() {
+//				@Override
+//				public void onReceive(Context context, Intent intent) {
+//					updateContact();
+//				}
+//			};
+//			activity.registerReceiver(_receiverContactChanged, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_CHANGED));
 			// Register to receive last selected contact list tab
 			_receiverActiveTab = new BroadcastReceiver() {
 				@Override
@@ -187,6 +196,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			activity.unregisterReceiver(_receiverAppState);
 			activity.unregisterReceiver(_receiverMessageState);
 			activity.unregisterReceiver(_receiverContactSelected);
+//			activity.unregisterReceiver(_receiverContactChanged);
 			activity.unregisterReceiver(_receiverActiveTab);
 		}
 		Contacts contacts = _contacts;
@@ -197,6 +207,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_receiverAppState = null;
 		_receiverMessageState = null;
 		_receiverContactSelected = null;
+//		_receiverContactChanged = null;
 		_receiverActiveTab = null;
 		stopAwakeTimer();
 		_handler = null;
@@ -540,10 +551,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_appState._networkUrl = intent.getStringExtra(Constants.EXTRA_STATE_NETWORK_URL);
 			_appState._username = intent.getStringExtra(Constants.EXTRA_STATE_USERNAME);
 		}
-		Contacts contacts = _contacts;
-		if (contacts != null) {
-			contacts.invalidate();
-		}
+//		Contacts contacts = _contacts;
+//		if (contacts != null) {
+//			contacts.invalidate();
+//		}
 		Events events = _events;
 		if (events != null) {
 			events.onAppStateChanged();
@@ -606,6 +617,13 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		Activity activity = _activity;
 		if (activity != null) {
 			_contacts = new Contacts(_package, activity, _handler, _events);
+		}
+	}
+
+	private void updateContact() {
+		Contacts contacts = _contacts;
+		if (contacts != null) {
+			contacts.update();
 		}
 	}
 

@@ -3,7 +3,6 @@ package com.zello.sdk;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Handler;
 import android.util.Log;
 
 public class Contacts {
@@ -26,7 +25,8 @@ public class Contacts {
 	private ContactsObserver _observer;
 	private Cursor _cursor;
 	private Context _context;
-	private boolean _invalid;
+	private SafeHandler<Sdk> _handler;
+	private boolean _valid;
 	private int _indexName;
 	private int _indexFullName;
 	private int _indexDisplayName;
@@ -40,95 +40,132 @@ public class Contacts {
 
 	private static Uri _uri;
 
-	/* package */ Contacts(String packageName, Context context, Handler handler, Events events) {
-		_events = events;
-		_context = context;
-		_observer = ContactsObserver.create(this, handler);
+	/* package */ Contacts(String packageName, Context context, SafeHandler<Sdk> handler, Events events) {
+		synchronized (this) {
+			_events = events;
+			_context = context;
+			_handler = handler;
+			_observer = ContactsObserver.create(this, handler);
+		}
 		Uri uri = _uri;
 		if (uri == null) {
 			uri = Uri.parse("content://" + packageName + _authoritySuffix + _contactsPath);
 			_uri = uri;
 		}
-		query();
 	}
 
 	/* package */ void close() {
-		_context = null;
-		clean();
-		ContactsObserver observer = _observer;
+		ContactsObserver observer;
+		Cursor cursor;
+		synchronized (this) {
+			cursor = _cursor;
+			observer = _observer;
+			_cursor = null;
+			_observer = null;
+			_context = null;
+			_handler = null;
+			_events = null;
+		}
+		closeCursor(cursor, observer);
 		if (observer != null) {
 			observer.close();
 		}
-		_observer = null;
-		_events = null;
 	}
 
+	// Have to requery
 	/* package */ void invalidate() {
-		_invalid = true;
-		Events events = _events;
+		Events events;
+		synchronized (this) {
+			events = _events;
+			if (events != null) {
+				_valid = false;
+			}
+		}
+		if (events != null) {
+			events.onContactsChanged();
+		}
+	}
+
+	// Don't need to requery
+	/* package */ void update() {
+		Events events;
+		synchronized (this) {
+			events = _events;
+		}
 		if (events != null) {
 			events.onContactsChanged();
 		}
 	}
 
 	private void query() {
-		Context context = _context;
-		if (context != null) {
-			Cursor cursor = null;
-			try {
-				cursor = context.getContentResolver().query(_uri, null, null, null, null);
-				_indexName = cursor.getColumnIndex(_columnName);
-				_indexFullName = cursor.getColumnIndex(_columnFullName);
-				_indexDisplayName = cursor.getColumnIndex(_columnDisplayName);
-				_indexStatusMessage = cursor.getColumnIndex(_columnStatusMessage);
-				_indexType = cursor.getColumnIndex(_columnType);
-				_indexStatus = cursor.getColumnIndex(_columnStatus);
-				_indexUsersCount = cursor.getColumnIndex(_columnUsersCount);
-				_indexUsersTotal = cursor.getColumnIndex(_columnUsersTotal);
-				_indexTitle = cursor.getColumnIndex(_columnTitle);
-				_indexMuted = cursor.getColumnIndex(_columnMuted);
-				cursor.registerContentObserver(_observer);
-			} catch (Throwable t) {
-				if (cursor != null) {
-					try {
-						cursor.close();
-					} catch (Throwable ignored) {
+		final Context context;
+		final ContactsObserver observer;
+		boolean valid;
+		synchronized (this) {
+			context = _context;
+			observer = _observer;
+			valid = _valid;
+			_valid = true;
+		}
+		if (context != null && !valid) {
+			new Thread() {
+				@Override
+				public void run() {
+					if (context == _context) {
+						Cursor cursor = null;
+						try {
+							cursor = context.getContentResolver().query(_uri, null, null, null, null);
+							_indexName = cursor.getColumnIndex(_columnName);
+							_indexFullName = cursor.getColumnIndex(_columnFullName);
+							_indexDisplayName = cursor.getColumnIndex(_columnDisplayName);
+							_indexStatusMessage = cursor.getColumnIndex(_columnStatusMessage);
+							_indexType = cursor.getColumnIndex(_columnType);
+							_indexStatus = cursor.getColumnIndex(_columnStatus);
+							_indexUsersCount = cursor.getColumnIndex(_columnUsersCount);
+							_indexUsersTotal = cursor.getColumnIndex(_columnUsersTotal);
+							_indexTitle = cursor.getColumnIndex(_columnTitle);
+							_indexMuted = cursor.getColumnIndex(_columnMuted);
+							cursor.registerContentObserver(observer);
+							final Cursor cursorNew = cursor;
+							synchronized (Contacts.this) {
+								if (_handler != null && _handler.post(new Runnable() {
+									@Override
+									public void run() {
+										Cursor cursorOld = null;
+										Events events = null;
+										synchronized (Contacts.this) {
+											if (_handler != null) {
+												cursorOld = _cursor;
+												events = _events;
+												if (events != null) {
+													_cursor = cursorNew;
+												} else {
+													_cursor = null;
+												}
+											}
+										}
+										if (events != null) {
+											events.onContactsChanged();
+										}
+										closeCursor(cursorOld, observer);
+									}
+								})) {
+									return;
+								}
+							}
+							closeCursor(cursor, observer);
+						} catch (Throwable t) {
+							closeCursor(cursor, null);
+							Log.i("zello sdk", "Error in Contacts.Contacts: " + t.toString());
+						}
 					}
-					cursor = null;
 				}
-				Log.i("zello sdk", "Error in Contacts.Contacts: " + t.toString());
-			}
-			_cursor = cursor;
-		}
-	}
-
-	private void clean() {
-		Cursor cursor = _cursor;
-		_cursor = null;
-		if (cursor != null) {
-			try {
-				cursor.unregisterContentObserver(_observer);
-			} catch (Throwable t) {
-				Log.i("zello sdk", "Error in Contacts.close: " + t.toString());
-			}
-			try {
-				cursor.close();
-			} catch (Throwable t) {
-				Log.i("zello sdk", "Error in Contacts.close: " + t.toString());
-			}
-		}
-	}
-
-	private void check() {
-		if (_invalid) {
-			_invalid = false;
-			clean();
-			query();
+			}.start();
 		}
 	}
 
 	public int getCount() {
-		check();
+		query();
 		Cursor cursor = _cursor;
 		if (cursor != null) {
 			try {
@@ -141,7 +178,7 @@ public class Contacts {
 	}
 
 	public Contact getItem(int index) {
-		check();
+		query();
 		Cursor cursor = _cursor;
 		if (cursor != null) {
 			cursor.moveToPosition(index);
@@ -176,6 +213,23 @@ public class Contacts {
 			}
 		}
 		return null;
+	}
+
+	private static void closeCursor(Cursor cursor, ContactsObserver unregisterObserver) {
+		if (cursor != null) {
+			if (unregisterObserver != null) {
+				try {
+					cursor.unregisterContentObserver(unregisterObserver);
+				} catch (Throwable t) {
+					Log.i("zello sdk", "Error in Contacts.close: " + t.toString());
+				}
+			}
+			try {
+				cursor.close();
+			} catch (Throwable t) {
+				Log.i("zello sdk", "Error in Contacts.close: " + t.toString());
+			}
+		}
 	}
 
 }

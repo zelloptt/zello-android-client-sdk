@@ -76,5 +76,6 @@ class Constants {
 	static final String ACTION_APP_STATE = "APP_STATE";
 	static final String ACTION_MESSAGE_STATE = "MESSAGE_STATE";
 	static final String ACTION_CONTACT_SELECTED = "CONTACT_SELECTED";
+//	static final String ACTION_CONTACT_CHANGED = "CONTACT_CHANGED";
 
 }
