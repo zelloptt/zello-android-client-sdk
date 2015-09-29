@@ -2,14 +2,14 @@ package com.zello.sdk;
 
 public interface Events {
 
-	public void onSelectedContactChanged();
+	void onSelectedContactChanged();
 
-	public void onMessageStateChanged();
+	void onMessageStateChanged();
 
-	public void onAppStateChanged();
+	void onAppStateChanged();
 
-	public void onLastContactsTabChanged(Tab tab);
+	void onLastContactsTabChanged(Tab tab);
 
-	public void onContactsChanged();
+	void onContactsChanged();
 
 }
