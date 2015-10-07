@@ -15,6 +15,7 @@ public class AppState {
 	boolean _busy;
 	boolean _solo;
 	boolean _autoRun;
+	boolean _autoChannels = true;
 	String _statusMessage;
 	String _network;
 	String _networkUrl;
@@ -34,6 +35,7 @@ public class AppState {
 		_busy = false;
 		_solo = false;
 		_autoRun = false;
+		_autoChannels = true;
 		_statusMessage = null;
 		_network = null;
 		_networkUrl = null;
@@ -62,6 +64,7 @@ public class AppState {
 			state._busy = _busy;
 			state._solo = _solo;
 			state._autoRun = _autoRun;
+			state._autoChannels = _autoChannels;
 			state._statusMessage = _statusMessage;
 			state._network = _network;
 			state._networkUrl = _networkUrl;
@@ -119,6 +122,10 @@ public class AppState {
 
 	public boolean isAutoRunEnabled() {
 		return _autoRun;
+	}
+
+	public boolean isChannelAutoConnectEnabled() {
+		return _autoChannels;
 	}
 
 	public String getStatusMessage() {

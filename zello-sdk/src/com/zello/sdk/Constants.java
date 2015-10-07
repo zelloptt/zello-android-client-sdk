@@ -21,6 +21,7 @@ class Constants {
 	static final String EXTRA_STATE_BUSY = "STATE_BUSY";
 	static final String EXTRA_STATE_SOLO = "STATE_SOLO";
 	static final String EXTRA_STATE_AUTO_RUN = "STATE_AUTO_RUN";
+	static final String EXTRA_STATE_AUTO_CHANNELS = "STATE_AUTO_CHANNELS";
 	static final String EXTRA_STATE_STATUS_MESSAGE = "STATE_STATUS_MESSAGE";
 	static final String EXTRA_STATE_NETWORK = "STATE_NETWORK";
 	static final String EXTRA_STATE_NETWORK_URL = "STATE_NETWORK_URL";
@@ -65,6 +66,7 @@ class Constants {
 	static final String VALUE_SIGN_IN = "SIGN_IN";
 	static final String VALUE_SIGN_OUT = "SIGN_OUT";
 	static final String VALUE_SET_AUTO_RUN = "SET_AUTO_RUN";
+	static final String VALUE_SET_AUTO_CHANNELS = "SET_AUTO_CHANNELS";
 	static final String VALUE_SET_EID = "SET_EID";
 	static final String VALUE_LOCK = "LOCK";
 	static final String VALUE_LIGHT = "LIGHT";

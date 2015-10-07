@@ -414,6 +414,16 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	public void setAutoConnectChannels(boolean connect) {
+		Context context = _context;
+		if (context != null) {
+			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUTO_CHANNELS);
+			intent.putExtra(Constants.EXTRA_STATE_AUTO_CHANNELS, connect);
+			context.sendBroadcast(intent);
+		}
+	}
+
 	public void setExternalId(String id) {
 		Context context = _context;
 		if (context != null) {
@@ -545,6 +555,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_appState._busy = intent.getBooleanExtra(Constants.EXTRA_STATE_BUSY, false);
 			_appState._solo = intent.getBooleanExtra(Constants.EXTRA_STATE_SOLO, false);
 			_appState._autoRun = intent.getBooleanExtra(Constants.EXTRA_STATE_AUTO_RUN, false);
+			_appState._autoChannels = intent.getBooleanExtra(Constants.EXTRA_STATE_AUTO_CHANNELS, true);
 			_appState._statusMessage = intent.getStringExtra(Constants.EXTRA_STATE_STATUS_MESSAGE);
 			_appState._network = intent.getStringExtra(Constants.EXTRA_STATE_NETWORK);
 			_appState._networkUrl = intent.getStringExtra(Constants.EXTRA_STATE_NETWORK_URL);
