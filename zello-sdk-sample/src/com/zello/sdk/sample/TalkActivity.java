@@ -213,6 +213,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			menu.findItem(R.id.menu_unlock_ptt_app).setVisible(_appState.isLocked());
 			menu.findItem(R.id.menu_enable_auto_run).setVisible(!_appState.isAutoRunEnabled());
 			menu.findItem(R.id.menu_disable_auto_run).setVisible(_appState.isAutoRunEnabled());
+			menu.findItem(R.id.menu_enable_auto_connect_channels).setVisible(!_appState.isChannelAutoConnectEnabled());
+			menu.findItem(R.id.menu_disable_auto_connect_channels).setVisible(_appState.isChannelAutoConnectEnabled());
 			menu.findItem(R.id.menu_about).setVisible(true);
 			MenuItem itemAvailable = menu.findItem(R.id.menu_available);
 			if (itemAvailable != null) {
@@ -258,6 +260,14 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			}
 			case R.id.menu_disable_auto_run: {
 				disableAutoRun();
+				return true;
+			}
+			case R.id.menu_enable_auto_connect_channels: {
+				enableAutoConnectChannels();
+				return true;
+			}
+			case R.id.menu_disable_auto_connect_channels: {
+				disableAutoConnectChannels();
 				return true;
 			}
 			case R.id.menu_start_message: {
@@ -371,6 +381,16 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private void disableAutoRun() {
 		// Disable client auto-run option
 		_sdk.setAutoRun(false);
+	}
+
+	private void enableAutoConnectChannels() {
+		// Enable auto-connecting to new channels
+		_sdk.setAutoConnectChannels(true);
+	}
+
+	private void disableAutoConnectChannels() {
+		// Disable auto-connecting to new channels
+		_sdk.setAutoConnectChannels(false);
 	}
 
 	private void chooseStatus() {
