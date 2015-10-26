@@ -23,7 +23,8 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private MessageOut _messageOut = new MessageOut();
 	private Contacts _contacts;
 	private AppState _appState = new AppState();
-	private boolean _connected;
+	private boolean _connected, _connecting;
+	private String _delayedNetwork, _delayedUsername, _delayedPassword;
 	private BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
 	private BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
 	private BroadcastReceiver _receiverMessageState; // Broadcast receiver for message state broadcasts
@@ -323,68 +324,85 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	public boolean signIn(String network, String username, String password) {
-		Context context = _context;
-		if (context != null) {
-			if (network != null && network.length() > 0 && username != null && username.length() > 0 && password != null && password.length() > 0) {
-				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SIGN_IN);
-				intent.putExtra(Constants.EXTRA_NETWORK_URL, network);
-				intent.putExtra(Constants.EXTRA_USERNAME, username);
-				intent.putExtra(Constants.EXTRA_PASSWORD, md5(password));
-				context.sendBroadcast(intent);
-				return true;
+		if (network != null && network.length() > 0 && username != null && username.length() > 0 && password != null && password.length() > 0) {
+			if (isConnected()) {
+				Context context = _context;
+				if (context != null) {
+					Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+					intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SIGN_IN);
+					intent.putExtra(Constants.EXTRA_NETWORK_URL, network);
+					intent.putExtra(Constants.EXTRA_USERNAME, username);
+					intent.putExtra(Constants.EXTRA_PASSWORD, md5(password));
+					context.sendBroadcast(intent);
+				}
+			} else if (_connecting) {
+				_delayedNetwork = network;
+				_delayedUsername = username;
+				_delayedPassword = password;
 			}
+			return true;
+		} else {
+			return false;
 		}
-		return true;
 	}
 
 	public void signOut() {
-		Context context = _context;
-		if (context != null) {
-			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SIGN_OUT);
-			context.sendBroadcast(intent);
+		if (isConnected()) {
+			Context context = _context;
+			if (context != null) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SIGN_OUT);
+				context.sendBroadcast(intent);
+			}
 		}
 	}
 
 	public void lock(String applicationName, String packageName) {
-		Context context = _context;
-		if (context != null && applicationName != null && applicationName.length() > 0) {
-			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_LOCK);
-			intent.putExtra(Constants.EXTRA_APPLICATION, applicationName);
-			intent.putExtra(Constants.EXTRA_PACKAGE, packageName);
-			context.sendBroadcast(intent);
+		if (isConnected()) {
+			Context context = _context;
+			if (context != null && applicationName != null && applicationName.length() > 0) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_LOCK);
+				intent.putExtra(Constants.EXTRA_APPLICATION, applicationName);
+				intent.putExtra(Constants.EXTRA_PACKAGE, packageName);
+				context.sendBroadcast(intent);
+			}
 		}
 	}
 
 	public void unlock() {
-		Context context = _context;
-		if (context != null) {
-			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_LOCK);
-			context.sendBroadcast(intent);
+		if (isConnected()) {
+			Context context = _context;
+			if (context != null) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_LOCK);
+				context.sendBroadcast(intent);
+			}
 		}
 	}
 
 	public void setStatus(Status status) {
-		Context context = _context;
-		if (context != null) {
-			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_STATUS);
-			intent.putExtra(Constants.EXTRA_STATE_BUSY, status == Status.BUSY);
-			intent.putExtra(Constants.EXTRA_STATE_SOLO, status == Status.SOLO);
-			context.sendBroadcast(intent);
+		if (isConnected()) {
+			Context context = _context;
+			if (context != null) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_STATUS);
+				intent.putExtra(Constants.EXTRA_STATE_BUSY, status == Status.BUSY);
+				intent.putExtra(Constants.EXTRA_STATE_SOLO, status == Status.SOLO);
+				context.sendBroadcast(intent);
+			}
 		}
 	}
 
 	public void setStatusMessage(String message) {
-		Context context = _context;
-		if (context != null) {
-			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_STATUS);
-			intent.putExtra(Constants.EXTRA_STATE_STATUS_MESSAGE, Util.emptyIfNull(message));
-			context.sendBroadcast(intent);
+		if (isConnected()) {
+			Context context = _context;
+			if (context != null) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_STATUS);
+				intent.putExtra(Constants.EXTRA_STATE_STATUS_MESSAGE, Util.emptyIfNull(message));
+				context.sendBroadcast(intent);
+			}
 		}
 	}
 
@@ -405,41 +423,49 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	public void setAutoRun(boolean enable) {
-		Context context = _context;
-		if (context != null) {
-			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUTO_RUN);
-			intent.putExtra(Constants.EXTRA_STATE_AUTO_RUN, enable);
-			context.sendBroadcast(intent);
+		if (isConnected()) {
+			Context context = _context;
+			if (context != null) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUTO_RUN);
+				intent.putExtra(Constants.EXTRA_STATE_AUTO_RUN, enable);
+				context.sendBroadcast(intent);
+			}
 		}
 	}
 
 	public void setAutoConnectChannels(boolean connect) {
-		Context context = _context;
-		if (context != null) {
-			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUTO_CHANNELS);
-			intent.putExtra(Constants.EXTRA_STATE_AUTO_CHANNELS, connect);
-			context.sendBroadcast(intent);
+		if (isConnected()) {
+			Context context = _context;
+			if (context != null) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUTO_CHANNELS);
+				intent.putExtra(Constants.EXTRA_STATE_AUTO_CHANNELS, connect);
+				context.sendBroadcast(intent);
+			}
 		}
 	}
 
 	public void setExternalId(String id) {
-		Context context = _context;
-		if (context != null) {
-			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_EID);
-			intent.putExtra(Constants.EXTRA_EID, id == null ? "" : id);
-			context.sendBroadcast(intent);
+		if (isConnected()) {
+			Context context = _context;
+			if (context != null) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_EID);
+				intent.putExtra(Constants.EXTRA_EID, id == null ? "" : id);
+				context.sendBroadcast(intent);
+			}
 		}
 	}
 
 	private void sendStayAwake() {
-		Context context = _context;
-		if (context != null) {
-			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_STAY_AWAKE);
-			context.sendBroadcast(intent);
+		if (isConnected()) {
+			Context context = _context;
+			if (context != null) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_STAY_AWAKE);
+				context.sendBroadcast(intent);
+			}
 		}
 	}
 
@@ -462,9 +488,11 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (!_connected) {
 			Context context = _context;
 			if (context != null) {
+				_connecting = true;
 				try {
 					_connected = context.bindService(getServiceIntent(), this, Context.BIND_AUTO_CREATE);
 				} catch (Throwable t) {
+					_connecting = false;
 					Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
 				}
 			}
@@ -474,6 +502,8 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private void disconnect() {
 		if (_connected) {
 			_connected = false;
+			_connecting = false;
+			_delayedNetwork = _delayedUsername = _delayedPassword = null;
 			Context context = _context;
 			if (context != null) {
 				context.unbindService(this);
@@ -505,12 +535,18 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		Context context = _context;
 		if (context != null) {
 			context.startService(getServiceIntent());
+			_connecting = false;
+			if (_delayedNetwork != null) {
+				signIn(_delayedNetwork, _delayedUsername, _delayedPassword);
+			}
+			_delayedNetwork = _delayedUsername = _delayedPassword = null;
 		}
 	}
 
 	@Override
 	public void onServiceDisconnected(ComponentName name) {
 		_connected = false;
+		_connecting = false;
 	}
 
 	private void startAwakeTimer() {
@@ -667,6 +703,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 				events.onLastContactsTabChanged(tab);
 			}
 		}
+	}
+
+	private boolean isConnected() {
+		return _connected && !_connecting;
 	}
 
 	private boolean isAppAvailable() {
