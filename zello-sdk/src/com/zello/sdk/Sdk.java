@@ -495,18 +495,30 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 					_connecting = false;
 					Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
 				}
+				if (!_connected) {
+					if (context != null) {
+						try {
+							context.unbindService(this);
+						} catch (Throwable t) {
+						}
+					}
+				}
 			}
 		}
 	}
 
 	private void disconnect() {
+		_connected = false;
+		_connecting = false;
+		_delayedNetwork = _delayedUsername = _delayedPassword = null;
 		if (_connected) {
 			_connected = false;
-			_connecting = false;
-			_delayedNetwork = _delayedUsername = _delayedPassword = null;
 			Context context = _context;
 			if (context != null) {
-				context.unbindService(this);
+				try {
+					context.unbindService(this);
+				} catch (Throwable t) {
+				}
 			}
 		}
 	}
