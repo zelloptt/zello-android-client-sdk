@@ -1,30 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/another_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/title"
-        android:text="@string/about_description"
-        android:gravity="center"
-        android:padding="10dip"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="10dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:paddingTop="20dip"
+        android:text="@string/about_description"/>
+
+    <TextView
+        android:id="@+id/network"
+        style="?attr/textStyle"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:padding="10dip"
+        android:textStyle="bold"/>
 
     <LinearLayout
         android:id="@+id/message_info"
-        android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dip"
-        android:orientation="horizontal"
         android:background="#dddddd"
-        android:visibility="invisible"
         android:clipChildren="false"
-        android:clipToPadding="false">
+        android:clipToPadding="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dip"
+        android:visibility="invisible">
 
         <ImageView
             android:id="@+id/message_image"
@@ -34,26 +47,23 @@
             android:src="@drawable/message_in"/>
 
         <LinearLayout
-            android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipChildren="false"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <TextView
-                style="?attr/textStyle"
                 android:id="@+id/message_name"
+                style="?attr/textStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/contact_image"/>
+                android:layout_height="wrap_content"/>
 
             <TextView
-                style="?attr/textStyle"
                 android:id="@+id/message_status"
+                style="?attr/textStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/contact_image"
-                android:layout_below="@+id/contact_name"/>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
 

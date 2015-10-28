@@ -16,6 +16,7 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 	private com.zello.sdk.MessageOut _messageOut = new com.zello.sdk.MessageOut();
 	private com.zello.sdk.Tab _activeTab = com.zello.sdk.Tab.RECENTS;
 
+	private TextView _textMessageInfo;
 	private ImageView _imgMessageStatus;
 	private TextView _txtMessageName;
 	private TextView _txtMessageStatus;
@@ -27,6 +28,7 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 		System.out.println("AnotherActivity.onCreate");
 
 		setContentView(R.layout.activity_another);
+		_textMessageInfo = (TextView) findViewById(R.id.network);
 		_viewMessageInfo = findViewById(R.id.message_info);
 		_imgMessageStatus = (ImageView) _viewMessageInfo.findViewById(R.id.message_image);
 		_txtMessageName = (TextView) _viewMessageInfo.findViewById(R.id.message_name);
@@ -131,7 +133,7 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 			case R.id.menu_stop_message: {
 				_sdk.endMessage();
 				return true;
-			}	
+			}
 		}
 		return false;
 	}
@@ -271,6 +273,7 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 				state = getString(R.string.ptt_app_is_signed_out);
 			}
 		}
+		_textMessageInfo.setText(_appState.getNetwork());
 		System.out.println(state);
 		Helper.invalidateOptionsMenu(this);
 	}
