@@ -29,6 +29,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private ImageView _imgMessageStatus;
 	private TextView _txtMessageName;
 	private TextView _txtMessageStatus;
+	private View _viewAudioMode;
+	private ToggleButton _btnSpeaker, _btnEarpiece, _btnBluetooth;
 	private View _viewMessageInfo;
 
 	private boolean _active; // Activity is resumed and visible to the user
@@ -36,6 +38,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private com.zello.sdk.Contact _contextContact; // Contact for which currently active context menu is being displayed
 
 	private com.zello.sdk.Sdk _sdk = new com.zello.sdk.Sdk();
+	private com.zello.sdk.Audio _audio;
 	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
 	private com.zello.sdk.MessageIn _messageIn = new com.zello.sdk.MessageIn();
 	private com.zello.sdk.MessageOut _messageOut = new com.zello.sdk.MessageOut();
@@ -64,6 +67,10 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_btnTalk = (SquareButton) _viewTalkScreen.findViewById(R.id.talk);
 		_btnConnect = (ToggleButton) findViewById(R.id.button_connect);
 		_viewContactNotSelected = _viewTalkScreen.findViewById(R.id.contact_not_selected);
+		_viewAudioMode = findViewById(R.id.audio_mode);
+		_btnSpeaker = (ToggleButton) _viewAudioMode.findViewById(R.id.audio_speaker);
+		_btnEarpiece = (ToggleButton) _viewAudioMode.findViewById(R.id.audio_earpiece);
+		_btnBluetooth = (ToggleButton) _viewAudioMode.findViewById(R.id.audio_bluetooth);
 		_viewMessageInfo = findViewById(R.id.message_info);
 		_imgMessageStatus = (ImageView) _viewMessageInfo.findViewById(R.id.message_image);
 		_txtMessageName = (TextView) _viewMessageInfo.findViewById(R.id.message_name);
@@ -161,10 +168,38 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			}
 		});
 
+		// Audio modes
+		_btnSpeaker.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (_audio != null) {
+					_audio.setMode(com.zello.sdk.AudioMode.SPEAKER);
+				}
+			}
+		});
+		_btnEarpiece.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (_audio != null) {
+					_audio.setMode(com.zello.sdk.AudioMode.EARPIECE);
+				}
+			}
+		});
+		_btnBluetooth.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (_audio != null) {
+					_audio.setMode(com.zello.sdk.AudioMode.BLUETOOTH);
+				}
+			}
+		});
+
 		_dirtyContacts = true;
 		_sdk.onCreate("com.pttsdk", this, this); // Use with generic apk
+		_audio = _sdk.getAudio();
 		//_sdk.onCreate("net.loudtalks", this, this); // Use to connect to apk from zellowork.com
 		updateAppState();
+		updateAudioMode();
 		updateMessageState();
 		updateSelectedContact();
 	}
@@ -173,6 +208,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	protected void onDestroy() {
 		super.onDestroy();
 		_sdk.onDestroy();
+		_audio = null;
 	}
 
 	@Override
@@ -338,6 +374,11 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	public void onContactsChanged() {
 		_dirtyContacts = true;
 		updateContactList();
+	}
+
+	@Override
+	public void onAudioStateChanged() {
+		updateAudioMode();
 	}
 
 	private void showAbout() {
@@ -532,6 +573,39 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_txtState.setText(state);
 		updateActiveScreen();
 		Helper.invalidateOptionsMenu(this);
+	}
+
+	private void updateAudioMode() {
+		boolean speaker = false, earpiece = false, bluetooth = false;
+		com.zello.sdk.AudioMode mode = com.zello.sdk.AudioMode.SPEAKER;
+		// Can't set new mode while the mode is being changed
+		boolean changindMode = false;
+		if (_audio != null) {
+			speaker = _audio.isModeAvailable(com.zello.sdk.AudioMode.SPEAKER);
+			earpiece = _audio.isModeAvailable(com.zello.sdk.AudioMode.EARPIECE);
+			bluetooth = _audio.isModeAvailable(com.zello.sdk.AudioMode.BLUETOOTH);
+			mode = _audio.getMode();
+			changindMode = _audio.isModeChanging();
+		}
+		// If none of the modes is available, the client app is old and needs to be updated
+		if (bluetooth || earpiece || speaker) {
+			_btnSpeaker.setVisibility(speaker ? View.VISIBLE : View.GONE);
+			if (speaker) {
+				_btnSpeaker.setChecked(mode == com.zello.sdk.AudioMode.SPEAKER);
+				_btnSpeaker.setEnabled(!changindMode && (earpiece || bluetooth));
+			}
+			_btnEarpiece.setVisibility(earpiece ? View.VISIBLE : View.GONE);
+			if (earpiece) {
+				_btnEarpiece.setChecked(mode == com.zello.sdk.AudioMode.EARPIECE);
+				_btnEarpiece.setEnabled(!changindMode && (speaker || bluetooth));
+			}
+			_btnBluetooth.setVisibility(bluetooth ? View.VISIBLE : View.GONE);
+			if (bluetooth) {
+				_btnBluetooth.setChecked(mode == com.zello.sdk.AudioMode.BLUETOOTH);
+				_btnBluetooth.setEnabled(!changindMode && (speaker || earpiece));
+			}
+		}
+		_viewAudioMode.setVisibility(speaker || earpiece || bluetooth ? View.VISIBLE : View.GONE);
 	}
 
 	private void updateActiveScreen() {

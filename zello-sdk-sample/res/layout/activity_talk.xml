@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
+    android:id="@+id/talk_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/talk_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TalkActivity">
+
+    <!-- Status screen -->
 
     <TextView
         android:id="@+id/state"
@@ -15,13 +17,15 @@
         android:padding="10dip"
         android:text="@string/ptt_app_not_installed"/>
 
+    <!-- Login screen -->
+
     <LinearLayout
         android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dip"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dip">
 
         <TextView
             android:layout_width="fill_parent"
@@ -32,9 +36,9 @@
             android:id="@+id/username"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:maxLength="40"
+            android:inputType="text|textNoSuggestions"
             android:lines="1"
-            android:inputType="text|textNoSuggestions"/>
+            android:maxLength="40"/>
 
         <TextView
             android:layout_width="fill_parent"
@@ -46,9 +50,9 @@
             android:id="@+id/password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:maxLength="40"
+            android:inputType="textPassword"
             android:lines="1"
-            android:inputType="textPassword"/>
+            android:maxLength="40"/>
 
         <TextView
             android:id="@+id/network_label"
@@ -61,9 +65,9 @@
             android:id="@+id/network"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:maxLength="128"
+            android:inputType="text|textNoSuggestions"
             android:lines="1"
-            android:inputType="text|textNoSuggestions"/>
+            android:maxLength="128"/>
 
         <Button
             android:id="@+id/button_login"
@@ -85,10 +89,14 @@
             android:layout_weight="1"
             android:background="#ffffff">
 
+            <!-- Contact list -->
+
             <ListView
                 android:id="@+id/contact_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
+
+            <!-- Talk screen -->
 
             <LinearLayout
                 android:id="@+id/talk_screen"
@@ -96,23 +104,25 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <!-- Selected contact -->
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:background="#dddddd">
+                    android:background="#dddddd"
+                    android:orientation="horizontal">
 
                     <FrameLayout
                         android:layout_width="0dip"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
+                        android:layout_weight="1"
                         android:clipChildren="false"
-                        android:clipToPadding="false">
+                        android:clipToPadding="false"
+                        android:gravity="center_vertical">
 
                         <include
-                            layout="@layout/contact"
                             android:id="@+id/contact_info"
+                            layout="@layout/contact"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
 
@@ -128,50 +138,86 @@
                         android:id="@+id/button_connect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dip"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dip"
                         android:contentDescription="@string/channel_connect"/>
 
                     <ImageButton
                         android:id="@+id/button_close"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dip"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dip"
                         android:contentDescription="@string/button_close"
                         android:src="@android:drawable/ic_delete"/>
                 </LinearLayout>
+
+                <!-- The talk button -->
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dip"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:padding="10dip"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="10dip">
 
                     <com.zello.sdk.sample.SquareButton
                         android:id="@+id/talk"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/button_talk"
+                        android:longClickable="false"
                         android:maxHeight="100dip"
                         android:maxWidth="100dip"
-                        android:text="@string/talk_button"
-                        android:background="@drawable/button_talk"
-                        android:longClickable="false"/>
+                        android:text="@string/talk_button"/>
                 </LinearLayout>
+
+                <!-- Audio modes -->
+
+                <LinearLayout
+                    android:id="@+id/audio_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="10dip">
+
+                    <com.zello.sdk.sample.NoToggleButton
+                        android:id="@+id/audio_speaker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="@string/audio_speaker"
+                        android:textOn="@string/audio_speaker"/>
+
+                    <com.zello.sdk.sample.NoToggleButton
+                        android:id="@+id/audio_earpiece"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="@string/audio_earpiece"
+                        android:textOn="@string/audio_earpiece"/>
+
+                    <com.zello.sdk.sample.NoToggleButton
+                        android:id="@+id/audio_bluetooth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textOff="@string/audio_bluetooth"
+                        android:textOn="@string/audio_bluetooth"/>
+                </LinearLayout>
+
+                <!-- Incoming message indication -->
 
                 <LinearLayout
                     android:id="@+id/message_info"
-                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dip"
-                    android:orientation="horizontal"
                     android:background="#dddddd"
-                    android:visibility="invisible"
                     android:clipChildren="false"
-                    android:clipToPadding="false">
+                    android:clipToPadding="false"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="10dip"
+                    android:visibility="invisible">
 
                     <ImageView
                         android:id="@+id/message_image"
@@ -181,26 +227,26 @@
                         android:src="@drawable/message_in"/>
 
                     <LinearLayout
-                        android:gravity="center_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clipChildren="false"
+                        android:gravity="center_vertical"
                         android:orientation="vertical">
 
                         <TextView
-                            style="?attr/textStyle"
                             android:id="@+id/message_name"
+                            style="?attr/textStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@+id/contact_image"/>
 
                         <TextView
-                            style="?attr/textStyle"
                             android:id="@+id/message_status"
+                            style="?attr/textStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@+id/contact_image"
-                            android:layout_below="@+id/contact_name"/>
+                            android:layout_below="@+id/contact_name"
+                            android:layout_toRightOf="@+id/contact_image"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

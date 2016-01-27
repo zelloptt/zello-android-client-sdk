@@ -53,6 +53,11 @@ class Constants {
 	static final String EXTRA_APPLICATION = "APP";
 	static final String EXTRA_PACKAGE = "PACKAGE";
 	static final String EXTRA_EID = "EID";
+	static final String EXTRA_MODE = "MODE";
+	static final String EXTRA_CHANGING = "CHANGING";
+	static final String EXTRA_BT = "BT";
+	static final String EXTRA_EP = "EP";
+	static final String EXTRA_SP = "SP";
 
 	static final String VALUE_BEGIN_MESSAGE = "BEGIN_MESSAGE";
 	static final String VALUE_END_MESSAGE = "END_MESSAGE";
@@ -73,11 +78,13 @@ class Constants {
 	static final String VALUE_USERS = "USERS";
 	static final String VALUE_CHANNELS = "CHANNELS";
 	static final String VALUE_RECENTS = "RECENTS";
+	static final String VALUE_SET_AUDIO = "SET_AUDIO";
 
 	static final String ACTION_COMMAND = "COMMAND";
 	static final String ACTION_APP_STATE = "APP_STATE";
 	static final String ACTION_MESSAGE_STATE = "MESSAGE_STATE";
 	static final String ACTION_CONTACT_SELECTED = "CONTACT_SELECTED";
-//	static final String ACTION_CONTACT_CHANGED = "CONTACT_CHANGED";
+	//	static final String ACTION_CONTACT_CHANGED = "CONTACT_CHANGED";
+	static final String ACTION_AUDIO_STATE = "AUDIO_STATE";
 
 }

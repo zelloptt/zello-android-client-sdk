@@ -22,6 +22,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private MessageIn _messageIn = new MessageIn();
 	private MessageOut _messageOut = new MessageOut();
 	private Contacts _contacts;
+	private Audio _audio;
 	private AppState _appState = new AppState();
 	private boolean _connected, _connecting;
 	private String _delayedNetwork, _delayedUsername, _delayedPassword;
@@ -203,6 +204,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (contacts != null) {
 			contacts.close();
 		}
+		Audio audio = _audio;
+		if (audio != null) {
+			audio.close();
+		}
 		_receiverPackage = null;
 		_receiverAppState = null;
 		_receiverMessageState = null;
@@ -215,6 +220,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_events = null;
 		_package = "";
 		_contacts = null;
+		_audio = null;
 	}
 
 	public void onResume() {
@@ -420,6 +426,15 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	public Contacts getContacts() {
 		return _contacts;
+	}
+
+	public Audio getAudio() {
+		if (_context != null) {
+			if (_audio == null) {
+				_audio = new Audio(_events, _package, _context);
+			}
+		}
+		return _audio;
 	}
 
 	public void setAutoRun(boolean enable) {
