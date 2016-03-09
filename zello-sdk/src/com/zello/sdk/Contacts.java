@@ -21,6 +21,7 @@ public class Contacts {
 	private static final String _columnUsersTotal = "userstotal";
 	private static final String _columnTitle = "title";
 	private static final String _columnMuted = "muted";
+	private static final String _columnNoDisconnect = "nodisconnect";
 
 	private Events _events;
 	private ContactsObserver _observer;
@@ -37,6 +38,7 @@ public class Contacts {
 	private int _indexUsersTotal;
 	private int _indexTitle;
 	private int _indexMuted;
+	private int _indexNoDisconnect; // Not available if the client app is old - has to be at least 3.20
 
 	private static Uri _uri;
 
@@ -75,6 +77,7 @@ public class Contacts {
 		Context context = _context;
 		if (context != null) {
 			Cursor cursor = null;
+			_indexNoDisconnect = -1;
 			try {
 				cursor = context.getContentResolver().query(_uri, null, null, null, null);
 				_indexName = cursor.getColumnIndex(_columnName);
@@ -97,6 +100,12 @@ public class Contacts {
 					cursor = null;
 				}
 				Log.i("zello sdk", "Error in Contacts.Contacts: " + t.toString());
+			}
+			if (cursor != null) {
+				try {
+					_indexNoDisconnect = cursor.getColumnIndex(_columnNoDisconnect);
+				} catch (Throwable ignore) {
+				}
 			}
 			_cursor = cursor;
 		}
@@ -169,6 +178,11 @@ public class Contacts {
 						contact._usersTotal = cursor.getInt(_indexUsersTotal);
 						break;
 					}
+				}
+				if (_indexNoDisconnect >= 0) {
+					contact._noDisconnect = (contact._type != ContactType.CHANNEL && contact._type != ContactType.GROUP) || cursor.getInt(_indexNoDisconnect) != 0;
+				} else {
+					contact._noDisconnect = contact._type != ContactType.CHANNEL;
 				}
 				return contact;
 			} catch (Throwable t) {

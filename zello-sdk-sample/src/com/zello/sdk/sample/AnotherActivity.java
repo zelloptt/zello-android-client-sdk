@@ -65,7 +65,7 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
-		if (_appState.isAvailable()) {
+		if (_appState.isAvailable() && !_appState.isInitializing()) {
 			getMenuInflater().inflate(R.menu.menu, menu);
 			boolean select = false, available = false, solo = false, busy = false;
 			if (!_appState.isConfiguring() && _appState.isSignedIn() && !_appState.isSigningIn() && !_appState.isSigningOut()) {
@@ -260,8 +260,11 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 	private void updateAppState() {
 		_sdk.getAppState(_appState);
 		String state = "";
+
 		if (!_appState.isAvailable()) {
 			state = getString(R.string.ptt_app_not_installed);
+		} else if (_appState.isInitializing()) {
+			state = getString(R.string.ptt_app_initializing);
 		} else if (_appState.isConfiguring()) {
 			state = getString(R.string.ptt_app_configuring);
 		} else if (!_appState.isSignedIn()) {

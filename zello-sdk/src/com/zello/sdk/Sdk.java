@@ -24,7 +24,8 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private Contacts _contacts;
 	private Audio _audio;
 	private AppState _appState = new AppState();
-	private boolean _connected, _connecting;
+	private boolean _serviceBound; // Service is bound
+	private boolean _serviceConnecting; // Service is bound but is still connecting
 	private String _delayedNetwork, _delayedUsername, _delayedPassword;
 	private BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
 	private BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
@@ -193,12 +194,24 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_resumed = false;
 		Context context = _context;
 		if (context != null) {
-			context.unregisterReceiver(_receiverPackage);
-			context.unregisterReceiver(_receiverAppState);
-			context.unregisterReceiver(_receiverMessageState);
-			context.unregisterReceiver(_receiverContactSelected);
-//			context.unregisterReceiver(_receiverContactChanged);
-			context.unregisterReceiver(_receiverActiveTab);
+			if (_receiverPackage != null) {
+				context.unregisterReceiver(_receiverPackage);
+			}
+			if (_receiverAppState != null) {
+				context.unregisterReceiver(_receiverAppState);
+			}
+			if (_receiverMessageState != null) {
+				context.unregisterReceiver(_receiverMessageState);
+			}
+			if (_receiverContactSelected != null) {
+				context.unregisterReceiver(_receiverContactSelected);
+			}
+//			if (_receiverContactChanged != null) {
+//				context.unregisterReceiver(_receiverContactChanged);
+//			}
+			if (_receiverActiveTab != null) {
+				context.unregisterReceiver(_receiverActiveTab);
+			}
 		}
 		Contacts contacts = _contacts;
 		if (contacts != null) {
@@ -216,7 +229,9 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_receiverActiveTab = null;
 		stopAwakeTimer();
 		_handler = null;
-		_context = null;
+		if (!_serviceConnecting) {
+			_context = null;
+		}
 		_events = null;
 		_package = "";
 		_contacts = null;
@@ -341,7 +356,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 					intent.putExtra(Constants.EXTRA_PASSWORD, md5(password));
 					context.sendBroadcast(intent);
 				}
-			} else if (_connecting) {
+			} else if (_serviceBound && _serviceConnecting) {
 				_delayedNetwork = network;
 				_delayedUsername = username;
 				_delayedPassword = password;
@@ -353,7 +368,8 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	public void signOut() {
-		if (isConnected()) {
+		_delayedNetwork = _delayedUsername = _delayedPassword = null;
+		if (_serviceBound) {
 			Context context = _context;
 			if (context != null) {
 				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
@@ -388,7 +404,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	public void setStatus(Status status) {
-		if (isConnected()) {
+		if (_serviceBound) {
 			Context context = _context;
 			if (context != null) {
 				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
@@ -401,7 +417,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	public void setStatusMessage(String message) {
-		if (isConnected()) {
+		if (_serviceBound) {
 			Context context = _context;
 			if (context != null) {
 				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
@@ -500,40 +516,48 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	private void connect() {
-		if (!_connected) {
+		if (!_serviceBound && !_serviceConnecting) {
 			Context context = _context;
 			if (context != null) {
-				_connecting = true;
+				_serviceConnecting = true;
+				_appState._initializing = true;
+				_appState._error = false;
+				fireAppStateChanged();
 				try {
-					_connected = context.bindService(getServiceIntent(), this, Context.BIND_AUTO_CREATE);
+					_serviceBound = context.bindService(getServiceIntent(), this, Context.BIND_AUTO_CREATE);
 				} catch (Throwable t) {
-					_connecting = false;
+					_serviceConnecting = false;
 					Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
 				}
-				if (!_connected) {
-					if (context != null) {
-						try {
-							context.unbindService(this);
-						} catch (Throwable t) {
-						}
+				if (!_serviceBound) {
+					_appState._error = true;
+					try {
+						context.unbindService(this);
+					} catch (Throwable t) {
 					}
+				}
+				if (_serviceConnecting) {
+					_appState._initializing = false;
+					fireAppStateChanged();
 				}
 			}
 		}
 	}
 
 	private void disconnect() {
-		_connected = false;
-		_connecting = false;
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
-		if (_connected) {
-			_connected = false;
-			Context context = _context;
-			if (context != null) {
-				try {
-					context.unbindService(this);
-				} catch (Throwable t) {
+		if (_serviceBound) {
+			_serviceBound = false;
+			if (!_serviceConnecting) {
+				Context context = _context;
+				if (context != null) {
+					try {
+						context.unbindService(this);
+					} catch (Throwable t) {
+					}
 				}
+			} else {
+				Log.i("zello sdk", "Early Sdk.disconnect");
 			}
 		}
 	}
@@ -561,19 +585,38 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	public void onServiceConnected(ComponentName name, IBinder service) {
 		Context context = _context;
 		if (context != null) {
-			context.startService(getServiceIntent());
-			_connecting = false;
-			if (_delayedNetwork != null) {
-				signIn(_delayedNetwork, _delayedUsername, _delayedPassword);
+			if (_serviceConnecting) {
+				_serviceConnecting = false;
+				context.startService(getServiceIntent());
+				if (_delayedNetwork != null) {
+					signIn(_delayedNetwork, _delayedUsername, _delayedPassword);
+				}
+				_delayedNetwork = _delayedUsername = _delayedPassword = null;
+				// If service is not bound, the component was destroyed and the service needs to be disconnected
+				if (!_serviceBound) {
+					Log.i("zello sdk", "disconnecting because sdk was destroyed");
+					try {
+						context.unbindService(this);
+					} catch (Throwable t) {
+					}
+					_context = null;
+					_appState._error = false;
+				}
+				_appState._initializing = false;
+				fireAppStateChanged();
 			}
-			_delayedNetwork = _delayedUsername = _delayedPassword = null;
 		}
 	}
 
 	@Override
 	public void onServiceDisconnected(ComponentName name) {
-		_connected = false;
-		_connecting = false;
+		_serviceBound = false;
+		if (_serviceConnecting) {
+			_serviceConnecting = false;
+			_appState._initializing = false;
+			_appState._error = false;
+			fireAppStateChanged();
+		}
 	}
 
 	private void startAwakeTimer() {
@@ -596,10 +639,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		boolean available = isAppAvailable();
 		if (available != _appState._available) {
 			_appState._available = available;
-			Events events = _events;
-			if (events != null) {
-				events.onAppStateChanged();
-			}
+			fireAppStateChanged();
 		}
 	}
 
@@ -628,10 +668,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 //		if (contacts != null) {
 //			contacts.invalidate();
 //		}
-		Events events = _events;
-		if (events != null) {
-			events.onAppStateChanged();
-		}
+		fireAppStateChanged();
 	}
 
 	private void updateMessageState(Intent intent) {
@@ -713,6 +750,9 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_selectedContact._statusMessage = intent.getStringExtra(Constants.EXTRA_CONTACT_STATUS_MESSAGE);
 			_selectedContact._usersCount = intent.getIntExtra(Constants.EXTRA_CHANNEL_USERS_COUNT, 0);
 			_selectedContact._usersTotal = intent.getIntExtra(Constants.EXTRA_CHANNEL_USERS_TOTAL, 0);
+			_selectedContact._title = intent.getStringExtra(Constants.EXTRA_CONTACT_TITLE);
+			_selectedContact._muted = intent.getIntExtra(Constants.EXTRA_CONTACT_MUTED, 0) != 0;
+			_selectedContact._noDisconnect = intent.getIntExtra(Constants.EXTRA_CHANNEL_NO_DISCONNECT, _selectedContact._type != ContactType.CHANNEL ? 1 : 0) != 0;
 		} else {
 			_selectedContact.reset();
 		}
@@ -733,7 +773,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	private boolean isConnected() {
-		return _connected && !_connecting;
+		return _serviceBound && !_serviceConnecting;
 	}
 
 	private boolean isAppAvailable() {
@@ -746,6 +786,13 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			}
 		}
 		return false;
+	}
+
+	private void fireAppStateChanged() {
+		Events events = _events;
+		if (events != null) {
+			events.onAppStateChanged();
+		}
 	}
 
 	static ContactType intToContactType(int type) {

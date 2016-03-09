@@ -3,6 +3,8 @@ package com.zello.sdk;
 public class AppState {
 
 	boolean _available;
+	boolean _error; // Set when the service fails to connect
+	boolean _initializing;
 	boolean _customBuild;
 	boolean _configuring;
 	boolean _locked;
@@ -53,6 +55,8 @@ public class AppState {
 		if (state != null) {
 			state._customBuild = _customBuild;
 			state._available = _available;
+			state._error = _error;
+			state._initializing = _initializing;
 			state._configuring = _configuring;
 			state._locked = _locked;
 			state._signedIn = _signedIn;
@@ -73,7 +77,11 @@ public class AppState {
 	}
 
 	public boolean isAvailable() {
-		return _available;
+		return _available && !_error;
+	}
+
+	public boolean isInitializing() {
+		return _initializing;
 	}
 
 	public boolean isCustomBuild() {

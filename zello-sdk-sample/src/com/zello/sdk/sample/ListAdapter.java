@@ -106,8 +106,7 @@ public class ListAdapter extends BaseAdapter {
 				}
 				case CHANNEL: {
 					if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
-						int count = contact.getUsersCount();
-						String countText = NumberFormat.getInstance().format(count);
+						String countText = NumberFormat.getInstance().format(contact.getUsersCount());
 						statusText = context.getResources().getString(R.string.status_channel_users_count).replace("%count%", countText);
 					} else {
 						statusText = statusToText(context, status);
@@ -115,15 +114,9 @@ public class ListAdapter extends BaseAdapter {
 					break;
 				}
 				case GROUP: {
-					int count = contact.getUsersCount();
-					if (status == com.zello.sdk.ContactStatus.AVAILABLE && count > 0) {
-						int total = contact.getUsersTotal();
-						String countText = NumberFormat.getInstance().format(count);
-						String totalText = NumberFormat.getInstance().format(total);
-						statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
-					} else {
-						statusText = statusToText(context, com.zello.sdk.ContactStatus.OFFLINE);
-					}
+					String countText = NumberFormat.getInstance().format(contact.getUsersTotal());
+					String totalText = NumberFormat.getInstance().format(contact.getUsersTotal());
+					statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
 					break;
 				}
 			}
@@ -200,7 +193,12 @@ public class ListAdapter extends BaseAdapter {
 			}
 			case GROUP: {
 				// Group
-				return R.drawable.group_online;
+				switch (status) {
+					case AVAILABLE:
+						return R.drawable.group_online;
+					default:
+						return R.drawable.channel_offline;
+				}
 			}
 		}
 		return R.drawable.user_offline;

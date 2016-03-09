@@ -234,7 +234,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
-		if (_appState.isAvailable()) {
+		if (_appState.isAvailable() && !_appState.isInitializing()) {
 			getMenuInflater().inflate(R.menu.menu, menu);
 			boolean select = false, available = false, solo = false, busy = false;
 			if (!_appState.isConfiguring() && _appState.isSignedIn() && !_appState.isSigningIn() && !_appState.isSigningOut()) {
@@ -492,8 +492,9 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 					canTalk = status != com.zello.sdk.ContactStatus.OFFLINE; // Not offline
 					break;
 				}
-				case CHANNEL: {
-					showConnect = true;
+				case CHANNEL:
+				case GROUP: {
+					showConnect = !_selectedContact.getNoDisconnect();
 					if (_appState.isSignedIn()) {
 						if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
 							canTalk = true; // Channel is online
@@ -504,13 +505,6 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 						} else if (status == com.zello.sdk.ContactStatus.CONNECTING) {
 							connected = true;
 						}
-					}
-					break;
-				}
-				case GROUP: {
-					int count = _selectedContact.getUsersCount();
-					if (status == com.zello.sdk.ContactStatus.AVAILABLE && count > 0) {
-						canTalk = true; // Group is online and there are online contacts in it
 					}
 					break;
 				}
@@ -555,6 +549,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		String state = "";
 		if (!_appState.isAvailable()) {
 			state = getString(R.string.ptt_app_not_installed);
+		} else if (_appState.isInitializing()) {
+			state = getString(R.string.ptt_app_initializing);
 		} else if (_appState.isConfiguring()) {
 			state = getString(R.string.ptt_app_configuring);
 		} else if (!_appState.isSignedIn()) {
@@ -615,7 +611,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		int listFlag = View.GONE;
 		int talkFlag = View.GONE;
 		int networkFlag = View.GONE;
-		if (!_appState.isAvailable() || _appState.isConfiguring()) {
+		if (!_appState.isAvailable() || _appState.isInitializing() || _appState.isConfiguring()) {
 			stateFlag = View.VISIBLE;
 		} else if (!_appState.isSignedIn()) {
 			if (_appState.isSigningIn() || _appState.isSigningOut() || _appState.isWaitingForNetwork() || _appState.isReconnecting()) {
@@ -673,7 +669,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	}
 
 	private void connectChannel() {
-		if (_selectedContact.getType() == com.zello.sdk.ContactType.CHANNEL) {
+		com.zello.sdk.ContactType type = _selectedContact.getType();
+		if (type == com.zello.sdk.ContactType.CHANNEL || type == com.zello.sdk.ContactType.GROUP) {
 			com.zello.sdk.ContactStatus status = _selectedContact.getStatus();
 			if (status == com.zello.sdk.ContactStatus.OFFLINE) {
 				_sdk.connectChannel(_selectedContact.getName());
