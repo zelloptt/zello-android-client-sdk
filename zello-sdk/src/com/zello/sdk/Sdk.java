@@ -345,6 +345,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	public boolean signIn(String network, String username, String password) {
+		return signIn(network, username, password, false);
+	}
+
+	public boolean signIn(String network, String username, String password, boolean perishable) {
 		if (network != null && network.length() > 0 && username != null && username.length() > 0 && password != null && password.length() > 0) {
 			if (isConnected()) {
 				Context context = _context;
@@ -354,6 +358,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 					intent.putExtra(Constants.EXTRA_NETWORK_URL, network);
 					intent.putExtra(Constants.EXTRA_USERNAME, username);
 					intent.putExtra(Constants.EXTRA_PASSWORD, md5(password));
+					intent.putExtra(Constants.EXTRA_PERISHABLE, perishable);
 					context.sendBroadcast(intent);
 				}
 			} else if (_serviceBound && _serviceConnecting) {

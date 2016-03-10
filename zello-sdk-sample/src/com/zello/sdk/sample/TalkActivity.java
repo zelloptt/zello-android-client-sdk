@@ -19,6 +19,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private EditText _editUsername;
 	private EditText _editPassword;
 	private EditText _editNetwork;
+	private CheckBox _checkPerishable;
 	private View _viewContent;
 	private ListView _listContacts;
 	private View _viewTalkScreen;
@@ -60,6 +61,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_editUsername = (EditText) _viewLogin.findViewById(R.id.username);
 		_editPassword = (EditText) _viewLogin.findViewById(R.id.password);
 		_editNetwork = (EditText) _viewLogin.findViewById(R.id.network);
+		_checkPerishable = (CheckBox) _viewLogin.findViewById(R.id.perishable);
 		_viewContent = findViewById(R.id.content);
 		_listContacts = (ListView) _viewContent.findViewById(R.id.contact_list);
 		_viewTalkScreen = _viewContent.findViewById(R.id.talk_screen);
@@ -161,10 +163,11 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				String username = _editUsername.getText().toString();
 				String password = _editPassword.getText().toString();
 				String network = _editNetwork.getText().toString();
+				boolean perishable = _checkPerishable.isChecked();
 				Helper.saveValue(TalkActivity.this, _keyUsername, username);
 				Helper.saveValue(TalkActivity.this, _keyPassword, password);
 				Helper.saveValue(TalkActivity.this, _keyNetwork, network);
-				_sdk.signIn(network, username, password);
+				_sdk.signIn(network, username, password, perishable);
 			}
 		});
 

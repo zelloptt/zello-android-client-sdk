@@ -53,6 +53,7 @@ class Constants {
 	static final String EXTRA_NETWORK_URL = "N";
 	static final String EXTRA_USERNAME = "U";
 	static final String EXTRA_PASSWORD = "P";
+	static final String EXTRA_PERISHABLE = "TMP";
 	static final String EXTRA_APPLICATION = "APP";
 	static final String EXTRA_PACKAGE = "PACKAGE";
 	static final String EXTRA_EID = "EID";

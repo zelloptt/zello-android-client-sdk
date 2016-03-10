@@ -47,6 +47,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="network">Network base URL</string>
+    <string name="perishable">Do not save account data</string>
     <string name="about_description">About Zello SDK\nThis screen shows how to use the SDK when your app includes multiple activities.
     </string>
     <string name="audio_speaker">SPEAKER</string>
