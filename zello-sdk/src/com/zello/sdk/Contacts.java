@@ -38,7 +38,7 @@ public class Contacts {
 	private int _indexUsersTotal;
 	private int _indexTitle;
 	private int _indexMuted;
-	private int _indexNoDisconnect; // Not available if the client app is old - has to be at least 3.20
+	private int _indexNoDisconnect; // Not available if the client app is old - has to be at least 3.19
 
 	private static Uri _uri;
 
