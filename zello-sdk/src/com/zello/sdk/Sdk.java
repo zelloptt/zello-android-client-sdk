@@ -27,6 +27,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private boolean _serviceBound; // Service is bound
 	private boolean _serviceConnecting; // Service is bound but is still connecting
 	private String _delayedNetwork, _delayedUsername, _delayedPassword;
+	private boolean _delayedPerishable;
 	private BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
 	private BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
 	private BroadcastReceiver _receiverMessageState; // Broadcast receiver for message state broadcasts
@@ -365,6 +366,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 				_delayedNetwork = network;
 				_delayedUsername = username;
 				_delayedPassword = password;
+				_delayedPerishable = perishable;
 			}
 			return true;
 		} else {
@@ -374,6 +376,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	public void signOut() {
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
+		_delayedPerishable = false;
 		if (_serviceBound) {
 			Context context = _context;
 			if (context != null) {
@@ -551,6 +554,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	private void disconnect() {
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
+		_delayedPerishable = false;
 		if (_serviceBound) {
 			_serviceBound = false;
 			if (!_serviceConnecting) {
@@ -594,9 +598,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 				_serviceConnecting = false;
 				context.startService(getServiceIntent());
 				if (_delayedNetwork != null) {
-					signIn(_delayedNetwork, _delayedUsername, _delayedPassword);
+					signIn(_delayedNetwork, _delayedUsername, _delayedPassword, _delayedPerishable);
 				}
 				_delayedNetwork = _delayedUsername = _delayedPassword = null;
+				_delayedPerishable = false;
 				// If service is not bound, the component was destroyed and the service needs to be disconnected
 				if (!_serviceBound) {
 					Log.i("zello sdk", "disconnecting because sdk was destroyed");
