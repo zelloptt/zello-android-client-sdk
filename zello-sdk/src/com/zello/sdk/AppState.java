@@ -117,7 +117,7 @@ public class AppState {
 	}
 
 	public boolean isReconnecting() {
-		return _reconnectTimer > 0;
+		return _reconnectTimer >= 0;
 	}
 
 	public boolean isWaitingForNetwork() {

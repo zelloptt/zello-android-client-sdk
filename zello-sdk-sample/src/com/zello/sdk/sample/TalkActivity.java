@@ -33,6 +33,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private View _viewAudioMode;
 	private ToggleButton _btnSpeaker, _btnEarpiece, _btnBluetooth;
 	private View _viewMessageInfo;
+	private Button _btnLogin, _btnCancel;
+	private TextView _txtStatus;
 
 	private boolean _active; // Activity is resumed and visible to the user
 	private boolean _dirtyContacts; // Contact list needs to be refreshed next time before it's presented to the user
@@ -77,6 +79,9 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_imgMessageStatus = (ImageView) _viewMessageInfo.findViewById(R.id.message_image);
 		_txtMessageName = (TextView) _viewMessageInfo.findViewById(R.id.message_name);
 		_txtMessageStatus = (TextView) _viewMessageInfo.findViewById(R.id.message_status);
+		_btnLogin = (Button) findViewById(R.id.button_login);
+		_btnCancel = (Button) findViewById(R.id.button_cancel);
+		_txtStatus = (TextView) _viewMessageInfo.findViewById(R.id.status);
 
 		// Constrain PTT button size
 		_btnTalk.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
@@ -157,7 +162,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_editNetwork.setText(Helper.loadValue(this, _keyNetwork));
 		_editPassword = (EditText) _viewLogin.findViewById(R.id.password);
 		_editNetwork = (EditText) _viewLogin.findViewById(R.id.network);
-		findViewById(R.id.button_login).setOnClickListener(new View.OnClickListener() {
+		_btnLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				String username = _editUsername.getText().toString();
@@ -168,6 +173,14 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				Helper.saveValue(TalkActivity.this, _keyPassword, password);
 				Helper.saveValue(TalkActivity.this, _keyNetwork, network);
 				_sdk.signIn(network, username, password, perishable);
+			}
+		});
+		_btnCancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (_appState.isReconnecting() || (_appState.isSigningIn() && !_appState.isCancellingSignin())) {
+					_sdk.cancel();
+				}
 			}
 		});
 
@@ -201,7 +214,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		//_sdk.onCreate("net.loudtalks", this, this); // Use to connect to apk from zellowork.com
 		_sdk.onCreate("com.pttsdk", this, this); // Use with generic apk
 		_audio = _sdk.getAudio();
-		
+
 		updateAppState();
 		updateAudioMode();
 		updateMessageState();
