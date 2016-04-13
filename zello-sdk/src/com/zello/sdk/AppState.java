@@ -11,6 +11,7 @@ public class AppState {
 	boolean _signedIn;
 	boolean _signingIn;
 	boolean _signingOut;
+	boolean _cancelling;
 	int _reconnectTimer = -1;
 	boolean _waitingForNetwork;
 	boolean _showContacts;
@@ -18,6 +19,7 @@ public class AppState {
 	boolean _solo;
 	boolean _autoRun;
 	boolean _autoChannels = true;
+	Error _lastError = Error.NONE;
 	String _statusMessage;
 	String _network;
 	String _networkUrl;
@@ -31,6 +33,7 @@ public class AppState {
 		_signedIn = false;
 		_signingIn = false;
 		_signingOut = false;
+		_cancelling = false;
 		_reconnectTimer = -1;
 		_waitingForNetwork = false;
 		_showContacts = false;
@@ -73,6 +76,7 @@ public class AppState {
 			state._network = _network;
 			state._networkUrl = _networkUrl;
 			state._username = _username;
+			state._lastError = _lastError;
 		}
 	}
 
@@ -106,6 +110,10 @@ public class AppState {
 
 	public boolean isSigningOut() {
 		return _signingOut;
+	}
+
+	public boolean isCancellingSignin() {
+		return _cancelling;
 	}
 
 	public boolean isReconnecting() {
@@ -150,6 +158,10 @@ public class AppState {
 
 	public String getUsername() {
 		return _username;
+	}
+
+	public Error getLastError() {
+		return _lastError;
 	}
 
 }

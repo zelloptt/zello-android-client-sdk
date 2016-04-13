@@ -15,6 +15,7 @@ class Constants {
 	static final String EXTRA_STATE_SIGNED_IN = "STATE_SIGNED_IN";
 	static final String EXTRA_STATE_SIGNING_IN = "STATE_SIGNING_IN";
 	static final String EXTRA_STATE_SIGNING_OUT = "STATE_SIGNING_OUT";
+	static final String EXTRA_STATE_CANCELLING_SIGNIN = "STATE_CANCELLING_SIGNIN";
 	static final String EXTRA_STATE_RECONNECT_TIMER = "STATE_RECONNECT_TIMER";
 	static final String EXTRA_STATE_WAITING_FOR_NETWORK = "STATE_WAITING_FOR_NETWORK";
 	static final String EXTRA_STATE_SHOW_CONTACTS = "STATE_SHOW_CONTACTS";
@@ -26,6 +27,7 @@ class Constants {
 	static final String EXTRA_STATE_NETWORK = "STATE_NETWORK";
 	static final String EXTRA_STATE_NETWORK_URL = "STATE_NETWORK_URL";
 	static final String EXTRA_STATE_USERNAME = "STATE_USERNAME";
+	static final String EXTRA_STATE_LAST_ERROR = "STATE_LAST_ERROR";
 	static final String EXTRA_CONTACT_NAME = "CONTACT_NAME";
 	static final String EXTRA_CONTACT_FULL_NAME = "CONTACT_FULL_NAME";
 	static final String EXTRA_CONTACT_DISPLAY_NAME = "CONTACT_DISPLAY_NAME";
@@ -74,6 +76,7 @@ class Constants {
 	static final String VALUE_SELECT_CONTACT = "SELECT_CONTACT";
 	static final String VALUE_SIGN_IN = "SIGN_IN";
 	static final String VALUE_SIGN_OUT = "SIGN_OUT";
+	static final String VALUE_CANCEL = "CANCEL";
 	static final String VALUE_SET_AUTO_RUN = "SET_AUTO_RUN";
 	static final String VALUE_SET_AUTO_CHANNELS = "SET_AUTO_CHANNELS";
 	static final String VALUE_SET_EID = "SET_EID";
@@ -88,7 +91,6 @@ class Constants {
 	static final String ACTION_APP_STATE = "APP_STATE";
 	static final String ACTION_MESSAGE_STATE = "MESSAGE_STATE";
 	static final String ACTION_CONTACT_SELECTED = "CONTACT_SELECTED";
-	//	static final String ACTION_CONTACT_CHANGED = "CONTACT_CHANGED";
 	static final String ACTION_AUDIO_STATE = "AUDIO_STATE";
 
 }

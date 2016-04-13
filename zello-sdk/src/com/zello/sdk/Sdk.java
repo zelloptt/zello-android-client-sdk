@@ -387,6 +387,19 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	public void cancel() {
+		_delayedNetwork = _delayedUsername = _delayedPassword = null;
+		_delayedPerishable = false;
+		if (_serviceBound) {
+			Context context = _context;
+			if (context != null) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_CANCEL);
+				context.sendBroadcast(intent);
+			}
+		}
+	}
+
 	public void lock(String applicationName, String packageName) {
 		if (isConnected()) {
 			Context context = _context;
@@ -662,6 +675,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_appState._signedIn = intent.getBooleanExtra(Constants.EXTRA_STATE_SIGNED_IN, false);
 			_appState._signingIn = intent.getBooleanExtra(Constants.EXTRA_STATE_SIGNING_IN, false);
 			_appState._signingOut = intent.getBooleanExtra(Constants.EXTRA_STATE_SIGNING_OUT, false);
+			_appState._cancelling = intent.getBooleanExtra(Constants.EXTRA_STATE_CANCELLING_SIGNIN, false);
 			_appState._reconnectTimer = intent.getIntExtra(Constants.EXTRA_STATE_RECONNECT_TIMER, -1);
 			_appState._waitingForNetwork = intent.getBooleanExtra(Constants.EXTRA_STATE_WAITING_FOR_NETWORK, false);
 			_appState._showContacts = intent.getBooleanExtra(Constants.EXTRA_STATE_SHOW_CONTACTS, false);
@@ -673,6 +687,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_appState._network = intent.getStringExtra(Constants.EXTRA_STATE_NETWORK);
 			_appState._networkUrl = intent.getStringExtra(Constants.EXTRA_STATE_NETWORK_URL);
 			_appState._username = intent.getStringExtra(Constants.EXTRA_STATE_USERNAME);
+			_appState._lastError = intToError(intent.getIntExtra(Constants.EXTRA_STATE_LAST_ERROR, Error.NONE.ordinal()));
 		}
 //		Contacts contacts = _contacts;
 //		if (contacts != null) {
@@ -802,6 +817,40 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		Events events = _events;
 		if (events != null) {
 			events.onAppStateChanged();
+		}
+	}
+
+	static Error intToError(int error) {
+		if (error > Error.NONE.ordinal()) {
+			if (error == Error.INVALID_CREDENTIALS.ordinal()) {
+				return Error.NONE;
+			} else if (error == Error.INVALID_NETWORK_NAME.ordinal()) {
+				return Error.INVALID_NETWORK_NAME;
+			} else if (error == Error.NETWORK_SUSPENDED.ordinal()) {
+				return Error.NETWORK_SUSPENDED;
+			} else if (error == Error.SERVER_SECURE_CONNECT_FAILED.ordinal()) {
+				return Error.SERVER_SECURE_CONNECT_FAILED;
+			} else if (error == Error.SERVER_SIGNIN_FAILED.ordinal()) {
+				return Error.SERVER_SIGNIN_FAILED;
+			} else if (error == Error.NETWORK_SIGNIN_FAILED.ordinal()) {
+				return Error.NETWORK_SIGNIN_FAILED;
+			} else if (error == Error.KICKED.ordinal()) {
+				return Error.KICKED;
+			} else if (error == Error.APP_UPDATE_REQUIRED.ordinal()) {
+				return Error.APP_UPDATE_REQUIRED;
+			} else if (error == Error.NO_INTERNET_CONNECTION.ordinal()) {
+				return Error.NO_INTERNET_CONNECTION;
+			} else if (error == Error.INTERNET_CONNECTION_RESTRICTED.ordinal()) {
+				return Error.INTERNET_CONNECTION_RESTRICTED;
+			} else if (error == Error.SERVER_LICENSE_PROBLEM.ordinal()) {
+				return Error.SERVER_LICENSE_PROBLEM;
+			} else if (error == Error.TOO_MANY_SIGNIN_ATTEMPTS.ordinal()) {
+				return Error.TOO_MANY_SIGNIN_ATTEMPTS;
+			} else {
+				return Error.UNKNOWN;
+			}
+		} else {
+			return Error.NONE;
 		}
 	}
 

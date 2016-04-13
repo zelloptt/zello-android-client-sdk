@@ -8,6 +8,11 @@ dependencies {
 android {
     compileSdkVersion 21
     buildToolsVersion '23.0.3'
+    defaultConfig {
+        applicationId "com.zello.sdk.sample"
+        minSdkVersion 4
+        targetSdkVersion 21
+    }
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -33,7 +38,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
         }
     }
 }

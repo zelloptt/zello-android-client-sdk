@@ -43,15 +43,30 @@
     <string name="menu_talk">Talk</string>
     <string name="button_close">Close</string>
     <string name="button_sigin_in">Sign in</string>
+    <string name="button_cancel">Cancel</string>
     <string name="channel_connect">Connect channel</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="network">Network base URL</string>
     <string name="perishable">Do not save account data</string>
-    <string name="about_description">About Zello SDK\nThis screen shows how to use the SDK when your app includes multiple activities.
-    </string>
+    <string name="about_description">About Zello SDK\nThis screen shows how to use the SDK when your app includes multiple activities.</string>
     <string name="audio_speaker">SPEAKER</string>
     <string name="audio_earpiece">EARPIECE</string>
     <string name="audio_bluetooth">BLUETOOTH</string>
+    <string name="status_cancelling_signin">Cancelling sign in…</string>
+    <string name="status_reconnecting" formatted="false">Reconnecting in %seconds% sec…</string>
+    <string name="error_unknown">Unknown error.</string>
+    <string name="error_invalid_credentials">Invalid username or password.</string>
+    <string name="error_invalid_network_name">Invalid network.</string>
+    <string name="error_network_suspended">Network suspended.</string>
+    <string name="error_secure_connect_failed">Can\'t establish a secure connection to the server.</string>
+    <string name="error_server_signin_failed">Can\'t connect to the server.</string>
+    <string name="error_network_signin_failed">Can\'t join the network.</string>
+    <string name="error_kicked">You signed in on another device.</string>
+    <string name="error_update_required">Client software update is required.</string>
+    <string name="error_no_internet">No internet.</string>
+    <string name="error_internet_restricted">Internet access is restricted.</string>
+    <string name="error_server_license">Server license problem.</string>
+    <string name="error_brute_force_protection">You\'ve used incorrect credentials too many times.</string>
 
 </resources>

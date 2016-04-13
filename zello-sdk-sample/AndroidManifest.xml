@@ -6,7 +6,7 @@
     android:versionName="1.0">
 
     <uses-sdk
-        android:minSdkVersion="3"
+        android:minSdkVersion="4"
         android:targetSdkVersion="21"/>
 
     <application
@@ -17,15 +17,31 @@
             android:name="com.zello.sdk.sample.TalkActivity"
             android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action
+                    android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category
+                    android:name="android.intent.category.LAUNCHER"/>
+                <category
+                    android:name="android.intent.category.MULTIWINDOW_LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name="com.zello.sdk.sample.AnotherActivity"
             android:label="@string/app_name">
         </activity>
+
+        <meta-data
+            android:name="com.sec.android.support.multiwindow"
+            android:value="true"/>
+
+        <meta-data
+            android:name="com.samsung.android.sdk.multiwindow.penwindow.enable"
+            android:value="true"/>
+
+        <meta-data
+            android:name="com.samsung.android.sdk.multiwindow.style"
+            android:value="fixedRatio"/>
     </application>
 
 </manifest>
