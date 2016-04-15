@@ -823,7 +823,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	static Error intToError(int error) {
 		if (error > Error.NONE.ordinal()) {
 			if (error == Error.INVALID_CREDENTIALS.ordinal()) {
-				return Error.NONE;
+				return Error.INVALID_CREDENTIALS;
 			} else if (error == Error.INVALID_NETWORK_NAME.ordinal()) {
 				return Error.INVALID_NETWORK_NAME;
 			} else if (error == Error.NETWORK_SUSPENDED.ordinal()) {
