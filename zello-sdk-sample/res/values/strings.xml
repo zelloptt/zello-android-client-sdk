@@ -21,7 +21,7 @@
     <string name="ptt_app_is_signed_out">Offline</string>
     <string name="ptt_app_is_signing_in">Signing in…</string>
     <string name="ptt_app_is_signing_out">Signing out…</string>
-    <string name="ptt_app_is_waiting_to_reconnect">Waiting for network to recover</string>
+    <string name="ptt_app_is_waiting_to_reconnect">Waiting for network to recover.</string>
     <string name="ptt_app_is_reconnecting" formatted="false">Reconnecting in %seconds%…</string>
     <string name="menu_available">Available</string>
     <string name="menu_solo">Solo</string>

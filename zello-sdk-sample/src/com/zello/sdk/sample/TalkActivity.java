@@ -11,9 +11,13 @@ import android.os.Parcelable;
 import android.view.*;
 import android.widget.*;
 
+import java.text.NumberFormat;
+
 public class TalkActivity extends Activity implements com.zello.sdk.Events {
 
+	private View _viewState;
 	private TextView _txtState;
+	private Button _btnCancel;
 	private View _viewLogin;
 	private TextView _txtNetwork;
 	private EditText _editUsername;
@@ -33,8 +37,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private View _viewAudioMode;
 	private ToggleButton _btnSpeaker, _btnEarpiece, _btnBluetooth;
 	private View _viewMessageInfo;
-	private Button _btnLogin, _btnCancel;
-	private TextView _txtStatus;
+	private Button _btnLogin;
+	private TextView _txtError;
 
 	private boolean _active; // Activity is resumed and visible to the user
 	private boolean _dirtyContacts; // Contact list needs to be refreshed next time before it's presented to the user
@@ -57,14 +61,16 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_talk);
-		_txtState = (TextView) findViewById(R.id.state);
-		_viewLogin = findViewById(R.id.login);
+		_viewState = findViewById(R.id.state_screen);
+		_txtState = (TextView) _viewState.findViewById(R.id.state);
+		_btnCancel = (Button) _viewState.findViewById(R.id.cancel);
+		_viewLogin = findViewById(R.id.login_screen);
 		_txtNetwork = (TextView) _viewLogin.findViewById(R.id.network_label);
 		_editUsername = (EditText) _viewLogin.findViewById(R.id.username);
 		_editPassword = (EditText) _viewLogin.findViewById(R.id.password);
 		_editNetwork = (EditText) _viewLogin.findViewById(R.id.network);
 		_checkPerishable = (CheckBox) _viewLogin.findViewById(R.id.perishable);
-		_viewContent = findViewById(R.id.content);
+		_viewContent = findViewById(R.id.content_screen);
 		_listContacts = (ListView) _viewContent.findViewById(R.id.contact_list);
 		_viewTalkScreen = _viewContent.findViewById(R.id.talk_screen);
 		_viewContactInfo = _viewTalkScreen.findViewById(R.id.contact_info);
@@ -79,9 +85,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_imgMessageStatus = (ImageView) _viewMessageInfo.findViewById(R.id.message_image);
 		_txtMessageName = (TextView) _viewMessageInfo.findViewById(R.id.message_name);
 		_txtMessageStatus = (TextView) _viewMessageInfo.findViewById(R.id.message_status);
-		_btnLogin = (Button) findViewById(R.id.button_login);
-		_btnCancel = (Button) findViewById(R.id.button_cancel);
-		_txtStatus = (TextView) _viewMessageInfo.findViewById(R.id.status);
+		_btnLogin = (Button) _viewLogin.findViewById(R.id.login);
+		_txtError = (TextView) _viewLogin.findViewById(R.id.error);
 
 		// Constrain PTT button size
 		_btnTalk.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
@@ -178,7 +183,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_btnCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (_appState.isReconnecting() || (_appState.isSigningIn() && !_appState.isCancellingSignin())) {
+				if (_appState.isReconnecting() || _appState.isWaitingForNetwork() || (_appState.isSigningIn() && !_appState.isCancellingSignin())) {
 					_sdk.cancel();
 				}
 			}
@@ -261,26 +266,17 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				solo = status == com.zello.sdk.Status.SOLO;
 				busy = status == com.zello.sdk.Status.BUSY;
 			}
-			menu.findItem(R.id.menu_select_contact).setVisible(select);
-			menu.findItem(R.id.menu_lock_ptt_app).setVisible(!_appState.isLocked());
-			menu.findItem(R.id.menu_unlock_ptt_app).setVisible(_appState.isLocked());
-			menu.findItem(R.id.menu_enable_auto_run).setVisible(!_appState.isAutoRunEnabled());
-			menu.findItem(R.id.menu_disable_auto_run).setVisible(_appState.isAutoRunEnabled());
-			menu.findItem(R.id.menu_enable_auto_connect_channels).setVisible(!_appState.isChannelAutoConnectEnabled());
-			menu.findItem(R.id.menu_disable_auto_connect_channels).setVisible(_appState.isChannelAutoConnectEnabled());
-			menu.findItem(R.id.menu_about).setVisible(true);
-			MenuItem itemAvailable = menu.findItem(R.id.menu_available);
-			if (itemAvailable != null) {
-				itemAvailable.setVisible(available);
-			}
-			MenuItem itemSolo = menu.findItem(R.id.menu_solo);
-			if (itemSolo != null) {
-				itemSolo.setVisible(solo);
-			}
-			MenuItem itemBusy = menu.findItem(R.id.menu_busy);
-			if (itemBusy != null) {
-				itemBusy.setVisible(busy);
-			}
+			showMenuItem(menu, R.id.menu_select_contact, select);
+			showMenuItem(menu, R.id.menu_lock_ptt_app ,!_appState.isLocked());
+			showMenuItem(menu, R.id.menu_unlock_ptt_app ,_appState.isLocked());
+			showMenuItem(menu, R.id.menu_enable_auto_run ,!_appState.isAutoRunEnabled());
+			showMenuItem(menu, R.id.menu_disable_auto_run, _appState.isAutoRunEnabled());
+			showMenuItem(menu, R.id.menu_enable_auto_connect_channels, !_appState.isChannelAutoConnectEnabled());
+			showMenuItem(menu, R.id.menu_disable_auto_connect_channels, _appState.isChannelAutoConnectEnabled());
+			showMenuItem(menu, R.id.menu_about ,true);
+			showMenuItem(menu, R.id.menu_available, available);
+			showMenuItem(menu, R.id.menu_solo, solo);
+			showMenuItem(menu, R.id.menu_busy, busy);
 		}
 		return true;
 	}
@@ -398,6 +394,13 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		updateAudioMode();
 	}
 
+	private void showMenuItem(Menu menu, int itemId, boolean show) {
+		MenuItem item = menu.findItem(itemId);
+		if (item != null) {
+			item.setVisible(show);
+		}
+	}
+	
 	private void showAbout() {
 		System.out.println("showAbout");
 		Intent intent = new Intent(this, AnotherActivity.class);
@@ -533,7 +536,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_btnConnect.setEnabled(canConnect);
 		_btnConnect.setChecked(connected);
 		_btnConnect.setVisibility(showConnect ? View.VISIBLE : View.GONE);
-		updateActiveScreen();
+		updateAppState();
 	}
 
 	private void updateMessageState() {
@@ -559,33 +562,6 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			}
 		}
 		_viewMessageInfo.setVisibility(incoming || outgoing ? View.VISIBLE : View.INVISIBLE);
-	}
-
-	private void updateAppState() {
-		_sdk.getAppState(_appState);
-		String state = "";
-		if (!_appState.isAvailable()) {
-			state = getString(R.string.ptt_app_not_installed);
-		} else if (_appState.isInitializing()) {
-			state = getString(R.string.ptt_app_initializing);
-		} else if (_appState.isConfiguring()) {
-			state = getString(R.string.ptt_app_configuring);
-		} else if (!_appState.isSignedIn()) {
-			if (_appState.isSigningIn()) {
-				state = getString(R.string.ptt_app_is_signing_in);
-			} else if (_appState.isSigningOut()) {
-				state = getString(R.string.ptt_app_is_signing_out);
-			} else if (_appState.isWaitingForNetwork()) {
-				state = getString(R.string.ptt_app_is_waiting_to_reconnect);
-			} else if (_appState.isReconnecting()) {
-				state = getString(R.string.ptt_app_is_reconnecting).replace("%seconds%", Integer.toString(_appState.getReconnectTimer()));
-			} else {
-				state = getString(R.string.ptt_app_is_signed_out);
-			}
-		}
-		_txtState.setText(state);
-		updateActiveScreen();
-		Helper.invalidateOptionsMenu(this);
 	}
 
 	private void updateAudioMode() {
@@ -621,42 +597,91 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_viewAudioMode.setVisibility(speaker || earpiece || bluetooth ? View.VISIBLE : View.GONE);
 	}
 
-	private void updateActiveScreen() {
-		int stateFlag = View.GONE;
-		int loginFlag = View.GONE;
-		int contentFlag = View.GONE;
-		int listFlag = View.GONE;
-		int talkFlag = View.GONE;
-		int networkFlag = View.GONE;
+	private void updateAppState() {
+		_sdk.getAppState(_appState);
+		int stateVisibility = View.GONE;
+		int loginVisibility = View.GONE;
+		int contentVisibility = View.GONE;
 		if (!_appState.isAvailable() || _appState.isInitializing() || _appState.isConfiguring()) {
-			stateFlag = View.VISIBLE;
+			stateVisibility = View.VISIBLE;
 		} else if (!_appState.isSignedIn()) {
 			if (_appState.isSigningIn() || _appState.isSigningOut() || _appState.isWaitingForNetwork() || _appState.isReconnecting()) {
-				stateFlag = View.VISIBLE;
+				stateVisibility = View.VISIBLE;
 			} else {
-				loginFlag = View.VISIBLE;
-				// Network URL controls are only used when PTT app is not hardcoded to work only with particular network
-				networkFlag = _appState.isCustomBuild() ? View.GONE : View.VISIBLE;
+				loginVisibility = View.VISIBLE;
 			}
 		} else {
-			contentFlag = View.VISIBLE;
-			String name = _selectedContact.getName();
-			if (name != null && name.length() != 0) {
-				talkFlag = View.VISIBLE;
-			} else {
-				listFlag = View.VISIBLE;
-			}
+			contentVisibility = View.VISIBLE;
 		}
 
-		_txtState.setVisibility(stateFlag);
-		_viewLogin.setVisibility(loginFlag);
-		_viewContent.setVisibility(contentFlag);
-		_listContacts.setVisibility(listFlag);
-		_viewTalkScreen.setVisibility(talkFlag);
+		if (stateVisibility == View.VISIBLE) {
+			updateStateScreen();
+		} else if (loginVisibility == View.VISIBLE) {
+			updateLoginScreen();
+		} else {
+			updateContentScreen();
+		}
+		_viewState.setVisibility(stateVisibility);
+		_viewLogin.setVisibility(loginVisibility);
+		_viewContent.setVisibility(contentVisibility);
+		Helper.invalidateOptionsMenu(this);
+	}
+
+	private void updateStateScreen() {
+		String error = null, state = "";
+		boolean cancelShow = false, cancelEnable = true;
+		if (!_appState.isAvailable()) {
+			state = getString(R.string.ptt_app_not_installed);
+		} else if (_appState.isInitializing()) {
+			state = getString(R.string.ptt_app_initializing);
+		} else if (_appState.isConfiguring()) {
+			state = getString(R.string.ptt_app_configuring);
+		} else if (!_appState.isSignedIn()) {
+			if (_appState.isSigningIn()) {
+				state = getString(R.string.ptt_app_is_signing_in);
+				cancelShow = true;
+				cancelEnable = !_appState.isCancellingSignin();
+			} else if (_appState.isSigningOut()) {
+				state = getString(R.string.ptt_app_is_signing_out);
+			} else if (_appState.isWaitingForNetwork()) {
+				error = getErrorText(_appState.getLastError());
+				state = getString(R.string.ptt_app_is_waiting_to_reconnect);
+				cancelShow = true;
+			} else if (_appState.isReconnecting()) {
+				error = getErrorText(_appState.getLastError());
+				state = getString(R.string.ptt_app_is_reconnecting).replace("%seconds%", NumberFormat.getInstance().format(_appState.getReconnectTimer()));
+				cancelShow = true;
+			} else {
+				state = getString(R.string.ptt_app_is_signed_out);
+			}
+		}
+		_txtState.setText(error != null ? (error + "\n" + state) : state);
+		_btnCancel.setEnabled(cancelEnable);
+		_btnCancel.setVisibility(cancelShow ? View.VISIBLE : View.GONE);
+	}
+
+	private void updateLoginScreen() {
+		// Network URL controls are only used when PTT app is not pre-configured to work with a particular network
+		int networkFlag = _appState.isCustomBuild() ? View.GONE : View.VISIBLE;
+		String error = getErrorText(_appState.getLastError());
 		_txtNetwork.setVisibility(networkFlag);
 		_editNetwork.setVisibility(networkFlag);
+		_txtError.setVisibility(error == null ? View.GONE : View.VISIBLE);
+		_txtError.setText(error);
+	}
 
-		if (listFlag == View.VISIBLE) {
+	private void updateContentScreen() {
+		int listVisibility = View.GONE;
+		int talkVisibility = View.GONE;
+		String name = _selectedContact.getName();
+		if (name != null && name.length() != 0) {
+			talkVisibility = View.VISIBLE;
+		} else {
+			listVisibility = View.VISIBLE;
+		}
+		_listContacts.setVisibility(listVisibility);
+		_viewTalkScreen.setVisibility(talkVisibility);
+		if (listVisibility == View.VISIBLE) {
 			updateContactList();
 		}
 	}
@@ -694,6 +719,39 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			} else if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
 				_sdk.disconnectChannel(_selectedContact.getName());
 			}
+		}
+	}
+
+	private String getErrorText(com.zello.sdk.Error error) {
+		switch (error) {
+			case UNKNOWN:
+				return getResources().getString(R.string.error_unknown);
+			case INVALID_CREDENTIALS:
+				return getResources().getString(R.string.error_invalid_credentials);
+			case INVALID_NETWORK_NAME:
+				return getResources().getString(R.string.error_invalid_network_name);
+			case NETWORK_SUSPENDED:
+				return getResources().getString(R.string.error_network_suspended);
+			case SERVER_SECURE_CONNECT_FAILED:
+				return getResources().getString(R.string.error_secure_connect_failed);
+			case SERVER_SIGNIN_FAILED:
+				return getResources().getString(R.string.error_server_signin_failed);
+			case NETWORK_SIGNIN_FAILED:
+				return getResources().getString(R.string.error_network_signin_failed);
+			case KICKED:
+				return getResources().getString(R.string.error_kicked);
+			case APP_UPDATE_REQUIRED:
+				return getResources().getString(R.string.error_update_required);
+			case NO_INTERNET_CONNECTION:
+				return getResources().getString(R.string.error_no_internet);
+			case INTERNET_CONNECTION_RESTRICTED:
+				return getResources().getString(R.string.error_internet_restricted);
+			case SERVER_LICENSE_PROBLEM:
+				return getResources().getString(R.string.error_server_license);
+			case TOO_MANY_SIGNIN_ATTEMPTS:
+				return getResources().getString(R.string.error_brute_force_protection);
+			default:
+				return null;
 		}
 	}
 
