@@ -278,9 +278,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Sending Messages
 
-	/**
-	 * Prerequisites: There must be a connected channel between the users.
-	 *
+	/*
 	 * Description:   The beginMessage() method is the starting point for sending a message through the Zello SDK.
 	 * 				  Once called, a message will be recorded until endMessage() method is called.
 	 */
@@ -386,11 +384,11 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Authentication
 
 	/**
-	 * Description:    The signIn() method authenticates the user on the network with the passed in login credentials. This authentication does not perish.
+	 * Description:    The signIn() method authenticates the user on the network with the passed in login credentials.
 	 * @param network  The network to authenticate against.
 	 * @param username The username to authenticate.
 	 * @param password The password for the username.
-     * @return
+	 * @return boolean indicating whether a sign in was attempted or not.
      */
 	public boolean signIn(String network, String username, String password) {
 		return signIn(network, username, password, false);
@@ -402,7 +400,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	 * @param username   The username to authenticate.
 	 * @param password   The password for the username.
 	 * @param perishable Whether or not the authentication should expire.
-     * @return
+     * @return boolean indicating whether a sign in was attempted or not.
      */
 	public boolean signIn(String network, String username, String password, boolean perishable) {
 		if (network != null && network.length() > 0 && username != null && username.length() > 0 && password != null && password.length() > 0) {
