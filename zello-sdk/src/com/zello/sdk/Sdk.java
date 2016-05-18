@@ -276,6 +276,14 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	//region Sending Messages
+
+	/**
+	 * Prerequisites: There must be a connected channel between the users.
+	 *
+	 * Description:   The beginMessage() method is the starting point for sending a message through the Zello SDK.
+	 * 				  Once called, a message will be recorded until endMessage() method is called.
+	 */
 	public void beginMessage() {
 		Context context = _context;
 		if (context != null) {
@@ -285,6 +293,11 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	/**
+	 * Prerequisites: There must be an invocation of the beginMessage() method.
+	 *
+	 * Description:   The endMessage() method is the ending point for sending a message through the Zello SDK.
+	 */
 	public void endMessage() {
 		Context context = _context;
 		if (context != null) {
@@ -294,6 +307,16 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	//endregion
+
+	//region Channels
+
+	/**
+	 * Description:   The connectChannel() method is required to send a message through the Zello SDK.
+	 * 				  This method opens a channel between two or more users in order to communicate.
+	 *
+	 * @param channel The name of the channel to connect to.
+     */
 	public void connectChannel(String channel) {
 		if (channel != null && channel.length() > 0) {
 			Context context = _context;
@@ -306,6 +329,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	/**
+	 * Description:   The disconnectChannel() method disconnects the user from the channel.
+	 * @param channel The name of the channel to disconnect from.
+     */
 	public void disconnectChannel(String channel) {
 		if (channel != null && channel.length() > 0) {
 			Context context = _context;
@@ -318,6 +345,15 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	//endregion
+
+	//region Contacts
+
+	/**
+	 * Description:   The muteContact() method either mutes or unmutes a contact.
+	 * @param contact The contact to mute or unmute.
+	 * @param mute    Whether the contact should be muted or not.
+     */
 	public void muteContact(Contact contact, boolean mute) {
 		if (contact != null) {
 			Context context = _context;
@@ -332,6 +368,8 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	//endregion
+
 	private void selectContact(int type, String name) {
 		Context context = _context;
 		if (context != null) {
@@ -345,10 +383,27 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	//region Authentication
+
+	/**
+	 * Description:    The signIn() method authenticates the user on the network with the passed in login credentials. This authentication does not perish.
+	 * @param network  The network to authenticate against.
+	 * @param username The username to authenticate.
+	 * @param password The password for the username.
+     * @return
+     */
 	public boolean signIn(String network, String username, String password) {
 		return signIn(network, username, password, false);
 	}
 
+	/**
+	 * Description:      The signIn() method authenticates the user on the network with the passed in login credentials with an option for the authentication to perish.
+	 * @param network    The network to authenticate against.
+	 * @param username   The username to authenticate.
+	 * @param password   The password for the username.
+	 * @param perishable Whether or not the authentication should expire.
+     * @return
+     */
 	public boolean signIn(String network, String username, String password, boolean perishable) {
 		if (network != null && network.length() > 0 && username != null && username.length() > 0 && password != null && password.length() > 0) {
 			if (isConnected()) {
@@ -374,6 +429,9 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	/**
+	 * The signOut() method unauthenticates the user from the network.
+	 */
 	public void signOut() {
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
 		_delayedPerishable = false;
@@ -387,6 +445,9 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	/**
+	 * The cancel() method cancels the ongoing authentication request from the signIn() method.
+	 */
 	public void cancel() {
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
 		_delayedPerishable = false;
@@ -399,6 +460,8 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			}
 		}
 	}
+
+	//endregion
 
 	public void lock(String applicationName, String packageName) {
 		if (isConnected()) {
@@ -424,6 +487,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	/**
+	 * Description:  The setStatus() method sets the status of a user to a Status message.
+	 * @param status The state to set the users status to.
+     */
 	public void setStatus(Status status) {
 		if (_serviceBound) {
 			Context context = _context;
@@ -437,6 +504,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	/**
+	 * Description:   The setStatusMessage() method sets the status of a user to a custom message.
+	 * @param message The custom message to set the users status to.
+     */
 	public void setStatusMessage(String message) {
 		if (_serviceBound) {
 			Context context = _context;
@@ -461,6 +532,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	/**
+	 * Description: The getContacts() method returns the Contacts for the user.
+	 * @return The Contacts object for the user.
+     */
 	public Contacts getContacts() {
 		return _contacts;
 	}
