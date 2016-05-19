@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">zello-sdk-sample-contacts</string>
+
+    <string name="status_online">Online</string>
+    <string name="status_busy">Busy</string>
+    <string name="status_offline">Offline</string>
+    <string name="status_standby">Standby</string>
+    <string name="status_connecting">Connecting</string>
+
+    <string name="status_channel_users_count" formatted="false">Users online: %count%</string>
+    <string name="status_group_users_count" formatted="false">Users online: %count%/%total%</string>
+
+    <string name="sign_in_status_offline">Please sign in using the sample sign in project.</string>
+    <string name="sign_in_status_signing_in">Signing in...</string>
+</resources>

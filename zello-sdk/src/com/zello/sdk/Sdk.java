@@ -252,6 +252,13 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		stopAwakeTimer();
 	}
 
+	/**
+	 * Description:     The selectContact() method selects a contact from the users contact list.
+	 * @param title     Optional; Activity Title
+	 * @param tabs		Set of displayed Tabs.
+	 * @param activeTab Optional; Initially active tab.
+     * @param theme     Optional: Visual Theme.
+     */
 	public void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
 		Context context = _context;
 		if (context != null) {
