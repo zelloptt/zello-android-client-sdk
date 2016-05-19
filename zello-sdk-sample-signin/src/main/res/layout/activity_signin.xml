@@ -104,6 +104,15 @@
             android:layout_below="@+id/statusTextView"
             android:layout_centerHorizontal="true" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign out"
+            android:id="@+id/signOutButton"
+            android:layout_below="@+id/cancelButton"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible" />
+
     </RelativeLayout>
 
 </RelativeLayout>

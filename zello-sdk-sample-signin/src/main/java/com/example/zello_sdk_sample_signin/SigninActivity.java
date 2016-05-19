@@ -24,6 +24,7 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
     private RelativeLayout signingInView;
     private RelativeLayout signInView;
     private Button cancelButton;
+    private Button signOutButton;
     private TextView errorTextView;
     private boolean signInAttempted = false;
 
@@ -46,6 +47,7 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
         signingInView = (RelativeLayout)findViewById(R.id.signingInView);
         cancelButton = (Button)findViewById(R.id.cancelButton);
         errorTextView = (TextView)findViewById(R.id.incorrectPasswordTextView);
+        signOutButton = (Button)findViewById(R.id.signOutButton);
 
         zelloSDK.onCreate("com.pttsdk", this, this);
 
@@ -68,6 +70,14 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
                 zelloSDK.cancel();
             }
         });
+
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                zelloSDK.signOut();
+            }
+        });
+
     }
 
     @Override
@@ -134,15 +144,19 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
             textView.setText(R.string.signed_in);
 
             cancelButton.setVisibility(View.INVISIBLE);
+            signOutButton.setVisibility(View.VISIBLE);
         } else if (appState.isSigningIn()) {
             textView.setText(R.string.signing_in);
             cancelButton.setVisibility(View.VISIBLE);
+            signOutButton.setVisibility(View.INVISIBLE);
 
             signInView.setVisibility(View.INVISIBLE);
             signingInView.setVisibility(View.VISIBLE);
         } else {
             signInView.setVisibility(View.VISIBLE);
             signingInView.setVisibility(View.INVISIBLE);
+
+            signOutButton.setVisibility(View.INVISIBLE);
         }
 
         if (signInAttempted) {
