@@ -102,10 +102,10 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     @Override
     public void onSelectedContactChanged() {
         com.zello.sdk.Contact selectedContact = new com.zello.sdk.Contact();
+        zelloSDK.getSelectedContact(selectedContact);
 
         String name = selectedContact.getDisplayName();
         if (name != null) {
-            zelloSDK.getSelectedContact(selectedContact);
             selectedContactTextView.setText("Selected Contact: " + selectedContact.getDisplayName());
         }
     }
