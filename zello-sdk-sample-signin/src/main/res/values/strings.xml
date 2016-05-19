@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">zello-sdk-sample-signin</string>
+
+    <string name="signing_in">SIGNING IN..."</string>
+    <string name="signed_in">YOU ARE SIGNED IN.</string>
+
+    <string name="error_unknown">Unknown error.</string>
+    <string name="error_invalid_credentials">Invalid username or password.</string>
+    <string name="error_invalid_network_name">Invalid network.</string>
+    <string name="error_network_suspended">Network suspended.</string>
+    <string name="error_secure_connect_failed">Can\'t establish a secure connection to the server.</string>
+    <string name="error_server_signin_failed">Can\'t connect to the server.</string>
+    <string name="error_network_signin_failed">Can\'t join the network.</string>
+    <string name="error_kicked">You signed in on another device.</string>
+    <string name="error_update_required">Client software update is required.</string>
+    <string name="error_no_internet">No internet.</string>
+    <string name="error_internet_restricted">Internet access is restricted.</string>
+    <string name="error_server_license">Server license problem.</string>
+    <string name="error_brute_force_protection">You\'ve used incorrect credentials too many times.</string>
 </resources>

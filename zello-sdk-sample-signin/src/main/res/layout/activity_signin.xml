@@ -9,68 +9,101 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SigninActivity">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/networkEdit"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="41dp"
-        android:hint="Network URL"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/signInView">
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/passwordEdit"
-        android:layout_below="@+id/networkEdit"
-        android:layout_marginTop="42dp"
-        android:hint="Password"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/usernameEdit"
-        android:layout_alignEnd="@+id/usernameEdit" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/networkEdit"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="41dp"
+            android:hint="Network URL"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:singleLine="true" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/usernameEdit"
-        android:layout_below="@+id/networkEdit"
-        android:layout_alignRight="@+id/networkEdit"
-        android:layout_alignEnd="@+id/networkEdit"
-        android:layout_alignLeft="@+id/networkEdit"
-        android:layout_alignStart="@+id/networkEdit"
-        android:hint="Username" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/passwordEdit"
+            android:layout_below="@+id/networkEdit"
+            android:layout_marginTop="42dp"
+            android:hint="Password"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/usernameEdit"
+            android:layout_alignEnd="@+id/usernameEdit"
+            android:singleLine="true" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign in"
-        android:id="@+id/loginButton"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/usernameEdit"
+            android:layout_below="@+id/networkEdit"
+            android:layout_alignRight="@+id/networkEdit"
+            android:layout_alignEnd="@+id/networkEdit"
+            android:layout_alignLeft="@+id/networkEdit"
+            android:layout_alignStart="@+id/networkEdit"
+            android:hint="Username"
+            android:singleLine="true" />
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Do not save account data"
-        android:id="@+id/checkBox"
-        android:layout_below="@+id/passwordEdit"
-        android:layout_alignRight="@+id/loginButton"
-        android:layout_alignEnd="@+id/loginButton" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign in"
+            android:id="@+id/loginButton"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Status"
-        android:id="@+id/textView"
-        android:layout_below="@+id/loginButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="41dp" />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Do not save account data"
+            android:id="@+id/checkBox"
+            android:layout_below="@+id/passwordEdit"
+            android:layout_alignRight="@+id/loginButton"
+            android:layout_alignEnd="@+id/loginButton" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text=""
+            android:id="@+id/incorrectPasswordTextView"
+            android:layout_below="@+id/loginButton"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/signingInView">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Status"
+            android:id="@+id/statusTextView"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:id="@+id/cancelButton"
+            android:layout_below="@+id/statusTextView"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
