@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 public class Audio {
 
 	private boolean _sp, _ep, _bt; // Speaker, earpiece, bluetooth
+	private int _wearable = -1; // Wearable index
+	private int _wearables; // Wearable device count
 	private boolean _changing;
 	private AudioMode _mode; // Current mode
 	private BroadcastReceiver _receiver;
@@ -53,6 +55,8 @@ public class Audio {
 				return _ep;
 			case BLUETOOTH:
 				return _bt;
+			case WEARABLE:
+				return _wearables > 0;
 			default:
 				return false;
 		}
@@ -67,11 +71,35 @@ public class Audio {
 	}
 
 	public void setMode(AudioMode mode) {
+		doSetMode(mode, 0);
+	}
+
+	public void setWearableMode(AudioMode mode, int wearable) {
+		if (wearable >= 0) {
+			doSetMode(mode, wearable);
+		}
+	}
+
+	public void doSetMode(AudioMode mode, int wearable) {
 		Context context = _context;
 		if (context != null) {
 			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
 			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUDIO);
-			intent.putExtra(Constants.EXTRA_MODE, mode == AudioMode.BLUETOOTH ? Constants.EXTRA_BT : (mode == AudioMode.EARPIECE ? Constants.EXTRA_EP : Constants.EXTRA_SP));
+			final String command;
+			switch (mode) {
+				case BLUETOOTH:
+					command = Constants.EXTRA_BT;
+					break;
+				case EARPIECE:
+					command = Constants.EXTRA_EP;
+					break;
+				case WEARABLE:
+					command = Constants.EXTRA_WA + wearable;
+					break;
+				default:
+					command = Constants.EXTRA_SP;
+			}
+			intent.putExtra(Constants.EXTRA_MODE, command);
 			context.sendBroadcast(intent);
 		}
 	}
@@ -79,7 +107,14 @@ public class Audio {
 	private void updateAudioState(Intent intent) {
 		if (intent != null) {
 			String mode = Util.emptyIfNull(intent.getStringExtra(Constants.EXTRA_MODE));
-			if (mode.equals(Constants.EXTRA_EP)) {
+			if (mode.startsWith(Constants.EXTRA_WA)) {
+				_mode = AudioMode.WEARABLE;
+				try {
+					_wearable = Integer.parseInt(mode.substring(Constants.EXTRA_WA.length()));
+				} catch (NumberFormatException ignore) {
+					_wearable = 0;
+				}
+			} else if (mode.equals(Constants.EXTRA_EP)) {
 				_mode = AudioMode.EARPIECE;
 			} else if (mode.equals(Constants.EXTRA_BT)) {
 				_mode = AudioMode.BLUETOOTH;
@@ -89,6 +124,7 @@ public class Audio {
 			_sp = intent.getBooleanExtra(Constants.EXTRA_SP, true);
 			_ep = intent.getBooleanExtra(Constants.EXTRA_EP, false);
 			_bt = intent.getBooleanExtra(Constants.EXTRA_BT, false);
+			_wearables = intent.getIntExtra(Constants.EXTRA_WA, 0);
 		}
 	}
 

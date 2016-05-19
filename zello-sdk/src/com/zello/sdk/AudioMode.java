@@ -4,6 +4,7 @@ public enum AudioMode {
 
 	SPEAKER,
 	EARPIECE,
-	BLUETOOTH
+	BLUETOOTH,
+	WEARABLE
 
 }

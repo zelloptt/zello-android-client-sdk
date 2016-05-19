@@ -64,6 +64,7 @@ class Constants {
 	static final String EXTRA_BT = "BT";
 	static final String EXTRA_EP = "EP";
 	static final String EXTRA_SP = "SP";
+	static final String EXTRA_WA = "WA"; // When used as a value of EXTRA_MODE, should include an index of the wearable, i.e. WA0, WA2 etc.
 
 	static final String VALUE_BEGIN_MESSAGE = "BEGIN_MESSAGE";
 	static final String VALUE_END_MESSAGE = "END_MESSAGE";
