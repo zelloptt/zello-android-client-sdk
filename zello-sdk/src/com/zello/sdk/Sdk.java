@@ -317,8 +317,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Channels
 
 	/**
-	 * Description:   The connectChannel() method is required to send a message through the Zello SDK.
-	 * 				  This method opens a channel between two or more users in order to communicate.
+	 * Description:   This method opens a channel between two or more users in order to communicate.
 	 *
 	 * @param channel The name of the channel to connect to.
      */

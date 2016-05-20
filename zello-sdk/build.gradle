@@ -4,6 +4,19 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 }
 
+task deleteJar(type: Delete) {
+    delete 'libs/zello-sdk.jar'
+}
+
+task createJar(type: Copy) {
+    from('build/intermediates/bundles/release/')
+    into('libs')
+    include('classes.jar')
+    rename('classes.jar', 'zello-sdk.jar')
+}
+
+createJar.dependsOn(deleteJar, build)
+
 android {
     compileSdkVersion 21
     buildToolsVersion '23.0.3'
