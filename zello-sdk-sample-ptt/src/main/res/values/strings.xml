@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">zello-sdk-sample-ptt</string>
+
+    <string name="audio_speaker">SPEAKER</string>
+    <string name="audio_earpiece">EARPIECE</string>
+    <string name="audio_bluetooth">BLUETOOTH</string>
+    <string name="sign_in_status_offline">Please sign in using the sample sign in project.</string>
+    <string name="sign_in_status_signing_in">Signing in...</string>
+    <string name="no_selected_contact">Please select an available contact using the sample contact project.</string>
+    <string name="unavailable_selected_contact">Contact unavailable. Please select an available contact using the sample contact project.</string>
+</resources>

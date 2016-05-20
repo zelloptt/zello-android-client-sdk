@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.zello_sdk_sample_ptt.PttActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/statusTextView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
+
+    <com.example.zello_sdk_sample_ptt.SquareButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pushToTalkButton"
+        android:text="PUSH TO TALK"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/button_talk"
+        android:layout_below="@+id/connectChannelButton"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:id="@+id/audio_mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dip"
+        android:layout_below="@+id/pushToTalkButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <com.example.zello_sdk_sample_ptt.NoToggleButton
+            android:id="@+id/audio_speaker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="@string/audio_speaker"
+            android:textOn="@string/audio_speaker"/>
+
+        <com.example.zello_sdk_sample_ptt.NoToggleButton
+            android:id="@+id/audio_earpiece"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="@string/audio_earpiece"
+            android:textOn="@string/audio_earpiece"/>
+
+        <com.example.zello_sdk_sample_ptt.NoToggleButton
+            android:id="@+id/audio_bluetooth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOff="@string/audio_bluetooth"
+            android:textOn="@string/audio_bluetooth"/>
+    </LinearLayout>
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CONNECT CHANNEL"
+        android:id="@+id/connectChannelButton"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textOn="DISCONNECT CHANNEL"
+        android:textOff="CONNECT CHANNEL" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/messageStateTextView"
+        android:layout_below="@+id/audio_mode"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
+
+</RelativeLayout>
