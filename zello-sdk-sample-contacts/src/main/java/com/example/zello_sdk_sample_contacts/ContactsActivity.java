@@ -132,16 +132,19 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
         if (appState.isSignedIn()) {
             statusTextView.setVisibility(View.INVISIBLE);
             contactsListView.setVisibility(View.VISIBLE);
+            selectedContactTextView.setVisibility(View.VISIBLE);
 
             updateContactList();
         } else if (appState.isSigningIn()) {
             statusTextView.setVisibility(View.VISIBLE);
             statusTextView.setText(R.string.sign_in_status_signing_in);
             contactsListView.setVisibility(View.INVISIBLE);
+            selectedContactTextView.setVisibility(View.INVISIBLE);
         } else {
             statusTextView.setVisibility(View.VISIBLE);
             statusTextView.setText(R.string.sign_in_status_offline);
             contactsListView.setVisibility(View.INVISIBLE);
+            selectedContactTextView.setVisibility(View.INVISIBLE);
         }
     }
 
