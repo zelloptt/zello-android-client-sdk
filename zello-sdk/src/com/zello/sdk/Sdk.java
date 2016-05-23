@@ -47,6 +47,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_selectedContact.copyTo(contact);
 	}
 
+	/**
+	 * Set the selected contact to a specific Contact.
+	 * @param contact Nullable; Contact to select.
+     */
 	public void setSelectedContact(Contact contact) {
 		if (contact != null) {
 			ContactType type = contact.getType();
@@ -254,10 +258,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	/**
 	 * Description:     The selectContact() method selects a contact from the users contact list.
-	 * @param title     Optional; Activity Title
+	 * @param title     Nullable; Activity Title
 	 * @param tabs		Set of displayed Tabs.
-	 * @param activeTab Optional; Initially active tab.
-     * @param theme     Optional: Visual Theme.
+	 * @param activeTab Nullable; Initially active tab.
+     * @param theme     Nullable; Visual Theme.
      */
 	public void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
 		Context context = _context;
@@ -524,6 +528,9 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	/**
+	 * The openMainScreen() method will open the Zello for Work applications main screen upon invocation.
+	 */
 	public void openMainScreen() {
 		Context context = _context;
 		if (context != null) {
@@ -553,6 +560,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return _audio;
 	}
 
+	/**
+	 * The setAutoRun() method determines if the app should be launched on the start of the OS or not.
+	 * @param enable The boolean to enable this feature or not. By default, this value is false.
+     */
 	public void setAutoRun(boolean enable) {
 		if (isConnected()) {
 			Context context = _context;
@@ -565,6 +576,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	/**
+	 * The setAutoConnectChannels() method determines if channels should be automatically connected to.
+	 * @param connect The boolean to enable this feature or not.
+     */
 	public void setAutoConnectChannels(boolean connect) {
 		if (isConnected()) {
 			Context context = _context;
