@@ -26,6 +26,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     private NoToggleButton bluetoothButton;
     private View audioModeView;
     private TextView messageStateTextView;
+    private TextView selectedContactTextView;
 
     private com.zello.sdk.Sdk zelloSDK = new com.zello.sdk.Sdk();
     private com.zello.sdk.AppState appState = new com.zello.sdk.AppState();
@@ -43,13 +44,14 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         setContentView(R.layout.activity_ptt);
 
         statusTextView = (TextView)findViewById(R.id.statusTextView);
-        connectChannelButton = (ToggleButton) findViewById(R.id.connectChannelButton);
+        connectChannelButton = (ToggleButton)findViewById(R.id.connectChannelButton);
         pttButton = (SquareButton)findViewById(R.id.pushToTalkButton);
         speakerButton = (NoToggleButton)findViewById(R.id.audio_speaker);
         earpieceButton = (NoToggleButton)findViewById(R.id.audio_earpiece);
         bluetoothButton = (NoToggleButton)findViewById(R.id.audio_bluetooth);
         audioModeView = (View)findViewById(R.id.audio_mode);
         messageStateTextView = (TextView)findViewById(R.id.messageStateTextView);
+        selectedContactTextView = (TextView)findViewById(R.id.selectedContactTextView);
 
         // Constrain PTT button size
         pttButton.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
@@ -174,7 +176,6 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         zelloSDK.getAppState(appState);
 
         if (appState.isSignedIn()) {
-            Contact selectedContact = new Contact();
             zelloSDK.getSelectedContact(selectedContact);
 
             if (selectedContact != null && selectedContact.getDisplayName() != null) {
@@ -246,6 +247,8 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         statusTextView.setVisibility(View.INVISIBLE);
         pttButton.setVisibility(View.VISIBLE);
         audioModeView.setVisibility(View.VISIBLE);
+        selectedContactTextView.setVisibility(View.VISIBLE);
+        selectedContactTextView.setText("Selected Contact: " + selectedContact.getDisplayName());
 
         updateConnectChannelButton();
     }
@@ -255,6 +258,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         pttButton.setVisibility(View.INVISIBLE);
         audioModeView.setVisibility(View.INVISIBLE);
         connectChannelButton.setVisibility(View.INVISIBLE);
+        selectedContactTextView.setVisibility(View.INVISIBLE);
 
         statusTextView.setText(R.string.unavailable_selected_contact);
     }
@@ -264,6 +268,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         pttButton.setVisibility(View.INVISIBLE);
         audioModeView.setVisibility(View.INVISIBLE);
         connectChannelButton.setVisibility(View.INVISIBLE);
+        selectedContactTextView.setVisibility(View.INVISIBLE);
 
         statusTextView.setText(R.string.sign_in_status_signing_in);
     }
@@ -273,6 +278,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         pttButton.setVisibility(View.INVISIBLE);
         audioModeView.setVisibility(View.INVISIBLE);
         connectChannelButton.setVisibility(View.INVISIBLE);
+        selectedContactTextView.setVisibility(View.INVISIBLE);
 
         statusTextView.setText(R.string.sign_in_status_offline);
     }

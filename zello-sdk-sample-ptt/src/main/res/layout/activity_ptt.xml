@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
+        android:text=""
         android:id="@+id/statusTextView"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
@@ -27,7 +27,7 @@
         android:textColor="#FFFFFF"
         android:background="@drawable/button_talk"
         android:layout_below="@+id/connectChannelButton"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"/>
 
     <LinearLayout
         android:id="@+id/audio_mode"
@@ -62,16 +62,6 @@
             android:textOn="@string/audio_bluetooth"/>
     </LinearLayout>
 
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="CONNECT CHANNEL"
-        android:id="@+id/connectChannelButton"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:textOn="DISCONNECT CHANNEL"
-        android:textOff="CONNECT CHANNEL" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,5 +70,23 @@
         android:layout_below="@+id/audio_mode"
         android:layout_centerHorizontal="true"
         android:textAlignment="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Selected Contact: "
+        android:id="@+id/selectedContactTextView"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/connectChannelButton"
+        android:textOn="DISCONNECT CHANNEL"
+        android:textOff="CONNECT CHANNEL"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
