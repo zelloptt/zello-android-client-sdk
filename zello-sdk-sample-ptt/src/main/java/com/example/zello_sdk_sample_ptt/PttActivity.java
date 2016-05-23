@@ -226,7 +226,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onAudioStateChanged() {
-
+        updateAudioMode();
     }
 
     @Override
