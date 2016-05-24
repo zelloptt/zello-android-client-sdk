@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">zello-sdk-sample-misc</string>
+
+    <string name="lock">Lock</string>
+    <string name="unlock">Unlock</string>
+
+    <string name="status_locked">The PTT app is locked.</string>
+
+    <string name="sign_in_status_offline">Please sign in using the sample sign in project.</string>
+    <string name="sign_in_status_signing_in">Signing in...</string>
+
+    <string name="menu_available">Available</string>
+    <string name="menu_solo">Solo</string>
+    <string name="menu_busy">Busy</string>
+    <string name="menu_set_status">Set Status</string>
+    <string name="menu_set_status_message">Custom Message</string>
+    <string name="menu_select_contact">Select contact</string>
+    <string name="menu_lock_ptt_app">Lock PTT app</string>
+    <string name="menu_unlock_ptt_app">Unlock PTT app</string>
+    <string name="menu_enable_auto_run">Enable auto-run</string>
+    <string name="menu_disable_auto_run">Disable auto-run</string>
+    <string name="menu_enable_auto_connect_channels">Enable channel auto-connect</string>
+    <string name="menu_disable_auto_connect_channels">Disable channel auto-connect</string>
+    <string name="menu_open_app">Open Zello for Work</string>
+</resources>

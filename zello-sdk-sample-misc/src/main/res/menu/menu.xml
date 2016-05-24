@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_set_status"
+        android:title="@string/menu_set_status"/>
+
+    <item
+        android:id="@+id/menu_select_contact"
+        android:title="@string/menu_select_contact"/>
+
+    <item
+        android:id="@+id/menu_lock_ptt_app"
+        android:title="@string/menu_lock_ptt_app"/>
+
+    <item
+        android:id="@+id/menu_unlock_ptt_app"
+        android:title="@string/menu_unlock_ptt_app"/>
+
+    <item
+        android:id="@+id/menu_enable_auto_run"
+        android:title="@string/menu_enable_auto_run"/>
+
+    <item
+        android:id="@+id/menu_disable_auto_run"
+        android:title="@string/menu_disable_auto_run"/>
+
+    <item
+        android:id="@+id/menu_enable_auto_connect_channels"
+        android:title="@string/menu_enable_auto_connect_channels"/>
+
+    <item
+        android:id="@+id/menu_disable_auto_connect_channels"
+        android:title="@string/menu_disable_auto_connect_channels"/>
+
+    <item
+        android:id="@+id/menu_open_app"
+        android:title="@string/menu_open_app" />
+
+</menu>
