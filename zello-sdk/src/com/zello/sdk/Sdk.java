@@ -10,7 +10,13 @@ import android.util.Log;
 
 import java.security.MessageDigest;
 
+/**
+ * Description: The Sdk class acts as the primary means of interacting to the Zello SDK.
+ * Usage:		Instantiate an instance of the Sdk class. For specific usage, please see the sample projects.
+ */
 public class Sdk implements SafeHandlerEvents, ServiceConnection {
+
+	//region Private Variables
 
 	private String _package = "";
 	private Context _context;
@@ -40,46 +46,17 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private static final String _pttActivityClass = "com.zello.sdk.Context";
 	private static Intent _serviceIntent;
 
+	//endregion
+
+	//region Initializer
+
 	public Sdk() {
+
 	}
 
-	public void getSelectedContact(Contact contact) {
-		_selectedContact.copyTo(contact);
-	}
+	//endregion
 
-	/**
-	 * Set the selected contact to a specific Contact.
-	 * @param contact Nullable; Contact to select.
-     */
-	public void setSelectedContact(Contact contact) {
-		if (contact != null) {
-			ContactType type = contact.getType();
-			selectContact(type == ContactType.CHANNEL || type == ContactType.GROUP ? 1 : 0, contact.getName());
-		} else {
-			selectContact(0, null);
-		}
-	}
-
-	public void setSelectedUserOrGateway(String name) {
-		selectContact(0, name);
-	}
-
-	public void setSelectedChannelOrGroup(String name) {
-		selectContact(1, name);
-	}
-
-
-	public void getMessageIn(MessageIn message) {
-		_messageIn.copyTo(message);
-	}
-
-	public void getMessageOut(MessageOut message) {
-		_messageOut.copyTo(message);
-	}
-
-	public void getAppState(AppState state) {
-		_appState.copyTo(state);
-	}
+	//region Lifecycle Methods
 
 	@SuppressLint("InlinedApi")
 	@SuppressWarnings("deprecation")
@@ -256,6 +233,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		stopAwakeTimer();
 	}
 
+	//endregion
+
+	//region Public Zello SDK Methods
+
 	/**
 	 * Description:     The selectContact() method selects a contact from the users contact list.
 	 * @param title     Nullable; Activity Title
@@ -378,19 +359,6 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//endregion
 
-	private void selectContact(int type, String name) {
-		Context context = _context;
-		if (context != null) {
-			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SELECT_CONTACT);
-			if (name != null && name.length() > 0) {
-				intent.putExtra(Constants.EXTRA_CONTACT_NAME, name);
-				intent.putExtra(Constants.EXTRA_CONTACT_TYPE, type);
-			}
-			context.sendBroadcast(intent);
-		}
-	}
-
 	//region Authentication
 
 	/**
@@ -438,7 +406,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * The signOut() method unauthenticates the user from the network.
+	 * Description: The signOut() method unauthenticates the user from the network.
 	 */
 	public void signOut() {
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
@@ -454,7 +422,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * The cancel() method cancels the ongoing authentication request from the signIn() method.
+	 * Description: The cancel() method cancels the ongoing authentication request from the signIn() method.
 	 */
 	public void cancel() {
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
@@ -471,6 +439,13 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//endregion
 
+	//region Locking
+
+	/**
+	 * Description:			  The lock() method puts the PTT app into a locked state where messages cannot be sent or received.
+	 * @param applicationName The name of the application to lock.
+	 * @param packageName	  The package name of the application to lock.
+     */
 	public void lock(String applicationName, String packageName) {
 		if (isConnected()) {
 			Context context = _context;
@@ -484,6 +459,9 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	/**
+	 * Description: The unlock() method unlocks the PTT app.
+	 */
 	public void unlock() {
 		if (isConnected()) {
 			Context context = _context;
@@ -494,6 +472,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			}
 		}
 	}
+
+	//endregion
+
+	//region Status
 
 	/**
 	 * Description:  The setStatus() method sets the status of a user to a Status message.
@@ -528,8 +510,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	//endregion
+
 	/**
-	 * The openMainScreen() method will open the Zello for Work applications main screen upon invocation.
+	 * Description: The openMainScreen() method will open the Zello for Work applications main screen upon invocation.
 	 */
 	public void openMainScreen() {
 		Context context = _context;
@@ -543,6 +527,24 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	//region Getters
+
+	public void getMessageIn(MessageIn message) {
+		_messageIn.copyTo(message);
+	}
+
+	public void getMessageOut(MessageOut message) {
+		_messageOut.copyTo(message);
+	}
+
+	public void getAppState(AppState state) {
+		_appState.copyTo(state);
+	}
+
+	public void getSelectedContact(Contact contact) {
+		_selectedContact.copyTo(contact);
+	}
+
 	/**
 	 * Description: The getContacts() method returns the Contacts for the user.
 	 * @return The Contacts object for the user.
@@ -551,6 +553,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return _contacts;
 	}
 
+	/**
+	 * Description: The getAudio() method returns the current Audio instance for the Sdk.
+	 * @return		The Audio instance.
+     */
 	public Audio getAudio() {
 		if (_context != null) {
 			if (_audio == null) {
@@ -560,8 +566,12 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return _audio;
 	}
 
+	//endregion
+
+	//region Setters
+
 	/**
-	 * The setAutoRun() method determines if the app should be launched on the start of the OS or not.
+	 * Description: The setAutoRun() method determines if the app should be launched on the start of the OS or not.
 	 * @param enable The boolean to enable this feature or not. By default, this value is false.
      */
 	public void setAutoRun(boolean enable) {
@@ -577,7 +587,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * The setAutoConnectChannels() method determines if channels should be automatically connected to.
+	 * Description: The setAutoConnectChannels() method determines if channels should be automatically connected to.
 	 * @param connect The boolean to enable this feature or not.
      */
 	public void setAutoConnectChannels(boolean connect) {
@@ -592,6 +602,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	/**
+	 * Description: The setExternalId() method sets an external id for messages to filter though. By default, the externalId is NULL.
+	 * @param id    Nullable; String indicating the external id.
+     */
 	public void setExternalId(String id) {
 		if (isConnected()) {
 			Context context = _context;
@@ -604,16 +618,34 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	private void sendStayAwake() {
-		if (isConnected()) {
-			Context context = _context;
-			if (context != null) {
-				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_STAY_AWAKE);
-				context.sendBroadcast(intent);
-			}
+	/**
+	 * Set the selected contact to a specific Contact.
+	 * @param contact Nullable; Contact to select.
+	 */
+	public void setSelectedContact(Contact contact) {
+		if (contact != null) {
+			ContactType type = contact.getType();
+			selectContact(type == ContactType.CHANNEL || type == ContactType.GROUP ? 1 : 0, contact.getName());
+		} else {
+			selectContact(0, null);
 		}
 	}
+
+	public void setSelectedUserOrGateway(String name) {
+		selectContact(0, name);
+	}
+
+	public void setSelectedChannelOrGroup(String name) {
+		selectContact(1, name);
+	}
+
+	//endregion
+
+	//endregion
+
+	//region Overridden Methods
+
+	//region SafeHandlerEvents
 
 	@Override
 	public void handleMessageFromSafeHandler(Message message) {
@@ -626,6 +658,79 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 						h.sendMessageDelayed(h.obtainMessage(AWAKE_TIMER), Constants.STAY_AWAKE_TIMEOUT);
 					}
 				}
+			}
+		}
+	}
+
+	//endregion
+
+	//region ServiceConnection
+
+	@Override
+	public void onServiceConnected(ComponentName name, IBinder service) {
+		Context context = _context;
+		if (context != null) {
+			if (_serviceConnecting) {
+				_serviceConnecting = false;
+				context.startService(getServiceIntent());
+				if (_delayedNetwork != null) {
+					signIn(_delayedNetwork, _delayedUsername, _delayedPassword, _delayedPerishable);
+				}
+				_delayedNetwork = _delayedUsername = _delayedPassword = null;
+				_delayedPerishable = false;
+				// If service is not bound, the component was destroyed and the service needs to be disconnected
+				if (!_serviceBound) {
+					Log.i("zello sdk", "disconnecting because sdk was destroyed");
+					try {
+						context.unbindService(this);
+					} catch (Throwable t) {
+					}
+					_context = null;
+					_appState._error = false;
+				}
+				_appState._initializing = false;
+				fireAppStateChanged();
+			}
+		}
+	}
+
+	@Override
+	public void onServiceDisconnected(ComponentName name) {
+		_serviceBound = false;
+		if (_serviceConnecting) {
+			_serviceConnecting = false;
+			_appState._initializing = false;
+			_appState._error = false;
+			fireAppStateChanged();
+		}
+	}
+
+	//endregion
+
+	//endregion
+
+	//region Private Methods
+
+	private void selectContact(int type, String name) {
+		Context context = _context;
+		if (context != null) {
+			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SELECT_CONTACT);
+			if (name != null && name.length() > 0) {
+				intent.putExtra(Constants.EXTRA_CONTACT_NAME, name);
+				intent.putExtra(Constants.EXTRA_CONTACT_TYPE, type);
+			}
+			context.sendBroadcast(intent);
+		}
+	}
+
+	private void sendStayAwake() {
+		if (isConnected()) {
+			Context context = _context;
+			if (context != null) {
+				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_STAY_AWAKE);
+				context.sendBroadcast(intent);
 			}
 		}
 	}
@@ -694,45 +799,6 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		Contacts contacts = _contacts;
 		if (contacts != null) {
 			contacts.invalidate();
-		}
-	}
-
-	@Override
-	public void onServiceConnected(ComponentName name, IBinder service) {
-		Context context = _context;
-		if (context != null) {
-			if (_serviceConnecting) {
-				_serviceConnecting = false;
-				context.startService(getServiceIntent());
-				if (_delayedNetwork != null) {
-					signIn(_delayedNetwork, _delayedUsername, _delayedPassword, _delayedPerishable);
-				}
-				_delayedNetwork = _delayedUsername = _delayedPassword = null;
-				_delayedPerishable = false;
-				// If service is not bound, the component was destroyed and the service needs to be disconnected
-				if (!_serviceBound) {
-					Log.i("zello sdk", "disconnecting because sdk was destroyed");
-					try {
-						context.unbindService(this);
-					} catch (Throwable t) {
-					}
-					_context = null;
-					_appState._error = false;
-				}
-				_appState._initializing = false;
-				fireAppStateChanged();
-			}
-		}
-	}
-
-	@Override
-	public void onServiceDisconnected(ComponentName name) {
-		_serviceBound = false;
-		if (_serviceConnecting) {
-			_serviceConnecting = false;
-			_appState._initializing = false;
-			_appState._error = false;
-			fireAppStateChanged();
 		}
 	}
 
@@ -914,6 +980,10 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	//endregion
+
+	//region Static Methods
+
 	static Error intToError(int error) {
 		if (error > Error.NONE.ordinal()) {
 			if (error == Error.INVALID_CREDENTIALS.ordinal()) {
@@ -1053,5 +1123,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 		return "";
 	}
+
+	//endregion
 
 }
