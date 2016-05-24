@@ -11,8 +11,12 @@ import android.util.Log;
 import java.security.MessageDigest;
 
 /**
- * Description: The Sdk class acts as the primary means of interacting to the Zello SDK.
- * Usage:		Instantiate an instance of the Sdk class. For specific usage, please see the sample projects.
+ * <pre>
+ * The Sdk class acts as the primary means of interacting to the Zello SDK.
+ * </pre>
+ * <pre>
+ * To use, instantiate an instance of the Sdk class. For specific usage, please see the sample projects.
+ * </pre>
  */
 public class Sdk implements SafeHandlerEvents, ServiceConnection {
 
@@ -238,7 +242,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Public Zello SDK Methods
 
 	/**
-	 * Description:     The selectContact() method selects a contact from the users contact list.
+	 * The selectContact() method selects a contact from the users contact list.
 	 * @param title     Nullable; Activity Title
 	 * @param tabs		Set of displayed Tabs.
 	 * @param activeTab Nullable; Initially active tab.
@@ -270,9 +274,13 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Sending Messages
 
-	/*
-	 * Description:   The beginMessage() method is the starting point for sending a message through the Zello SDK.
-	 * 				  Once called, a message will be recorded until endMessage() method is called.
+	/**
+	 * <pre>
+	 * The beginMessage() method is the starting point for sending a message through the Zello SDK.
+	 * </pre>
+	 * <pre>
+	 * Once called, a message will be recorded until endMessage() method is called.
+	 * </pre>
 	 */
 	public void beginMessage() {
 		Context context = _context;
@@ -284,9 +292,12 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
+	 * <pre>
+	 * The endMessage() method is the ending point for sending a message through the Zello SDK.
+	 * </pre>
+	 * <pre>
 	 * Prerequisites: There must be an invocation of the beginMessage() method.
-	 *
-	 * Description:   The endMessage() method is the ending point for sending a message through the Zello SDK.
+	 * </pre>
 	 */
 	public void endMessage() {
 		Context context = _context;
@@ -302,8 +313,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Channels
 
 	/**
-	 * Description:   This method opens a channel between two or more users in order to communicate.
-	 *
+	 * This method opens a channel between two or more users in order to communicate.
 	 * @param channel The name of the channel to connect to.
      */
 	public void connectChannel(String channel) {
@@ -319,7 +329,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * Description:   The disconnectChannel() method disconnects the user from the channel.
+	 * The disconnectChannel() method disconnects the user from the channel.
 	 * @param channel The name of the channel to disconnect from.
      */
 	public void disconnectChannel(String channel) {
@@ -339,7 +349,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Contacts
 
 	/**
-	 * Description:   The muteContact() method either mutes or unmutes a contact.
+	 * The muteContact() method either mutes or unmutes a contact.
 	 * @param contact The contact to mute or unmute.
 	 * @param mute    Whether the contact should be muted or not.
      */
@@ -362,23 +372,23 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Authentication
 
 	/**
-	 * Description:    The signIn() method authenticates the user on the network with the passed in login credentials.
+	 * The signIn() method authenticates the user on the network with the passed in login credentials.
 	 * @param network  The network to authenticate against.
 	 * @param username The username to authenticate.
 	 * @param password The password for the username.
-	 * @return boolean indicating whether a sign in was attempted or not.
+	 * @return 		   boolean indicating whether a sign in was attempted or not.
      */
 	public boolean signIn(String network, String username, String password) {
 		return signIn(network, username, password, false);
 	}
 
 	/**
-	 * Description:      The signIn() method authenticates the user on the network with the passed in login credentials with an option for the authentication to perish.
+	 * The signIn() method authenticates the user on the network with the passed in login credentials with an option for the authentication to perish.
 	 * @param network    The network to authenticate against.
 	 * @param username   The username to authenticate.
 	 * @param password   The password for the username.
 	 * @param perishable Whether or not the authentication should expire.
-     * @return boolean indicating whether a sign in was attempted or not.
+     * @return 			 boolean indicating whether a sign in was attempted or not.
      */
 	public boolean signIn(String network, String username, String password, boolean perishable) {
 		if (network != null && network.length() > 0 && username != null && username.length() > 0 && password != null && password.length() > 0) {
@@ -406,7 +416,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * Description: The signOut() method unauthenticates the user from the network.
+	 * The signOut() method unauthenticates the user from the network.
 	 */
 	public void signOut() {
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
@@ -422,7 +432,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * Description: The cancel() method cancels the ongoing authentication request from the signIn() method.
+	 * The cancel() method cancels the ongoing authentication request from the signIn() method.
 	 */
 	public void cancel() {
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
@@ -442,7 +452,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Locking
 
 	/**
-	 * Description:			  The lock() method puts the PTT app into a locked state where messages cannot be sent or received.
+	 * The lock() method puts the PTT app into a locked state where messages cannot be sent or received.
 	 * @param applicationName The name of the application to lock.
 	 * @param packageName	  The package name of the application to lock.
      */
@@ -460,7 +470,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * Description: The unlock() method unlocks the PTT app.
+	 * The unlock() method unlocks the PTT app.
 	 */
 	public void unlock() {
 		if (isConnected()) {
@@ -478,7 +488,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Status
 
 	/**
-	 * Description:  The setStatus() method sets the status of a user to a Status message.
+	 * The setStatus() method sets the status of a user to a Status message.
 	 * @param status The state to set the users status to.
      */
 	public void setStatus(Status status) {
@@ -495,7 +505,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * Description:   The setStatusMessage() method sets the status of a user to a custom message.
+	 * The setStatusMessage() method sets the status of a user to a custom message.
 	 * @param message The custom message to set the users status to.
      */
 	public void setStatusMessage(String message) {
@@ -513,7 +523,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//endregion
 
 	/**
-	 * Description: The openMainScreen() method will open the Zello for Work applications main screen upon invocation.
+	 * The openMainScreen() method will open the Zello for Work applications main screen upon invocation.
 	 */
 	public void openMainScreen() {
 		Context context = _context;
@@ -546,7 +556,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * Description: The getContacts() method returns the Contacts for the user.
+	 * The getContacts() method returns the Contacts for the user.
 	 * @return The Contacts object for the user.
      */
 	public Contacts getContacts() {
@@ -554,8 +564,8 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * Description: The getAudio() method returns the current Audio instance for the Sdk.
-	 * @return		The Audio instance.
+	 * The getAudio() method returns the current Audio instance for the Sdk.
+	 * @return The Audio instance.
      */
 	public Audio getAudio() {
 		if (_context != null) {
@@ -571,7 +581,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Setters
 
 	/**
-	 * Description: The setAutoRun() method determines if the app should be launched on the start of the OS or not.
+	 * The setAutoRun() method determines if the app should be launched on the start of the OS or not.
 	 * @param enable The boolean to enable this feature or not. By default, this value is false.
      */
 	public void setAutoRun(boolean enable) {
@@ -587,7 +597,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * Description: The setAutoConnectChannels() method determines if channels should be automatically connected to.
+	 * The setAutoConnectChannels() method determines if channels should be automatically connected to.
 	 * @param connect The boolean to enable this feature or not.
      */
 	public void setAutoConnectChannels(boolean connect) {
@@ -603,8 +613,8 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * Description: The setExternalId() method sets an external id for messages to filter though. By default, the externalId is NULL.
-	 * @param id    Nullable; String indicating the external id.
+	 * The setExternalId() method sets an external id for messages to filter though. By default, the externalId is NULL.
+	 * @param id Nullable; String indicating the external id.
      */
 	public void setExternalId(String id) {
 		if (isConnected()) {
