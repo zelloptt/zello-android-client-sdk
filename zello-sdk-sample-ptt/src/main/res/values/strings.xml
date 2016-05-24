@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">zello-sdk-sample-ptt</string>
 
+    <string name="locked">PTT App is locked. Please unlock the app using the sample misc project.</string>
+
     <string name="audio_speaker">SPEAKER</string>
     <string name="audio_earpiece">EARPIECE</string>
     <string name="audio_bluetooth">BLUETOOTH</string>

@@ -146,12 +146,17 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         super.onPrepareOptionsMenu(menu);
 
         menu.clear();
-        getMenuInflater().inflate(R.menu.menu, menu);
-        showMenuItem(menu, R.id.menu_mute_contact, true);
 
-        zelloSDK.getSelectedContact(selectedContact);
-        String itemTitle = selectedContact.getMuted() ? "Unmute Contact" : "Mute Contact";
-        menu.getItem(0).setTitle(itemTitle);
+        zelloSDK.getAppState(appState);
+
+        if (appState.isSignedIn() && !appState.isLocked()) {
+            getMenuInflater().inflate(R.menu.menu, menu);
+            showMenuItem(menu, R.id.menu_mute_contact, true);
+
+            zelloSDK.getSelectedContact(selectedContact);
+            String itemTitle = selectedContact.getMuted() ? "Unmute Contact" : "Mute Contact";
+            menu.getItem(0).setTitle(itemTitle);
+        }
 
         return true;
     }
@@ -174,8 +179,9 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     @Override
     public void onAppStateChanged() {
         zelloSDK.getAppState(appState);
-
-        if (appState.isSignedIn()) {
+        if (appState.isLocked()) {
+            updateUIForLocked();
+        } else if (appState.isSignedIn()) {
             zelloSDK.getSelectedContact(selectedContact);
 
             if (selectedContact != null && selectedContact.getDisplayName() != null) {
@@ -241,22 +247,46 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
     //endregion
 
+    private void updateUIForLocked() {
+        Helper.invalidateOptionsMenu(this);
+
+        statusTextView.setVisibility(View.VISIBLE);
+
+        pttButton.setVisibility(View.INVISIBLE);
+        audioModeView.setVisibility(View.INVISIBLE);
+        speakerButton.setVisibility(View.INVISIBLE);
+        bluetoothButton.setVisibility(View.INVISIBLE);
+        earpieceButton.setVisibility(View.INVISIBLE);
+        connectChannelButton.setVisibility(View.INVISIBLE);
+        selectedContactTextView.setVisibility(View.INVISIBLE);
+
+        statusTextView.setText(R.string.locked);
+    }
+
     private void updateUIForAvailableContact() {
         Helper.invalidateOptionsMenu(this);
 
         statusTextView.setVisibility(View.INVISIBLE);
+
         pttButton.setVisibility(View.VISIBLE);
         audioModeView.setVisibility(View.VISIBLE);
         selectedContactTextView.setVisibility(View.VISIBLE);
         selectedContactTextView.setText("Selected Contact: " + selectedContact.getDisplayName());
 
         updateConnectChannelButton();
+        updateAudioMode();
     }
 
     private void updateUIForUnavailableContact() {
+        Helper.invalidateOptionsMenu(this);
+
         statusTextView.setVisibility(View.VISIBLE);
+
         pttButton.setVisibility(View.INVISIBLE);
         audioModeView.setVisibility(View.INVISIBLE);
+        speakerButton.setVisibility(View.INVISIBLE);
+        bluetoothButton.setVisibility(View.INVISIBLE);
+        earpieceButton.setVisibility(View.INVISIBLE);
         connectChannelButton.setVisibility(View.INVISIBLE);
         selectedContactTextView.setVisibility(View.INVISIBLE);
 
@@ -264,9 +294,15 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     }
 
     private void updateUIForSigningIn() {
+        Helper.invalidateOptionsMenu(this);
+
         statusTextView.setVisibility(View.VISIBLE);
+
         pttButton.setVisibility(View.INVISIBLE);
         audioModeView.setVisibility(View.INVISIBLE);
+        speakerButton.setVisibility(View.INVISIBLE);
+        bluetoothButton.setVisibility(View.INVISIBLE);
+        earpieceButton.setVisibility(View.INVISIBLE);
         connectChannelButton.setVisibility(View.INVISIBLE);
         selectedContactTextView.setVisibility(View.INVISIBLE);
 
@@ -274,7 +310,10 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     }
 
     private void updateUIForDisconnected() {
+        Helper.invalidateOptionsMenu(this);
+
         statusTextView.setVisibility(View.VISIBLE);
+
         pttButton.setVisibility(View.INVISIBLE);
         audioModeView.setVisibility(View.INVISIBLE);
         connectChannelButton.setVisibility(View.INVISIBLE);
