@@ -645,7 +645,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * Set the selected contact to a specific Contact.
+	 * The setSelectedContact() method sets the selected contact to a specified Contact.
 	 * @param contact Nullable; Contact to select. A null value will deselect the current Contact.
 	 */
 	public void setSelectedContact(Contact contact) {
@@ -657,10 +657,18 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	/**
+	 * The setSelectedUserOrGateway() method sets the selected contact to a specified User or Gateway.
+	 * @param name Nullable; The name of the User or Gateway to select. A null value will deselect the current Contact.
+	 */
 	public void setSelectedUserOrGateway(String name) {
 		selectContact(0, name);
 	}
 
+	/**
+	 * The setSelectedChannelOrGroup() method sets the selected contact to a specified Channel or Group.
+	 * @param name Nullable; The name of the Channel or Group to select. A null value will deselect the current Contact.
+     */
 	public void setSelectedChannelOrGroup(String name) {
 		selectContact(1, name);
 	}
