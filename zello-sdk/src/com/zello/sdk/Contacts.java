@@ -6,7 +6,12 @@ import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 
+/**
+ * The Contacts class represent the set of Contacts that the user has.
+ */
 public class Contacts {
+
+	//region Private Properties
 
 	private static final String _authoritySuffix = ".provider";
 	private static final String _contactsPath = "/contacts";
@@ -42,6 +47,10 @@ public class Contacts {
 
 	private static Uri _uri;
 
+	//endregion
+
+	//region Package Private Methods
+
 	/* package */ Contacts(String packageName, Context context, Handler handler, Events events) {
 		_events = events;
 		_context = context;
@@ -72,6 +81,83 @@ public class Contacts {
 			events.onContactsChanged();
 		}
 	}
+
+	//endregion
+
+	//region Public Methods
+
+	//region Getters
+
+	/**
+	 * The getCount() method returns the number of Contacts that the user has.
+	 * @return the number of Contacts for the user.
+     */
+	public int getCount() {
+		check();
+		Cursor cursor = _cursor;
+		if (cursor != null) {
+			try {
+				return cursor.getCount();
+			} catch (Throwable t) {
+				Log.i("zello sdk", "Error in Contacts.getCount: " + t.toString());
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * The getItem() method returns the Contact at the specified index.
+	 * @param index Index indicating which Contact to retrieve.
+	 * @return Contact at the specified index.
+     */
+	public Contact getItem(int index) {
+		check();
+		Cursor cursor = _cursor;
+		if (cursor != null) {
+			cursor.moveToPosition(index);
+			Contact contact = new Contact();
+			try {
+				contact._name = cursor.getString(_indexName);
+				contact._fullName = cursor.getString(_indexFullName);
+				contact._displayName = cursor.getString(_indexDisplayName);
+				contact._type = Sdk.intToContactType(cursor.getInt(_indexType));
+				contact._status = Sdk.intToContactStatus(cursor.getInt(_indexStatus));
+				contact._title = cursor.getString(_indexTitle);
+				contact._muted = cursor.getInt(_indexMuted) != 0;
+				switch (contact._type) {
+					case USER:
+					case GATEWAY: {
+						contact._statusMessage = cursor.getString(_indexStatusMessage);
+						break;
+					}
+					case CHANNEL: {
+						contact._usersCount = cursor.getInt(_indexUsersCount);
+						break;
+					}
+					case GROUP: {
+						contact._usersCount = cursor.getInt(_indexUsersCount);
+						contact._usersTotal = cursor.getInt(_indexUsersTotal);
+						break;
+					}
+				}
+				if (_indexNoDisconnect >= 0) {
+					contact._noDisconnect = (contact._type != ContactType.CHANNEL && contact._type != ContactType.GROUP) || cursor.getInt(_indexNoDisconnect) != 0;
+				} else {
+					contact._noDisconnect = contact._type != ContactType.CHANNEL;
+				}
+				return contact;
+			} catch (Throwable t) {
+				Log.i("zello sdk", "Error in Contacts.getItem: " + t.toString());
+			}
+		}
+		return null;
+	}
+
+	//endregion
+
+	//endregion
+
+	//region Private Methods
 
 	private void query() {
 		Context context = _context;
@@ -136,60 +222,6 @@ public class Contacts {
 		}
 	}
 
-	public int getCount() {
-		check();
-		Cursor cursor = _cursor;
-		if (cursor != null) {
-			try {
-				return cursor.getCount();
-			} catch (Throwable t) {
-				Log.i("zello sdk", "Error in Contacts.getCount: " + t.toString());
-			}
-		}
-		return 0;
-	}
-
-	public Contact getItem(int index) {
-		check();
-		Cursor cursor = _cursor;
-		if (cursor != null) {
-			cursor.moveToPosition(index);
-			Contact contact = new Contact();
-			try {
-				contact._name = cursor.getString(_indexName);
-				contact._fullName = cursor.getString(_indexFullName);
-				contact._displayName = cursor.getString(_indexDisplayName);
-				contact._type = Sdk.intToContactType(cursor.getInt(_indexType));
-				contact._status = Sdk.intToContactStatus(cursor.getInt(_indexStatus));
-				contact._title = cursor.getString(_indexTitle);
-				contact._muted = cursor.getInt(_indexMuted) != 0;
-				switch (contact._type) {
-					case USER:
-					case GATEWAY: {
-						contact._statusMessage = cursor.getString(_indexStatusMessage);
-						break;
-					}
-					case CHANNEL: {
-						contact._usersCount = cursor.getInt(_indexUsersCount);
-						break;
-					}
-					case GROUP: {
-						contact._usersCount = cursor.getInt(_indexUsersCount);
-						contact._usersTotal = cursor.getInt(_indexUsersTotal);
-						break;
-					}
-				}
-				if (_indexNoDisconnect >= 0) {
-					contact._noDisconnect = (contact._type != ContactType.CHANNEL && contact._type != ContactType.GROUP) || cursor.getInt(_indexNoDisconnect) != 0;
-				} else {
-					contact._noDisconnect = contact._type != ContactType.CHANNEL;
-				}
-				return contact;
-			} catch (Throwable t) {
-				Log.i("zello sdk", "Error in Contacts.getItem: " + t.toString());
-			}
-		}
-		return null;
-	}
+	//endregion
 
 }

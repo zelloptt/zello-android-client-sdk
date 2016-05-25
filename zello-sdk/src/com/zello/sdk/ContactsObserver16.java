@@ -3,9 +3,9 @@ package com.zello.sdk;
 import android.net.Uri;
 import android.os.Handler;
 
-public class ContactsObserver16 extends ContactsObserver {
+class ContactsObserver16 extends ContactsObserver {
 
-	public ContactsObserver16(Contacts contacts, Handler handler) {
+	ContactsObserver16(Contacts contacts, Handler handler) {
 		super(contacts, handler);
 	}
 

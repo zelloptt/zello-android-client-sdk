@@ -11,7 +11,7 @@ package com.zello.sdk;
  */
 public class AppState {
 
-	//region Private Variables
+	//region Package Private Variables
 
 	boolean _available;
 	boolean _error; // Set when the service fails to connect
@@ -256,7 +256,7 @@ public class AppState {
 
 	//endregion
 
-	//region Private Methods
+	//region Package Private Methods
 
 	void copyTo(AppState state) {
 		if (state != null) {
