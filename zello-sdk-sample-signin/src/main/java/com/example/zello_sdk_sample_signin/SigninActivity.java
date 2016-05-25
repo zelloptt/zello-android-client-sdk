@@ -1,7 +1,9 @@
 package com.example.zello_sdk_sample_signin;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.app.Activity;
@@ -61,6 +63,8 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
 
                 signInAttempted = true;
                 zelloSDK.signIn(network, username, password, perishable);
+
+                hideKeyboard();
             }
         });
 
@@ -199,6 +203,14 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
                 return getResources().getString(R.string.error_brute_force_protection);
             default:
                 return null;
+        }
+    }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

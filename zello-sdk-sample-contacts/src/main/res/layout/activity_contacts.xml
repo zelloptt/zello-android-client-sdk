@@ -11,7 +11,7 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="465dp"
         android:id="@+id/contactsListView"
         android:layout_above="@+id/selectedContactTextView"
         android:layout_alignRight="@+id/statusTextView"
