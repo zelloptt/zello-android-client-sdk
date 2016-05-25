@@ -556,7 +556,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	/**
-	 * The getAppState() method returns a ocpy of the current AppState from the Sdk.
+	 * The getAppState() method returns a copy of the current AppState from the Sdk.
 	 * @param state AppState to have the Sdk copy into.
      */
 	public void getAppState(AppState state) {

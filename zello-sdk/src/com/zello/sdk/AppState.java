@@ -13,29 +13,29 @@ public class AppState {
 
 	//region Private Variables
 
-	private boolean _available;
-	private boolean _error; // Set when the service fails to connect
-	private boolean _initializing;
-	private boolean _customBuild;
-	private boolean _configuring;
-	private boolean _locked;
-	private boolean _signedIn;
-	private boolean _signingIn;
-	private boolean _signingOut;
-	private boolean _cancelling;
-	private int _reconnectTimer = -1;
-	private boolean _waitingForNetwork;
-	private boolean _showContacts;
-	private boolean _busy;
-	private boolean _solo;
-	private boolean _autoRun;
-	private boolean _autoChannels = true;
-	private Error _lastError = Error.NONE;
-	private String _statusMessage;
-	private String _network;
-	private String _networkUrl;
-	private String _username;
-	private String _externalId;
+	boolean _available;
+	boolean _error; // Set when the service fails to connect
+	boolean _initializing;
+	boolean _customBuild;
+	boolean _configuring;
+	boolean _locked;
+	boolean _signedIn;
+	boolean _signingIn;
+	boolean _signingOut;
+	boolean _cancelling;
+	int _reconnectTimer = -1;
+	boolean _waitingForNetwork;
+	boolean _showContacts;
+	boolean _busy;
+	boolean _solo;
+	boolean _autoRun;
+	boolean _autoChannels = true;
+	Error _lastError = Error.NONE;
+	String _statusMessage;
+	String _network;
+	String _networkUrl;
+	String _username;
+	String _externalId;
 
 	//endregion
 
@@ -258,7 +258,7 @@ public class AppState {
 
 	//region Private Methods
 
-	private void copyTo(AppState state) {
+	void copyTo(AppState state) {
 		if (state != null) {
 			state._customBuild = _customBuild;
 			state._available = _available;
