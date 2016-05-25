@@ -24,7 +24,8 @@
         android:text="App Status"
         android:id="@+id/statusTextView"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
 
     <EditText
         android:layout_width="wrap_content"

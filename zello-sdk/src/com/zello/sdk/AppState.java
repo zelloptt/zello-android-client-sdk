@@ -24,6 +24,7 @@ public class AppState {
 	String _network;
 	String _networkUrl;
 	String _username;
+	String _externalId;
 
 	public void reset() {
 		//_available = false;
@@ -45,6 +46,7 @@ public class AppState {
 		_network = null;
 		_networkUrl = null;
 		_username = null;
+		_externalId = null;
 	}
 
 	@Override
@@ -77,6 +79,7 @@ public class AppState {
 			state._networkUrl = _networkUrl;
 			state._username = _username;
 			state._lastError = _lastError;
+			state._externalId = _externalId;
 		}
 	}
 
@@ -162,6 +165,10 @@ public class AppState {
 
 	public Error getLastError() {
 		return _lastError;
+	}
+
+	public String getExternalId() {
+		return _externalId;
 	}
 
 }

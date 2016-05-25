@@ -119,10 +119,13 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
             showMenuItem(menu, R.id.menu_solo, solo);
             showMenuItem(menu, R.id.menu_busy, busy);
 
-            showMenuItem(menu, R.id.menu_enable_auto_run ,!appState.isAutoRunEnabled());
-            showMenuItem(menu, R.id.menu_disable_auto_run, appState.isAutoRunEnabled());
-            showMenuItem(menu, R.id.menu_enable_auto_connect_channels, !appState.isChannelAutoConnectEnabled());
-            showMenuItem(menu, R.id.menu_disable_auto_connect_channels, appState.isChannelAutoConnectEnabled());
+            if (appState.isSignedIn()) {
+                showMenuItem(menu, R.id.menu_enable_auto_run, !appState.isAutoRunEnabled());
+                showMenuItem(menu, R.id.menu_disable_auto_run, appState.isAutoRunEnabled());
+                showMenuItem(menu, R.id.menu_enable_auto_connect_channels, !appState.isChannelAutoConnectEnabled());
+                showMenuItem(menu, R.id.menu_disable_auto_connect_channels, appState.isChannelAutoConnectEnabled());
+            }
+
             showMenuItem(menu, R.id.menu_open_app, true);
         }
 
@@ -289,6 +292,8 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
         Helper.invalidateOptionsMenu(this);
 
         externalIdEditText.setVisibility(View.VISIBLE);
+        externalIdEditText.setText(appState.getExternalId());
+
         externalIdTextView.setVisibility(View.VISIBLE);
 
         statusTextView.setVisibility(View.INVISIBLE);
@@ -307,15 +312,23 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
     }
 
     private void updateUIForSigningIn() {
+        Helper.invalidateOptionsMenu(this);
+
         statusTextView.setVisibility(View.VISIBLE);
         lockButton.setVisibility(View.INVISIBLE);
+        externalIdEditText.setVisibility(View.INVISIBLE);
+        externalIdTextView.setVisibility(View.INVISIBLE);
 
         statusTextView.setText(R.string.sign_in_status_signing_in);
     }
 
     private void updateUIForDisconnected() {
+        Helper.invalidateOptionsMenu(this);
+
         statusTextView.setVisibility(View.VISIBLE);
         lockButton.setVisibility(View.INVISIBLE);
+        externalIdEditText.setVisibility(View.INVISIBLE);
+        externalIdTextView.setVisibility(View.INVISIBLE);
 
         statusTextView.setText(R.string.sign_in_status_offline);
     }

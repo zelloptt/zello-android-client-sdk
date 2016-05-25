@@ -387,7 +387,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 	 * @param network    The network to authenticate against.
 	 * @param username   The username to authenticate.
 	 * @param password   The password for the username.
-	 * @param perishable Whether or not the authentication should expire.
+	 * @param perishable Whether or not the authentication information should be saved.
      * @return 			 boolean indicating whether a sign in was attempted or not.
      */
 	public boolean signIn(String network, String username, String password, boolean perishable) {
@@ -539,18 +539,34 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Getters
 
+	/**
+	 * The getMessageIn() method returns a copy of the current MessageIn from the Sdk.
+	 * @param message MessageIn to have the Sdk copy into.
+     */
 	public void getMessageIn(MessageIn message) {
 		_messageIn.copyTo(message);
 	}
 
+	/**
+	 * The getMessageOut() method reeturns a copy of the current MessageOut from the Sdk.
+	 * @param message MessageOut to have the Sdk copy into.
+     */
 	public void getMessageOut(MessageOut message) {
 		_messageOut.copyTo(message);
 	}
 
+	/**
+	 * The getAppState() method returns a ocpy of the current AppState from the Sdk.
+	 * @param state AppState to have the Sdk copy into.
+     */
 	public void getAppState(AppState state) {
 		_appState.copyTo(state);
 	}
 
+	/**
+	 * The getSelectedContact() method returns a copy of the curret selected Contact from the Sdk.
+	 * @param contact Contact to have the Sdk copy into.
+     */
 	public void getSelectedContact(Contact contact) {
 		_selectedContact.copyTo(contact);
 	}
@@ -630,7 +646,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	/**
 	 * Set the selected contact to a specific Contact.
-	 * @param contact Nullable; Contact to select.
+	 * @param contact Nullable; Contact to select. A null value will deselect the current Contact.
 	 */
 	public void setSelectedContact(Contact contact) {
 		if (contact != null) {
@@ -858,6 +874,7 @@ public class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_appState._networkUrl = intent.getStringExtra(Constants.EXTRA_STATE_NETWORK_URL);
 			_appState._username = intent.getStringExtra(Constants.EXTRA_STATE_USERNAME);
 			_appState._lastError = intToError(intent.getIntExtra(Constants.EXTRA_STATE_LAST_ERROR, Error.NONE.ordinal()));
+			_appState._externalId = intent.getStringExtra(Constants.EXTRA_EID);
 		}
 //		Contacts contacts = _contacts;
 //		if (contacts != null) {
