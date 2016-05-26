@@ -1,4 +1,4 @@
-package com.example.zello_sdk_sample_misc;
+package com.zello.sdk.sample.misc;
 
 import android.app.Activity;
 import android.os.Build;

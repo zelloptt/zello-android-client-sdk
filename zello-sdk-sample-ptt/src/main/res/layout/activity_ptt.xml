@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.zello_sdk_sample_ptt.PttActivity">
+    tools:context="com.zello.sdk.sample.ptt.PttActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -19,7 +19,7 @@
         android:layout_centerHorizontal="true"
         android:textAlignment="center" />
 
-    <com.example.zello_sdk_sample_ptt.SquareButton
+    <com.zello.sdk.sample.ptt.SquareButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/pushToTalkButton"
@@ -40,21 +40,21 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <com.example.zello_sdk_sample_ptt.NoToggleButton
+        <com.zello.sdk.sample.ptt.NoToggleButton
             android:id="@+id/audio_speaker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textOff="@string/audio_speaker"
             android:textOn="@string/audio_speaker"/>
 
-        <com.example.zello_sdk_sample_ptt.NoToggleButton
+        <com.zello.sdk.sample.ptt.NoToggleButton
             android:id="@+id/audio_earpiece"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textOff="@string/audio_earpiece"
             android:textOn="@string/audio_earpiece"/>
 
-        <com.example.zello_sdk_sample_ptt.NoToggleButton
+        <com.zello.sdk.sample.ptt.NoToggleButton
             android:id="@+id/audio_bluetooth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

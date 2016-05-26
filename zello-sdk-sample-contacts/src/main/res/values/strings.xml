@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">zello-sdk-sample-contacts</string>
+    <string name="app_name">Zello SDK Sample Contacts</string>
 
     <string name="status_online">Online</string>
     <string name="status_busy">Busy</string>

@@ -1,8 +1,6 @@
-package com.example.zello_sdk_sample_ptt;
+package com.zello.sdk.sample.ptt;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 
 import java.lang.reflect.Field;

@@ -1,4 +1,4 @@
-package com.example.zello_sdk_sample_misc;
+package com.zello.sdk.sample.misc;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -48,7 +48,7 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
                 if (appState.isLocked()) {
                     zelloSDK.unlock();
                 } else {
-                    zelloSDK.lock("zello-sdk-sample-misc", getPackageName());
+                    zelloSDK.lock("Zello SDK Sample Misc", getPackageName());
                 }
             }
         });

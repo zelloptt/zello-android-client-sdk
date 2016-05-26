@@ -1,9 +1,8 @@
-package com.example.zello_sdk_sample_contacts;
+package com.zello.sdk.sample.contacts;
 
 import android.app.Activity;
 import android.os.Parcelable;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;

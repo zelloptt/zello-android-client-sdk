@@ -1,4 +1,4 @@
-package com.example.zello_sdk_sample_contacts;
+package com.zello.sdk.sample.contacts;
 
 import android.content.Context;
 import android.view.LayoutInflater;

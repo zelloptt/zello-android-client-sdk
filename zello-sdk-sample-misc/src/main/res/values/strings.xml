@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">zello-sdk-sample-misc</string>
+    <string name="app_name">Zello SDK Sample Misc</string>
 
     <string name="lock">Lock</string>
     <string name="unlock">Unlock</string>
