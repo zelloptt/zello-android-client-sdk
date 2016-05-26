@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">zello-sdk-sample-signin</string>
+    <string name="app_name">Zello SDK Sample Sign In</string>
 
     <string name="signing_in">SIGNING IN..."</string>
     <string name="signed_in">YOU ARE SIGNED IN.</string>

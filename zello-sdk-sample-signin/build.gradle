@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.example.zello_sdk_sample_signin"
+        applicationId "com.zello.sdk.sample.signin"
         minSdkVersion 7
         targetSdkVersion 23
         versionCode 1
