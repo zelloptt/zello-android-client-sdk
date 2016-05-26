@@ -8,9 +8,10 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
 
+import com.zello.sdk.ZelloSDK;
+
 public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 
-	private com.zello.sdk.Sdk _sdk = new com.zello.sdk.Sdk();
 	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
 	private com.zello.sdk.MessageIn _messageIn = new com.zello.sdk.MessageIn();
 	private com.zello.sdk.MessageOut _messageOut = new com.zello.sdk.MessageOut();
@@ -34,7 +35,7 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 		_txtMessageName = (TextView) _viewMessageInfo.findViewById(R.id.message_name);
 		_txtMessageStatus = (TextView) _viewMessageInfo.findViewById(R.id.message_status);
 
-		_sdk.onCreate("com.pttsdk", this, this);
+		ZelloSDK.initialize("com.pttsdk", this, this);
 		updateAppState();
 		updateMessageState();
 	}
@@ -42,19 +43,19 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		_sdk.onDestroy();
+		ZelloSDK.killZelloUpdates();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		_sdk.onResume();
+		ZelloSDK.resumeZelloUpdates();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		_sdk.onPause();
+		ZelloSDK.pauseZelloUpdates();
 	}
 
 	@Override
@@ -127,11 +128,11 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 				return true;
 			}
 			case R.id.menu_start_message: {
-				_sdk.beginMessage();
+				ZelloSDK.beginMessage();
 				return true;
 			}
 			case R.id.menu_stop_message: {
-				_sdk.endMessage();
+				ZelloSDK.endMessage();
 				return true;
 			}
 		}
@@ -176,27 +177,27 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 		// Visual theme; optional; can be DARK or LIGHT
 		com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
 
-		_sdk.selectContact(title, tabs, tab, theme);
+		ZelloSDK.selectContact(title, tabs, tab, theme);
 	}
 
 	private void lockPttApp() {
 		// Configure PTT app to display information screen with the name of this app that can be clicked to open main activity
-		_sdk.lock(getString(R.string.app_name), getPackageName());
+		ZelloSDK.lock(getString(R.string.app_name), getPackageName());
 	}
 
 	private void unlockPttApp() {
 		// Switch PTT app back to normal UI mode
-		_sdk.unlock();
+		ZelloSDK.unlock();
 	}
 
 	private void enableAutoRun() {
 		// Enable client auto-run option
-		_sdk.setAutoRun(true);
+		ZelloSDK.setAutoRun(true);
 	}
 
 	private void disableAutoRun() {
 		// Disable client auto-run option
-		_sdk.setAutoRun(false);
+		ZelloSDK.setAutoRun(false);
 	}
 
 	private void chooseStatus() {
@@ -210,19 +211,19 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 					case 0: {
-						_sdk.setStatus(com.zello.sdk.Status.AVAILABLE);
+						ZelloSDK.setStatus(com.zello.sdk.Status.AVAILABLE);
 						break;
 					}
 					case 1: {
-						_sdk.setStatus(com.zello.sdk.Status.SOLO);
+						ZelloSDK.setStatus(com.zello.sdk.Status.SOLO);
 						break;
 					}
 					case 2: {
-						_sdk.setStatus(com.zello.sdk.Status.BUSY);
+						ZelloSDK.setStatus(com.zello.sdk.Status.BUSY);
 						break;
 					}
 					case 3: {
-						_sdk.signOut();
+						ZelloSDK.signOut();
 						break;
 					}
 				}
@@ -235,8 +236,8 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 	}
 
 	private void updateMessageState() {
-		_sdk.getMessageIn(_messageIn);
-		_sdk.getMessageOut(_messageOut);
+		ZelloSDK.getMessageIn(_messageIn);
+		ZelloSDK.getMessageOut(_messageOut);
 		boolean incoming = _messageIn.isActive(); // Is incoming message active?
 		boolean outgoing = _messageOut.isActive(); // Is outgoing message active?
 		if (outgoing) {
@@ -258,7 +259,7 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 
 
 	private void updateAppState() {
-		_sdk.getAppState(_appState);
+		ZelloSDK.getAppState(_appState);
 		String state = "";
 
 		if (!_appState.isAvailable()) {

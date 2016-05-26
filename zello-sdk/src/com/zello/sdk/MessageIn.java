@@ -38,7 +38,7 @@ public class MessageIn {
 	/**
 	 * The getFrom() method returns an instance of the Contact that is sending the user the message.
 	 * If the ContactType is ContactType.CHANNEL or ContactType.GROUP, the returned contact will be the Channel or Group, respectively. To get the original author of the message, use the getAuthor() method.
-	 * @return
+	 * @return The Contact that is sending the message.
      */
 	public Contact getFrom() {
 		return _from;
@@ -47,7 +47,7 @@ public class MessageIn {
 	/**
 	 * The getAuthor() method returns an instance of the Contact that authored the message.
 	 * This method should only be used to get the author of a message when the ContactType of the getFrom() method is ContactType.CHANNEL or ContactType.GROUP.
-	 * @return
+	 * @return The Contact that authored the message.
      */
 	public Contact getAuthor() {
 		return _author;

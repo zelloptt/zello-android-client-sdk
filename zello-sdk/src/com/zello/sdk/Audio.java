@@ -24,7 +24,6 @@ public class Audio {
 	private boolean _changing;
 	private AudioMode _mode; // Current mode
 	private BroadcastReceiver _receiver;
-	private Events _events;
 	private Context _context;
 	private String _package;
 
@@ -33,8 +32,7 @@ public class Audio {
 	//region Package Private Methods
 
 	/* package */
-	Audio(Events events, String packageName, Context context) {
-		_events = events;
+	Audio(String packageName, Context context) {
 		_package = packageName;
 		_context = context;
 		if (context != null && packageName != null) {
@@ -42,9 +40,9 @@ public class Audio {
 				@Override
 				public void onReceive(Context context, Intent intent) {
 					updateAudioState(intent);
-					Events events = _events;
-					if (events != null) {
-						events.onAudioStateChanged();
+
+					for (Events event : ZelloSDK.events) {
+						event.onAudioStateChanged();
 					}
 				}
 			};
@@ -60,7 +58,6 @@ public class Audio {
 			context.unregisterReceiver(_receiver);
 		}
 		_receiver = null;
-		_events = null;
 		_context = null;
 	}
 

@@ -28,7 +28,6 @@ public class Contacts {
 	private static final String _columnMuted = "muted";
 	private static final String _columnNoDisconnect = "nodisconnect";
 
-	private Events _events;
 	private ContactsObserver _observer;
 	private Cursor _cursor;
 	private Context _context;
@@ -51,8 +50,7 @@ public class Contacts {
 
 	//region Package Private Methods
 
-	/* package */ Contacts(String packageName, Context context, Handler handler, Events events) {
-		_events = events;
+	/* package */ Contacts(String packageName, Context context, Handler handler) {
 		_context = context;
 		_observer = ContactsObserver.create(this, handler);
 		Uri uri = _uri;
@@ -71,14 +69,13 @@ public class Contacts {
 			observer.close();
 		}
 		_observer = null;
-		_events = null;
 	}
 
 	/* package */ void invalidate() {
 		_invalid = true;
-		Events events = _events;
-		if (events != null) {
-			events.onContactsChanged();
+
+		for (Events event : ZelloSDK.events) {
+			event.onContactsChanged();
 		}
 	}
 

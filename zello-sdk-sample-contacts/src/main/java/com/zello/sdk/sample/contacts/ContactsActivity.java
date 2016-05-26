@@ -8,7 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.zello.sdk.Tab;
+import com.zello.sdk.*;
 
 public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
@@ -16,7 +16,6 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     private TextView statusTextView;
     private TextView selectedContactTextView;
 
-    private com.zello.sdk.Sdk zelloSdk = new com.zello.sdk.Sdk();
     private com.zello.sdk.AppState appState = new com.zello.sdk.AppState();
 
     //region Lifecycle Methods
@@ -31,7 +30,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
         statusTextView = (TextView)findViewById(R.id.statusTextView);
         selectedContactTextView = (TextView)findViewById(R.id.selectedContactTextView);
 
-        zelloSdk.onCreate("com.pttsdk", this, this);
+        ZelloSDK.initialize("com.pttsdk", this, this);
 
         // Contact list pick handler
         contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -41,7 +40,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
                 if (adapter != null) {
                     com.zello.sdk.Contact contact = (com.zello.sdk.Contact)adapter.getItem(position);
                     if (contact != null) {
-                        zelloSdk.setSelectedContact(contact);
+                        ZelloSDK.setSelectedContact(contact);
                     }
                 }
             }
@@ -52,21 +51,21 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     protected void onDestroy() {
         super.onDestroy();
 
-        zelloSdk.onDestroy();
+        ZelloSDK.killZelloUpdates();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        zelloSdk.onResume();
+        ZelloSDK.resumeZelloUpdates();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        zelloSdk.onPause();
+        ZelloSDK.pauseZelloUpdates();
     }
 
     //endregion
@@ -78,7 +77,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
             newAdapter = true;
             adapter = new ListAdapter();
         }
-        adapter.setContacts(zelloSdk.getContacts());
+        adapter.setContacts(ZelloSDK.getContacts());
         Parcelable state = contactsListView.onSaveInstanceState();
         if (newAdapter) {
             contactsListView.setAdapter(adapter);
@@ -101,7 +100,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     @Override
     public void onSelectedContactChanged() {
         com.zello.sdk.Contact selectedContact = new com.zello.sdk.Contact();
-        zelloSdk.getSelectedContact(selectedContact);
+        ZelloSDK.getSelectedContact(selectedContact);
 
         String name = selectedContact.getDisplayName();
         if (name != null) {
@@ -126,7 +125,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onAppStateChanged() {
-        zelloSdk.getAppState(appState);
+        ZelloSDK.getAppState(appState);
 
         if (appState.isLocked()) {
             statusTextView.setVisibility(View.VISIBLE);

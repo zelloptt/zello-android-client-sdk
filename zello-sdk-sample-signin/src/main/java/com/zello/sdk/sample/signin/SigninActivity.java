@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zello.sdk.Tab;
+import com.zello.sdk.ZelloSDK;
 
 public class SigninActivity extends Activity implements com.zello.sdk.Events {
 
@@ -30,7 +31,6 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
     private TextView errorTextView;
     private boolean signInAttempted = false;
 
-    private com.zello.sdk.Sdk zelloSdk = new com.zello.sdk.Sdk();
     private com.zello.sdk.AppState appState = new com.zello.sdk.AppState();
 
     @Override
@@ -51,7 +51,7 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
         errorTextView = (TextView)findViewById(R.id.incorrectPasswordTextView);
         signOutButton = (Button)findViewById(R.id.signOutButton);
 
-        zelloSdk.onCreate("com.pttsdk", this, this);
+        ZelloSDK.initialize("com.pttsdk", this, this);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,7 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
                 boolean perishable = perishableCheckBox.isChecked();
 
                 signInAttempted = true;
-                zelloSdk.signIn(network, username, password, perishable);
+                ZelloSDK.signIn(network, username, password, perishable);
 
                 hideKeyboard();
             }
@@ -71,38 +71,38 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                zelloSdk.cancel();
+                ZelloSDK.cancel();
             }
         });
 
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                zelloSdk.signOut();
+                ZelloSDK.signOut();
             }
         });
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        zelloSdk.onDestroy();
+        ZelloSDK.killZelloUpdates();
+        ZelloSDK.unsubscribeFromEvents(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        zelloSdk.onResume();
+        ZelloSDK.resumeZelloUpdates();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        zelloSdk.onPause();
+        ZelloSDK.pauseZelloUpdates();
     }
 
     //endregion
@@ -136,7 +136,7 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onAppStateChanged() {
-        zelloSdk.getAppState(appState);
+        ZelloSDK.getAppState(appState);
 
         updateUI();
     }
