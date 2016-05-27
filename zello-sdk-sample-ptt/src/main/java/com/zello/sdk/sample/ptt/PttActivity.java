@@ -174,24 +174,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onAppStateChanged() {
-        Zello.getAppState(appState);
-        if (appState.isLocked()) {
-            updateUIForLocked();
-        } else if (appState.isSignedIn()) {
-            Zello.getSelectedContact(selectedContact);
-
-            if (selectedContact != null && selectedContact.getDisplayName() != null) {
-                if (selectedContact.getStatus() == ContactStatus.AVAILABLE) {
-                    updateUIForAvailableContact();
-                } else {
-                    updateUIForUnavailableContact();
-                }
-            }
-        } else if (appState.isSigningIn()) {
-            updateUIForSigningIn();
-        } else {
-            updateUIForDisconnected();
-        }
+        updateUI();
     }
 
     @Override
@@ -223,7 +206,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onSelectedContactChanged() {
-
+        updateUI();
     }
 
     @Override
@@ -242,6 +225,30 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     }
 
     //endregion
+
+    private void updateUI() {
+        Zello.getAppState(appState);
+
+        if (appState.isLocked()) {
+            updateUIForLocked();
+        } else if (appState.isSignedIn()) {
+            Zello.getSelectedContact(selectedContact);
+
+            if (selectedContact != null && selectedContact.getDisplayName() != null) {
+                if (selectedContact.getStatus() == ContactStatus.AVAILABLE) {
+                    updateUIForAvailableContact();
+                } else {
+                    updateUIForUnavailableContact();
+                }
+            } else {
+                updateUIForNoContact();
+            }
+        } else if (appState.isSigningIn()) {
+            updateUIForSigningIn();
+        } else {
+            updateUIForDisconnected();
+        }
+    }
 
     private void updateUIForLocked() {
         Helper.invalidateOptionsMenu(this);
@@ -287,6 +294,22 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         selectedContactTextView.setVisibility(View.INVISIBLE);
 
         statusTextView.setText(R.string.unavailable_selected_contact);
+    }
+
+    private void updateUIForNoContact() {
+        Helper.invalidateOptionsMenu(this);
+
+        statusTextView.setVisibility(View.VISIBLE);
+
+        pttButton.setVisibility(View.INVISIBLE);
+        audioModeView.setVisibility(View.INVISIBLE);
+        speakerButton.setVisibility(View.INVISIBLE);
+        bluetoothButton.setVisibility(View.INVISIBLE);
+        earpieceButton.setVisibility(View.INVISIBLE);
+        connectChannelButton.setVisibility(View.INVISIBLE);
+        selectedContactTextView.setVisibility(View.INVISIBLE);
+
+        statusTextView.setText(R.string.no_selected_contact);
     }
 
     private void updateUIForSigningIn() {

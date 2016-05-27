@@ -145,6 +145,9 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
 
     private void updateUI() {
         if (appState.isSignedIn()) {
+            signInView.setVisibility(View.INVISIBLE);
+            signingInView.setVisibility(View.VISIBLE);
+
             textView.setText(R.string.signed_in);
 
             cancelButton.setVisibility(View.INVISIBLE);
