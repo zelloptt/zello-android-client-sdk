@@ -51,8 +51,8 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         // Constrain PTT button size
         pttButton.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
 
-        ZelloSDK.initialize("com.pttsdk", this, this);
-        audio = ZelloSDK.getAudio();
+        Zello.initialize("com.pttsdk", this, this);
+        audio = Zello.getAudio();
 
         connectChannelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,9 +68,9 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
                 int action = event.getAction();
 
                 if (action == MotionEvent.ACTION_DOWN) {
-                    ZelloSDK.beginMessage();
+                    Zello.beginMessage();
                 } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-                    ZelloSDK.endMessage();
+                    Zello.endMessage();
                 }
 
                 return false;
@@ -112,21 +112,22 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     protected void onDestroy() {
         super.onDestroy();
 
-        ZelloSDK.killZelloUpdates();
+        Zello.unsubscribeFromEvents(this);
+        Zello.killZelloUpdates();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        ZelloSDK.resumeZelloUpdates();
+        Zello.resumeZelloUpdates();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        ZelloSDK.pauseZelloUpdates();
+        Zello.pauseZelloUpdates();
     }
 
     @Override
@@ -142,13 +143,13 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
         menu.clear();
 
-        ZelloSDK.getAppState(appState);
+        Zello.getAppState(appState);
 
         if (appState.isSignedIn() && !appState.isLocked()) {
             getMenuInflater().inflate(R.menu.menu, menu);
             showMenuItem(menu, R.id.menu_mute_contact, true);
 
-            ZelloSDK.getSelectedContact(selectedContact);
+            Zello.getSelectedContact(selectedContact);
             String itemTitle = selectedContact.getMuted() ? "Unmute Contact" : "Mute Contact";
             menu.getItem(0).setTitle(itemTitle);
         }
@@ -159,9 +160,9 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_mute_contact) {
-            ZelloSDK.getSelectedContact(selectedContact);
+            Zello.getSelectedContact(selectedContact);
 
-            ZelloSDK.muteContact(selectedContact, !selectedContact.getMuted());
+            Zello.muteContact(selectedContact, !selectedContact.getMuted());
         }
 
         return true;
@@ -173,11 +174,11 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onAppStateChanged() {
-        ZelloSDK.getAppState(appState);
+        Zello.getAppState(appState);
         if (appState.isLocked()) {
             updateUIForLocked();
         } else if (appState.isSignedIn()) {
-            ZelloSDK.getSelectedContact(selectedContact);
+            Zello.getSelectedContact(selectedContact);
 
             if (selectedContact != null && selectedContact.getDisplayName() != null) {
                 if (selectedContact.getStatus() == ContactStatus.AVAILABLE) {
@@ -195,8 +196,8 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onMessageStateChanged() {
-        ZelloSDK.getMessageIn(messageIn);
-        ZelloSDK.getMessageOut(messageOut);
+        Zello.getMessageIn(messageIn);
+        Zello.getMessageOut(messageOut);
 
         boolean incoming = messageIn.isActive(); // Is incoming message active?
         boolean outgoing = messageOut.isActive(); // Is outgoing message active?
@@ -367,9 +368,9 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         if (type == com.zello.sdk.ContactType.CHANNEL || type == com.zello.sdk.ContactType.GROUP) {
             com.zello.sdk.ContactStatus status = selectedContact.getStatus();
             if (status == com.zello.sdk.ContactStatus.OFFLINE) {
-                ZelloSDK.connectChannel(selectedContact.getName());
+                Zello.connectChannel(selectedContact.getName());
             } else if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
-                ZelloSDK.disconnectChannel(selectedContact.getName());
+                Zello.disconnectChannel(selectedContact.getName());
             }
         }
     }

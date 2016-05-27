@@ -42,12 +42,12 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
         lockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ZelloSDK.getAppState(appState);
+                Zello.getAppState(appState);
 
                 if (appState.isLocked()) {
-                    ZelloSDK.unlock();
+                    Zello.unlock();
                 } else {
-                    ZelloSDK.lock("Zello SDK Sample Misc", getPackageName());
+                    Zello.lock("Zello SDK Sample Misc", getPackageName());
                 }
             }
         });
@@ -56,7 +56,7 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    ZelloSDK.setExternalId(externalIdEditText.getText().toString());
+                    Zello.setExternalId(externalIdEditText.getText().toString());
 
                     hideKeyboard();
 
@@ -67,28 +67,29 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
             }
         });
 
-        ZelloSDK.initialize("com.pttsdk", this, this);
+        Zello.initialize("com.pttsdk", this, this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        ZelloSDK.killZelloUpdates();
+        Zello.unsubscribeFromEvents(this);
+        Zello.killZelloUpdates();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        ZelloSDK.resumeZelloUpdates();
+        Zello.resumeZelloUpdates();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        ZelloSDK.pauseZelloUpdates();
+        Zello.pauseZelloUpdates();
     }
 
     @Override
@@ -102,7 +103,7 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
 
         menu.clear();
 
-        ZelloSDK.getAppState(appState);
+        Zello.getAppState(appState);
         if (appState.isAvailable() && !appState.isInitializing() && !appState.isLocked()) {
             getMenuInflater().inflate(R.menu.menu, menu);
 
@@ -142,23 +143,23 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
                 break;
             }
             case R.id.menu_enable_auto_run: {
-                ZelloSDK.setAutoRun(true);
+                Zello.setAutoRun(true);
                 break;
             }
             case R.id.menu_disable_auto_run: {
-                ZelloSDK.setAutoRun(false);
+                Zello.setAutoRun(false);
                 break;
             }
             case R.id.menu_enable_auto_connect_channels: {
-                ZelloSDK.setAutoConnectChannels(true);
+                Zello.setAutoConnectChannels(true);
                 break;
             }
             case R.id.menu_disable_auto_connect_channels: {
-                ZelloSDK.setAutoConnectChannels(false);
+                Zello.setAutoConnectChannels(false);
                 break;
             }
             case R.id.menu_open_app: {
-                ZelloSDK.openMainScreen();
+                Zello.openMainScreen();
                 break;
             }
         }
@@ -197,7 +198,7 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onAppStateChanged() {
-        ZelloSDK.getAppState(appState);
+        Zello.getAppState(appState);
 
         if (appState.isSignedIn()) {
             Helper.invalidateOptionsMenu(this);
@@ -222,7 +223,7 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
     private void chooseStatus() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         Resources res = getResources();
-        ZelloSDK.getAppState(appState);
+        Zello.getAppState(appState);
 
         com.zello.sdk.Status status = appState.getStatus();
         int selection = -1;
@@ -250,15 +251,15 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case 0: {
-                        ZelloSDK.setStatus(com.zello.sdk.Status.AVAILABLE);
+                        Zello.setStatus(com.zello.sdk.Status.AVAILABLE);
                         break;
                     }
                     case 1: {
-                        ZelloSDK.setStatus(com.zello.sdk.Status.SOLO);
+                        Zello.setStatus(com.zello.sdk.Status.SOLO);
                         break;
                     }
                     case 2: {
-                        ZelloSDK.setStatus(com.zello.sdk.Status.BUSY);
+                        Zello.setStatus(com.zello.sdk.Status.BUSY);
                         break;
                     }
                     case 3: {
@@ -334,14 +335,14 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
 
     private void createCustomStatusMessageDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        ZelloSDK.getAppState(appState);
+        Zello.getAppState(appState);
         String previousStatus = appState.getStatusMessage();
         final EditText statusEditText = new EditText(this);
         statusEditText.setText(previousStatus);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ZelloSDK.setStatusMessage(statusEditText.getText().toString());
+                Zello.setStatusMessage(statusEditText.getText().toString());
             }
         });
         builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
