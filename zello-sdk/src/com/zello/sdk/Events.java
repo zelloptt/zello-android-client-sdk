@@ -26,7 +26,7 @@ public interface Events {
 	/**
 	 * The onLastContactsTabChanged() method is fired when the last Contacts tab changes.
 	 * This method is invoked on the UI thread.
-	 * @param tab
+	 * @param tab The tab that changed.
      */
 	void onLastContactsTabChanged(Tab tab);
 

@@ -123,11 +123,6 @@ public class Audio {
 
 	//region Private Methods
 
-	/**
-	 *
-	 * @param mode
-	 * @param wearable
-     */
 	private void doSetMode(AudioMode mode, int wearable) {
 		Context context = _context;
 		if (context != null) {

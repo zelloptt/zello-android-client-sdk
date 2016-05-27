@@ -43,17 +43,6 @@ public class Zello {
         Zello.doInitialization(packageName, context);
     }
 
-    private static void doInitialization(String packageName, Context context) {
-        if (!initialized) {
-            initialized = true;
-
-            sdk.onCreate(packageName, context);
-
-            // Updates should be on by default
-            Zello.resumeZelloUpdates();
-        }
-    }
-
     //endregion
 
     //region Lifecycle Methods
@@ -385,6 +374,21 @@ public class Zello {
     }
 
     //endregion
+
+    //endregion
+
+    //region Private Methods
+
+    private static void doInitialization(String packageName, Context context) {
+        if (!initialized) {
+            initialized = true;
+
+            sdk.onCreate(packageName, context);
+
+            // Updates should be on by default
+            Zello.resumeZelloUpdates();
+        }
+    }
 
     //endregion
 
