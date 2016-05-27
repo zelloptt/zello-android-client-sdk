@@ -74,7 +74,7 @@ public class Contacts {
 	/* package */ void invalidate() {
 		_invalid = true;
 
-		for (Events event : ZelloSDK.events) {
+		for (Events event : Zello.events) {
 			event.onContactsChanged();
 		}
 	}

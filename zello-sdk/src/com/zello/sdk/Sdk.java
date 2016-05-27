@@ -935,7 +935,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_messageOut.reset();
 		}
 
-		for (Events event : ZelloSDK.events) {
+		for (Events event : Zello.events) {
 			event.onMessageStateChanged();
 		}
 	}
@@ -979,7 +979,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_selectedContact.reset();
 		}
 
-		for (Events event : ZelloSDK.events) {
+		for (Events event : Zello.events) {
 			event.onSelectedContactChanged();
 		}
 	}
@@ -988,7 +988,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (intent != null) {
 			Tab tab = stringToTab(intent.getStringExtra(Constants.EXTRA_TAB));
 
-			for (Events event : ZelloSDK.events) {
+			for (Events event : Zello.events) {
 				event.onLastContactsTabChanged(tab);
 			}
 		}
@@ -1011,7 +1011,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	private void fireAppStateChanged() {
-		for (Events event : ZelloSDK.events) {
+		for (Events event : Zello.events) {
 			event.onAppStateChanged();
 		}
 	}

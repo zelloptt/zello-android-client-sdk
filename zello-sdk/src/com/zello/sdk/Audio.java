@@ -41,7 +41,7 @@ public class Audio {
 				public void onReceive(Context context, Intent intent) {
 					updateAudioState(intent);
 
-					for (Events event : ZelloSDK.events) {
+					for (Events event : Zello.events) {
 						event.onAudioStateChanged();
 					}
 				}

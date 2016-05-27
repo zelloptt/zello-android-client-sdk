@@ -1,39 +1,57 @@
 package com.zello.sdk;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 
 /**
  * <pre>
- * The ZelloSDK Singleton acts as the primary means of interacting to the Zello SDK.
+ * The Zello class acts as the primary means of interacting to the Zello SDK.
  * </pre>
  * <pre>
  * For specific usage, please see the sample projects.
  * </pre>
  */
-public class ZelloSDK {
+public class Zello {
 
     static ArrayList<Events> events = new ArrayList<Events>();
 
     static Sdk sdk = new Sdk();
 
+    // Protect against multiple attempts to initialize SDK.
+    static boolean initialized = false;
+
     //region Initialization
 
     /**
-     * The initialize method initializes the Zello SDK and subscribes the passed in Events  to receive updates.
+     * The initialize() method initializes the Zello SDK without immediately subscribing to the Events.
+     * @param packageName The package name of the app.
+     * @param context The context for the app.
+     */
+    public static void initialize(String packageName, Context context) {
+        doInitialization(packageName, context);
+    }
+
+    /**
+     * The initialize() method initializes the Zello SDK and subscribes the passed in Events to receive updates.
      * @param packageName The package name of the app.
      * @param context The context for the app.
      * @param event The Events implementor to subscribe.
      */
     public static void initialize(String packageName, Context context, Events event) {
         subscribeToEvents(event);
+        Zello.doInitialization(packageName, context);
+    }
 
-        sdk.onCreate(packageName, context);
+    private static void doInitialization(String packageName, Context context) {
+        if (!initialized) {
+            initialized = true;
 
-        // Updates should be on by default
-        ZelloSDK.resumeZelloUpdates();
+            sdk.onCreate(packageName, context);
+
+            // Updates should be on by default
+            Zello.resumeZelloUpdates();
+        }
     }
 
     //endregion
@@ -209,9 +227,9 @@ public class ZelloSDK {
     }
 
     /**
-     * The cancel() method cancels the ongoing authentication request from the signIn() method.
+     * The cancelSignIn() method cancels the ongoing authentication request from the signIn() method.
      */
-    public static void cancel() {
+    public static void cancelSignIn() {
         sdk.cancel();
     }
 
