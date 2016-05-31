@@ -1,7 +1,7 @@
 package com.zello.sdk;
 
 /**
- * The MessageIn class represents an incoming message to the Zello SDK.
+ * The MessageIn class represents an incoming message to the Zello for Work app.
  */
 public class MessageIn {
 

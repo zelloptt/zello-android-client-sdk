@@ -1,7 +1,7 @@
 package com.zello.sdk;
 
 /**
- * The MessageOut class represents an outgoing message through the Zello SDK.
+ * The MessageOut class represents an outgoing message through the Zello for Work app.
  */
 public class MessageOut {
 

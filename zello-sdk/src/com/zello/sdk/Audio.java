@@ -7,11 +7,11 @@ import android.content.IntentFilter;
 
 /**
  * <pre>
- * The Audio class acts as an intermediary between the devices audio and the Zello SDK.
+ * The Audio class acts as an intermediary between the devices audio and the Zello for Work app.
  * This class is useful for getting and updating the current output mode of audio from the device (ie. AudioMode).
  * </pre>
  * <pre>
- * To use, retrieve the current Audio instance from the Sdk instance using the getAudio() method. For specific usage, please see the sample projects.
+ * To use, retrieve the current Audio instance from the Zello class using the getAudio() method. For specific usage, please see the sample projects.
  * </pre>
  */
 public class Audio {

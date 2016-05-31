@@ -113,7 +113,6 @@ public class Contact {
 	 * </pre>
 	 * <pre>
 	 * For ContactType.USER and ContactType.GATEWAY, this value will be 0.
-	 * For ContactType.CHANNEL and ContactType.GROUP, this value will be the total number of users associated with the channel or group, respectively.
 	 * </pre>
 	 * @return number of total users under the Contact for the ContactType.
 	 */
