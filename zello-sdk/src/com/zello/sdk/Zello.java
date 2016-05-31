@@ -75,14 +75,14 @@ public final class Zello {
 
     /**
      * <pre>
-     * The killZelloUpdates() method suspends communication with the Zello for Work app.
+     * The uninitialize() method terminates communication with the Zello for Work app.
      * </pre>
      * <pre>
      * The Zello SDK communicates with the Zello for Work app to send and receive updates.
      * By invoking this method, this communication will end.
      * </pre>
      */
-    public static void killZelloUpdates() {
+    public static void uninitialize() {
         sdk.onDestroy();
     }
 
@@ -345,7 +345,8 @@ public final class Zello {
     }
 
     /**
-     * The setExternalId() method sets an external id for messages to filter though. By default, the externalId is NULL.
+     * The setExternalId() method sets an external id tag onto messages recorded on the server.
+     * This tag is only recorded if the server history feature is enabled on the Zello for Work console.
      * @param id Nullable; String indicating the external id.
      */
     public static void setExternalId(String id) {
