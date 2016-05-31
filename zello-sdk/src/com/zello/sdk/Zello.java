@@ -230,7 +230,13 @@ public final class Zello {
     //region Locking
 
     /**
+     * <pre>
      * The lock() method puts the UI for the Zello for Work app into a locked state.
+     * </pre>
+     * <pre>
+     * In this locked state, the Zello for Work app will only display the "Support" Activity.
+     * This does NOT interfere with the sending and receiving of messages through the Zello for Work app.
+     * </pre>
      * @param applicationName The name of the application.
      * @param packageName	  The package name of the application.
      */
