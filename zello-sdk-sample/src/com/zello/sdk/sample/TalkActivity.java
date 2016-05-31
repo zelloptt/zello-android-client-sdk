@@ -238,7 +238,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Zello.resumeZelloUpdates();
+		Zello.leavePowerSavingMode();
 		_active = true;
 		updateContactList();
 	}
@@ -246,7 +246,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Zello.pauseZelloUpdates();
+		Zello.enterPowerSavingMode();
 		_active = false;
 	}
 

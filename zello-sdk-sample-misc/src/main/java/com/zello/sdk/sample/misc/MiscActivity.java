@@ -82,14 +82,14 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
     protected void onResume() {
         super.onResume();
 
-        Zello.resumeZelloUpdates();
+        Zello.leavePowerSavingMode();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        Zello.pauseZelloUpdates();
+        Zello.enterPowerSavingMode();
     }
 
     @Override
