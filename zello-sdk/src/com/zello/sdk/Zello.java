@@ -50,7 +50,7 @@ public final class Zello {
 
     /**
      * <pre>
-     * The enterPowerSavingMode() method limits communication with the Zello for Work app to optimize power and data consumption.
+     * The enterPowerSavingMode() method limits communication between the Zello for Work app and the server to optimize power and data consumption.
      * </pre>
      * <pre>
      * The Zello SDK communicates with the Zello for Work app to send and receive updates.
@@ -121,7 +121,7 @@ public final class Zello {
 
     /**
      * <pre>
-     * The selectContact() opens an Activity that displays the authenticated users Contacts to select.
+     * The selectContact() method opens an Activity that displays the authenticated user's Contacts to select.
      * </pre>
      * <pre>
      * This method should be used if the Zello SDK was initialized from the Application Context.
@@ -137,7 +137,7 @@ public final class Zello {
 
     /**
      * <pre>
-     * The selectContact() opens an Activity that displays the authenticated users Contacts to select.
+     * The selectContact() opens an Activity that displays the authenticated user's Contacts to select.
      * </pre>
      * <pre>
      * This method should be used if the Zello SDK was initialized from an Activity Context.
@@ -284,7 +284,7 @@ public final class Zello {
 
     /**
      * The setStatus() method sets the status of the authenticated user to a Status message.
-     * @param status The state to set the users status to.
+     * @param status The state to set the user's status to.
      */
     public static void setStatus(Status status) {
         sdk.setStatus(status);
@@ -292,7 +292,7 @@ public final class Zello {
 
     /**
      * The setStatusMessage() method sets the status of the authenticated user to a custom message.
-     * @param message The custom message to set the users status to.
+     * @param message The custom message to set the user's status to.
      */
     public static void setStatusMessage(String message) {
         sdk.setStatusMessage(message);
@@ -420,7 +420,7 @@ public final class Zello {
 
     /**
      * The setExternalId() method sets an external id tag onto messages recorded on the server.
-     * This tag is only recorded if the server history feature is enabled on the Zello for Work console.
+     * This tag is only recorded if the server recording feature is enabled on the Zello for Work console.
      * @param id Nullable; String indicating the external id.
      */
     public static void setExternalId(String id) {
