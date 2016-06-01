@@ -128,12 +128,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     public void onAppStateChanged() {
         Zello.getAppState(appState);
 
-        if (appState.isLocked()) {
-            statusTextView.setVisibility(View.VISIBLE);
-            statusTextView.setText(R.string.locked);
-            contactsListView.setVisibility(View.INVISIBLE);
-            selectedContactTextView.setVisibility(View.INVISIBLE);
-        } else if (appState.isSignedIn()) {
+        if (appState.isSignedIn()) {
             statusTextView.setVisibility(View.INVISIBLE);
             contactsListView.setVisibility(View.VISIBLE);
             selectedContactTextView.setVisibility(View.VISIBLE);

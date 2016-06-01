@@ -104,7 +104,7 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
         menu.clear();
 
         Zello.getAppState(appState);
-        if (appState.isAvailable() && !appState.isInitializing() && !appState.isLocked()) {
+        if (appState.isAvailable() && !appState.isInitializing()) {
             getMenuInflater().inflate(R.menu.menu, menu);
 
             boolean available = false, solo = false, busy = false;
@@ -277,18 +277,14 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
     }
 
     private void updateUIForLocked() {
-        Helper.invalidateOptionsMenu(this);
-
-        externalIdEditText.setVisibility(View.INVISIBLE);
-        externalIdTextView.setVisibility(View.INVISIBLE);
-
-        statusTextView.setVisibility(View.VISIBLE);
-
         lockButton.setText(R.string.unlock);
-        statusTextView.setText(R.string.status_locked);
     }
 
     private void updateUIForUnlocked() {
+        lockButton.setText(R.string.lock);
+    }
+
+    private void updateUIForSignedIn() {
         Helper.invalidateOptionsMenu(this);
 
         externalIdEditText.setVisibility(View.VISIBLE);
@@ -298,10 +294,6 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
 
         statusTextView.setVisibility(View.INVISIBLE);
 
-        lockButton.setText(R.string.lock);
-    }
-
-    private void updateUIForSignedIn() {
         if (appState.isLocked()) {
             updateUIForLocked();
         } else {
