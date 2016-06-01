@@ -217,7 +217,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		});
 
 		_dirtyContacts = true;
-		//Zello.onCreate("net.loudtalks", this, this); // Use to connect to apk from zellowork.com
+		//Zello.initialize("net.loudtalks", this, this); // Use to connect to apk from zellowork.com
 		Zello.initialize("com.pttsdk", this, this); // Use with generic apk
 		_audio = Zello.getAudio();
 
