@@ -116,10 +116,10 @@ public final class Zello {
 
     /**
      * The selectContact() opens an Activity that displays the authenticated users Contacts to select.
-     * @param title     Nullable; Activity Title
+     * @param title     Nullable; Activity Title.
      * @param tabs		Set of displayed Tabs.
-     * @param activeTab Initially active tab.
-     * @param theme     Visual Theme.
+     * @param activeTab Initially active Tab.
+     * @param theme     Visual Theme for Activity.
      */
     public static void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
         sdk.selectContact(title, tabs, activeTab, theme);
@@ -156,7 +156,7 @@ public final class Zello {
     //region Channels
 
     /**
-     * Thie connectChannel() method connects the authenticated user to a channel for users to communicate through.
+     * The connectChannel() method connects the authenticated user to a channel for users to communicate through.
      * @param channel The name of the channel to connect to.
      */
     public static void connectChannel(String channel) {
@@ -234,7 +234,7 @@ public final class Zello {
      * The lock() method puts the UI for the Zello for Work app into a locked state.
      * </pre>
      * <pre>
-     * In this locked state, the Zello for Work app will only display the "Support" Activity.
+     * In this locked state, the Zello for Work app will only display an information screen with the name of your app that can be clicked to open the main activity.
      * This does NOT interfere with the sending and receiving of messages through the Zello for Work app.
      * </pre>
      * @param applicationName The name of the application.
@@ -245,7 +245,7 @@ public final class Zello {
     }
 
     /**
-     * The unlock() method unlocks the Zello for Work app.
+     * The unlock() method unlocks the UI of the Zello for Work app.
      */
     public static void unlock() {
         sdk.unlock();
@@ -283,7 +283,13 @@ public final class Zello {
     //region Getters
 
     /**
+     * <pre>
      * The getMessageIn() method returns a copy of the current incoming message from the Zello for Work app.
+     * </pre>
+     * <pre>
+     * This copy is a snapshot of the state of the MessageIn at the time of invocation.
+     * It is static in the sense that the Zello SDK will not update it.
+     * </pre>
      * @param message MessageIn to copy into.
      */
     public static void getMessageIn(MessageIn message) {
@@ -291,7 +297,13 @@ public final class Zello {
     }
 
     /**
+     * <pre>
      * The getMessageOut() method returns a copy of the current outgoing message from the Zello for Work app.
+     * </pre>
+     * <pre>
+     * This copy is a snapshot of the state of the MessageOut at the time of invocation.
+     * It is static in the sense that the Zello SDK will not update it.
+     * </pre>
      * @param message MessageOut to copy into.
      */
     public static void getMessageOut(MessageOut message) {
@@ -299,15 +311,27 @@ public final class Zello {
     }
 
     /**
+     * <pre>
      * The getAppState() method returns a copy of the current AppState from the Zello for Work app.
-     * @param state AppState to copy into.
+     * </pre>
+     * <pre>
+     * This copy is a snapshot of the state of the AppState at the time of invocation.
+     * It is static in the sense that the Zello SDK will not update it.
+     * </pre>
+     * * @param state AppState to copy into.
      */
     public static void getAppState(AppState state) {
         sdk.getAppState(state);
     }
 
     /**
+     * <pre>
      * The getSelectedContact() method returns a copy of the current selected Contact from the Zello for Work app.
+     * </pre>
+     * <pre>
+     * This copy is a snapshot of the state of the Contact at the time of invocation.
+     * It is static in the sense that the Zello SDK will not update it.
+     * </pre>
      * @param contact Contact to copy into.
      */
     public static void getSelectedContact(Contact contact) {
@@ -315,7 +339,13 @@ public final class Zello {
     }
 
     /**
+     * <pre>
      * The getContacts() method returns the Contacts for the authenticated user.
+     * </pre>
+     * <pre>
+     * This copy is a snapshot of the state of the Contacts at the time of invocation.
+     * It is static in the sense that the Zello SDK will not update it.
+     * </pre>
      * @return The Contacts object for the user.
      */
     public static Contacts getContacts() {
@@ -323,7 +353,13 @@ public final class Zello {
     }
 
     /**
+     * <pre>
      * The getAudio() method returns the current Audio instance for the Zello for Work app.
+     * </pre>
+     * <pre>
+     * This copy is a snapshot of the state of the Audio at the time of invocation.
+     * It is static in the sense that the Zello SDK will not update it.
+     * </pre>
      * @return The Audio instance.
      */
     public static Audio getAudio() {
@@ -343,7 +379,7 @@ public final class Zello {
     }
 
     /**
-     * The setAutoConnectChannels() method determines if channels should be automatically connected to.
+     * The setAutoConnectChannels() method determines if new channels should be automatically connected to.
      * @param connect The boolean to enable this feature or not.
      */
     public static void setAutoConnectChannels(boolean connect) {
@@ -360,7 +396,12 @@ public final class Zello {
     }
 
     /**
+     * <pre>
      * The setSelectedContact() method sets the selected contact to a specified Contact.
+     * </pre>
+     * <pre>
+     * The selected Contact will be the contact that a voice message will be sent to upon a Zello.beginMessage() invocation.
+     * </pre>
      * @param contact Nullable; Contact to select. A null value will deselect the current Contact.
      */
     public static void setSelectedContact(Contact contact) {
