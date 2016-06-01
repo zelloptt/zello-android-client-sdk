@@ -673,18 +673,21 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	private void connect() {
-		if (!_serviceBound && !_serviceConnecting) {
+		if (!_serviceBound || !_serviceConnecting) {
 			Context context = _context;
 			if (context != null) {
 				_serviceConnecting = true;
 				_appState._initializing = true;
 				_appState._error = false;
 				fireAppStateChanged();
-				try {
-					_serviceBound = context.bindService(getServiceIntent(), this, Context.BIND_AUTO_CREATE);
-				} catch (Throwable t) {
-					_serviceConnecting = false;
-					Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
+
+				if (!_serviceBound) {
+					try {
+						_serviceBound = context.bindService(getServiceIntent(), this, Context.BIND_AUTO_CREATE);
+					} catch (Throwable t) {
+						_serviceConnecting = false;
+						Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
+					}
 				}
 				if (!_serviceBound) {
 					_appState._error = true;

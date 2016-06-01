@@ -17,7 +17,7 @@ public final class Zello {
 
     static ArrayList<Events> events = new ArrayList<Events>();
 
-    static Sdk sdk = new Sdk();
+    static Sdk sdk;
 
     // Protect against multiple attempts to initialize SDK.
     static boolean initialized = false;
@@ -85,6 +85,10 @@ public final class Zello {
      */
     public static void uninitialize() {
         sdk.onDestroy();
+
+        sdk = null;
+        events = null;
+        initialized = false;
     }
 
     //endregion
@@ -461,6 +465,7 @@ public final class Zello {
         if (!initialized) {
             initialized = true;
 
+            sdk = new Sdk();
             sdk.onCreate(packageName, context);
 
             // Updates should be on by default
