@@ -75,8 +75,8 @@ public class AppState {
 	//region Public State Methods
 
 	/**
-	 * The isAvailable() method determines if the Zello for Work app is available.
-	 * @return boolean indicating if the app is available.
+	 * The isAvailable() method determines if the Zello for Work app is available on the device.
+	 * @return boolean indicating if the app is available to communicate with.
      */
 	public boolean isAvailable() {
 		return _available && !_error;
@@ -107,7 +107,13 @@ public class AppState {
 	}
 
 	/**
+	 * <pre>
 	 * The isLocked() method determines if the Zello for Work app is currently locked.
+	 * </pre>
+	 * <pre>
+	 * If the Zello for Work app is locked, the UI will only display an information screen with the name of your app that can be clicked to open the main activity.
+	 * Being locked does NOT interfere with the sending and receiving of messages through the Zello for Work app.
+	 * </pre>
 	 * @return boolean indicating if the app is currently locked.
 	 */
 	public boolean isLocked() {
@@ -163,7 +169,12 @@ public class AppState {
 	}
 
 	/**
+	 * <pre>
 	 * The isAutoRunEnabled() method determines if the auto run setting is enabled.
+	 * </pre>
+	 * <pre>
+	 * The auto run enabled feature determines if the app should be launched on the start of the OS or not.
+	 * </pre>
 	 * @return boolean indicating whether or not auto run is enabled.
 	 */
 	public boolean isAutoRunEnabled() {
@@ -171,7 +182,12 @@ public class AppState {
 	}
 
 	/**
+	 * <pre>
 	 * The isChannelAutoConnectEnabled() method determines if the auto connect channel setting is enabled.
+	 * </pre>
+	 * <pre>
+	 * The auto connect channel feature determines whether or not any new channel that the authenticated user is added to will be automatically connected to.
+	 * </pre>
 	 * @return boolean indicating whether or not auto connect channels is enabled.
 	 */
 	public boolean isChannelAutoConnectEnabled() {
@@ -247,7 +263,13 @@ public class AppState {
 	}
 
 	/**
-	 * The getExternalId() method returns the external id for the Zello for Work app.
+	 * <pre>
+	 * The getExternalId() method returns the external id for messages recorded on the server.
+	 * </pre>
+	 * <pre>
+	 * The external id is a tag for messages recorded on the server.
+	 * This tag is only recorded if the server recording feature is enabled on the Zello for Work console.
+	 * </pre>
 	 * @return Nullable; The external id for the app.
      */
 	public String getExternalId() {
