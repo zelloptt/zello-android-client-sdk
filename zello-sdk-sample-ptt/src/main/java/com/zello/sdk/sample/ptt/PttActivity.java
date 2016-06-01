@@ -113,7 +113,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         super.onDestroy();
 
         Zello.unsubscribeFromEvents(this);
-        Zello.killZelloUpdates();
+        Zello.uninitialize();
     }
 
     @Override
