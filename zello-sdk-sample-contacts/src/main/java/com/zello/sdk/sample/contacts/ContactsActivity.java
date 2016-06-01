@@ -3,6 +3,8 @@ package com.zello.sdk.sample.contacts;
 import android.app.Activity;
 import android.os.Parcelable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -69,6 +71,49 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
         Zello.enterPowerSavingMode();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        menu.clear();
+
+        Zello.getAppState(appState);
+        if (appState.isAvailable() && !appState.isInitializing()) {
+            getMenuInflater().inflate(R.menu.menu, menu);
+
+            showMenuItem(menu, R.id.menu_select_contact, true);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_select_contact: {
+                // Activity title; optional
+                String title = getResources().getString(R.string.select_contact_title);
+                // Set of displayed tabs; required; any combination of RECENTS, USERS and CHANNELS
+                com.zello.sdk.Tab[] tabs = new com.zello.sdk.Tab[]{com.zello.sdk.Tab.RECENTS, com.zello.sdk.Tab.USERS, com.zello.sdk.Tab.CHANNELS};
+                // Initially active tab; optional; can be RECENTS, USERS or CHANNELS
+                com.zello.sdk.Tab tab = Tab.RECENTS;
+                // Visual theme; optional; can be DARK or LIGHT
+                com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
+
+                // Since Zello was initialized in the Activity, pass in this as Activity parameter
+                Zello.selectContact(title, tabs, tab, theme, this);
+                break;
+            }
+        }
+
+        return true;
+    }
+
     //endregion
 
     private void updateContactList() {
@@ -129,6 +174,8 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
         Zello.getAppState(appState);
 
         if (appState.isSignedIn()) {
+            Helper.invalidateOptionsMenu(this);
+
             statusTextView.setVisibility(View.INVISIBLE);
             contactsListView.setVisibility(View.VISIBLE);
             selectedContactTextView.setVisibility(View.VISIBLE);
@@ -148,5 +195,12 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     }
 
     //endregion
+
+    private void showMenuItem(Menu menu, int itemId, boolean show) {
+        MenuItem item = menu.findItem(itemId);
+        if (item != null) {
+            item.setVisible(show);
+        }
+    }
 
 }
