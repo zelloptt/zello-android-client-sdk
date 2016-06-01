@@ -1,7 +1,7 @@
 package com.zello.sdk;
 
 /**
- * The Error enum represents the various errors that can be encountered in the Zello SDK.
+ * The Error enum represents some of the authentication errors that can be encountered in the Zello SDK.
  */
 public enum Error {
 
