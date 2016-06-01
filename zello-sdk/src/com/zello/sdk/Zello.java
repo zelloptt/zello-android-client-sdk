@@ -406,7 +406,12 @@ public final class Zello {
     }
 
     /**
+     * <pre>
      * The setAutoConnectChannels() method determines if new channels should be automatically connected to.
+     * </pre>
+     * <pre>
+     * By enabling this feature, any new channel that the authenticated user is added to will be automatically connected to.
+     * </pre>
      * @param connect The boolean to enable this feature or not.
      */
     public static void setAutoConnectChannels(boolean connect) {
