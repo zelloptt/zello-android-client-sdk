@@ -26,7 +26,7 @@ public final class Zello {
 
     /**
      * The initialize() method initializes the Zello SDK without immediately subscribing to the Events.
-     * @param packageName The package name of the PTT app.
+     * @param packageName The package name of the Zello for Work app. If the apk was downloaded off zellowork.com, this parameter should be "net.loudtalks"
      * @param context The context for the app.
      */
     public static void initialize(String packageName, Context context) {
@@ -35,7 +35,7 @@ public final class Zello {
 
     /**
      * The initialize() method initializes the Zello SDK and subscribes the passed in Events to receive updates.
-     * @param packageName The package name of the PTT app.
+     * @param packageName The package name of the Zello for Work app. If the apk was downloaded off zellowork.com, this parameter should be "net.loudtalks"
      * @param context The context for the app.
      * @param event The Events implementor to subscribe.
      */
