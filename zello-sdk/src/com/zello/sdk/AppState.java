@@ -239,7 +239,7 @@ public class AppState {
 	}
 
 	/**
-	 * The getLastError() method returns the most recent Error encountered by the Zello for Work app.
+	 * The getLastError() method returns the most recent authentication Error encountered by the Zello for Work app.
 	 * @return Error type indicating the latest error.
      */
 	public Error getLastError() {
