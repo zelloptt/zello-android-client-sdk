@@ -1,6 +1,7 @@
 package com.zello.sdk;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -51,7 +52,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	private static final int AWAKE_TIMER = 1;
 
-	private static final String _pttActivityClass = "com.zello.sdk.Context";
+	private static final String _pttActivityClass = "com.zello.sdk.Activity";
 	private static Intent _serviceIntent;
 
 	//endregion
@@ -244,8 +245,32 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Zello SDK Methods
 
 	void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
-		Context context = _context;
+		Context context = _context.getApplicationContext();
 		if (context != null) {
+			String tabList = tabsToString(tabs);
+			if (tabList != null) {
+				try {
+					Intent intent = new Intent();
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.setComponent(new ComponentName(_package, _pttActivityClass));
+					intent.setAction(Intent.ACTION_PICK);
+					intent.putExtra(Intent.EXTRA_TITLE, title); // Activity title; optional
+					intent.putExtra(Constants.EXTRA_TABS, tabList); // Set of displayed tabs; required; any combination of RECENTS, USERS and CHANNELS
+					intent.putExtra(Constants.EXTRA_TAB, tabToString(activeTab)); // Initially active tab; optional; can be RECENTS, USERS or CHANNELS
+					intent.putExtra(Constants.EXTRA_CALLBACK, _activeTabAction); // Last selected tab callback action; optional
+					if (theme == Theme.LIGHT) {
+						intent.putExtra(Constants.EXTRA_THEME, Constants.VALUE_LIGHT);
+					}
+					context.startActivity(intent);
+				} catch (Exception ignored) {
+					// ActivityNotFoundException
+				}
+			}
+		}
+	}
+
+	void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme, Activity activity) {
+		if (activity != null) {
 			String tabList = tabsToString(tabs);
 			if (tabList != null) {
 				try {
@@ -259,7 +284,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 					if (theme == Theme.LIGHT) {
 						intent.putExtra(Constants.EXTRA_THEME, Constants.VALUE_LIGHT);
 					}
-					context.startActivity(intent);
+					activity.startActivity(intent);
 				} catch (Exception ignored) {
 					// ActivityNotFoundException
 				}

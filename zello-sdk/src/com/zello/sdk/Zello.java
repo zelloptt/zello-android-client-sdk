@@ -1,5 +1,6 @@
 package com.zello.sdk;
 
+import android.app.Activity;
 import android.content.Context;
 
 import java.util.ArrayList;
@@ -115,7 +116,12 @@ public final class Zello {
     //region Zello SDK Methods
 
     /**
+     * <pre>
      * The selectContact() opens an Activity that displays the authenticated users Contacts to select.
+     * </pre>
+     * <pre>
+     * This method should be used if the Zello SDK was initialized from the Application Context.
+     * </pre>
      * @param title     Nullable; Activity Title.
      * @param tabs		Set of displayed Tabs.
      * @param activeTab Initially active Tab.
@@ -123,6 +129,23 @@ public final class Zello {
      */
     public static void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
         sdk.selectContact(title, tabs, activeTab, theme);
+    }
+
+    /**
+     * <pre>
+     * The selectContact() opens an Activity that displays the authenticated users Contacts to select.
+     * </pre>
+     * <pre>
+     * This method should be used if the Zello SDK was initialized from an Activity Context.
+     * </pre>
+     * @param title     Nullable; Activity Title.
+     * @param tabs		Set of displayed Tabs.
+     * @param activeTab Initially active Tab.
+     * @param theme     Visual Theme for Activity.
+     * @param activity  Activity that is calling this method (ie. this).
+     */
+    public static void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme, Activity activity) {
+        sdk.selectContact(title, tabs, activeTab, theme, activity);
     }
 
     //region Sending Messages
