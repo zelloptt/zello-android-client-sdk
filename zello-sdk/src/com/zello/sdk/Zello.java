@@ -1,5 +1,6 @@
 package com.zello.sdk;
 
+import android.app.Activity;
 import android.content.Context;
 
 import java.util.ArrayList;
@@ -12,11 +13,11 @@ import java.util.ArrayList;
  * For specific usage, please see the sample projects.
  * </pre>
  */
-public class Zello {
+public final class Zello {
 
     static ArrayList<Events> events = new ArrayList<Events>();
 
-    static Sdk sdk = new Sdk();
+    static Sdk sdk;
 
     // Protect against multiple attempts to initialize SDK.
     static boolean initialized = false;
@@ -25,7 +26,7 @@ public class Zello {
 
     /**
      * The initialize() method initializes the Zello SDK without immediately subscribing to the Events.
-     * @param packageName The package name of the app.
+     * @param packageName The package name of the Zello for Work app. If the apk was downloaded off zellowork.com, this parameter should be "net.loudtalks"
      * @param context The context for the app.
      */
     public static void initialize(String packageName, Context context) {
@@ -34,7 +35,7 @@ public class Zello {
 
     /**
      * The initialize() method initializes the Zello SDK and subscribes the passed in Events to receive updates.
-     * @param packageName The package name of the app.
+     * @param packageName The package name of the Zello for Work app. If the apk was downloaded off zellowork.com, this parameter should be "net.loudtalks"
      * @param context The context for the app.
      * @param event The Events implementor to subscribe.
      */
@@ -49,38 +50,45 @@ public class Zello {
 
     /**
      * <pre>
-     * The pauseZelloUpdates() method pauses communication with the Zello for Work app to optimize power and data consumption.
+     * The enterPowerSavingMode() method limits communication between the Zello for Work app and the server to optimize power and data consumption.
      * </pre>
      * <pre>
-     * The Zello SDK communicates with the Zello for Work app to send and receive updates. By invoking this method, this communication will temporarily stop.
+     * The Zello SDK communicates with the Zello for Work app to send and receive updates.
+     * By invoking this method, this communication will be limited.
      * </pre>
      */
-    public static void pauseZelloUpdates() {
+    public static void enterPowerSavingMode() {
         sdk.onPause();
     }
 
     /**
      * <pre>
-     * The resumeZelloUpdates() method resumes communication with the Zello for Work app.
+     * The leavePowerSavingMode() method resumes normal communication with the Zello for Work app.
      * </pre>
      * <pre>
-     * The Zello SDK communicates with the Zello for Work app to send and receive updates. By invoking this method, this paused communication will resume.
+     * The Zello SDK communicates with the Zello for Work app to send and receive updates.
+     * By invoking this method, this limited communication will return to normal.
      * </pre>
      */
-    public static void resumeZelloUpdates() {
+    public static void leavePowerSavingMode() {
         sdk.onResume();
     }
 
     /**
      * <pre>
-     * The killZelloUpdates() method suspends communication with the Zello for Work app.
+     * The uninitialize() method terminates communication with the Zello for Work app.
      * </pre>
      * <pre>
-     * The Zello SDK communicates with the Zello for Work app to send and receive updates. By invoking this method, this communication will end.
+     * The Zello SDK communicates with the Zello for Work app to send and receive updates.
+     * By invoking this method, this communication will end.
      * </pre>
      */
-    public static void killZelloUpdates() {
+    public static void uninitialize() {
         sdk.onDestroy();
+
+        sdk = null;
+        events = null;
+        initialized = false;
     }
 
     //endregion
@@ -112,14 +120,36 @@ public class Zello {
     //region Zello SDK Methods
 
     /**
-     * The selectContact() method selects a contact from the users contact list.
-     * @param title     Nullable; Activity Title
+     * <pre>
+     * The selectContact() method opens an Activity that displays the authenticated user's Contacts to select.
+     * </pre>
+     * <pre>
+     * This method should be used if the Zello SDK was initialized from the Application Context.
+     * </pre>
+     * @param title     Nullable; Activity Title.
      * @param tabs		Set of displayed Tabs.
-     * @param activeTab Nullable; Initially active tab.
-     * @param theme     Nullable; Visual Theme.
+     * @param activeTab Initially active Tab.
+     * @param theme     Visual Theme for Activity.
      */
     public static void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
         sdk.selectContact(title, tabs, activeTab, theme);
+    }
+
+    /**
+     * <pre>
+     * The selectContact() opens an Activity that displays the authenticated user's Contacts to select.
+     * </pre>
+     * <pre>
+     * This method should be used if the Zello SDK was initialized from an Activity Context.
+     * </pre>
+     * @param title     Nullable; Activity Title.
+     * @param tabs		Set of displayed Tabs.
+     * @param activeTab Initially active Tab.
+     * @param theme     Visual Theme for Activity.
+     * @param activity  Activity that is calling this method (ie. this).
+     */
+    public static void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme, Activity activity) {
+        sdk.selectContact(title, tabs, activeTab, theme, activity);
     }
 
     //region Sending Messages
@@ -153,7 +183,7 @@ public class Zello {
     //region Channels
 
     /**
-     * This method opens a channel between two or more users in order to communicate.
+     * The connectChannel() method connects the authenticated user to a channel for users to communicate through.
      * @param channel The name of the channel to connect to.
      */
     public static void connectChannel(String channel) {
@@ -190,7 +220,7 @@ public class Zello {
      * @param network  The network to authenticate against.
      * @param username The username to authenticate.
      * @param password The password for the username.
-     * @return 		   boolean indicating whether a sign in was attempted or not.
+     * @return 		   boolean indicating whether a sign in was initiated or not.
      */
     public static boolean signIn(String network, String username, String password) {
         return sdk.signIn(network, username, password);
@@ -202,7 +232,7 @@ public class Zello {
      * @param username   The username to authenticate.
      * @param password   The password for the username.
      * @param perishable Whether or not the authentication information should be saved.
-     * @return 			 boolean indicating whether a sign in was attempted or not.
+     * @return 			 boolean indicating whether a sign in was initiated or not.
      */
     public static boolean signIn(String network, String username, String password, boolean perishable) {
         return sdk.signIn(network, username, password, perishable);
@@ -227,16 +257,22 @@ public class Zello {
     //region Locking
 
     /**
-     * The lock() method puts the PTT app into a locked state where messages cannot be sent or received.
-     * @param applicationName The name of the application to lock.
-     * @param packageName	  The package name of the application to lock.
+     * <pre>
+     * The lock() method puts the UI for the Zello for Work app into a locked state.
+     * </pre>
+     * <pre>
+     * In this locked state, the Zello for Work app will only display an information screen with the name of your app that can be clicked to open the main activity.
+     * This does NOT interfere with the sending and receiving of messages through the Zello for Work app.
+     * </pre>
+     * @param applicationName The name of the application.
+     * @param packageName	  The package name of the application.
      */
     public static void lock(String applicationName, String packageName) {
         sdk.lock(applicationName, packageName);
     }
 
     /**
-     * The unlock() method unlocks the PTT app.
+     * The unlock() method unlocks the UI of the Zello for Work app.
      */
     public static void unlock() {
         sdk.unlock();
@@ -247,16 +283,16 @@ public class Zello {
     //region Status
 
     /**
-     * The setStatus() method sets the status of a user to a Status message.
-     * @param status The state to set the users status to.
+     * The setStatus() method sets the status of the authenticated user to a Status message.
+     * @param status The state to set the user's status to.
      */
     public static void setStatus(Status status) {
         sdk.setStatus(status);
     }
 
     /**
-     * The setStatusMessage() method sets the status of a user to a custom message.
-     * @param message The custom message to set the users status to.
+     * The setStatusMessage() method sets the status of the authenticated user to a custom message.
+     * @param message The custom message to set the user's status to.
      */
     public static void setStatusMessage(String message) {
         sdk.setStatusMessage(message);
@@ -265,7 +301,7 @@ public class Zello {
     //endregion
 
     /**
-     * The openMainScreen() method will open the Zello for Work applications main screen upon invocation.
+     * The openMainScreen() method will open the Zello for Work app upon invocation.
      */
     public static void openMainScreen() {
         sdk.openMainScreen();
@@ -274,39 +310,69 @@ public class Zello {
     //region Getters
 
     /**
-     * The getMessageIn() method returns a copy of the current MessageIn from the Sdk.
-     * @param message MessageIn to have the Sdk copy into.
+     * <pre>
+     * The getMessageIn() method returns a copy of the current incoming message from the Zello for Work app.
+     * </pre>
+     * <pre>
+     * This copy is a snapshot of the state of the MessageIn at the time of invocation.
+     * It is static in the sense that the Zello SDK will not update it.
+     * </pre>
+     * @param message MessageIn to copy into.
      */
     public static void getMessageIn(MessageIn message) {
         sdk.getMessageIn(message);
     }
 
     /**
-     * The getMessageOut() method reeturns a copy of the current MessageOut from the Sdk.
-     * @param message MessageOut to have the Sdk copy into.
+     * <pre>
+     * The getMessageOut() method returns a copy of the current outgoing message from the Zello for Work app.
+     * </pre>
+     * <pre>
+     * This copy is a snapshot of the state of the MessageOut at the time of invocation.
+     * It is static in the sense that the Zello SDK will not update it.
+     * </pre>
+     * @param message MessageOut to copy into.
      */
     public static void getMessageOut(MessageOut message) {
         sdk.getMessageOut(message);
     }
 
     /**
-     * The getAppState() method returns a copy of the current AppState from the Sdk.
-     * @param state AppState to have the Sdk copy into.
+     * <pre>
+     * The getAppState() method returns a copy of the current AppState from the Zello for Work app.
+     * </pre>
+     * <pre>
+     * This copy is a snapshot of the state of the AppState at the time of invocation.
+     * It is static in the sense that the Zello SDK will not update it.
+     * </pre>
+     * * @param state AppState to copy into.
      */
     public static void getAppState(AppState state) {
         sdk.getAppState(state);
     }
 
     /**
-     * The getSelectedContact() method returns a copy of the curret selected Contact from the Sdk.
-     * @param contact Contact to have the Sdk copy into.
+     * <pre>
+     * The getSelectedContact() method returns a copy of the current selected Contact from the Zello for Work app.
+     * </pre>
+     * <pre>
+     * This copy is a snapshot of the state of the Contact at the time of invocation.
+     * It is static in the sense that the Zello SDK will not update it.
+     * </pre>
+     * @param contact Contact to copy into.
      */
     public static void getSelectedContact(Contact contact) {
         sdk.getSelectedContact(contact);
     }
 
     /**
-     * The getContacts() method returns the Contacts for the user.
+     * <pre>
+     * The getContacts() method returns the Contacts for the authenticated user.
+     * </pre>
+     * <pre>
+     * This copy is a snapshot of the state of the Contacts at the time of invocation.
+     * It is static in the sense that the Zello SDK will not update it.
+     * </pre>
      * @return The Contacts object for the user.
      */
     public static Contacts getContacts() {
@@ -314,7 +380,13 @@ public class Zello {
     }
 
     /**
-     * The getAudio() method returns the current Audio instance for the Sdk.
+     * <pre>
+     * The getAudio() method returns the current Audio instance for the Zello for Work app.
+     * </pre>
+     * <pre>
+     * This copy is a snapshot of the state of the Audio at the time of invocation.
+     * It is static in the sense that the Zello SDK will not update it.
+     * </pre>
      * @return The Audio instance.
      */
     public static Audio getAudio() {
@@ -334,7 +406,12 @@ public class Zello {
     }
 
     /**
-     * The setAutoConnectChannels() method determines if channels should be automatically connected to.
+     * <pre>
+     * The setAutoConnectChannels() method determines if new channels should be automatically connected to.
+     * </pre>
+     * <pre>
+     * By enabling this feature, any new channel that the authenticated user is added to will be automatically connected to.
+     * </pre>
      * @param connect The boolean to enable this feature or not.
      */
     public static void setAutoConnectChannels(boolean connect) {
@@ -342,7 +419,8 @@ public class Zello {
     }
 
     /**
-     * The setExternalId() method sets an external id for messages to filter though. By default, the externalId is NULL.
+     * The setExternalId() method sets an external id tag onto messages recorded on the server.
+     * This tag is only recorded if the server recording feature is enabled on the Zello for Work console.
      * @param id Nullable; String indicating the external id.
      */
     public static void setExternalId(String id) {
@@ -350,7 +428,12 @@ public class Zello {
     }
 
     /**
+     * <pre>
      * The setSelectedContact() method sets the selected contact to a specified Contact.
+     * </pre>
+     * <pre>
+     * The selected Contact will be the contact that a voice message will be sent to upon a Zello.beginMessage() invocation.
+     * </pre>
      * @param contact Nullable; Contact to select. A null value will deselect the current Contact.
      */
     public static void setSelectedContact(Contact contact) {
@@ -379,14 +462,19 @@ public class Zello {
 
     //region Private Methods
 
+    private Zello() {
+
+    }
+
     private static void doInitialization(String packageName, Context context) {
         if (!initialized) {
             initialized = true;
 
+            sdk = new Sdk();
             sdk.onCreate(packageName, context);
 
             // Updates should be on by default
-            Zello.resumeZelloUpdates();
+            Zello.leavePowerSavingMode();
         }
     }
 

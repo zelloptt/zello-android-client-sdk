@@ -113,21 +113,21 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         super.onDestroy();
 
         Zello.unsubscribeFromEvents(this);
-        Zello.killZelloUpdates();
+        Zello.uninitialize();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Zello.resumeZelloUpdates();
+        Zello.leavePowerSavingMode();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        Zello.pauseZelloUpdates();
+        Zello.enterPowerSavingMode();
     }
 
     @Override
@@ -145,7 +145,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
         Zello.getAppState(appState);
 
-        if (appState.isSignedIn() && !appState.isLocked()) {
+        if (appState.isSignedIn()) {
             getMenuInflater().inflate(R.menu.menu, menu);
             showMenuItem(menu, R.id.menu_mute_contact, true);
 
@@ -229,9 +229,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     private void updateUI() {
         Zello.getAppState(appState);
 
-        if (appState.isLocked()) {
-            updateUIForLocked();
-        } else if (appState.isSignedIn()) {
+        if (appState.isSignedIn()) {
             Zello.getSelectedContact(selectedContact);
 
             if (selectedContact != null && selectedContact.getDisplayName() != null) {
@@ -248,22 +246,6 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         } else {
             updateUIForDisconnected();
         }
-    }
-
-    private void updateUIForLocked() {
-        Helper.invalidateOptionsMenu(this);
-
-        statusTextView.setVisibility(View.VISIBLE);
-
-        pttButton.setVisibility(View.INVISIBLE);
-        audioModeView.setVisibility(View.INVISIBLE);
-        speakerButton.setVisibility(View.INVISIBLE);
-        bluetoothButton.setVisibility(View.INVISIBLE);
-        earpieceButton.setVisibility(View.INVISIBLE);
-        connectChannelButton.setVisibility(View.INVISIBLE);
-        selectedContactTextView.setVisibility(View.INVISIBLE);
-
-        statusTextView.setText(R.string.locked);
     }
 
     private void updateUIForAvailableContact() {

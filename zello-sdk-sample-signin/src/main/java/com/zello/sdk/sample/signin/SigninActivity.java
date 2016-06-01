@@ -88,21 +88,21 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
         super.onDestroy();
 
         Zello.unsubscribeFromEvents(this);
-        Zello.killZelloUpdates();
+        Zello.uninitialize();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Zello.resumeZelloUpdates();
+        Zello.leavePowerSavingMode();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        Zello.pauseZelloUpdates();
+        Zello.enterPowerSavingMode();
     }
 
     //endregion

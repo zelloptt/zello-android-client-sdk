@@ -1,6 +1,7 @@
 package com.zello.sdk;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -51,7 +52,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	private static final int AWAKE_TIMER = 1;
 
-	private static final String _pttActivityClass = "com.zello.sdk.Context";
+	private static final String _pttActivityClass = "com.zello.sdk.Activity";
 	private static Intent _serviceIntent;
 
 	//endregion
@@ -243,20 +244,14 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Zello SDK Methods
 
-	/**
-	 * The selectContact() method selects a contact from the users contact list.
-	 * @param title     Nullable; Activity Title
-	 * @param tabs		Set of displayed Tabs.
-	 * @param activeTab Nullable; Initially active tab.
-     * @param theme     Nullable; Visual Theme.
-     */
 	void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
-		Context context = _context;
+		Context context = _context.getApplicationContext();
 		if (context != null) {
 			String tabList = tabsToString(tabs);
 			if (tabList != null) {
 				try {
 					Intent intent = new Intent();
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					intent.setComponent(new ComponentName(_package, _pttActivityClass));
 					intent.setAction(Intent.ACTION_PICK);
 					intent.putExtra(Intent.EXTRA_TITLE, title); // Activity title; optional
@@ -274,16 +269,31 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme, Activity activity) {
+		if (activity != null) {
+			String tabList = tabsToString(tabs);
+			if (tabList != null) {
+				try {
+					Intent intent = new Intent();
+					intent.setComponent(new ComponentName(_package, _pttActivityClass));
+					intent.setAction(Intent.ACTION_PICK);
+					intent.putExtra(Intent.EXTRA_TITLE, title); // Activity title; optional
+					intent.putExtra(Constants.EXTRA_TABS, tabList); // Set of displayed tabs; required; any combination of RECENTS, USERS and CHANNELS
+					intent.putExtra(Constants.EXTRA_TAB, tabToString(activeTab)); // Initially active tab; optional; can be RECENTS, USERS or CHANNELS
+					intent.putExtra(Constants.EXTRA_CALLBACK, _activeTabAction); // Last selected tab callback action; optional
+					if (theme == Theme.LIGHT) {
+						intent.putExtra(Constants.EXTRA_THEME, Constants.VALUE_LIGHT);
+					}
+					activity.startActivity(intent);
+				} catch (Exception ignored) {
+					// ActivityNotFoundException
+				}
+			}
+		}
+	}
+
 	//region Sending Messages
 
-	/**
-	 * <pre>
-	 * The beginMessage() method is the starting point for sending a message through the Zello SDK.
-	 * </pre>
-	 * <pre>
-	 * Once called, a message will be recorded until endMessage() method is called.
-	 * </pre>
-	 */
 	void beginMessage() {
 		Context context = _context;
 		if (context != null) {
@@ -293,14 +303,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	/**
-	 * <pre>
-	 * The endMessage() method is the ending point for sending a message through the Zello SDK.
-	 * </pre>
-	 * <pre>
-	 * Prerequisites: There must be an invocation of the beginMessage() method.
-	 * </pre>
-	 */
 	void endMessage() {
 		Context context = _context;
 		if (context != null) {
@@ -314,10 +316,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Channels
 
-	/**
-	 * This method opens a channel between two or more users in order to communicate.
-	 * @param channel The name of the channel to connect to.
-     */
 	void connectChannel(String channel) {
 		if (channel != null && channel.length() > 0) {
 			Context context = _context;
@@ -330,10 +328,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	/**
-	 * The disconnectChannel() method disconnects the user from the channel.
-	 * @param channel The name of the channel to disconnect from.
-     */
 	void disconnectChannel(String channel) {
 		if (channel != null && channel.length() > 0) {
 			Context context = _context;
@@ -350,11 +344,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Contacts
 
-	/**
-	 * The muteContact() method either mutes or unmutes a contact.
-	 * @param contact The contact to mute or unmute.
-	 * @param mute    Whether the contact should be muted or not.
-     */
 	void muteContact(Contact contact, boolean mute) {
 		if (contact != null) {
 			Context context = _context;
@@ -373,25 +362,10 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Authentication
 
-	/**
-	 * The signIn() method authenticates the user on the network with the passed in login credentials.
-	 * @param network  The network to authenticate against.
-	 * @param username The username to authenticate.
-	 * @param password The password for the username.
-	 * @return 		   boolean indicating whether a sign in was attempted or not.
-     */
 	boolean signIn(String network, String username, String password) {
 		return signIn(network, username, password, false);
 	}
 
-	/**
-	 * The signIn() method authenticates the user on the network with the passed in login credentials with an option for the authentication to perish.
-	 * @param network    The network to authenticate against.
-	 * @param username   The username to authenticate.
-	 * @param password   The password for the username.
-	 * @param perishable Whether or not the authentication information should be saved.
-     * @return 			 boolean indicating whether a sign in was attempted or not.
-     */
 	boolean signIn(String network, String username, String password, boolean perishable) {
 		if (network != null && network.length() > 0 && username != null && username.length() > 0 && password != null && password.length() > 0) {
 			if (isConnected()) {
@@ -417,9 +391,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	/**
-	 * The signOut() method unauthenticates the user from the network.
-	 */
 	void signOut() {
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
 		_delayedPerishable = false;
@@ -433,9 +404,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	/**
-	 * The cancel() method cancels the ongoing authentication request from the signIn() method.
-	 */
 	void cancel() {
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
 		_delayedPerishable = false;
@@ -453,11 +421,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Locking
 
-	/**
-	 * The lock() method puts the PTT app into a locked state where messages cannot be sent or received.
-	 * @param applicationName The name of the application to lock.
-	 * @param packageName	  The package name of the application to lock.
-     */
 	void lock(String applicationName, String packageName) {
 		if (isConnected()) {
 			Context context = _context;
@@ -471,9 +434,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	/**
-	 * The unlock() method unlocks the PTT app.
-	 */
 	void unlock() {
 		if (isConnected()) {
 			Context context = _context;
@@ -489,10 +449,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Status
 
-	/**
-	 * The setStatus() method sets the status of a user to a Status message.
-	 * @param status The state to set the users status to.
-     */
 	void setStatus(Status status) {
 		if (_serviceBound) {
 			Context context = _context;
@@ -506,10 +462,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	/**
-	 * The setStatusMessage() method sets the status of a user to a custom message.
-	 * @param message The custom message to set the users status to.
-     */
 	void setStatusMessage(String message) {
 		if (_serviceBound) {
 			Context context = _context;
@@ -524,9 +476,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//endregion
 
-	/**
-	 * The openMainScreen() method will open the Zello for Work applications main screen upon invocation.
-	 */
 	void openMainScreen() {
 		Context context = _context;
 		if (context != null) {
@@ -541,50 +490,26 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Getters
 
-	/**
-	 * The getMessageIn() method returns a copy of the current MessageIn from the Sdk.
-	 * @param message MessageIn to have the Sdk copy into.
-     */
 	void getMessageIn(MessageIn message) {
 		_messageIn.copyTo(message);
 	}
 
-	/**
-	 * The getMessageOut() method reeturns a copy of the current MessageOut from the Sdk.
-	 * @param message MessageOut to have the Sdk copy into.
-     */
 	void getMessageOut(MessageOut message) {
 		_messageOut.copyTo(message);
 	}
 
-	/**
-	 * The getAppState() method returns a copy of the current AppState from the Sdk.
-	 * @param state AppState to have the Sdk copy into.
-     */
 	void getAppState(AppState state) {
 		_appState.copyTo(state);
 	}
 
-	/**
-	 * The getSelectedContact() method returns a copy of the curret selected Contact from the Sdk.
-	 * @param contact Contact to have the Sdk copy into.
-     */
 	void getSelectedContact(Contact contact) {
 		_selectedContact.copyTo(contact);
 	}
 
-	/**
-	 * The getContacts() method returns the Contacts for the user.
-	 * @return The Contacts object for the user.
-     */
 	Contacts getContacts() {
 		return _contacts;
 	}
 
-	/**
-	 * The getAudio() method returns the current Audio instance for the Sdk.
-	 * @return The Audio instance.
-     */
 	Audio getAudio() {
 		if (_context != null) {
 			if (_audio == null) {
@@ -598,10 +523,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Setters
 
-	/**
-	 * The setAutoRun() method determines if the app should be launched on the start of the OS or not.
-	 * @param enable The boolean to enable this feature or not. By default, this value is false.
-     */
 	void setAutoRun(boolean enable) {
 		if (isConnected()) {
 			Context context = _context;
@@ -614,10 +535,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	/**
-	 * The setAutoConnectChannels() method determines if channels should be automatically connected to.
-	 * @param connect The boolean to enable this feature or not.
-     */
 	void setAutoConnectChannels(boolean connect) {
 		if (isConnected()) {
 			Context context = _context;
@@ -630,10 +547,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	/**
-	 * The setExternalId() method sets an external id for messages to filter though. By default, the externalId is NULL.
-	 * @param id Nullable; String indicating the external id.
-     */
 	void setExternalId(String id) {
 		if (isConnected()) {
 			Context context = _context;
@@ -646,10 +559,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	/**
-	 * The setSelectedContact() method sets the selected contact to a specified Contact.
-	 * @param contact Nullable; Contact to select. A null value will deselect the current Contact.
-	 */
 	void setSelectedContact(Contact contact) {
 		if (contact != null) {
 			ContactType type = contact.getType();
@@ -659,18 +568,10 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	/**
-	 * The setSelectedUserOrGateway() method sets the selected contact to a specified User or Gateway.
-	 * @param name Nullable; The name of the User or Gateway to select. A null value will deselect the current Contact.
-	 */
 	void setSelectedUserOrGateway(String name) {
 		selectContact(0, name);
 	}
 
-	/**
-	 * The setSelectedChannelOrGroup() method sets the selected contact to a specified Channel or Group.
-	 * @param name Nullable; The name of the Channel or Group to select. A null value will deselect the current Contact.
-     */
 	void setSelectedChannelOrGroup(String name) {
 		selectContact(1, name);
 	}
@@ -772,18 +673,21 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	private void connect() {
-		if (!_serviceBound && !_serviceConnecting) {
+		if (!_serviceBound || !_serviceConnecting) {
 			Context context = _context;
 			if (context != null) {
 				_serviceConnecting = true;
 				_appState._initializing = true;
 				_appState._error = false;
 				fireAppStateChanged();
-				try {
-					_serviceBound = context.bindService(getServiceIntent(), this, Context.BIND_AUTO_CREATE);
-				} catch (Throwable t) {
-					_serviceConnecting = false;
-					Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
+
+				if (!_serviceBound) {
+					try {
+						_serviceBound = context.bindService(getServiceIntent(), this, Context.BIND_AUTO_CREATE);
+					} catch (Throwable t) {
+						_serviceConnecting = false;
+						Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
+					}
 				}
 				if (!_serviceBound) {
 					_appState._error = true;

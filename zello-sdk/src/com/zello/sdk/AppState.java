@@ -2,11 +2,11 @@ package com.zello.sdk;
 
 /**
  * <pre>
- * The AppState class is a representation of the current state of the Zello SDK at any given moment.
- * This class is useful to get information about the Sdk and the status of the app.
+ * The AppState class is a representation of the current state of the Zello for Work app at any given moment.
+ * This class is useful for getting the status of the Zello for Work app.
  * </pre>
  * <pre>
- * To use, retrieve the current AppState instance from the Sdk instance using the getAppState() method. For specific usage, please see the sample projects.
+ * To use, retrieve the current AppState instance from the Zello class using the getAppState() method. For specific usage, please see the sample projects.
  * </pre>
  */
 public class AppState {
@@ -75,7 +75,7 @@ public class AppState {
 	//region Public State Methods
 
 	/**
-	 * The isAvailable() method determines if the PTT app is available.
+	 * The isAvailable() method determines if the Zello for Work app is available.
 	 * @return boolean indicating if the app is available.
      */
 	public boolean isAvailable() {
@@ -83,7 +83,7 @@ public class AppState {
 	}
 
 	/**
-	 * The isInitializing() method determines if the PTT app is initializing.
+	 * The isInitializing() method determines if the Zello for Work app is initializing.
 	 * @return boolean indicating if the app is initializing.
 	 */
 	public boolean isInitializing() {
@@ -91,7 +91,7 @@ public class AppState {
 	}
 
 	/**
-	 * The isCustomBuild() method determines if the PTT app is a custom build.
+	 * The isCustomBuild() method determines if the Zello for Work app is a custom build.
 	 * @return boolean indicating if the app is a custom build.
 	 */
 	public boolean isCustomBuild() {
@@ -99,7 +99,7 @@ public class AppState {
 	}
 
 	/**
-	 * The isConfiguring() method determines if the PTT app is currently configuring.
+	 * The isConfiguring() method determines if the Zello for Work app is currently configuring.
 	 * @return boolean indicating if the app is currently configuring.
 	 */
 	public boolean isConfiguring() {
@@ -107,7 +107,7 @@ public class AppState {
 	}
 
 	/**
-	 * The isLocked() method determines if the PTT app is currently locked.
+	 * The isLocked() method determines if the Zello for Work app is currently locked.
 	 * @return boolean indicating if the app is currently locked.
 	 */
 	public boolean isLocked() {
@@ -147,7 +147,7 @@ public class AppState {
 	}
 
 	/**
-	 * The isReconnecting() method determines if the PTT app is trying to reconnect the user.
+	 * The isReconnecting() method determines if the Zello for Work app is trying to reconnect the user.
 	 * @return boolean indicating if the app is trying to reconnect the user.
      */
 	public boolean isReconnecting() {
@@ -155,7 +155,7 @@ public class AppState {
 	}
 
 	/**
-	 * The isWaitingForNetwork() method determines if the PTT app is waiting for the network to respond.
+	 * The isWaitingForNetwork() method determines if the Zello for Work app is waiting for the network to respond.
 	 * @return boolean indicating if the app is waiting for the network.
      */
 	public boolean isWaitingForNetwork() {
@@ -184,7 +184,7 @@ public class AppState {
 
 	/**
 	 * The getReconnectTimer() method returns the timer for reconnecting to the network.
-	 * @return The network reconnect timer.
+	 * @return The network reconnect timer in seconds.
      */
 	public int getReconnectTimer() {
 		return _reconnectTimer;
@@ -199,7 +199,7 @@ public class AppState {
 	}
 
 	/**
-	 * The getStatus() method returns the Status for the user.
+	 * The getStatus() method returns the Status for the authenticated user.
 	 * @return The current Status for the user.
      */
 	public Status getStatus() {
@@ -207,7 +207,7 @@ public class AppState {
 	}
 
 	/**
-	 * The getStatusMessage() method returns the custom status message for the user.
+	 * The getStatusMessage() method returns the custom status message for the authenticated user.
 	 * @return Nullable; The status message for the user.
      */
 	public String getStatusMessage() {
@@ -215,7 +215,7 @@ public class AppState {
 	}
 
 	/**
-	 * The getNetwork() method returns the network String for the PTT app.
+	 * The getNetwork() method returns the network String for the Zello for Work app.
 	 * @return Nullable; The network String.
 	 */
 	public String getNetwork() {
@@ -223,7 +223,7 @@ public class AppState {
 	}
 
 	/**
-	 * The getNetworkUrl() method returns the network in URL format for the PTT app.
+	 * The getNetworkUrl() method returns the network in URL format for the Zello for Work app.
 	 * @return Nullable; The network URL.
 	 */
 	public String getNetworkUrl() {
@@ -239,7 +239,7 @@ public class AppState {
 	}
 
 	/**
-	 * The getLastError() method returns the most recent Error encountered by the PTT app.
+	 * The getLastError() method returns the most recent Error encountered by the Zello for Work app.
 	 * @return Error type indicating the latest error.
      */
 	public Error getLastError() {
@@ -247,7 +247,7 @@ public class AppState {
 	}
 
 	/**
-	 * The getExternalId() method returns the external id for the PTT app.
+	 * The getExternalId() method returns the external id for the Zello for Work app.
 	 * @return Nullable; The external id for the app.
      */
 	public String getExternalId() {

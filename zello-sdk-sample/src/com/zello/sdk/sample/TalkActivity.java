@@ -217,7 +217,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		});
 
 		_dirtyContacts = true;
-		//Zello.onCreate("net.loudtalks", this, this); // Use to connect to apk from zellowork.com
+		//Zello.initialize("net.loudtalks", this, this); // Use to connect to apk from zellowork.com
 		Zello.initialize("com.pttsdk", this, this); // Use with generic apk
 		_audio = Zello.getAudio();
 
@@ -231,14 +231,14 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	protected void onDestroy() {
 		super.onDestroy();
 		Zello.unsubscribeFromEvents(this);
-		Zello.killZelloUpdates();
+		Zello.uninitialize();
 		_audio = null;
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Zello.resumeZelloUpdates();
+		Zello.leavePowerSavingMode();
 		_active = true;
 		updateContactList();
 	}
@@ -246,7 +246,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Zello.pauseZelloUpdates();
+		Zello.enterPowerSavingMode();
 		_active = false;
 	}
 
@@ -423,7 +423,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		// Visual theme; optional; can be DARK or LIGHT
 		com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
 
-		Zello.selectContact(title, tabs, tab, theme);
+		// Since Zello was initialized in the Activity, pass in this as Activity parameter
+		Zello.selectContact(title, tabs, tab, theme, this);
 	}
 
 	private void lockPttApp() {

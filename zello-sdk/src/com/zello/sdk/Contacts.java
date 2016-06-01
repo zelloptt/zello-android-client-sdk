@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 
 /**
- * The Contacts class represent the set of Contacts that the user has.
+ * The Contacts class represents the Contacts that the authenticated user has.
  */
 public class Contacts {
 

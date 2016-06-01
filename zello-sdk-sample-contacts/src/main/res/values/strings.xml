@@ -13,5 +13,5 @@
     <string name="sign_in_status_offline">Please sign in using the sample sign in project.</string>
     <string name="sign_in_status_signing_in">Signing in...</string>
 
-    <string name="locked">PTT App is locked. Please unlock the app using the sample misc project.</string>
+    <string name="select_contact_title">Select Contact</string>
 </resources>
