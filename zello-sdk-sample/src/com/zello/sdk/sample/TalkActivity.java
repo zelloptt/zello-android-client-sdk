@@ -231,7 +231,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	protected void onDestroy() {
 		super.onDestroy();
 		Zello.unsubscribeFromEvents(this);
-		Zello.killZelloUpdates();
+		Zello.uninitialize();
 		_audio = null;
 	}
 

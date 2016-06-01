@@ -44,7 +44,7 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 	protected void onDestroy() {
 		super.onDestroy();
 		Zello.unsubscribeFromEvents(this);
-		Zello.killZelloUpdates();
+		Zello.uninitialize();
 	}
 
 	@Override
