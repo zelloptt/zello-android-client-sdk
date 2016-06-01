@@ -423,7 +423,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		// Visual theme; optional; can be DARK or LIGHT
 		com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
 
-		Zello.selectContact(title, tabs, tab, theme);
+		// Since Zello was initialized in the Activity, pass in this as Activity parameter
+		Zello.selectContact(title, tabs, tab, theme, this);
 	}
 
 	private void lockPttApp() {
