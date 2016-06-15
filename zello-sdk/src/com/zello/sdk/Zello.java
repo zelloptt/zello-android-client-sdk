@@ -478,6 +478,10 @@ public class Zello {
 
     //region Private Methods
 
+    private Zello() {
+
+    }
+
     private void doConfiguration(String packageName, Context context) {
         if (!configured) {
             configured = true;
