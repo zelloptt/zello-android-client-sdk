@@ -7,41 +7,56 @@ import java.util.ArrayList;
 
 /**
  * <pre>
- * The Zello class acts as the primary means of interacting to the Zello SDK.
+ * The Zello singleton acts as the primary means of interacting to the Zello SDK.
  * </pre>
  * <pre>
+ * To use, call the Zello.getInstance().configure() method and pass in the necessary parameters.
  * For specific usage, please see the sample projects.
  * </pre>
  */
-public final class Zello {
+public class Zello {
 
-    static ArrayList<Events> events = new ArrayList<Events>();
+    private static Zello _instance = null;
 
-    static Sdk sdk;
+    ArrayList<Events> events = new ArrayList<Events>();
 
-    // Protect against multiple attempts to initialize SDK.
-    static boolean initialized = false;
+    Sdk sdk;
 
-    //region Initialization
+    // Protect against multiple attempts to configure SDK.
+    boolean configured = false;
+
+    //region Instance
+
+    public static Zello getInstance() {
+        if (_instance == null) {
+            _instance = new Zello();
+        }
+        
+        return _instance;
+    }
+
+    //endregion
+
+    //region Configuration
 
     /**
-     * The initialize() method initializes the Zello SDK without immediately subscribing to the Events.
+     * The configure() method configures the Zello SDK without immediately subscribing to the Events.
      * @param packageName The package name of the Zello for Work app. If the apk was downloaded off zellowork.com, this parameter should be "net.loudtalks"
      * @param context The context for the app.
      */
-    public static void initialize(String packageName, Context context) {
-        doInitialization(packageName, context);
+    public void configure(String packageName, Context context) {
+        doConfiguration(packageName, context);
     }
 
     /**
-     * The initialize() method initializes the Zello SDK and subscribes the passed in Events to receive updates.
+     * The configure() method configures the Zello SDK and subscribes the passed in Events to receive updates.
      * @param packageName The package name of the Zello for Work app. If the apk was downloaded off zellowork.com, this parameter should be "net.loudtalks"
      * @param context The context for the app.
      * @param event The Events implementor to subscribe.
      */
-    public static void initialize(String packageName, Context context, Events event) {
+    public void configure(String packageName, Context context, Events event) {
         subscribeToEvents(event);
-        Zello.doInitialization(packageName, context);
+        doConfiguration(packageName, context);
     }
 
     //endregion
@@ -57,7 +72,7 @@ public final class Zello {
      * By invoking this method, this communication will be limited.
      * </pre>
      */
-    public static void enterPowerSavingMode() {
+    public void enterPowerSavingMode() {
         sdk.onPause();
     }
 
@@ -70,25 +85,27 @@ public final class Zello {
      * By invoking this method, this limited communication will return to normal.
      * </pre>
      */
-    public static void leavePowerSavingMode() {
+    public void leavePowerSavingMode() {
         sdk.onResume();
     }
 
     /**
      * <pre>
-     * The uninitialize() method terminates communication with the Zello for Work app.
+     * The unconfigure() method terminates communication with the Zello for Work app.
      * </pre>
      * <pre>
      * The Zello SDK communicates with the Zello for Work app to send and receive updates.
      * By invoking this method, this communication will end.
      * </pre>
      */
-    public static void uninitialize() {
+    public void unconfigure() {
         sdk.onDestroy();
 
         sdk = null;
         events = null;
-        initialized = false;
+        configured = false;
+
+        _instance = null;
     }
 
     //endregion
@@ -99,7 +116,7 @@ public final class Zello {
      * The subscribeToEvents() method ensures the passed in Events implementor will receive Events method invocations.
      * @param event The Events instance to subscribe.
      */
-    public static void subscribeToEvents(Events event) {
+    public void subscribeToEvents(Events event) {
         if (!events.contains(event)) {
             events.add(event);
         }
@@ -109,7 +126,7 @@ public final class Zello {
      * The unsubscribeFromEvents() method ensures the passed in Events implementor will no longer receive Events method invocations.
      * @param event The Events instance to unsubscribe.
      */
-    public static void unsubscribeFromEvents(Events event) {
+    public void unsubscribeFromEvents(Events event) {
         if (events.contains(event)) {
             events.remove(event);
         }
@@ -131,7 +148,7 @@ public final class Zello {
      * @param activeTab Initially active Tab.
      * @param theme     Visual Theme for Activity.
      */
-    public static void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
+    public void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
         sdk.selectContact(title, tabs, activeTab, theme);
     }
 
@@ -148,7 +165,7 @@ public final class Zello {
      * @param theme     Visual Theme for Activity.
      * @param activity  Activity that is calling this method (ie. this).
      */
-    public static void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme, Activity activity) {
+    public void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme, Activity activity) {
         sdk.selectContact(title, tabs, activeTab, theme, activity);
     }
 
@@ -162,7 +179,7 @@ public final class Zello {
      * Once called, a message will be recorded until endMessage() method is called.
      * </pre>
      */
-    public static void beginMessage() {
+    public void beginMessage() {
         sdk.beginMessage();
     }
 
@@ -174,7 +191,7 @@ public final class Zello {
      * Prerequisites: There must be an invocation of the beginMessage() method.
      * </pre>
      */
-    public static void endMessage() {
+    public void endMessage() {
         sdk.endMessage();
     }
 
@@ -186,7 +203,7 @@ public final class Zello {
      * The connectChannel() method connects the authenticated user to a channel for users to communicate through.
      * @param channel The name of the channel to connect to.
      */
-    public static void connectChannel(String channel) {
+    public void connectChannel(String channel) {
         sdk.connectChannel(channel);
     }
 
@@ -194,7 +211,7 @@ public final class Zello {
      * The disconnectChannel() method disconnects the user from the channel.
      * @param channel The name of the channel to disconnect from.
      */
-    public static void disconnectChannel(String channel) {
+    public void disconnectChannel(String channel) {
         sdk.disconnectChannel(channel);
     }
 
@@ -207,7 +224,7 @@ public final class Zello {
      * @param contact The contact to mute or unmute.
      * @param mute    Whether the contact should be muted or not.
      */
-    public static void muteContact(Contact contact, boolean mute) {
+    public void muteContact(Contact contact, boolean mute) {
         sdk.muteContact(contact, mute);
     }
 
@@ -222,7 +239,7 @@ public final class Zello {
      * @param password The password for the username.
      * @return 		   boolean indicating whether a sign in was initiated or not.
      */
-    public static boolean signIn(String network, String username, String password) {
+    public boolean signIn(String network, String username, String password) {
         return sdk.signIn(network, username, password);
     }
 
@@ -234,21 +251,21 @@ public final class Zello {
      * @param perishable Whether or not the authentication information should be saved.
      * @return 			 boolean indicating whether a sign in was initiated or not.
      */
-    public static boolean signIn(String network, String username, String password, boolean perishable) {
+    public boolean signIn(String network, String username, String password, boolean perishable) {
         return sdk.signIn(network, username, password, perishable);
     }
 
     /**
      * The signOut() method unauthenticates the user from the network.
      */
-    public static void signOut() {
+    public void signOut() {
         sdk.signOut();
     }
 
     /**
      * The cancelSignIn() method cancels the ongoing authentication request from the signIn() method.
      */
-    public static void cancelSignIn() {
+    public void cancelSignIn() {
         sdk.cancel();
     }
 
@@ -267,14 +284,14 @@ public final class Zello {
      * @param applicationName The name of the application.
      * @param packageName	  The package name of the application.
      */
-    public static void lock(String applicationName, String packageName) {
+    public void lock(String applicationName, String packageName) {
         sdk.lock(applicationName, packageName);
     }
 
     /**
      * The unlock() method unlocks the UI of the Zello for Work app.
      */
-    public static void unlock() {
+    public void unlock() {
         sdk.unlock();
     }
 
@@ -286,7 +303,7 @@ public final class Zello {
      * The setStatus() method sets the status of the authenticated user to a Status message.
      * @param status The state to set the user's status to.
      */
-    public static void setStatus(Status status) {
+    public void setStatus(Status status) {
         sdk.setStatus(status);
     }
 
@@ -294,7 +311,7 @@ public final class Zello {
      * The setStatusMessage() method sets the status of the authenticated user to a custom message.
      * @param message The custom message to set the user's status to.
      */
-    public static void setStatusMessage(String message) {
+    public void setStatusMessage(String message) {
         sdk.setStatusMessage(message);
     }
 
@@ -303,7 +320,7 @@ public final class Zello {
     /**
      * The openMainScreen() method will open the Zello for Work app upon invocation.
      */
-    public static void openMainScreen() {
+    public void openMainScreen() {
         sdk.openMainScreen();
     }
 
@@ -319,7 +336,7 @@ public final class Zello {
      * </pre>
      * @param message MessageIn to copy into.
      */
-    public static void getMessageIn(MessageIn message) {
+    public void getMessageIn(MessageIn message) {
         sdk.getMessageIn(message);
     }
 
@@ -333,7 +350,7 @@ public final class Zello {
      * </pre>
      * @param message MessageOut to copy into.
      */
-    public static void getMessageOut(MessageOut message) {
+    public void getMessageOut(MessageOut message) {
         sdk.getMessageOut(message);
     }
 
@@ -347,7 +364,7 @@ public final class Zello {
      * </pre>
      * * @param state AppState to copy into.
      */
-    public static void getAppState(AppState state) {
+    public void getAppState(AppState state) {
         sdk.getAppState(state);
     }
 
@@ -361,7 +378,7 @@ public final class Zello {
      * </pre>
      * @param contact Contact to copy into.
      */
-    public static void getSelectedContact(Contact contact) {
+    public void getSelectedContact(Contact contact) {
         sdk.getSelectedContact(contact);
     }
 
@@ -375,7 +392,7 @@ public final class Zello {
      * </pre>
      * @return The Contacts object for the user.
      */
-    public static Contacts getContacts() {
+    public Contacts getContacts() {
         return sdk.getContacts();
     }
 
@@ -387,9 +404,9 @@ public final class Zello {
      * This copy is a snapshot of the state of the Audio at the time of invocation.
      * It is static in the sense that the Zello SDK will not update it.
      * </pre>
-     * @return The Audio instance.
+     * @return The Audio 
      */
-    public static Audio getAudio() {
+    public Audio getAudio() {
         return sdk.getAudio();
     }
 
@@ -401,7 +418,7 @@ public final class Zello {
      * The setAutoRun() method determines if the app should be launched on the start of the OS or not.
      * @param enable The boolean to enable this feature or not. By default, this value is false.
      */
-    public static void setAutoRun(boolean enable) {
+    public void setAutoRun(boolean enable) {
         sdk.setAutoRun(enable);
     }
 
@@ -414,7 +431,7 @@ public final class Zello {
      * </pre>
      * @param connect The boolean to enable this feature or not.
      */
-    public static void setAutoConnectChannels(boolean connect) {
+    public void setAutoConnectChannels(boolean connect) {
         sdk.setAutoConnectChannels(connect);
     }
 
@@ -423,7 +440,7 @@ public final class Zello {
      * This tag is only recorded if the server recording feature is enabled on the Zello for Work console.
      * @param id Nullable; String indicating the external id.
      */
-    public static void setExternalId(String id) {
+    public void setExternalId(String id) {
         sdk.setExternalId(id);
     }
 
@@ -436,7 +453,7 @@ public final class Zello {
      * </pre>
      * @param contact Nullable; Contact to select. A null value will deselect the current Contact.
      */
-    public static void setSelectedContact(Contact contact) {
+    public void setSelectedContact(Contact contact) {
         sdk.setSelectedContact(contact);
     }
 
@@ -444,7 +461,7 @@ public final class Zello {
      * The setSelectedUserOrGateway() method sets the selected contact to a specified User or Gateway.
      * @param name Nullable; The name of the User or Gateway to select. A null value will deselect the current Contact.
      */
-    public static void setSelectedUserOrGateway(String name) {
+    public void setSelectedUserOrGateway(String name) {
         sdk.setSelectedUserOrGateway(name);
     }
 
@@ -452,7 +469,7 @@ public final class Zello {
      * The setSelectedChannelOrGroup() method sets the selected contact to a specified Channel or Group.
      * @param name Nullable; The name of the Channel or Group to select. A null value will deselect the current Contact.
      */
-    public static void setSelectedChannelOrGroup(String name) {
+    public void setSelectedChannelOrGroup(String name) {
         sdk.setSelectedChannelOrGroup(name);
     }
 
@@ -466,15 +483,15 @@ public final class Zello {
 
     }
 
-    private static void doInitialization(String packageName, Context context) {
-        if (!initialized) {
-            initialized = true;
+    private void doConfiguration(String packageName, Context context) {
+        if (!configured) {
+            configured = true;
 
             sdk = new Sdk();
             sdk.onCreate(packageName, context);
 
             // Updates should be on by default
-            Zello.leavePowerSavingMode();
+            leavePowerSavingMode();
         }
     }
 

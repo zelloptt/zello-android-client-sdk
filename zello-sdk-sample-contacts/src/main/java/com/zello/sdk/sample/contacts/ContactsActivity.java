@@ -32,7 +32,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
         statusTextView = (TextView)findViewById(R.id.statusTextView);
         selectedContactTextView = (TextView)findViewById(R.id.selectedContactTextView);
 
-        Zello.initialize("com.pttsdk", this, this);
+        Zello.getInstance().configure("com.pttsdk", this, this);
 
         // Contact list pick handler
         contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -42,7 +42,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
                 if (adapter != null) {
                     com.zello.sdk.Contact contact = (com.zello.sdk.Contact)adapter.getItem(position);
                     if (contact != null) {
-                        Zello.setSelectedContact(contact);
+                        Zello.getInstance().setSelectedContact(contact);
                     }
                 }
             }
@@ -53,22 +53,22 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     protected void onDestroy() {
         super.onDestroy();
 
-        Zello.unsubscribeFromEvents(this);
-        Zello.uninitialize();
+        Zello.getInstance().unsubscribeFromEvents(this);
+        Zello.getInstance().unconfigure();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Zello.leavePowerSavingMode();
+        Zello.getInstance().leavePowerSavingMode();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        Zello.enterPowerSavingMode();
+        Zello.getInstance().enterPowerSavingMode();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
         menu.clear();
 
-        Zello.getAppState(appState);
+        Zello.getInstance().getAppState(appState);
         if (appState.isAvailable() && !appState.isInitializing()) {
             getMenuInflater().inflate(R.menu.menu, menu);
 
@@ -106,7 +106,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
                 com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
 
                 // Since Zello was initialized in the Activity, pass in this as Activity parameter
-                Zello.selectContact(title, tabs, tab, theme, this);
+                Zello.getInstance().selectContact(title, tabs, tab, theme, this);
                 break;
             }
         }
@@ -123,7 +123,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
             newAdapter = true;
             adapter = new ListAdapter();
         }
-        adapter.setContacts(Zello.getContacts());
+        adapter.setContacts(Zello.getInstance().getContacts());
         Parcelable state = contactsListView.onSaveInstanceState();
         if (newAdapter) {
             contactsListView.setAdapter(adapter);
@@ -146,7 +146,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     @Override
     public void onSelectedContactChanged() {
         com.zello.sdk.Contact selectedContact = new com.zello.sdk.Contact();
-        Zello.getSelectedContact(selectedContact);
+        Zello.getInstance().getSelectedContact(selectedContact);
 
         String name = selectedContact.getDisplayName();
         if (name != null) {
@@ -171,7 +171,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onAppStateChanged() {
-        Zello.getAppState(appState);
+        Zello.getInstance().getAppState(appState);
 
         if (appState.isSignedIn()) {
             Helper.invalidateOptionsMenu(this);
