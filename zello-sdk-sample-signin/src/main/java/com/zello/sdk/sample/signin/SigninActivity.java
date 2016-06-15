@@ -51,7 +51,7 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
         errorTextView = (TextView)findViewById(R.id.incorrectPasswordTextView);
         signOutButton = (Button)findViewById(R.id.signOutButton);
 
-        Zello.initialize("com.pttsdk", this, this);
+        Zello.getInstance().configure("com.pttsdk", this, this);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,7 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
                 boolean perishable = perishableCheckBox.isChecked();
 
                 signInAttempted = true;
-                Zello.signIn(network, username, password, perishable);
+                Zello.getInstance().signIn(network, username, password, perishable);
 
                 hideKeyboard();
             }
@@ -71,14 +71,14 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Zello.cancelSignIn();
+                Zello.getInstance().cancelSignIn();
             }
         });
 
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Zello.signOut();
+                Zello.getInstance().signOut();
             }
         });
     }
@@ -87,22 +87,22 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
     protected void onDestroy() {
         super.onDestroy();
 
-        Zello.unsubscribeFromEvents(this);
-        Zello.uninitialize();
+        Zello.getInstance().unsubscribeFromEvents(this);
+        Zello.getInstance().unconfigure();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Zello.leavePowerSavingMode();
+        Zello.getInstance().leavePowerSavingMode();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        Zello.enterPowerSavingMode();
+        Zello.getInstance().enterPowerSavingMode();
     }
 
     //endregion
@@ -136,7 +136,7 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onAppStateChanged() {
-        Zello.getAppState(appState);
+        Zello.getInstance().getAppState(appState);
 
         updateUI();
     }
