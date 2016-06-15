@@ -7,9 +7,10 @@ import java.util.ArrayList;
 
 /**
  * <pre>
- * The Zello class acts as the primary means of interacting to the Zello SDK.
+ * The Zello singleton acts as the primary means of interacting to the Zello SDK.
  * </pre>
  * <pre>
+ * To use, call the Zello.getInstance().configure() method and pass in the necessary parameters.
  * For specific usage, please see the sample projects.
  * </pre>
  */
