@@ -1,7 +1,7 @@
 package com.zello.sdk;
 
 /**
- * The Contact class acts as a representation of a single contact for the user. A contact has a type attached to it (ie. ContactType)
+ * The <code>Contact</code> class acts as a representation of a contact for the user. A <code>Contact</code> has a type attached to it (ie. {@link ContactType})
  */
 public class Contact {
 
@@ -22,7 +22,12 @@ public class Contact {
 	//endregion
 
 	/**
-	 * The reset() method resets the Contact instance back to the default values.
+	 * <p>
+	 *     Resets the <code>Contact</code> instance back to the default values.
+	 * </p>
+	 * <p>
+	 *     This method will only reset the values for this copied instance of the <code>Contact</code>.
+	 * </p>
 	 */
 	public void reset() {
 		_name = null;
@@ -46,48 +51,48 @@ public class Contact {
 	}
 
 	/**
-	 * The getName() method returns the name of the Contact.
-	 * @return Nullable; Name of the Contact.
+	 * Returns the name of the <code>Contact</code>.
+	 * @return Nullable; Name of the <code>Contact</code>.
      */
 	public String getName() {
 		return _name;
 	}
 
 	/**
-	 * The getFullName() method returns the full name of the Contact.
-	 * @return Nullable; Full name of the Contact.
+	 * Returns the full name of the <code>Contact</code>.
+	 * @return Nullable; Full name of the <code>Contact</code>.
      */
 	public String getFullName() {
 		return _fullName;
 	}
 
 	/**
-	 * The getDisplayName() method returns the display name for the Contact.
-	 * @return Nullable; Display Name for the Contact.
+	 * Returns the display name for the <code>Contact</code>.
+	 * @return Nullable; Display Name for the <code>Contact</code>.
      */
 	public String getDisplayName() {
 		return _displayName;
 	}
 
 	/**
-	 * The getType() method returns the ContactType for the Contact.
-	 * @return ContactType for the Contact.
+	 * Returns the <code>ContactType</code> for the <code>Contact</code>.
+	 * @return <code>ContactType</code> for the <code>Contact</code>.
      */
 	public ContactType getType() {
 		return _type;
 	}
 
 	/**
-	 * The getStatus() method returns the ContactStatus for the Contact.
-	 * @return ContactStatus for the Contact.
+	 * Returns the <code>ContactStatus</code> for the <code>Contact</code>.
+	 * @return <code>ContactStatus</code> for the <code>Contact</code>.
      */
 	public ContactStatus getStatus() {
 		return _status;
 	}
 
 	/**
-	 * The getStatusMessage() method returns the custom status message for the Contact.
-	 * @return Nullable; The status message for the Contact.
+	 * Returns the custom status message for the <code>Contact</code>.
+	 * @return Nullable; The status message for the <code>Contact</code>.
      */
 	public String getStatusMessage() {
 		return _statusMessage;
@@ -95,13 +100,13 @@ public class Contact {
 
 	/**
 	 * <pre>
-	 * The getUsersCount() method returns the number of online users under the Contact.
+	 * Returns the number of online users under the <code>Contact</code>.
 	 * </pre>
 	 * <pre>
-	 * For ContactType.USER and ContactType.GATEWAY, this value will be 0.
-	 * For ContactType.CHANNEL and ContactType.GROUP, this value will be the number of users online in the channel or group, respectively.
+	 * For {@link ContactType#USER} and {@link ContactType#GATEWAY}, this value will be 0.
+	 * For {@link ContactType#CHANNEL} and {@link ContactType#GROUP}, this value will be the number of users online in the channel or group, respectively.
 	 * </pre>
-	 * @return number of online users under the Contact for the ContactType.
+	 * @return number of online users under the <code>Contact</code> for the <code>ContactType</code>.
      */
 	public int getUsersCount() {
 		return _usersCount;
@@ -109,36 +114,36 @@ public class Contact {
 
 	/**
 	 * <pre>
-	 * The getUsersTotal() method returns the number of total users under the Contact.
+	 * Returns the number of total users under the <code>Contact</code>.
 	 * </pre>
 	 * <pre>
-	 * For ContactType.USER and ContactType.GATEWAY, this value will be 0.
+	 * For {@link ContactType#USER} and  {@link ContactType#GATEWAY}, this value will be 0.
 	 * </pre>
-	 * @return number of total users under the Contact for the ContactType.
+	 * @return number of total users under the <code>Contact</code> for the <code>ContactType</code>.
 	 */
 	public int getUsersTotal() {
 		return _usersTotal;
 	}
 
 	/**
-	 * The getTitle() method returns the title for the Contact.
-	 * @return Nullable; The title for the contact.
+	 * Returns the title for the <code>Contact</code>.
+	 * @return Nullable; The title for the <code>Contact</code>.
      */
 	public String getTitle() {
 		return _title;
 	}
 
 	/**
-	 * The getMuted() method determines whether the Contact is muted or not.
-	 * @return boolean indicating if the Contact is muted.
+	 * Returns whether the <code>Contact</code> is muted or not.
+	 * @return boolean indicating if the <code>Contact</code> is muted.
      */
 	public boolean getMuted() {
 		return _muted;
 	}
 
 	/**
-	 * The getNoDisconnect() method determines whether the Contact has the no disconnect setting enabled or not.
-	 * @return boolean indicating if the Contact has the no disconnect setting enabled.
+	 * Returns whether the <code>Contact</code> has the no disconnect setting enabled or not.
+	 * @return boolean indicating if the <code>Contact</code> has the no disconnect setting enabled.
      */
 	public boolean getNoDisconnect() {
 		return _noDisconnect;

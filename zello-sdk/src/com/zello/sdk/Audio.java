@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 /**
- * <pre>
- * The Audio class acts as an intermediary between the devices audio and the Zello for Work app.
- * This class is useful for getting and updating the current output mode of audio from the device (ie. AudioMode).
- * </pre>
- * <pre>
- * To use, retrieve the current Audio instance from the Zello class using the getAudio() method. For specific usage, please see the sample projects.
- * </pre>
+ * <p>
+ *     The <code>Audio</code> class acts as an intermediary between the devices audio and the Zello for Work app.
+ *     This class is useful for getting and updating the current output mode of audio from the device (ie. {@link AudioMode}).
+ * </p>
+ * <p>
+ *     To use, retrieve the current <code>Audio</code> instance using the {@link Zello#getAudio()} method. For specific usage, please see the sample projects.
+ * </p>
  */
 public class Audio {
 
@@ -66,7 +66,7 @@ public class Audio {
 	//region Public Audio Methods
 
 	/**
-	 * The isModeAvailable() method determines if the passed in AudioMode is available on the device.
+	 * Determines if the passed in <code>AudioMode</code> is available on the device.
 	 * @param mode The mode to test availability for.
 	 * @return boolean indicating if the mode is available for the device.
      */
@@ -86,31 +86,32 @@ public class Audio {
 	}
 
 	/**
-	 * The isModeChanging() method determines if the set AudioMode is currently in the process of changing to another AudioMode.
+	 * Determines if the old {@link AudioMode} is currently in the process of changing to a new  <code>AudioMode</code>.
 	 * @return boolean indicating if the mode is changing.
+	 * @see #setMode(AudioMode)
      */
 	public boolean isModeChanging() {
 		return _changing;
 	}
 
 	/**
-	 * The getMode() method returns the current AudioMode type.
-	 * @return AudioMode indicating the current output of audio.
+	 * Returns the current <code>AudioMode</code> type.
+	 * @return <code>AudioMode</code> indicating the current output of audio.
      */
 	public AudioMode getMode() {
 		return _mode;
 	}
 
 	/**
-	 * The setMode() method sets the current AudioMode to the passed in mode.
-	 * @param mode AudioMode indicating the new form of audio output.
+	 * Sets the current <code>AudioMode</code> to the passed in mode.
+	 * @param mode <code>AudioMode</code> indicating the new form of audio output.
      */
 	public void setMode(AudioMode mode) {
 		doSetMode(mode, 0);
 	}
 
 	/**
-	 * The setWearableMode() method sets the current AudioMode to the WEARABLE mode using the passed in wearable index.
+	 * Sets the current <code>AudioMode</code> to the {@link AudioMode#WEARABLE} mode using the passed in wearable index.
 	 * @param wearable The index of the wearable device to set the output of audio to.
      */
 	public void setWearableMode(int wearable) {

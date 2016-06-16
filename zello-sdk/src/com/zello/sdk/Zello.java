@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 /**
  * <p>
- * The Zello singleton acts as the primary point of interacting to the Zello SDK.
+ *     The Zello singleton acts as the primary point of interacting to the Zello SDK.
  * </p>
  * <p>
  *     To get an instance of the object call {@link Zello#getInstance()}.
@@ -29,9 +29,9 @@ public class Zello {
     //region Instance
 
     /**
-     * Gets an instance of Zello singletone object
+     * Gets the instance of Zello singleton object.
      *
-     * @return Zello
+     * @return Zello singleton instance.
      */
     public static Zello getInstance() {
         if (_instance == null) {
@@ -123,8 +123,8 @@ public class Zello {
     //region Events Handlers
 
     /**
-     * Subscribes for Zello SDK events
-     * @param event Events handler
+     * Subscribes for Zello SDK events.
+     * @param event Events handler.
      * @see Events
      */
     public void subscribeToEvents(Events event) {
@@ -134,8 +134,8 @@ public class Zello {
     }
 
     /**
-     * Unsubscribes from Zello SDK events
-     * @param event Events handler
+     * Unsubscribes from Zello SDK events.
+     * @param event Events handler.
      * @see Events
      */
     public void unsubscribeFromEvents(Events event) {
@@ -149,7 +149,7 @@ public class Zello {
     //region Zello SDK Methods
 
     /**
-     * Opens an activity, which lets user select user or channel to talk to
+     * Opens an activity, which lets the user select a user or channel to talk to.
      * <p>
      * Zello SDK provides built-in UI for contact selection, available when user is signed in.
      * You can customize the title of the activity (leave <code>null</code> for default), the tabs available,
@@ -173,7 +173,7 @@ public class Zello {
     }
 
     /**
-     * Opens an activity, which lets user select user or channel to talk to, from another activity
+     * Opens an activity, which lets user select user or channel to talk to, from another activity.
      * <p>
      * Use this method to open contact selector UI from existing activity.
      * </p>
@@ -227,7 +227,7 @@ public class Zello {
     //region Channels
 
     /**
-     * Connects the user to a channel
+     * Connects the user to a channel.
      * <p>
      *     The method is asynchronous. When the channel is connected <code>onContactsChanged()</code>
      *     is called on <code>Events</code> interface.
@@ -242,7 +242,7 @@ public class Zello {
     }
 
     /**
-     * Disconnects the user from a channel
+     * Disconnects the user from a channel.
      * <p>
      *     The method is asynchronous. When the channel is disconnected <code>onContactsChanged()</code>
      *     is called on <code>Events</code> interface.
@@ -341,7 +341,7 @@ public class Zello {
      * Cancels currently running sign in process.
      *
      * <p>
-     *     The method won't have an effect if user already signed in
+     *     This method won't have an effect if user already signed in.
      * </p>
      * @see #signIn(String, String, String, boolean)
      */
@@ -511,7 +511,7 @@ public class Zello {
     //region Setters
 
     /**
-     * Specifies whether Zello for Work app should be launched on the start of the OS.
+     * Specifies whether the Zello for Work app should be launched on the start of the OS.
      * <p>
      *     Configured autorun behavior persists between app launches.
      * </p>
