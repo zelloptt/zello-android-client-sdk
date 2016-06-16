@@ -10,8 +10,9 @@ import java.util.ArrayList;
  * The Zello singleton acts as the primary point of interacting to the Zello SDK.
  * </p>
  * <p>
- * Before using, call the Zello.getInstance().configure(String, Context) method.
- * For specific usage, please see the sample projects.
+ *     To get an instance of the object call {@link Zello#getInstance()}.
+ *     Before using this class, call the {@link Zello#configure(String, Context)} method.
+ *     For specific usage, see the sample projects.
  * </p>
  */
 public class Zello {
