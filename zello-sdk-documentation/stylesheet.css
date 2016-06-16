@@ -53,7 +53,9 @@ ul {
     list-style-type:disc;
 }
 code, tt {
-    font-size:1.2em;
+}
+.block code {
+	background: #eeeeee;
 }
 dt code {
     font-size:1.2em;
@@ -104,8 +106,7 @@ Document title and Copyright styles
 Navigation bar styles
 */
 .bar {
-    background-image:url(resources/background.gif);
-    background-repeat:repeat-x;
+    background: black;
     color:#FFFFFF;
     padding:.8em .5em .4em .8em;
     height:auto;/*height:1.8em;*/
@@ -113,27 +114,23 @@ Navigation bar styles
     margin:0;
 }
 .topNav {
-    background-image:url(resources/background.gif);
-    background-repeat:repeat-x;
+    background: black;
     color:#FFFFFF;
     float:left;
     padding:0;
     width:100%;
     clear:right;
-    height:2.8em;
     padding-top:10px;
     overflow:hidden;
 }
 .bottomNav {
     margin-top:10px;
-    background-image:url(resources/background.gif);
-    background-repeat:repeat-x;
+    background: black;
     color:#FFFFFF;
     float:left;
     padding:0;
     width:100%;
     clear:right;
-    height:2.8em;
     padding-top:10px;
     overflow:hidden;
 }
@@ -173,11 +170,18 @@ ul.subNavList li{
     color:#bb7a2a;
 }
 .navBarCell1Rev {
-    background-image:url(resources/tab.gif);
-    background-color:#a88834;
-    color:#FFFFFF;
+    background-color:#dee3e9;
+    color:black;
     margin: auto 5px;
-    border:1px solid #c9aa44;
+    padding: 10px;
+}
+.skipNav {
+	padding: 8px;
+	color: gray;
+}
+.skipNav a:link, .skipNav a:active, .skipNav a:visited {
+	color: gray;
+	size: 0.8em;
 }
 /*
 Page header and footer styles
@@ -220,14 +224,14 @@ div.details ul.blockList ul.blockList ul.blockList li.blockList h4, div.details 
     border-top:1px solid #9eadc0;
     border-bottom:1px solid #9eadc0;
     margin:0 0 6px -8px;
-    padding:2px 5px;
+    padding:10px 8px;
 }
 ul.blockList ul.blockList ul.blockList li.blockList h3 {
     background-color:#dee3e9;
     border-top:1px solid #9eadc0;
     border-bottom:1px solid #9eadc0;
     margin:0 0 6px -8px;
-    padding:2px 5px;
+    padding:10px 8px;
 }
 ul.blockList ul.blockList li.blockList h3 {
     padding:0;
@@ -374,16 +378,15 @@ caption a:link, caption a:hover, caption a:active, caption a:visited {
 }
 .overviewSummary caption span, .packageSummary caption span, .contentContainer ul.blockList li.blockList caption span, .summary caption span, .classUseContainer caption span, .constantValuesContainer caption span {
     white-space:nowrap;
-    padding-top:8px;
     padding-left:8px;
     display:block;
     float:left;
-    background-image:url(resources/titlebar.gif);
-    height:18px;
+    background: black;
+    height:34px;
+    line-height:34px;
 }
 .overviewSummary .tabEnd, .packageSummary .tabEnd, .contentContainer ul.blockList li.blockList .tabEnd, .summary .tabEnd, .classUseContainer .tabEnd, .constantValuesContainer .tabEnd {
     width:10px;
-    background-image:url(resources/titlebar_end.gif);
     background-repeat:no-repeat;
     background-position:top right;
     position:relative;
@@ -404,14 +407,14 @@ ul.blockList ul.blockList li.blockList table {
 }
 .overviewSummary td, .packageSummary td, .contentContainer ul.blockList li.blockList td, .summary td, .classUseContainer td, .constantValuesContainer td {
     text-align:left;
-    padding:3px 3px 3px 7px;
+    padding:10px 3px 12px 7px;
 }
 th.colFirst, th.colLast, th.colOne, .constantValuesContainer th {
     background:#dee3e9;
     border-top:1px solid #9eadc0;
     border-bottom:1px solid #9eadc0;
     text-align:left;
-    padding:3px 3px 3px 7px;
+    padding:10px 3px 12px 7px;
 }
 td.colOne a:link, td.colOne a:active, td.colOne a:visited, td.colOne a:hover, td.colFirst a:link, td.colFirst a:active, td.colFirst a:visited, td.colFirst a:hover, td.colLast a:link, td.colLast a:active, td.colLast a:visited, td.colLast a:hover, .constantValuesContainer td a:link, .constantValuesContainer td a:active, .constantValuesContainer td a:visited, .constantValuesContainer td a:hover {
     font-weight:bold;
@@ -472,3 +475,58 @@ h1.hidden {
 .strong {
     font-weight:bold;
 }
+/* Javadoc style sheet */
+ 
+/* Define colors, fonts and other style attributes here to override the defaults */
+ 
+/* Page background color */
+body { background-color: #FFFFFF; color:#333; font-size: 100%; }
+ 
+body { font-size: 0.875em; line-height: 1.286em; font-family:   "Helvetica", "Arial", sans-serif; }
+ 
+code { color: #777; line-height: 1.286em; font-family: "Consolas", "Lucida Console", "Droid Sans Mono", "Andale Mono", "Monaco", "Lucida Sans Typewriter"; }
+ 
+a:hover { text-decoration: underline; }
+ 
+ 
+table[border="1"] { border: 1px solid #ddd; }
+table[border="1"] td, table[border="1"] th { border: 1px solid #ddd; }
+table[cellpadding="3"] td { padding: 0.5em; }
+ 
+font[size="-1"] { font-size: 0.85em; line-height: 1.5em; }
+font[size="-2"] { font-size: 0.8em; }
+font[size="+2"] { font-size: 1.4em; line-height: 1.3em; padding: 0.4em 0; }
+ 
+/* Headings */
+h1 { font-size: 2em; line-height: 1.286em;}
+h2.title { font-size: 2em }
+ 
+/* Table colors */
+.TableHeadingColor     { background: #ccc; color:#444; } /* Dark mauve */
+.TableSubHeadingColor  { background: #ddd; color:#444; } /* Light mauve */
+.TableRowColor         { background: #FFFFFF; color:#666; font-size: 0.95em; } /* White */
+.TableRowColor code    { color:#000; } /* White */
+ 
+/* Font used in left-hand frame lists */
+.FrameTitleFont   { font-size: 100%; }
+.FrameHeadingFont { font-size:  90%; }
+.FrameItemFont { font-size:  0.9em; line-height: 1.3em; 
+}
+/* Java Interfaces */
+.FrameItemFont a i {
+  font-style: normal; color: #16569A;
+}
+.FrameItemFont a:hover i {
+  text-decoration: underline;
+}
+ 
+ 
+/* Navigation bar fonts and colors */
+.NavBarCell1    { background-color:#E0E6DF; } /* Light mauve */
+.NavBarCell1Rev { background-color:#16569A; color:#FFFFFF} /* Dark Blue */
+.NavBarFont1    { }
+.NavBarFont1Rev { color:#FFFFFF; }
+ 
+.NavBarCell2    { background-color:#FFFFFF; color:#000000}
+.NavBarCell3    { background-color:#FFFFFF; color:#000000}
+ 
