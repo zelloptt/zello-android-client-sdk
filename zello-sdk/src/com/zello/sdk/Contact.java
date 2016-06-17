@@ -99,13 +99,13 @@ public class Contact {
 	}
 
 	/**
-	 * <pre>
+	 * <p>
 	 * Returns the number of online users under the <code>Contact</code>.
-	 * </pre>
-	 * <pre>
+	 * </p>
+	 * <p>
 	 * For {@link ContactType#USER} and {@link ContactType#GATEWAY}, this value will be 0.
 	 * For {@link ContactType#CHANNEL} and {@link ContactType#GROUP}, this value will be the number of users online in the channel or group, respectively.
-	 * </pre>
+	 * </p>
 	 * @return number of online users under the <code>Contact</code> for the <code>ContactType</code>.
      */
 	public int getUsersCount() {
@@ -113,12 +113,12 @@ public class Contact {
 	}
 
 	/**
-	 * <pre>
+	 * <p>
 	 * Returns the number of total users under the <code>Contact</code>.
-	 * </pre>
-	 * <pre>
+	 * </p>
+	 * <p>
 	 * For {@link ContactType#USER} and  {@link ContactType#GATEWAY}, this value will be 0.
-	 * </pre>
+	 * </p>
 	 * @return number of total users under the <code>Contact</code> for the <code>ContactType</code>.
 	 */
 	public int getUsersTotal() {
