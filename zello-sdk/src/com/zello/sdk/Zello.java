@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 /**
  * <p>
- *     The Zello singleton acts as the primary point of interacting to the Zello SDK.
+ *     The <code>Zello</code> singleton acts as the primary point of interacting to the Zello SDK.
  * </p>
  * <p>
  *     To get an instance of the object call {@link Zello#getInstance()}.
