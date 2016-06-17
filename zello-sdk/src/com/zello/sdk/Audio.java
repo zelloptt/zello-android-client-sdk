@@ -86,7 +86,7 @@ public class Audio {
 	}
 
 	/**
-	 * Determines if the old {@link AudioMode} is currently in the process of changing to a new  <code>AudioMode</code>.
+	 * Determines if the old <code>AudioMode</code> is currently in the process of changing to a new <code>AudioMode</code>.
 	 * @return boolean indicating if the mode is changing.
 	 * @see #setMode(AudioMode)
      */

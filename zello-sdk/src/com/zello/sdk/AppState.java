@@ -173,7 +173,7 @@ public class AppState {
 	 *      Determines if the authentication request for the user is being cancelled.
 	 *  </p>
 	 *  <p>
-	 *      This method will return true if the {@link Zello#cancelSignIn()} method is called.
+	 *      This method will return true if the <code>Zello.cancelSignIn()</code> method is called.
 	 *  </p>
 	 * @return boolean indicating if the authentication request is being cancelled.
 	 * @see Zello#cancelSignIn()
@@ -204,7 +204,7 @@ public class AppState {
 	 * </p>
 	 * <p>
 	 *     The auto run enabled feature determines if the app should be launched on the start of the OS or not.
-	 *     This feature can be enabled or disabled using the {@link Zello#setAutoRun(boolean)} method.
+	 *     This feature can be enabled or disabled using the <code>Zello.setAutoRun(boolean)</code> method.
 	 * </p>
 	 * @return boolean indicating whether or not auto run is enabled.
 	 * @see Zello#setAutoRun(boolean)

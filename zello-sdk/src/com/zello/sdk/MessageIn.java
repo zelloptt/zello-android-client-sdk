@@ -1,7 +1,7 @@
 package com.zello.sdk;
 
 /**
- * The MessageIn class represents an incoming message to the Zello for Work app.
+ * The <code>MessageIn</code> class represents an incoming message to the Zello for Work app.
  */
 public class MessageIn {
 
@@ -20,7 +20,13 @@ public class MessageIn {
 	}
 
 	/**
-	 * The reset() method resets the MessageIn instance back to the default values.
+	 * <p>
+	 *     Resets the <code>MessageIn</code> instance back to the default values.
+	 * </p>
+	 * <p>
+	 *     This method will not affect the state of the incoming message to the Zello for Work app.
+	 *     This will only reset the values for this copied instance of the <code>MessageIn</code>.
+	 * </p>
 	 */
 	public void reset() {
 		_from.reset();
@@ -36,26 +42,37 @@ public class MessageIn {
 	}
 
 	/**
-	 * The getFrom() method returns an instance of the Contact that is sending the user the message.
-	 * If the ContactType is ContactType.CHANNEL or ContactType.GROUP, the returned contact will be the Channel or Group, respectively. To get the original author of the message, use the getAuthor() method.
-	 * @return The Contact that is sending the message.
+	 * <p>
+	 *     Returns an instance of the <code>Contact</code> that is sending the user the message.
+	 * </p>
+	 * <p>
+	 *     If the <code>ContactType</code> is {@link ContactType#CHANNEL} or {@link ContactType#GROUP}, the returned <code>Contact</code> will be the channel or group, respectively.
+	 *     For channels and groups, get the original author of the message by using the {@link #getAuthor()} method.
+	 * </p>
+	 * @return The <code>Contact</code> that is sending the message.
      */
 	public Contact getFrom() {
 		return _from;
 	}
 
 	/**
-	 * The getAuthor() method returns an instance of the Contact that authored the message.
-	 * This method should only be used to get the author of a message when the ContactType of the getFrom() method is ContactType.CHANNEL or ContactType.GROUP.
-	 * @return The Contact that authored the message.
+	 * <p>
+	 *     Returns an instance of the <code>Contact</code> that authored the message.
+	 * </p>
+	 * <p>
+	 *     This method should only be used to get the author of a message when the <code>ContactType</code> of the {@link #getFrom()} method is {@link ContactType#CHANNEL} or {@link ContactType#GROUP}.
+	 * </p>
+	 * @return The <code>Contact</code> that authored the message.
      */
 	public Contact getAuthor() {
 		return _author;
 	}
 
 	/**
-	 * The isActive() method determines if the MessageIn is in progress.
-	 * @return boolean indicating if the message is currently active.
+	 * <p>
+	 *     Determines if the <code>MessageIn</code> is currently in progress or not.
+	 * </p>
+	 * @return boolean indicating if the incoming message is currently active.
      */
 	public boolean isActive() {
 		return _active;

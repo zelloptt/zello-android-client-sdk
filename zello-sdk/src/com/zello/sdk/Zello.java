@@ -50,14 +50,14 @@ public class Zello {
     //region Configuration
 
     /**
-     * Configures the Zello SDK
+     * Configures the Zello SDK.
      * <p>
      * You must call <code>configure(String, Context)</code> or <code>configure(String, Context, Events)</code> before using any other SDK methods.
-     * In the most cases you'd want to do it from your <code>Application.onCreate</code> method.
+     * In most cases, the <code>Application.onCreate()</code> method is the best place to do this.
      * </p>
-     *<p>
+     * <p>
      * If the apk was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
-     *</p>
+     * </p>
      * @param packageName The package name of the Zello for Work app.
      * @param context The context for the app.
      * @see #configure(String, Context, Events)
@@ -68,8 +68,14 @@ public class Zello {
     }
 
     /**
-     * Configures the Zello SDK and subscribes for Zello SDK events.
-     *
+     * Configures the Zello SDK and subscribes for Zello SDK <code>Events</code>.
+     * <p>
+     * You must call <code>configure(String, Context)</code> or <code>configure(String, Context, Events)</code> before using any other SDK methods.
+     * In most cases, the <code>Application.onCreate()</code> method is the best place to do this.
+     * </p>
+     * <p>
+     * If the apk was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
+     * </p>
      * @param packageName The package name of the Zello for Work app.
      * @param context The context for the app.
      * @param event Events handler

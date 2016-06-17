@@ -17,12 +17,8 @@ import android.util.Log;
 import java.security.MessageDigest;
 
 /**
- * <pre>
  * The Sdk class acts as the implementation of the Zello SDK methods.
- * </pre>
- * <pre>
  * To use, instantiate an instance of the Sdk class.
- * </pre>
  */
 class Sdk implements SafeHandlerEvents, ServiceConnection {
 
