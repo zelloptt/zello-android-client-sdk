@@ -120,6 +120,15 @@ public class Audio {
 		}
 	}
 
+	/**
+	 * The getWearableCount returns the number of wearable devices that can play audio.
+	 * @return The number of wearables connected to the device.
+	 */
+	public int getWearableCount() {
+		return _wearables;
+	}
+
+
 	//endregion
 
 	//region Private Methods
