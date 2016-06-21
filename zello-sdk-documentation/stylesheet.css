@@ -106,7 +106,7 @@ Document title and Copyright styles
 Navigation bar styles
 */
 .bar {
-    background: black;
+    background: #516174;
     color:#FFFFFF;
     padding:.8em .5em .4em .8em;
     height:auto;/*height:1.8em;*/
@@ -114,7 +114,7 @@ Navigation bar styles
     margin:0;
 }
 .topNav {
-    background: black;
+    background: #516174;
     color:#FFFFFF;
     float:left;
     padding:0;
@@ -125,7 +125,7 @@ Navigation bar styles
 }
 .bottomNav {
     margin-top:10px;
-    background: black;
+    background: #516174;
     color:#FFFFFF;
     float:left;
     padding:0;
@@ -171,7 +171,7 @@ ul.subNavList li{
 }
 .navBarCell1Rev {
     background-color:#dee3e9;
-    color:black;
+    color:#516174;
     margin: auto 5px;
     padding: 10px;
 }
@@ -381,7 +381,7 @@ caption a:link, caption a:hover, caption a:active, caption a:visited {
     padding-left:8px;
     display:block;
     float:left;
-    background: black;
+    background: #516174;
     height:34px;
     line-height:34px;
 }
@@ -485,7 +485,13 @@ body { background-color: #FFFFFF; color:#333; font-size: 100%; }
 body { font-size: 0.875em; line-height: 1.286em; font-family:   "Helvetica", "Arial", sans-serif; }
  
 code { color: #777; line-height: 1.286em; font-family: "Consolas", "Lucida Console", "Droid Sans Mono", "Andale Mono", "Monaco", "Lucida Sans Typewriter"; }
- 
+
+/* a code { color: #0c5bf7 } */
+a code { color:#2c97de }
+a:link, a:visited {
+    text-decoration:none;
+    color:#2c97de;
+}
 a:hover { text-decoration: underline; }
  
  

@@ -7,8 +7,7 @@ import android.content.IntentFilter;
 
 /**
  * <p>
- *     The <code>Audio</code> class acts as an intermediary between the devices audio and the Zello for Work app.
- *     This class is useful for getting and updating the current output mode of audio from the device (ie. {@link AudioMode}).
+ *     Manages {@link AudioMode} used by Zello for Work app.
  * </p>
  * <p>
  *     To use, retrieve the current <code>Audio</code> instance using the {@link Zello#getAudio()} method. For specific usage, please see the sample projects.
@@ -97,31 +96,46 @@ public class Audio {
 	/**
 	 * Returns the current <code>AudioMode</code> type.
 	 * @return <code>AudioMode</code> indicating the current output of audio.
+	 * @see #setMode(AudioMode)
      */
 	public AudioMode getMode() {
 		return _mode;
 	}
 
 	/**
-	 * Sets the current <code>AudioMode</code> to the passed in mode.
+	 * <p>
+	 *     Sets the current <code>AudioMode</code> to <code>mode</code>.
+	 * </p>
+	 * <p>
+	 *     The method is asynchronous so using <code>Audio.getMode()</code> immediatelly after calling
+	 *     it may return the previous audio mode. {@link Events#onAudioStateChanged()} is called when
+	 *     audio mode changes.
+	 * </p>
 	 * @param mode <code>AudioMode</code> indicating the new form of audio output.
+	 * @see #getMode()
+	 * @see Events#onAudioStateChanged()
      */
 	public void setMode(AudioMode mode) {
 		doSetMode(mode, 0);
 	}
 
 	/**
-	 * Sets the current <code>AudioMode</code> to the {@link AudioMode#WEARABLE} mode using the passed in wearable index.
-	 * @param wearable The index of the wearable device to set the output of audio to.
+	 * <p>
+	 *     Sets the current <code>AudioMode</code> to the {@link AudioMode#WEARABLE} mode using the passed in wearable index.
+	 * </p>
+	 * <p>
+	 *     The <code>wearableIndex</code> can be between <code>0</code> and {@link #getWearableCount()}
+	 * </p>
+	 * @param wearableIndex The index of the wearable device to set the output of audio to.
      */
-	public void setWearableMode(int wearable) {
-		if (wearable >= 0) {
-			doSetMode(AudioMode.WEARABLE, wearable);
+	public void setWearableMode(int wearableIndex) {
+		if (wearableIndex >= 0) {
+			doSetMode(AudioMode.WEARABLE, wearableIndex);
 		}
 	}
 
 	/**
-	 * The getWearableCount returns the number of wearable devices that can play audio.
+	 * Gets the number of wearable devices that can play audio.
 	 * @return The number of wearables connected to the device.
 	 */
 	public int getWearableCount() {

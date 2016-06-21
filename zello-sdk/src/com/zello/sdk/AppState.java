@@ -2,11 +2,10 @@ package com.zello.sdk;
 
 /**
  * <p>
- *     The <code>AppState</code> class is a representation of the current state of the Zello for Work app at any given moment.
- *     This class is useful for getting the status of the Zello for Work app.
+ *     The <code>AppState</code> class represents the current state of the Zello for Work app.
  * </p>
  * <p>
- *     To use, retrieve the current <code>AppState</code> instance using the {@link Zello#getAppState(AppState)} method. For specific usage, please see the sample projects.
+ *     To use, retrieve the current <code>AppState</code> values using the {@link Zello#getAppState(AppState)} method. For specific usage, please see the sample projects.
  * </p>
  * @see Zello#getAppState(AppState)
  */
@@ -86,7 +85,7 @@ public class AppState {
 	 *     Determines if the Zello for Work app is available on the device.
 	 * </p>
 	 * <p>
-	 *     This method will return false if the Zello for Work app is not installed on the device
+	 *     This method will return <code>false</code> if the Zello for Work app is not installed on the device
 	 *     or if the app is in a state of error.
 	 * </p>
 	 * @return boolean indicating if the app is available to communicate with.
@@ -140,7 +139,7 @@ public class AppState {
 	}
 
 	/**
-	 * Determines if the user is currently authenticated with the network.
+	 * Determines if the user is currently signed into Zello for Work network.
 	 * @return boolean indicating if the user is signed in.
 	 * @see Zello#signIn(String, String, String)
 	 * @see Zello#signIn(String, String, String, boolean)
@@ -150,8 +149,8 @@ public class AppState {
 	}
 
 	/**
-	 * Determines if the user is in the process of authenticating with the network.
-	 * @return boolean indicating if the user is being authenticated.
+	 * Determines if the user is in the process of signing in.
+	 * @return boolean indicating if the user is signing in.
 	 * @see Zello#signIn(String, String, String)
 	 * @see Zello#signIn(String, String, String, boolean)
 	 */
@@ -170,10 +169,11 @@ public class AppState {
 
 	/**
 	 *  <p>
-	 *      Determines if the authentication request for the user is being cancelled.
+	 *      Determines if the sign in request for the user is being cancelled.
 	 *  </p>
 	 *  <p>
-	 *      This method will return true if the <code>Zello.cancelSignIn()</code> method is called.
+	 *      This method will return <code>true</code> if the <code>Zello.cancelSignIn()</code> method is called
+	 *      and cancellation hasn't completed yet.
 	 *  </p>
 	 * @return boolean indicating if the authentication request is being cancelled.
 	 * @see Zello#cancelSignIn()
@@ -191,7 +191,14 @@ public class AppState {
 	}
 
 	/**
-	 * Determines if the Zello for Work app is waiting for the network to respond.
+	 * <p>
+	 * 		Determines if the Zello for Work app is waiting for the network to be available.
+	 * </p>
+	 * <p>
+	 *     If Android OS reports that there is no internet connection the app will wait for connection
+	 *     to become available and this method will return <code>true</code>. When connection is restored
+	 *     the app signs in automatically.
+	 * </p>
 	 * @return boolean indicating if the app is waiting for the network.
      */
 	public boolean isWaitingForNetwork() {
@@ -203,7 +210,7 @@ public class AppState {
 	 *     Determines if the auto run setting is enabled.
 	 * </p>
 	 * <p>
-	 *     The auto run enabled feature determines if the app should be launched on the start of the OS or not.
+	 *     The auto run feature determines if Zello app will be launched on the start of the OS or not.
 	 *     This feature can be enabled or disabled using the <code>Zello.setAutoRun(boolean)</code> method.
 	 * </p>
 	 * @return boolean indicating whether or not auto run is enabled.
@@ -218,7 +225,7 @@ public class AppState {
 	 *     Determines if the auto connect channel setting is enabled.
 	 * </p>
 	 * <p>
-	 *     The auto connect channel feature determines whether or not any new channel that the authenticated user is added to will be automatically connected to.
+	 *     The auto connect channel feature determines whether or not any new channel that the user is added to will automatically connect.
 	 * </p>
 	 * @return boolean indicating whether or not auto connect channels is enabled.
 	 * @see Zello#setAutoConnectChannels(boolean)
@@ -240,7 +247,15 @@ public class AppState {
 	}
 
 	/**
-	 * Returns if the contacts for the user should be shown or not.
+	 * <p>
+	 *     Returns if the contacts list for the user available to display.
+	 * </p>
+	 * <p>
+	 *     When <code>true</code> it is possible to use {@link Zello#getContacts()} to fetch the list
+	 *     of the contacts even when user is not online. The last cached copy of the list is returned
+	 *     in that case.
+	 * </p>
+	 *
 	 * @return boolean indicating if the contacts should be shown or not.
      */
 	public boolean getShowContacts() {
@@ -248,7 +263,7 @@ public class AppState {
 	}
 
 	/**
-	 * Returns the <code>Status</code> for the authenticated user.
+	 * Returns the <code>Status</code> for the current user.
 	 * @return The current <code>Status</code> for the user.
 	 * @see Zello#setStatus(Status)
      */
@@ -257,7 +272,7 @@ public class AppState {
 	}
 
 	/**
-	 * Returns the custom status message for the authenticated user.
+	 * Returns the custom status message for the current user.
 	 * @return Nullable; The status message for the user.
 	 * @see Zello#setStatusMessage(String)
      */
@@ -266,7 +281,7 @@ public class AppState {
 	}
 
 	/**
-	 * Returns the network String for the Zello for Work app.
+	 * Returns the network name for the current user.
 	 * @return Nullable; The network String.
 	 * @see Zello#signIn(String, String, String)
 	 * @see Zello#signIn(String, String, String, boolean)
@@ -276,7 +291,7 @@ public class AppState {
 	}
 
 	/**
-	 * Returns the network in URL format for the Zello for Work app.
+	 * Returns the network in URL for the current user.
 	 * @return Nullable; The network URL.
 	 * @see Zello#signIn(String, String, String)
 	 * @see Zello#signIn(String, String, String, boolean)
@@ -286,7 +301,7 @@ public class AppState {
 	}
 
 	/**
-	 * Returns the username of the authenticated user.
+	 * Returns the username of the current user.
 	 * @return Nullable; The username for the user.
 	 * @see Zello#signIn(String, String, String)
 	 * @see Zello#signIn(String, String, String, boolean)
@@ -296,7 +311,12 @@ public class AppState {
 	}
 
 	/**
-	 * Returns the most recent authentication <code>Error</code> encountered by the Zello for Work app.
+	 * <p>
+	 * 		Returns the most recent <code>Error</code> encountered by the Zello for Work app.
+	 * </p>
+	 * <p>
+	 *     {@link Error#NONE} is returned if there were no errors.
+	 * </p>
 	 * @return <code>Error</code> type indicating the latest error.
      */
 	public Error getLastError() {

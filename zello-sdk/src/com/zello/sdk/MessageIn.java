@@ -1,7 +1,8 @@
 package com.zello.sdk;
 
 /**
- * The <code>MessageIn</code> class represents an incoming message to the Zello for Work app.
+ * The <code>MessageIn</code> class represents an incoming voice message.
+ * @see Zello#getMessageIn(MessageIn)
  */
 public class MessageIn {
 

@@ -3,13 +3,13 @@ package com.zello.sdk;
 import android.app.Activity;
 
 /**
- * The <code>Events</code> interface provides a means to intercept key changes within the Zello SDK.
+ * The <code>Events</code> interface enables monitoring of Zello SDK state and property changes
  */
 public interface Events {
 
 	/**
 	 * <p>
-	 *     This method is fired when the selected contact for a user changes.
+	 *     Called when the selected contact changes.
 	 * </p>
 	 * <p>
 	 *     This method is invoked on the UI thread.
@@ -26,11 +26,11 @@ public interface Events {
 
 	/**
 	 * <p>
-	 *     This method is fired when the state of either the {@link MessageOut} or {@link MessageIn} changes.
+	 *     Called when the state of either the {@link MessageOut} or {@link MessageIn} changes.
 	 * </p>
 	 * <p>
 	 *     This method is invoked on the UI thread.
-	 *     To retrieve the message state changes, call the {@link Zello#getMessageIn(MessageIn)} and {@link Zello#getMessageOut(MessageOut)} methods.
+	 *     To retrieve the current message state, call the {@link Zello#getMessageIn(MessageIn)} and {@link Zello#getMessageOut(MessageOut)} methods.
 	 * </p>
 	 * @see Zello#getMessageIn(MessageIn)
 	 * @see Zello#getMessageOut(MessageOut)
@@ -41,11 +41,11 @@ public interface Events {
 
 	/**
 	 * <p>
-	 *     This method is fired when the {@link AppState} changes.
+	 *     Called when the {@link AppState} changes.
 	 * </p>
 	 * <p>
 	 *     This method is invoked on the UI thread.
-	 *     To retrieve the <code>AppState</code> changes, call the {@link Zello#getAppState(AppState)} method.
+	 *     To retrieve the current <code>AppState</code>, call the {@link Zello#getAppState(AppState)} method.
 	 * </p>
 	 * @see Zello#getAppState(AppState)
 	 */
@@ -53,7 +53,7 @@ public interface Events {
 
 	/**
 	 * <p>
-	 *     This method is fired when the last {@link Contacts} {@link Tab} changes.
+	 *     Called when the last {@link Contacts} {@link Tab} changes.
 	 * </p>
 	 * <p>
 	 *     This method is invoked on the UI thread.
@@ -66,11 +66,13 @@ public interface Events {
 
 	/**
 	 * <p>
-	 *     This method is fired when the {@link Contacts} for the user changes.
+	 *     Called when the {@link Contacts} for the user changes.
 	 * </p>
 	 * <p>
 	 *     This method is invoked on the UI thread.
-	 *     To retrieve the <code>Contacts</code> changes, call the {@link Zello#getContacts()} method.
+	 *     To retrieve the current <code>Contacts</code> snapshot, call the {@link Zello#getContacts()} method.
+	 *     The best approach, when dealing with large contact lists (in 1000s) is to run both <code>getContacts()</code>
+	 *     and any contact processing in a background thread, then post the result to UI thread for display.
 	 * </p>
 	 * @see Zello#getContacts()
 	 */
@@ -78,11 +80,11 @@ public interface Events {
 
 	/**
 	 * <p>
-	 *     This method is fired when the the state of the {@link Audio} changes.
+	 *     Called when the the state of the {@link Audio} changes.
 	 * </p>
 	 * <p>
 	 *     This method is invoked on the UI thread.
-	 *     To retrieve the <code>Audio</code> changes, call the {@link Zello#getAudio()} method.
+	 *     To retrieve the current <code>Audio</code>, call the {@link Zello#getAudio()} method.
 	 * </p>
 	 * @see Zello#getAudio()
 	 */

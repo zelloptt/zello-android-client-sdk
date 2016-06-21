@@ -12,50 +12,54 @@ public enum ContactStatus {
 
 	/**
 	 * <p>
-	 *     <code>Contact</code> is offline.
+	 *     Contact is offline.
 	 * </p>
 	 * <p>
-	 *     Messages can potentially be delivered to a <code>Contact</code> with this status.
-	 *     If the <code>Contact</code> signs in before the user signs out, the message will be delivered to the <code>Contact</code> the next time they sign in.
+	 *     Messages cannot be sent to a channel with this status. If channel is <code>OFFLINE</code> you need
+	 *     to connect to it before sending the message.
+	 * </p>
+	 * <p>
+	 *     Messages can be sent to a user with this status and will be saved locally for later delivery, which
+	 *     will happen when user comes back online.
 	 * </p>
 	 */
 	OFFLINE,
 	/**
 	 * <p>
-	 *     <code>Contact</code> is online and available to talk.
+	 *     Contact is online and available to talk.
 	 * </p>
 	 * <p>
-	 *     Messages will be immediately delivered to a <code>Contact</code> with this status.
-	 *     Delivered messages will fire the {@link Events#onMessageStateChanged()} method.
+	 *     Messages will be immediately delivered to a contact with this status.
 	 * </p>
-	 * @see Events#onMessageStateChanged()
 	 */
 	AVAILABLE,
 	/**
 	 * <p>
-	 *     <code>Contact</code> is online but currently busy.
+	 *     Contact is online but currently busy.
 	 * </p>
 	 * <p>
-	 *     Messages will be delivered to the Zello for Work app of the <code>Contact</code> with this status, but they will not be delivered to the Zello SDK.
+	 *     Messages will be delivered to the Zello for Work app of the contact with this status and
+	 *     will be saved to the history. However they won't play live and won't be delivered to the Zello SDK.
 	 * </p>
 	 */
 	BUSY,
 	/**
 	 * <p>
-	 *     <code>Contact</code> is offline but was recently online.
+	 *     Contact is offline but was recently online.
 	 * </p>
 	 * <p>
-	 *     Messages sent to a <code>Contact</code> with this status will be delivered to the Zello SDK for the <code>Contact</code> the next time they sign in.
+	 *     Messages sent to a contact with this status will be saved on the server and delivered to
+	 *     the contact the next time they sign in. Depending on the plattform and configuration they
+	 *     may also get the push notification about the message.
 	 * </p>
 	 */
 	STANDBY,
 	/**
 	 * <p>
-	 *     <code>Contact</code> is currently connecting to the network.
+	 *     The channel is in the process of connecting.
 	 * </p>
 	 * <p>
-	 *     Messages sent to a <code>Contact</code> with this status will be delivered to the Zello SDK when they finish signing in.
-	 *     Delivered messages will fire the {@link Events#onMessageStateChanged()} method.
+	 *     This status only applies to channels. You cannot send messages to a channel in this state.
 	 * </p>
 	 * @see Events#onMessageStateChanged()
 	 */

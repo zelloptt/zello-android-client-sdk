@@ -1,7 +1,8 @@
 package com.zello.sdk;
 
 /**
- * The <code>Contact</code> class acts as a representation of a contact for the user. A <code>Contact</code> has a type attached to it (ie. {@link ContactType})
+ * The <code>Contact</code> class represents a contact of the current user.
+ * Contact can be another user, radio gateway, group channel or dynamic channel (see {@link ContactType})
  */
 public class Contact {
 
@@ -51,8 +52,13 @@ public class Contact {
 	}
 
 	/**
-	 * Returns the name of the <code>Contact</code>.
-	 * @return Nullable; Name of the <code>Contact</code>.
+	 * <p>
+	 *     Returns the identifying name of the <code>Contact</code>.
+	 * </p>
+	 * <p>
+	 *     Username is returned for users and gateways. Channel name is returned for channels.
+	 * </p>
+	 * @return Name of the <code>Contact</code>.
      */
 	public String getName() {
 		return _name;
@@ -67,7 +73,13 @@ public class Contact {
 	}
 
 	/**
-	 * Returns the display name for the <code>Contact</code>.
+	 * <p>
+	 *     Returns the display name for the <code>Contact</code>.
+	 * </p>
+	 * <p>
+	 *     Use this function if you need to show the contact on the screen as it will use the best
+	 *     available data to build the human-readable name.
+	 * </p>
 	 * @return Nullable; Display Name for the <code>Contact</code>.
      */
 	public String getDisplayName() {
@@ -100,11 +112,11 @@ public class Contact {
 
 	/**
 	 * <p>
-	 * Returns the number of online users under the <code>Contact</code>.
+	 * Returns the number of online users in the channel.
 	 * </p>
 	 * <p>
-	 * For {@link ContactType#USER} and {@link ContactType#GATEWAY}, this value will be 0.
-	 * For {@link ContactType#CHANNEL} and {@link ContactType#GROUP}, this value will be the number of users online in the channel or group, respectively.
+	 * For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>0</code> will be returned).
+	 * For {@link ContactType#CHANNEL} and {@link ContactType#GROUP} this value will be the number of users online in the channel or group, respectively.
 	 * </p>
 	 * @return number of online users under the <code>Contact</code> for the <code>ContactType</code>.
      */
@@ -114,10 +126,10 @@ public class Contact {
 
 	/**
 	 * <p>
-	 * Returns the number of total users under the <code>Contact</code>.
+	 * Returns the number of total users in the channel.
 	 * </p>
 	 * <p>
-	 * For {@link ContactType#USER} and  {@link ContactType#GATEWAY}, this value will be 0.
+	 * For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>0</code> will be returned).* For {@link ContactType#USER} and  {@link ContactType#GATEWAY}, this value will be 0.
 	 * </p>
 	 * @return number of total users under the <code>Contact</code> for the <code>ContactType</code>.
 	 */
@@ -126,7 +138,13 @@ public class Contact {
 	}
 
 	/**
-	 * Returns the title for the <code>Contact</code>.
+	 * <p>
+	 *     Returns the title for the <code>Contact</code>.
+	 * </p>
+	 * <p>
+	 *     For {@link ContactType#CHANNEL} and {@link ContactType#GROUP} this value is not defined (<code>null</code> will be returned)
+	 * </p>
+	 *
 	 * @return Nullable; The title for the <code>Contact</code>.
      */
 	public String getTitle() {
@@ -142,7 +160,10 @@ public class Contact {
 	}
 
 	/**
-	 * Returns whether the <code>Contact</code> has the no disconnect setting enabled or not.
+	 * Returns whether the channel has the no disconnect setting enabled or not.
+	 * <p>
+	 *     * For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>false</code> will be returned).
+	 * </p>
 	 * @return boolean indicating if the <code>Contact</code> has the no disconnect setting enabled.
      */
 	public boolean getNoDisconnect() {

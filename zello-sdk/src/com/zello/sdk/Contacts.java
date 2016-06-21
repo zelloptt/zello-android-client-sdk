@@ -8,10 +8,10 @@ import android.util.Log;
 
 /**
  * <p>
- *     The <code>Contacts</code> class represents the contacts that the authenticated user has.
+ *     The <code>Contacts</code> class represents the contacts of the current user.
  * </p>
  * <p>
- *     To use, retrieve the current <code>Contacts</code> instance using the {@link Zello#getContacts()} method. For specific usage, please see the sample projects.
+ *     To use, get the current snapshot of <code>Contacts</code> using the {@link Zello#getContacts()} method. For specific usage, please see the sample projects.
  * </p>
  * */
 public class Contacts {
@@ -91,8 +91,13 @@ public class Contacts {
 	//region Getters
 
 	/**
-	 * Returns the number of <code>Contacts</code> that the user has.
-	 * @return the number of <code>Contacts</code> for the user.
+	 * <p>
+	 *     Returns the number of contacts in the list.
+	 * </p>
+	 * <p>
+	 *     NB: The method may take non trivial time to execute so should not be used from UI thread.
+	 * </p>
+	 * @return the number of contacts for the user.
      */
 	public int getCount() {
 		check();
@@ -108,7 +113,12 @@ public class Contacts {
 	}
 
 	/**
-	 * Returns the <code>Contact</code> at the specified index.
+	 * <p>
+	 *     Returns the <code>Contact</code> at the specified index.
+	 * </p>
+	 * <p>
+	 *     NB: The method may take non trivial time to execute so should not be used from UI thread.
+	 * </p>
 	 * @param index Index indicating which <code>Contact</code> to retrieve.
 	 * @return <code>Contact</code> at the specified index.
      */

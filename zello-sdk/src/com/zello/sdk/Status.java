@@ -4,7 +4,7 @@ import android.app.Activity;
 
 /**
  * <p>
- *     The <code>Status</code> enum represents the status of the user.
+ *     The <code>Status</code> enum represents the status of the current user.
  * </p>
  * <p>
  *     For the status of a {@link Contact}, see the {@link ContactStatus} enum.
@@ -18,7 +18,7 @@ public enum Status {
 	 * </p>
 	 * <p>
 	 *     Messages will be immediately delivered to the Zello SDK with this status.
-	 *     Delivered messages will fire the {@link Events#onMessageStateChanged()} method.
+	 *     Delivered messages will call the {@link Events#onMessageStateChanged()} method.
 	 * </p>
 	 * @see Events#onMessageStateChanged()
 	 */

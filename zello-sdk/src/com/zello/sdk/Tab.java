@@ -1,20 +1,23 @@
 package com.zello.sdk;
 
+import android.app.Activity;
+
 /**
- * The <code>Tab</code> enum represents the UI tabs of the Zello for Work app.
+ * The <code>Tab</code> enum represents the contact selection UI tabs of the Zello for Work app.
+ * @see Zello#selectContact(String, Tab[], Tab, Theme, Activity)
  */
 public enum Tab {
 
 	/**
-	 * Tab populated with recent {@link Contact}s.
+	 * Tab populated with recent users and channels.
 	 */
 	RECENTS,
 	/**
-	 * Tab populated with {@link Contact}s of {@link ContactType#USER} type.
+	 * Tab populated with the list of users.
 	 */
 	USERS,
 	/**
-	 * Tab populated with {@link Contact}s of {@link ContactType#CHANNEL} type.
+	 * Tab populated with the list of channels.
 	 */
 	CHANNELS
 
