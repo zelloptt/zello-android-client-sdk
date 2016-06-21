@@ -1,13 +1,13 @@
 package com.zello.sdk;
 
 /**
- * <pre>
- * The AppState class is a representation of the current state of the Zello for Work app at any given moment.
- * This class is useful for getting the status of the Zello for Work app.
- * </pre>
- * <pre>
- * To use, retrieve the current AppState instance from the Zello class using the getAppState() method. For specific usage, please see the sample projects.
- * </pre>
+ * <p>
+ *     The <code>AppState</code> class represents the current state of the Zello for Work app.
+ * </p>
+ * <p>
+ *     To use, retrieve the current <code>AppState</code> values using the {@link Zello#getAppState(AppState)} method. For specific usage, please see the sample projects.
+ * </p>
+ * @see Zello#getAppState(AppState)
  */
 public class AppState {
 
@@ -40,7 +40,13 @@ public class AppState {
 	//endregion
 
 	/**
-	 * The reset() method resets the AppState instance back to the default values.
+	 * <p>
+	 *     Resets the <code>Appstate</code> instance back to the default values.
+	 * </p>
+	 * <p>
+	 *     This method will not affect the state of the Zello SDK.
+	 *     This will only reset the values for this copied instance of the <code>Appstate</code>.
+	 * </p>
 	 */
 	public void reset() {
 		//_available = false;
@@ -75,7 +81,13 @@ public class AppState {
 	//region Public State Methods
 
 	/**
-	 * The isAvailable() method determines if the Zello for Work app is available on the device.
+	 * <p>
+	 *     Determines if the Zello for Work app is available on the device.
+	 * </p>
+	 * <p>
+	 *     This method will return <code>false</code> if the Zello for Work app is not installed on the device
+	 *     or if the app is in a state of error.
+	 * </p>
 	 * @return boolean indicating if the app is available to communicate with.
      */
 	public boolean isAvailable() {
@@ -83,7 +95,7 @@ public class AppState {
 	}
 
 	/**
-	 * The isInitializing() method determines if the Zello for Work app is initializing.
+	 * Determines if the Zello for Work app is initializing.
 	 * @return boolean indicating if the app is initializing.
 	 */
 	public boolean isInitializing() {
@@ -91,7 +103,12 @@ public class AppState {
 	}
 
 	/**
-	 * The isCustomBuild() method determines if the Zello for Work app is a custom build.
+	 * <p>
+	 *     Determines if the Zello for Work app is a custom build.
+	 * </p>
+	 * <p>
+	 *     This method will return true if the PTT .apk was downloaded from zellowork.com.
+	 * </p>
 	 * @return boolean indicating if the app is a custom build.
 	 */
 	public boolean isCustomBuild() {
@@ -99,7 +116,7 @@ public class AppState {
 	}
 
 	/**
-	 * The isConfiguring() method determines if the Zello for Work app is currently configuring.
+	 * Determines if the Zello for Work app is currently configuring.
 	 * @return boolean indicating if the app is currently configuring.
 	 */
 	public boolean isConfiguring() {
@@ -107,53 +124,66 @@ public class AppState {
 	}
 
 	/**
-	 * <pre>
-	 * The isLocked() method determines if the Zello for Work app is currently locked.
-	 * </pre>
-	 * <pre>
-	 * If the Zello for Work app is locked, the UI will only display an information screen with the name of your app that can be clicked to open the main activity.
-	 * Being locked does NOT interfere with the sending and receiving of messages through the Zello for Work app.
-	 * </pre>
+	 * <p>
+	 *     Determines if the Zello for Work app is currently locked.
+	 * </p>
+	 * <p>
+	 *     If the Zello for Work app is locked, the UI will only display an information screen with the name of your app that can be clicked to open the main activity.
+	 *     Being locked does NOT interfere with the sending and receiving of messages through the Zello for Work app.
+	 * </p>
 	 * @return boolean indicating if the app is currently locked.
+	 * @see Zello#lock(String, String)
 	 */
 	public boolean isLocked() {
 		return _locked;
 	}
 
 	/**
-	 * The isSignedIn() method determines if the user is currently authenticated.
+	 * Determines if the user is currently signed into Zello for Work network.
 	 * @return boolean indicating if the user is signed in.
+	 * @see Zello#signIn(String, String, String)
+	 * @see Zello#signIn(String, String, String, boolean)
 	 */
 	public boolean isSignedIn() {
 		return _signedIn;
 	}
 
 	/**
-	 * The isSigningIn() method determines if the user is in the process of authenticating.
-	 * @return boolean indicating if the user is being authenticated.
-     */
+	 * Determines if the user is in the process of signing in.
+	 * @return boolean indicating if the user is signing in.
+	 * @see Zello#signIn(String, String, String)
+	 * @see Zello#signIn(String, String, String, boolean)
+	 */
 	public boolean isSigningIn() {
 		return _signingIn;
 	}
 
 	/**
-	 * The isSigningOut() method determines if the user is in the process of signing out.
+	 * Determines if the user is in the process of signing out.
 	 * @return boolean indicating if the user is signing out.
+	 * @see Zello#signOut()
      */
 	public boolean isSigningOut() {
 		return _signingOut;
 	}
 
 	/**
-	 * The isCancellingSignin() method determines if the authentication request for the user is being cancelled.
+	 *  <p>
+	 *      Determines if the sign in request for the user is being cancelled.
+	 *  </p>
+	 *  <p>
+	 *      This method will return <code>true</code> if the <code>Zello.cancelSignIn()</code> method is called
+	 *      and cancellation hasn't completed yet.
+	 *  </p>
 	 * @return boolean indicating if the authentication request is being cancelled.
+	 * @see Zello#cancelSignIn()
      */
 	public boolean isCancellingSignin() {
 		return _cancelling;
 	}
 
 	/**
-	 * The isReconnecting() method determines if the Zello for Work app is trying to reconnect the user.
+	 * Determines if the Zello for Work app is trying to reconnect the user to the network.
 	 * @return boolean indicating if the app is trying to reconnect the user.
      */
 	public boolean isReconnecting() {
@@ -161,7 +191,14 @@ public class AppState {
 	}
 
 	/**
-	 * The isWaitingForNetwork() method determines if the Zello for Work app is waiting for the network to respond.
+	 * <p>
+	 * 		Determines if the Zello for Work app is waiting for the network to be available.
+	 * </p>
+	 * <p>
+	 *     If Android OS reports that there is no internet connection the app will wait for connection
+	 *     to become available and this method will return <code>true</code>. When connection is restored
+	 *     the app signs in automatically.
+	 * </p>
 	 * @return boolean indicating if the app is waiting for the network.
      */
 	public boolean isWaitingForNetwork() {
@@ -169,26 +206,29 @@ public class AppState {
 	}
 
 	/**
-	 * <pre>
-	 * The isAutoRunEnabled() method determines if the auto run setting is enabled.
-	 * </pre>
-	 * <pre>
-	 * The auto run enabled feature determines if the app should be launched on the start of the OS or not.
-	 * </pre>
+	 * <p>
+	 *     Determines if the auto run setting is enabled.
+	 * </p>
+	 * <p>
+	 *     The auto run feature determines if Zello app will be launched on the start of the OS or not.
+	 *     This feature can be enabled or disabled using the <code>Zello.setAutoRun(boolean)</code> method.
+	 * </p>
 	 * @return boolean indicating whether or not auto run is enabled.
+	 * @see Zello#setAutoRun(boolean)
 	 */
 	public boolean isAutoRunEnabled() {
 		return _autoRun;
 	}
 
 	/**
-	 * <pre>
-	 * The isChannelAutoConnectEnabled() method determines if the auto connect channel setting is enabled.
-	 * </pre>
-	 * <pre>
-	 * The auto connect channel feature determines whether or not any new channel that the authenticated user is added to will be automatically connected to.
-	 * </pre>
+	 * <p>
+	 *     Determines if the auto connect channel setting is enabled.
+	 * </p>
+	 * <p>
+	 *     The auto connect channel feature determines whether or not any new channel that the user is added to will automatically connect.
+	 * </p>
 	 * @return boolean indicating whether or not auto connect channels is enabled.
+	 * @see Zello#setAutoConnectChannels(boolean)
 	 */
 	public boolean isChannelAutoConnectEnabled() {
 		return _autoChannels;
@@ -199,7 +239,7 @@ public class AppState {
 	//region Public Getters
 
 	/**
-	 * The getReconnectTimer() method returns the timer for reconnecting to the network.
+	 * Returns the timer for reconnecting to the network.
 	 * @return The network reconnect timer in seconds.
      */
 	public int getReconnectTimer() {
@@ -207,7 +247,15 @@ public class AppState {
 	}
 
 	/**
-	 * The getShowContacts() method determines if the contacts for the user should be shown or not.
+	 * <p>
+	 *     Returns if the contacts list for the user available to display.
+	 * </p>
+	 * <p>
+	 *     When <code>true</code> it is possible to use {@link Zello#getContacts()} to fetch the list
+	 *     of the contacts even when user is not online. The last cached copy of the list is returned
+	 *     in that case.
+	 * </p>
+	 *
 	 * @return boolean indicating if the contacts should be shown or not.
      */
 	public boolean getShowContacts() {
@@ -215,62 +263,76 @@ public class AppState {
 	}
 
 	/**
-	 * The getStatus() method returns the Status for the authenticated user.
-	 * @return The current Status for the user.
+	 * Returns the <code>Status</code> for the current user.
+	 * @return The current <code>Status</code> for the user.
+	 * @see Zello#setStatus(Status)
      */
 	public Status getStatus() {
 		return _busy ? Status.BUSY : (_solo ? Status.SOLO : Status.AVAILABLE);
 	}
 
 	/**
-	 * The getStatusMessage() method returns the custom status message for the authenticated user.
+	 * Returns the custom status message for the current user.
 	 * @return Nullable; The status message for the user.
+	 * @see Zello#setStatusMessage(String)
      */
 	public String getStatusMessage() {
 		return _statusMessage;
 	}
 
 	/**
-	 * The getNetwork() method returns the network String for the Zello for Work app.
+	 * Returns the network name for the current user.
 	 * @return Nullable; The network String.
+	 * @see Zello#signIn(String, String, String)
+	 * @see Zello#signIn(String, String, String, boolean)
 	 */
 	public String getNetwork() {
 		return _network;
 	}
 
 	/**
-	 * The getNetworkUrl() method returns the network in URL format for the Zello for Work app.
+	 * Returns the network in URL for the current user.
 	 * @return Nullable; The network URL.
+	 * @see Zello#signIn(String, String, String)
+	 * @see Zello#signIn(String, String, String, boolean)
 	 */
 	public String getNetworkUrl() {
 		return _networkUrl;
 	}
 
 	/**
-	 * The getUsername() method returns the username of the authenticated user.
+	 * Returns the username of the current user.
 	 * @return Nullable; The username for the user.
-     */
+	 * @see Zello#signIn(String, String, String)
+	 * @see Zello#signIn(String, String, String, boolean)
+	 */
 	public String getUsername() {
 		return _username;
 	}
 
 	/**
-	 * The getLastError() method returns the most recent authentication Error encountered by the Zello for Work app.
-	 * @return Error type indicating the latest error.
+	 * <p>
+	 * 		Returns the most recent <code>Error</code> encountered by the Zello for Work app.
+	 * </p>
+	 * <p>
+	 *     {@link Error#NONE} is returned if there were no errors.
+	 * </p>
+	 * @return <code>Error</code> type indicating the latest error.
      */
 	public Error getLastError() {
 		return _lastError;
 	}
 
 	/**
-	 * <pre>
-	 * The getExternalId() method returns the external id for messages recorded on the server.
-	 * </pre>
-	 * <pre>
-	 * The external id is a tag for messages recorded on the server.
-	 * This tag is only recorded if the server recording feature is enabled on the Zello for Work console.
-	 * </pre>
+	 * <p>
+	 * 	   Returns an optional external id tag used by Zello Server Recording.
+	 * </p>
+	 * <p>
+	 *     The method will return null unless the Zello Server Recording feature is turned on for the
+	 *     current network.
+	 * </p>
 	 * @return Nullable; The external id for the app.
+	 * @see Zello#setExternalId(String)
      */
 	public String getExternalId() {
 		return _externalId;

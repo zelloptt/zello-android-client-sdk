@@ -1,7 +1,8 @@
 package com.zello.sdk;
 
 /**
- * The MessageOut class represents an outgoing message through the Zello for Work app.
+ * The <code>MessageOut</code> class represents an outgoing voice message.
+ * @see Zello#getMessageOut(MessageOut)
  */
 public class MessageOut {
 
@@ -20,7 +21,13 @@ public class MessageOut {
 	}
 
 	/**
-	 * The reset() method resets the MessageOut instance back to the default values.
+	 * <p>
+	 *     Resets the <code>MessageOut</code> instance back to the default values.
+	 * </p>
+	 * <p>
+	 *     This method will not affect the state of the incoming message to the Zello for Work app.
+	 *     This will only reset the values for this copied instance of the <code>MessageOut</code>.
+	 * </p>
 	 */
 	public void reset() {
 		_to.reset();
@@ -36,23 +43,29 @@ public class MessageOut {
 	}
 
 	/**
-	 * The getTo() method returns the instance of the Contact that the outgoing message is being sent to.
-	 * @return The Contact recieving the message.
+	 * <p>
+	 *     Returns the instance of the <code>Contact</code> that the outgoing message is being sent to.
+	 * </p>
+	 * @return The <code>Contact</code> receiving the message.
      */
 	public Contact getTo() {
 		return _to;
 	}
 
 	/**
-	 * The isActive() method determines if the MessageOut is in progress.
-	 * @return boolean indicating if the message is currently active.
+	 * <p>
+	 *     Determines if the <code>MessageOut</code> is currently in progress or not.
+	 * </p>
+	 * @return boolean indicating if the outgoing message is currently active.
 	 */
 	public boolean isActive() {
 		return _active;
 	}
 
 	/**
-	 * The isConnecting() method determines if a connection is currently being established between the user and the recipient.
+	 * <p>
+	 *     Determines if a connection is currently being established between the user and the recipient.
+	 * </p>
 	 * @return boolean indicating if the Contacts are connecting.
      */
 	public boolean isConnecting() {

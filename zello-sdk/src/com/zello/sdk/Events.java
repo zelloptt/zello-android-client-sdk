@@ -1,44 +1,92 @@
 package com.zello.sdk;
 
+import android.app.Activity;
+
 /**
- * The Events interface provides a means to intercept key changes within the Zello SDK.
+ * The <code>Events</code> interface enables monitoring of Zello SDK state and property changes
  */
 public interface Events {
 
 	/**
-	 * The onSelectedContactChanged() method is fired when the selected contact for a user changes.
-	 * This method is invoked on the UI thread.
+	 * <p>
+	 *     Called when the selected contact changes.
+	 * </p>
+	 * <p>
+	 *     This method is invoked on the UI thread.
+	 *     To retrieve the newly selected contact, call the {@link Zello#getSelectedContact(Contact)} method.
+	 * </p>
+	 * @see Zello#getSelectedContact(Contact)
+	 * @see Zello#selectContact(String, Tab[], Tab, Theme)
+	 * @see Zello#selectContact(String, Tab[], Tab, Theme, Activity)
+	 * @see Zello#setSelectedContact(Contact)
+	 * @see Zello#setSelectedUserOrGateway(String)
+	 * @see Zello#setSelectedChannelOrGroup(String)
 	 */
 	void onSelectedContactChanged();
 
 	/**
-	 * The onMessageStateChanged() method is fired when the state of either a MessageOut or MessageIn changes.
-	 * This method is invoked on the UI thread.
+	 * <p>
+	 *     Called when the state of either the {@link MessageOut} or {@link MessageIn} changes.
+	 * </p>
+	 * <p>
+	 *     This method is invoked on the UI thread.
+	 *     To retrieve the current message state, call the {@link Zello#getMessageIn(MessageIn)} and {@link Zello#getMessageOut(MessageOut)} methods.
+	 * </p>
+	 * @see Zello#getMessageIn(MessageIn)
+	 * @see Zello#getMessageOut(MessageOut)
+	 * @see Zello#beginMessage()
+	 * @see Zello#endMessage()
 	 */
 	void onMessageStateChanged();
 
 	/**
-	 * The onAppStateChanged() method is fired when the AppState changes.
-	 * This method is invoked on the UI thread.
+	 * <p>
+	 *     Called when the {@link AppState} changes.
+	 * </p>
+	 * <p>
+	 *     This method is invoked on the UI thread.
+	 *     To retrieve the current <code>AppState</code>, call the {@link Zello#getAppState(AppState)} method.
+	 * </p>
+	 * @see Zello#getAppState(AppState)
 	 */
 	void onAppStateChanged();
 
 	/**
-	 * The onLastContactsTabChanged() method is fired when the last Contacts tab changes.
-	 * This method is invoked on the UI thread.
+	 * <p>
+	 *     Called when the last {@link Contacts} {@link Tab} changes.
+	 * </p>
+	 * <p>
+	 *     This method is invoked on the UI thread.
+	 * </p>
 	 * @param tab The tab that changed.
+	 * @see Zello#selectContact(String, Tab[], Tab, Theme)
+	 * @see Zello#selectContact(String, Tab[], Tab, Theme, Activity)
      */
 	void onLastContactsTabChanged(Tab tab);
 
 	/**
-	 * The onContactsChanged() method is fired when the Contacts for a user changes.
-	 * This method is invoked on the UI thread.
+	 * <p>
+	 *     Called when the {@link Contacts} for the user changes.
+	 * </p>
+	 * <p>
+	 *     This method is invoked on the UI thread.
+	 *     To retrieve the current <code>Contacts</code> snapshot, call the {@link Zello#getContacts()} method.
+	 *     The best approach, when dealing with large contact lists (in 1000s) is to run both <code>getContacts()</code>
+	 *     and any contact processing in a background thread, then post the result to UI thread for display.
+	 * </p>
+	 * @see Zello#getContacts()
 	 */
 	void onContactsChanged();
 
 	/**
-	 * The onAudioStateChanged() method is fired when the the state of the audio changes.
-	 * This method is invoked on the UI thread.
+	 * <p>
+	 *     Called when the the state of the {@link Audio} changes.
+	 * </p>
+	 * <p>
+	 *     This method is invoked on the UI thread.
+	 *     To retrieve the current <code>Audio</code>, call the {@link Zello#getAudio()} method.
+	 * </p>
+	 * @see Zello#getAudio()
 	 */
 	void onAudioStateChanged();
 
