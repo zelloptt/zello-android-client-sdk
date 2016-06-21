@@ -46,6 +46,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private boolean _dirtyContacts; // Contact list needs to be refreshed next time before it's presented to the user
 	private com.zello.sdk.Contact _contextContact; // Contact for which currently active context menu is being displayed
 
+	private com.zello.sdk.Zello _sdk;
 	private com.zello.sdk.Audio _audio;
 	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
 	private com.zello.sdk.MessageIn _messageIn = new com.zello.sdk.MessageIn();
@@ -99,9 +100,9 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				int action = event.getAction();
 				if (action == MotionEvent.ACTION_DOWN) {
 					//Zello.getInstance().setExternalId(java.util.UUID.randomUUID().toString());
-					Zello.getInstance().beginMessage();
+					_sdk.beginMessage();
 				} else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-					Zello.getInstance().endMessage();
+					_sdk.endMessage();
 				}
 				return false;
 			}
@@ -115,7 +116,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				if (adapter != null) {
 					com.zello.sdk.Contact contact = (com.zello.sdk.Contact) adapter.getItem(position);
 					if (contact != null) {
-						Zello.getInstance().setSelectedContact(contact);
+						_sdk.setSelectedContact(contact);
 					}
 				}
 			}
@@ -178,14 +179,14 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				Helper.saveValue(TalkActivity.this, _keyUsername, username);
 				Helper.saveValue(TalkActivity.this, _keyPassword, password);
 				Helper.saveValue(TalkActivity.this, _keyNetwork, network);
-				Zello.getInstance().signIn(network, username, password, perishable);
+				_sdk.signIn(network, username, password, perishable);
 			}
 		});
 		_btnCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (_appState.isReconnecting() || _appState.isWaitingForNetwork() || (_appState.isSigningIn() && !_appState.isCancellingSignin())) {
-					Zello.getInstance().cancelSignIn();
+					_sdk.cancelSignIn();
 				}
 			}
 		});
@@ -218,8 +219,9 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 
 		_dirtyContacts = true;
 
-		Zello.getInstance().subscribeToEvents(this);
-		_audio = Zello.getInstance().getAudio();
+		_sdk = Zello.getInstance();
+		_sdk.subscribeToEvents(this);
+		_audio = _sdk.getAudio();
 
 		updateAppState();
 		updateAudioMode();
@@ -230,14 +232,14 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Zello.getInstance().unsubscribeFromEvents(this);
+		_sdk.unsubscribeFromEvents(this);
 		_audio = null;
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Zello.getInstance().leavePowerSavingMode();
+		_sdk.leavePowerSavingMode();
 		_active = true;
 		updateContactList();
 	}
@@ -245,7 +247,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Zello.getInstance().enterPowerSavingMode();
+		_sdk.enterPowerSavingMode();
 		_active = false;
 	}
 
@@ -321,11 +323,11 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				return true;
 			}
 			case R.id.menu_start_message: {
-				Zello.getInstance().beginMessage();
+				_sdk.beginMessage();
 				return true;
 			}
 			case R.id.menu_stop_message: {
-				Zello.getInstance().endMessage();
+				_sdk.endMessage();
 				return true;
 			}
 			case R.id.menu_about: {
@@ -345,15 +347,15 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				if (listInfo.targetView != null && listInfo.targetView.getParent() == _listContacts && _contextContact != null) {
 					switch (item.getItemId()) {
 						case R.id.menu_talk: {
-							Zello.getInstance().setSelectedContact(_contextContact);
+							_sdk.setSelectedContact(_contextContact);
 							break;
 						}
 						case R.id.menu_mute: {
-							Zello.getInstance().muteContact(_contextContact, true);
+							_sdk.muteContact(_contextContact, true);
 							break;
 						}
 						case R.id.menu_unmute: {
-							Zello.getInstance().muteContact(_contextContact, false);
+							_sdk.muteContact(_contextContact, false);
 							break;
 						}
 					}
@@ -423,37 +425,37 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
 
 		// Since Zello was initialized in the Activity, pass in this as Activity parameter
-		Zello.getInstance().selectContact(title, tabs, tab, theme, this);
+		_sdk.selectContact(title, tabs, tab, theme, this);
 	}
 
 	private void lockPttApp() {
 		// Configure PTT app to display information screen with the name of this app that can be clicked to open main activity
-		Zello.getInstance().lock(getString(R.string.app_name), getPackageName());
+		_sdk.lock(getString(R.string.app_name), getPackageName());
 	}
 
 	private void unlockPttApp() {
 		// Switch PTT app back to normal UI mode
-		Zello.getInstance().unlock();
+		_sdk.unlock();
 	}
 
 	private void enableAutoRun() {
 		// Enable client auto-run option
-		Zello.getInstance().setAutoRun(true);
+		_sdk.setAutoRun(true);
 	}
 
 	private void disableAutoRun() {
 		// Disable client auto-run option
-		Zello.getInstance().setAutoRun(false);
+		_sdk.setAutoRun(false);
 	}
 
 	private void enableAutoConnectChannels() {
 		// Enable auto-connecting to new channels
-		Zello.getInstance().setAutoConnectChannels(true);
+		_sdk.setAutoConnectChannels(true);
 	}
 
 	private void disableAutoConnectChannels() {
 		// Disable auto-connecting to new channels
-		Zello.getInstance().setAutoConnectChannels(false);
+		_sdk.setAutoConnectChannels(false);
 	}
 
 	private void chooseStatus() {
@@ -467,19 +469,19 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 					case 0: {
-						Zello.getInstance().setStatus(com.zello.sdk.Status.AVAILABLE);
+						_sdk.setStatus(com.zello.sdk.Status.AVAILABLE);
 						break;
 					}
 					case 1: {
-						Zello.getInstance().setStatus(com.zello.sdk.Status.SOLO);
+						_sdk.setStatus(com.zello.sdk.Status.SOLO);
 						break;
 					}
 					case 2: {
-						Zello.getInstance().setStatus(com.zello.sdk.Status.BUSY);
+						_sdk.setStatus(com.zello.sdk.Status.BUSY);
 						break;
 					}
 					case 3: {
-						Zello.getInstance().signOut();
+						_sdk.signOut();
 						break;
 					}
 				}
@@ -498,7 +500,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	}
 
 	private void updateSelectedContact() {
-		Zello.getInstance().getSelectedContact(_selectedContact);
+		_sdk.getSelectedContact(_selectedContact);
 		String name = _selectedContact.getName(); // Contact name
 		boolean selected = name != null && name.length() > 0;
 		boolean canTalk = false, showConnect = false, connected = false, canConnect = false;
@@ -542,8 +544,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	}
 
 	private void updateMessageState() {
-		Zello.getInstance().getMessageIn(_messageIn);
-		Zello.getInstance().getMessageOut(_messageOut);
+		_sdk.getMessageIn(_messageIn);
+		_sdk.getMessageOut(_messageOut);
 		boolean incoming = _messageIn.isActive(); // Is incoming message active?
 		boolean outgoing = _messageOut.isActive(); // Is outgoing message active?
 		if (outgoing) {
@@ -600,7 +602,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	}
 
 	private void updateAppState() {
-		Zello.getInstance().getAppState(_appState);
+		_sdk.getAppState(_appState);
 		int stateVisibility = View.GONE;
 		int loginVisibility = View.GONE;
 		int contentVisibility = View.GONE;
@@ -698,7 +700,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				newAdapter = true;
 				adapter = new ListAdapter();
 			}
-			adapter.setContacts(Zello.getInstance().getContacts());
+			adapter.setContacts(_sdk.getContacts());
 			Parcelable state = _listContacts.onSaveInstanceState();
 			if (newAdapter) {
 				_listContacts.setAdapter(adapter);
@@ -717,9 +719,9 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		if (type == com.zello.sdk.ContactType.CHANNEL || type == com.zello.sdk.ContactType.GROUP) {
 			com.zello.sdk.ContactStatus status = _selectedContact.getStatus();
 			if (status == com.zello.sdk.ContactStatus.OFFLINE) {
-				Zello.getInstance().connectChannel(_selectedContact.getName());
+				_sdk.connectChannel(_selectedContact.getName());
 			} else if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
-				Zello.getInstance().disconnectChannel(_selectedContact.getName());
+				_sdk.disconnectChannel(_selectedContact.getName());
 			}
 		}
 	}
