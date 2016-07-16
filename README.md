@@ -124,10 +124,20 @@ public class MyActivity extends Activity implements com.zello.sdk.Events {
 
 Please note that all events interface methods are called on __UI thread__ so if you need to do any potentially slow processing, move it to background thread.
 
+### Switching user accounts
+
+If Zello app already have user account configured and signed in, the SDK will connect to exiting user session so no repeat sign in is necessary. When needed you can programmatically sign in Zello to the desired user account or sign out to stop the active session:
+
+```java
+Zello.getInstance().signOut(); // Signs out the current user
+Zello.getInstance().signIn("mynetwork", "myuser", "mypassword"); // Signs in into "mynetwork" network as "myuser"
+```
+
+Both `signIn` and `signOut` are asynchronous. Subscribe for Zello SDK events and implement `Events.onAppStateChnaged()` to be notified about sign in progress or errors.
 
 ### Battery life optimization
 
-You can improve your app power effiiency and reduce data usage by telling Zello SDK When your app switches to background or user leaves the screen showing Zello UI. You do this by calling `Zello.getInstance().enterPowerSavingMode()`. When in power saving mode Zello app limits communication to the server postponing any non-critical updates. It doesn't affect your ability to send or receive messages. Make sure to call `Zello.getInstance().enterPowerSavingMode()` when Zello UI appears on the screen.
+You can improve your app power effiiency and reduce data usage by telling Zello SDK when your app switches to background or user leaves the screen showing Zello UI. You do this by calling `Zello.getInstance().enterPowerSavingMode()`. When in power saving mode Zello app limits communication to the server postponing any non-critical updates. It doesn't affect your ability to send or receive messages. Make sure to call `Zello.getInstance().enterPowerSavingMode()` when Zello UI appears on the screen.
 
 `Activity.onPause()` and `Activity.onResume()` are good places to call these methods:
 
