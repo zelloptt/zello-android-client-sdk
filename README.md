@@ -50,3 +50,35 @@ public class App extends Application {
 
 }
 ```
+Here `net.loudtalks` is the package name of Zello for Work app.
+
+### Sending voice messages
+
+To start a voice message to currently selected contact call `Zello.getInstance().beginMessage()`. To stop sending the message call `Zello.getInstance().endmessage()`. Here is a snippet of how to make a push-to-talk button in your activity:
+
+```java
+Button pttButton = (Button)findViewById(R.id.pttButton);
+pttButton.setOnTouchListener(new View.OnTouchListener() {
+   @Override
+   public boolean onTouch(View v, MotionEvent event) {
+      int action = event.getAction();
+      if (action == MotionEvent. ACTION_DOWN ) {
+         Zello.getInstance().beginMessage();
+      } else if (action == MotionEvent. ACTION_UP || action == MotionEvent. ACTION_CANCEL ) {
+         Zello.getInstance().endMessage();
+      }
+   return false;
+}
+});
+```
+
+To successfully send a message one needs to select a contact first. The SDK includes a built-in activity, you can display to let user select a contact:
+
+```java
+Zello.getInstance().selectContact("Select a contact", new Tab[]{Tab.RECENTS, Tab.USERS, Tab.CHANNELS}, Tab.RECENTS, Theme.DARK);
+```
+You can also select a contact programmatically:
+
+```java
+Zello.getInstance().setSelectedUserOrGateway("test"); // selects a user with username "test"
+```
