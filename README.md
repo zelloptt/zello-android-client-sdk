@@ -146,17 +146,16 @@ public class MyActivity extends Activity {
       Zello.getInstance().leavePowerSavingMode();
    }
 ```
-When your app no longer needs the SDK call `Zello.getInstance().unconfigure()` to release resources. Most apps should do it in `Application.onTermiated()`:
+When your app no longer needs the SDK call `Zello.getInstance().unconfigure()` to release resources. Most apps should do it in `Application.onTerminate()`:
 
 ```java
 public class App extends Application {
-
-// ...
 
    @Override
    public void onTerminate() {
       super.onTerminate();
       Zello.getInstance().unconfigure();
    }
+   
 }
 ```
