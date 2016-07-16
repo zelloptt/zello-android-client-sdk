@@ -54,7 +54,7 @@ Here `net.loudtalks` is the package name of Zello for Work app.
 
 ### Sending voice messages
 
-To start a voice message to currently selected contact call `Zello.getInstance().beginMessage()`. To stop sending the message call `Zello.getInstance().endmessage()`. Here is a snippet of how to make a push-to-talk button in your activity:
+To start a voice message to currently selected contact call `Zello.getInstance().beginMessage()`. To stop sending the message call `Zello.getInstance().endMessage()`. Here is a snippet of how to make a push-to-talk button in your activity:
 
 ```java
 Button pttButton = (Button)findViewById(R.id.pttButton);
@@ -81,4 +81,82 @@ You can also select a contact programmatically:
 
 ```java
 Zello.getInstance().setSelectedUserOrGateway("test"); // selects a user with username "test"
+```
+
+### Handling Zello SDK events
+
+Zello SDK supports events interface which you can implement to be notified about changes in incoming and outgoing messages state, app online status, sign in progress etc. In the most cases your implementation will be a part of your activity code.
+
+```java
+public class MyActivity extends Activity implements com.zello.sdk.Events {
+   
+   @Override
+   protected void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      Zello.getInstance().subscribeToEvents(this);
+   }
+
+   @Override
+   protected void onDestroy() {
+      super.onDestroy();
+      Zello.getInstance().unsubscribeFromEvents(this);
+   }
+
+   // Events interface implementation
+   @Override
+   void onAppStateChanged(){}
+   
+   @Override
+   void onAudioStateChanged(){}
+   
+   @Override
+   void onContactsChanged(){}
+   
+   @Override
+   void onMessageStateChanged(){}
+   
+   @Override
+   void onSelectedContactChanged(){}
+   
+   // ...
+}
+```
+
+Please note that all events interface methods are called on __UI thread__ so if you need to do any potentially slow processing, move it to background thread.
+
+
+### Battery life optimization
+
+You can improve your app power effiiency and reduce data usage by telling Zello SDK When your app switches to background or user leaves the screen showing Zello UI. You do this by calling `Zello.getInstance().enterPowerSavingMode()`. When in power saving mode Zello app limits communication to the server postponing any non-critical updates. It doesn't affect your ability to send or receive messages. Make sure to call `Zello.getInstance().enterPowerSavingMode()` when Zello UI appears on the screen.
+
+`Activity.onPause()` and `Activity.onResume()` are good places to call these methods:
+
+```java
+public class MyActivity extends Activity {
+
+   @Override
+   protected void onPause() {
+      super.onPause();
+      Zello.getInstance().enterPowerSavingMode();
+   }
+   
+   @Override
+   protected void onResume() {
+      super.onResume();
+      Zello.getInstance().leavePowerSavingMode();
+   }
+```
+When your app no longer needs the SDK call `Zello.getInstance().unconfigure()` to release resources. Most apps should do it in `Application.onTermiated()`:
+
+```java
+public class App extends Application {
+
+// ...
+
+   @Override
+   public void onTerminate() {
+      super.onTerminate();
+      Zello.getInstance().unconfigure();
+   }
+}
 ```
