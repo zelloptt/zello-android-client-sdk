@@ -133,7 +133,44 @@ Zello.getInstance().signOut(); // Signs out the current user
 Zello.getInstance().signIn("mynetwork", "myuser", "mypassword"); // Signs in into "mynetwork" network as "myuser"
 ```
 
-Both `signIn` and `signOut` are asynchronous. Subscribe for Zello SDK events and implement `Events.onAppStateChnaged()` to be notified about sign in progress or errors.
+Both `signIn` and `signOut` are asynchronous. Subscribe for Zello SDK events and implement `Events.onAppStateChnaged()` to be notified about sign in progress or errors:
+
+```java
+@Override
+void onAppStateChanged(){
+   Zello.getInstance().getAppState(_appState);
+   
+   Error error = null;
+   String state = "";
+   boolean showCancel = false, cancelEnable = true;
+	   
+   if (!_appState.isAvailable()) {
+		state = "Zello for Work app is not installed";
+   } else if (_appState.isInitializing()) {
+		state = "Connecting to the Zello app...";
+   } else if (_appState.isConfiguring()) {
+		state = "Configuring Zello app...";
+   } else if (!_appState.isSignedIn()) {
+		if (_appState.isSigningIn()) {
+			state = "Signing in...";
+			showCancel = true;
+			cancelEnable = !_appState.isCancellingSignin();
+		} else if (_appState.isSigningOut()) {
+			state = "Signing out...";
+		} else if (_appState.isWaitingForNetwork()) {
+			error = _appState.getLastError();
+			state = "Waiting for network connection";
+			showCancel = true;
+		} else if (_appState.isReconnecting()) {
+			error = _appState.getLastError();
+			state = "Reconnecting in %seconds%...".replace("%seconds%", NumberFormat.getInstance().format(_appState.getReconnectTimer()));
+			showCancel = true;
+		} else {
+			state = "Signed out";
+		}
+	}
+}
+```
 
 ### Battery life optimization
 
