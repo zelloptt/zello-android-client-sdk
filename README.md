@@ -171,7 +171,7 @@ void onAppStateChanged(){
 	}
 }
 ```
-__NB__: `Zello.getAppState(AppState)` and similar methods write a snpashot of the requested state into provided object. Aftewards the object state remains "frozen" even if application state changes and __will not__ update automatically. To get fresh data call `Zello.getAppState(AppState)` again.
+__NB__: `Zello.getAppState(AppState)` and similar methods write a snapshot of the requested state into provided object. Aftewards the object state remains "frozen" even if application state changes and __will not__ update automatically. To get fresh data call `Zello.getAppState(AppState)` again.
 
 ### Battery life optimization
 
@@ -207,3 +207,13 @@ public class App extends Application {
    
 }
 ```
+## Zello SDK samples
+
+Sample | Description
+-------|-------
+[zello-sdk-sample](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample) | Master sample, showing all features available in the SDK
+[zello-sdk-sample-signin](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample-signin) | Signing in and  out
+[zello-sdk-sample-ptt](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample-ptt) | Sending voice messages
+[zello-sdk-sample-contacts](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample-contacts) | Working with contact list 
+[zello-sdk-sample-misc](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample-misc) | Advanced SDK options and settings
+
