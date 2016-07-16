@@ -122,7 +122,7 @@ public class MyActivity extends Activity implements com.zello.sdk.Events {
 }
 ```
 
-Please note that all events interface methods are called on __UI thread__ so if you need to do any potentially slow processing, move it to background thread.
+__NB__: All events interface methods are called on __UI thread__ so if you need to do any potentially slow processing, move it to background thread.
 
 ### Switching user accounts
 
@@ -171,6 +171,7 @@ void onAppStateChanged(){
 	}
 }
 ```
+__NB__: `Zello.getAppState(AppState)` and similar methods write a snpashot of the requested state into provided object. Aftewards the object state remains "frozen" even if application state changes and __will not__ update automatically. To get fresh data call `Zello.getAppState(AppState)` again.
 
 ### Battery life optimization
 
