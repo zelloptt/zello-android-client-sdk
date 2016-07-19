@@ -24,7 +24,7 @@ Go to http://zellowork.com/ and click __Start your network__ button. If you alre
 
 Before you can use the SDK install Zello for Work app on your phone. You can do it from __Get app__ section of the web console or by navigating to `http://<network name>.zellowork.com/app` on your phone. 
 
-__NB__: Zello app downloaded from Google Play is not supported by the SDK.
+>__NB__: Zello app downloaded from Google Play is not supported by the SDK.
 
 ### Install Android Studio and configure your project
 
@@ -125,7 +125,7 @@ public class MyActivity extends Activity implements com.zello.sdk.Events {
 }
 ```
 
-__NB__: All events interface methods are called on __UI thread__ so if you need to do any potentially slow processing, move it to background thread.
+>__NB__: All events interface methods are called on __UI thread__ so if you need to do any potentially slow processing, move it to background thread.
 
 ### Switching user accounts
 
@@ -174,7 +174,7 @@ void onAppStateChanged(){
 	}
 }
 ```
-__NB__: `Zello.getAppState(AppState)` and similar methods write a snapshot of the requested state into provided object. Aftewards the object state remains "frozen" even if application state changes and __will not__ update automatically. To get fresh data call `Zello.getAppState(AppState)` again.
+>__NB__: `Zello.getAppState(AppState)` and similar methods write a snapshot of the requested state into provided object. Aftewards the object state remains "frozen" even if application state changes and __will not__ update automatically. To get fresh data call `Zello.getAppState(AppState)` again.
 
 ### Battery life optimization
 
