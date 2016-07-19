@@ -32,6 +32,9 @@ __NB__: Zello app downloaded from Google Play is not supported by the SDK.
 
 Place [zello-sdk.jar](https://github.com/zelloptt/zello-android-client-sdk/blob/master/zello-sdk.jar?raw=true) file into `libs` folder of your project, then right-click the file in Android Studio and select “Add as Library…”.
 
+![Adding as a library in Android Studio]
+(https://zellowork.com/img/github/add-zello-sdk-lib.png)
+
 ## Using the SDK
 
 ### Configuring the SDK
@@ -207,7 +210,8 @@ public class App extends Application {
    
 }
 ```
-## Zello SDK samples
+## Additional resources
+### Zello SDK samples
 
 Sample | Description
 -------|-------
@@ -217,3 +221,7 @@ Sample | Description
 [zello-sdk-sample-contacts](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample-contacts) | Working with contact list 
 [zello-sdk-sample-misc](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample-misc) | Advanced SDK options and settings
 
+### Documentation
+
+* [Zello SDK reference] (http://zelloptt.github.io/zello-android-client-sdk/zello-sdk-documentation/)
+* [Zello SDK migration guide (for legacy SDK users)] (https://github.com/zelloptt/zello-android-client-sdk/blob/master/MIGRATION.md)
