@@ -5,7 +5,7 @@
 Zello Android client SDK allows you integrate [Zello for Work](https://zellowork.com/) push-to-talk into your own application. The SDK uses cross-process communication to let your app connect to Zello app installed on the device and remotely control it. Supported features include:
 
 * Send voice messages
-* Get notiications about incoming voice messages
+* Get notifications about incoming voice messages
 * Get the list of contacts and their status
 * Configure and switch user accounts
 * Connect and disconnect channels
@@ -28,7 +28,7 @@ Before you can use the SDK install Zello for Work app on your phone. You can do 
 
 ### Install Android Studio and configure your project
 
-[Download Android Studio](https://developer.android.com/studio/index.html) and install it. Open your exisitng project or create a new one. The minimum API level supported by the SDK is 4 (Donut).
+[Download Android Studio](https://developer.android.com/studio/index.html) and install it. Open your existing project or create a new one. The minimum API level supported by the SDK is 4 (Donut).
 
 Place [zello-sdk.jar](https://github.com/zelloptt/zello-android-client-sdk/blob/master/zello-sdk.jar?raw=true) file into `libs` folder of your project, then right-click the file in Android Studio and select “Add as Library…”.
 
@@ -129,14 +129,14 @@ public class MyActivity extends Activity implements com.zello.sdk.Events {
 
 ### Switching user accounts
 
-If Zello app already have user account configured and signed in, the SDK will connect to exiting user session so no repeat sign in is necessary. When needed you can programmatically sign in Zello to the desired user account or sign out to stop the active session:
+If Zello app already has a user account configured and signed in, the SDK will connect to the existing user session so no repeat sign in is necessary. When needed, you can programmatically sign in Zello to the desired user account or sign out to stop the active session:
 
 ```java
 Zello.getInstance().signOut(); // Signs out the current user
 Zello.getInstance().signIn("mynetwork", "myuser", "mypassword"); // Signs in into "mynetwork" network as "myuser"
 ```
 
-Both `signIn` and `signOut` are asynchronous. Subscribe for Zello SDK events and implement `Events.onAppStateChnaged()` to be notified about sign in progress or errors:
+Both `signIn` and `signOut` are asynchronous. Subscribe for Zello SDK events and implement `Events.onAppStateChanged()` to be notified about sign in progress or errors:
 
 ```java
 @Override
@@ -178,7 +178,7 @@ void onAppStateChanged(){
 
 ### Battery life optimization
 
-You can improve your app power effiiency and reduce data usage by telling Zello SDK when your app switches to background or user leaves the screen showing Zello UI. You do this by calling `Zello.getInstance().enterPowerSavingMode()`. When in power saving mode Zello app limits communication to the server postponing any non-critical updates. It doesn't affect your ability to send or receive messages. Make sure to call `Zello.getInstance().enterPowerSavingMode()` when Zello UI appears on the screen.
+You can improve your app power efficiency and reduce data usage by telling Zello SDK when your app switches to background or user leaves the screen showing Zello UI. You do this by calling `Zello.getInstance().enterPowerSavingMode()`. When in power saving mode Zello app limits communication to the server postponing any non-critical updates. It doesn't affect your ability to send or receive messages. Make sure to call `Zello.getInstance().enterPowerSavingMode()` when Zello UI appears on the screen.
 
 `Activity.onPause()` and `Activity.onResume()` are good places to call these methods:
 
