@@ -225,4 +225,8 @@ Sample | Description
 
 * [Zello SDK reference] (http://zelloptt.github.io/zello-android-client-sdk/zello-sdk-documentation/)
 * [Zello SDK migration guide (for legacy SDK users)] (https://github.com/zelloptt/zello-android-client-sdk/blob/master/MIGRATION.md)
-* [Zello server API] (http://zellowork.com/api/)
+* [Zello for Work server API] (http://zellowork.com/api/)
+* 
+### See also
+
+* [Zello for Work server API libraries] (https://github.com/zelloptt/zello-for-work-server-api-libs)
