@@ -43,3 +43,4 @@ zello-sdk/.idea
 zello-sdk/build
 zello-sdk/gradle
 zello-sdk/libs
+.idea

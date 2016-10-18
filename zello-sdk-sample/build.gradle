@@ -4,20 +4,20 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.android.tools.build:gradle:2.2.1'
     }
 }
 
 apply plugin: 'com.android.application'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
+    compile fileTree(include: '*.jar', dir: 'libs')
     compile files('libs/zello-sdk.jar')
 }
 
 android {
     compileSdkVersion 21
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '24.0.3'
     defaultConfig {
         applicationId "com.zello.sdk.sample"
         minSdkVersion 4
