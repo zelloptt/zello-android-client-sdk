@@ -2,7 +2,7 @@
 
 ## Overview
 
-Zello Android client SDK allows you integrate [Zello for Work](https://zellowork.com/) push-to-talk into your own application. The SDK uses cross-process communication to let your app connect to Zello app installed on the device and remotely control it. Supported features include:
+Zello Android client SDK allows you integrate [ZelloWork](https://zellowork.com/) push-to-talk into your own application. The SDK uses cross-process communication to let your app connect to ZelloWork app installed on the device and remotely control it. Supported features include:
 
 * Send voice messages
 * Get notifications about incoming voice messages
@@ -16,13 +16,13 @@ Zello Android client SDK allows you integrate [Zello for Work](https://zellowork
 
 ## Installation
 
-### Sign up for Zello for Work account
+### Sign up for ZelloWork account
 
-Go to http://zellowork.com/ and click __Start your network__ button. If you already have a network, click __Sign In__. A free Zello for Work account supports up to five users and has no time limit.
+Go to http://zellowork.com/ and click __Start your network__ button. If you already have a network, click __Sign In__. A free ZelloWork account supports up to five users and has no time limit.
 
-### Get Zello for Work app
+### Get ZelloWork app
 
-Before you can use the SDK install Zello for Work app on your phone. You can do it from __Get app__ section of the web console or by navigating to `http://<network name>.zellowork.com/app` on your phone. 
+Before you can use the SDK install ZelloWork app on your phone. You can do it from __Get app__ section of the web console or by navigating to `http://<network name>.zellowork.com/app` on your phone. 
 
 >__NB__: Zello app downloaded from Google Play is not supported by the SDK.
 
@@ -53,7 +53,7 @@ public class App extends Application {
 
 }
 ```
-Here `net.loudtalks` is the package name of Zello for Work app.
+Here `net.loudtalks` is the package name of ZelloWork app.
 
 ### Sending voice messages
 
@@ -88,7 +88,7 @@ Zello.getInstance().setSelectedUserOrGateway("test"); // selects a user with use
 
 ### Handling Zello SDK events
 
-Zello SDK supports events interface which you can implement to be notified about changes in incoming and outgoing messages state, app online status, sign in progress etc. In the most cases your implementation will be a part of your activity code.
+The Zello SDK contains an events interface which you can implement to be notified about changes in incoming and outgoing messages, state, app online status, sign in progress etc. In most cases, your implementation will be a part of your activity code.
 
 ```java
 public class MyActivity extends Activity implements com.zello.sdk.Events {
@@ -125,11 +125,11 @@ public class MyActivity extends Activity implements com.zello.sdk.Events {
 }
 ```
 
->__NB__: All events interface methods are called on __UI thread__ so if you need to do any potentially slow processing, move it to background thread.
+>__NB__: All events interface methods are called on __UI thread__, so if you need to do any potentially slow processing, move it to background thread.
 
 ### Switching user accounts
 
-If Zello app already has a user account configured and signed in, the SDK will connect to the existing user session so no repeat sign in is necessary. When needed, you can programmatically sign in Zello to the desired user account or sign out to stop the active session:
+If the ZelloWork app already has a user account configured and signed in, the SDK will connect to the existing user session so no repeat sign in is necessary. When needed, you can programmatically sign in Zello to the desired user account or sign out to stop the active session:
 
 ```java
 Zello.getInstance().signOut(); // Signs out the current user
@@ -148,11 +148,11 @@ void onAppStateChanged(){
    boolean showCancel = false, cancelEnable = true;
 	   
    if (!_appState.isAvailable()) {
-		state = "Zello for Work app is not installed";
+		state = "ZelloWork app is not installed";
    } else if (_appState.isInitializing()) {
-		state = "Connecting to the Zello app...";
+		state = "Connecting to the ZelloWork app...";
    } else if (_appState.isConfiguring()) {
-		state = "Configuring Zello app...";
+		state = "Configuring ZelloWork app...";
    } else if (!_appState.isSignedIn()) {
 		if (_appState.isSigningIn()) {
 			state = "Signing in...";
@@ -174,11 +174,11 @@ void onAppStateChanged(){
 	}
 }
 ```
->__NB__: `Zello.getAppState(AppState)` and similar methods write a snapshot of the requested state into provided object. Aftewards the object state remains "frozen" even if application state changes and __will not__ update automatically. To get fresh data call `Zello.getAppState(AppState)` again.
+>__NB__: `Zello.getAppState(AppState)` and similar methods write a snapshot of the requested state into the provided object. Afterwards, the object state remains "frozen" (even if the application state changes) and __will not__ update automatically. To get fresh data, call `Zello.getAppState(AppState)` again.
 
 ### Battery life optimization
 
-You can improve your app power efficiency and reduce data usage by telling Zello SDK when your app switches to background or user leaves the screen showing Zello UI. You do this by calling `Zello.getInstance().enterPowerSavingMode()`. When in power saving mode Zello app limits communication to the server postponing any non-critical updates. It doesn't affect your ability to send or receive messages. Make sure to call `Zello.getInstance().leavePowerSavingMode()` when Zello UI appears on the screen.
+You can improve your apps power efficiency and reduce data usage by telling the Zello SDK when your app switches to the background or the user leaves the screen showing the Zello UI. You can do this by calling `Zello.getInstance().enterPowerSavingMode()`. When in power saving mode, the ZelloWork app limits communication to the server  and postpones any non-critical updates. It doesn't affect your ability to send or receive messages. Make sure to call `Zello.getInstance().leavePowerSavingMode()` when the Zello UI appears on the screen.
 
 `Activity.onPause()` and `Activity.onResume()` are good places to call these methods:
 
@@ -197,7 +197,7 @@ public class MyActivity extends Activity {
       Zello.getInstance().leavePowerSavingMode();
    }
 ```
-When your app no longer needs the SDK call `Zello.getInstance().unconfigure()` to release resources. Most apps should do it in `Application.onTerminate()`:
+When your app no longer needs the SDK, call `Zello.getInstance().unconfigure()` to release resources. Most apps should do it in `Application.onTerminate()`:
 
 ```java
 public class App extends Application {
@@ -216,17 +216,17 @@ public class App extends Application {
 Sample | Description
 -------|-------
 [zello-sdk-sample](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample) | Master sample, showing all features available in the SDK
-[zello-sdk-sample-signin](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample-signin) | Signing in and  out
+[zello-sdk-sample-signin](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample-signin) | Signing in and out
 [zello-sdk-sample-ptt](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample-ptt) | Sending voice messages
-[zello-sdk-sample-contacts](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample-contacts) | Working with contact list 
+[zello-sdk-sample-contacts](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample-contacts) | Working with the contact list 
 [zello-sdk-sample-misc](https://github.com/zelloptt/zello-android-client-sdk/tree/master/zello-sdk-sample-misc) | Advanced SDK options and settings
 
 ### Documentation
 
 * [Zello SDK reference] (http://zelloptt.github.io/zello-android-client-sdk/zello-sdk-documentation/)
 * [Zello SDK migration guide (for legacy SDK users)] (https://github.com/zelloptt/zello-android-client-sdk/blob/master/MIGRATION.md)
-* [Zello for Work server API] (http://zellowork.com/api/)
+* [ZelloWork server API] (http://zellowork.com/api/)
 
 ### See also
 
-* [Zello for Work server API libraries] (https://github.com/zelloptt/zello-for-work-server-api-libs)
+* [ZelloWork server API libraries] (https://github.com/zelloptt/zello-for-work-server-api-libs)
