@@ -2,7 +2,7 @@
 
 ## Overview
 
-Zello Android client SDK allows you integrate [ZelloWork](https://zellowork.com/) push-to-talk into your own application. The SDK uses cross-process communication to let your app connect to ZelloWork app installed on the device and remotely control it. Supported features include:
+The Zello Android client SDK allows you to integrate [ZelloWork](https://zellowork.com/) push-to-talk into your own application. The SDK uses cross-process communication to let your app connect to the ZelloWork app installed on the device and remotely control it. Supported features include:
 
 * Send voice messages
 * Get notifications about incoming voice messages
@@ -22,9 +22,9 @@ Go to http://zellowork.com/ and click __Start your network__ button. If you alre
 
 ### Get ZelloWork app
 
-Before you can use the SDK install ZelloWork app on your phone. You can do it from __Get app__ section of the web console or by navigating to `http://<network name>.zellowork.com/app` on your phone. 
+Before you can use the SDK, you must install the ZelloWork app on your phone. You can do this from the __Get app__ section of the web console or by navigating to `http://<network name>.zellowork.com/app` on your phone. 
 
->__NB__: Zello app downloaded from Google Play is not supported by the SDK.
+>__NB__: The Zello app downloaded from Google Play is not supported by the SDK.
 
 ### Install Android Studio and configure your project
 
@@ -57,7 +57,7 @@ Here `net.loudtalks` is the package name of ZelloWork app.
 
 ### Sending voice messages
 
-To start a voice message to currently selected contact call `Zello.getInstance().beginMessage()`. To stop sending the message call `Zello.getInstance().endMessage()`. Here is a snippet of how to make a push-to-talk button in your activity:
+To start a voice message to the currently selected contact, call `Zello.getInstance().beginMessage()`. To stop sending the message, call `Zello.getInstance().endMessage()`. Here is a snippet of how to make a push-to-talk button in your activity:
 
 ```java
 Button pttButton = (Button)findViewById(R.id.pttButton);
@@ -75,7 +75,7 @@ pttButton.setOnTouchListener(new View.OnTouchListener() {
 });
 ```
 
-To successfully send a message one needs to select a contact first. The SDK includes a built-in activity, you can display to let user select a contact:
+To successfully send a message, one needs to select a contact first. The SDK includes a built-in activity that you can display to let user select a contact:
 
 ```java
 Zello.getInstance().selectContact("Select a contact", new Tab[]{Tab.RECENTS, Tab.USERS, Tab.CHANNELS}, Tab.RECENTS, Theme.DARK);
@@ -178,7 +178,7 @@ void onAppStateChanged(){
 
 ### Battery life optimization
 
-You can improve your apps power efficiency and reduce data usage by telling the Zello SDK when your app switches to the background or the user leaves the screen showing the Zello UI. You can do this by calling `Zello.getInstance().enterPowerSavingMode()`. When in power saving mode, the ZelloWork app limits communication to the server  and postpones any non-critical updates. It doesn't affect your ability to send or receive messages. Make sure to call `Zello.getInstance().leavePowerSavingMode()` when the Zello UI appears on the screen.
+You can improve your apps power efficiency and reduce data usage by telling the Zello SDK when your app switches to the background or the user leaves the screen showing the Zello UI. You can do this by calling `Zello.getInstance().enterPowerSavingMode()`. When in power saving mode, the ZelloWork app limits communication to the server  and postpones any non-critical updates. It doesn't affect your ability to send or receive messages. Make sure to call `Zello.getInstance().leavePowerSavingMode()` when the Zello UI reappears on the screen.
 
 `Activity.onPause()` and `Activity.onResume()` are good places to call these methods:
 
