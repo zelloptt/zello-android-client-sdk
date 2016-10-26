@@ -28,7 +28,7 @@ public enum Status {
 	 *      User is online but currently busy.
 	 * </p>
 	 * <p>
-	 *      Messages will not be delivered to the Zello SDK with this status, but they will be delivered to the Zello for Work app.
+	 *      Messages will not be delivered to the Zello SDK with this status, but they will be delivered to the ZelloWork app.
 	 * </p>
 	 * */
 	BUSY,
@@ -37,7 +37,7 @@ public enum Status {
 	 *     User is online but only available to talk with the selected <code>Contact</code>.
 	 * </p>
 	 * <p>
-	 *     Messages from a non-selected <code>Contact</code> will not be delivered to the Zello SDK with this status, but they will be delivered to the Zello for Work app.
+	 *     Messages from a non-selected <code>Contact</code> will not be delivered to the Zello SDK with this status, but they will be delivered to the ZelloWork app.
 	 * </p>
 	 * @see Zello#getSelectedContact(Contact)
 	 * @see Zello#selectContact(String, Tab[], Tab, Theme)

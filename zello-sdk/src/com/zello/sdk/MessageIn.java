@@ -25,7 +25,7 @@ public class MessageIn {
 	 *     Resets the <code>MessageIn</code> instance back to the default values.
 	 * </p>
 	 * <p>
-	 *     This method will not affect the state of the incoming message to the Zello for Work app.
+	 *     This method will not affect the state of the incoming message to the ZelloWork app.
 	 *     This will only reset the values for this copied instance of the <code>MessageIn</code>.
 	 * </p>
 	 */
