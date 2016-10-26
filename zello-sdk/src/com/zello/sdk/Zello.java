@@ -19,7 +19,7 @@ public class Zello {
 
     private static Zello _instance = null;
 
-    ArrayList<Events> events = new ArrayList<Events>();
+    ArrayList<Events> events = new ArrayList<>();
 
     Sdk sdk;
 
@@ -58,7 +58,7 @@ public class Zello {
      * <p>
      * If the apk was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
      * </p>
-     * @param packageName The package name of the Zello for Work app.
+     * @param packageName The package name of the ZelloWork app.
      * @param context The context for the app.
      * @see #configure(String, Context, Events)
      * @see #unconfigure()
@@ -76,7 +76,7 @@ public class Zello {
      * <p>
      * If the apk was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
      * </p>
-     * @param packageName The package name of the Zello for Work app.
+     * @param packageName The package name of the ZelloWork app.
      * @param context The context for the app.
      * @param event Events handler
      * @see #configure(String, Context)
@@ -92,10 +92,10 @@ public class Zello {
     //region Lifecycle Methods
 
     /**
-     * Limits communication between the Zello for Work app and the server to optimize power and data consumption.
+     * Limits communication between the ZelloWork app and the server to optimize power and data consumption.
      * <p>
-     * Call this method when Zello UI is not visible to minimize app power and data use. When in power saving mode the app won't receive non-essential status updates.
-     * Call <code>leavePowerSavingMode</code> to resume status updates when Zello UI is back on the screen.
+     * Call this method when the Zello UI is not visible to minimize app power and data use. When in power saving mode the app won't receive non-essential status updates.
+     * Call <code>leavePowerSavingMode</code> to resume status updates when the Zello UI is back on the screen.
      * </p>
      * @see #leavePowerSavingMode()
      */
@@ -104,7 +104,7 @@ public class Zello {
     }
 
     /**
-     * Resumes full communication between Zello for Work app and the server.
+     * Resumes full communication between the ZelloWork app and the server.
      * @see #enterPowerSavingMode()
      */
     public void leavePowerSavingMode() {
@@ -112,7 +112,7 @@ public class Zello {
     }
 
     /**
-     * Disconnects the SDK from Zello for Work app and unsubscribes all <code>Events</code> handlers.
+     * Disconnects the SDK from ZelloWork app and unsubscribes all <code>Events</code> handlers.
      * @see #configure(String, Context)
      */
     public synchronized void unconfigure() {
@@ -365,15 +365,15 @@ public class Zello {
     //region Locking
 
     /**
-     * Locks the default Zello for Work app UI to prevent users from accessing it.
+     * Locks the default ZelloWork app UI to prevent users from accessing it.
      * <p>
-     *     In this locked state, the Zello for Work app, when accessed by user, will only display an
+     *     In this locked state, the ZelloWork app, when accessed by user, will only display an
      *     information screen with the name of your app that can be clicked to open the main activity.
      *     This does NOT interfere with the sending and receiving of messages through the SDK.
      * </p>
      * <p>
      *     This method is useful when you implement a fully custom UI in your app and want
-     *     to prevent users from accidentally accessing the standard Zello UI.
+     *     to prevent users from accidentally accessing the standard ZelloWork UI.
      * </p>
      * @param applicationName The name of your application.
      * @param packageName	  The package name of your application.
@@ -384,7 +384,7 @@ public class Zello {
     }
 
     /**
-     * Unlocks the default Zello for Work app UI.
+     * Unlocks the default ZelloWork app UI.
      * @see #lock(String, String)
      */
     public void unlock() {
@@ -419,7 +419,7 @@ public class Zello {
     //endregion
 
     /**
-     * Opens the main screen of the standard Zello for Work app.
+     * Opens the main screen of the standard ZelloWork app.
      */
     public void openMainScreen() {
         sdk.openMainScreen();
@@ -462,7 +462,7 @@ public class Zello {
      * <p>
      * The method updates provided instance of <code>AppState</code> object with the current data.
      * The object will not update automatically, so call this method every time you need to get the
-     * current info about Zello app and SDK state.
+     * current info about ZelloWork app and SDK state.
      * </p>
      * @param state The object to copy data to.
      * @see AppState
@@ -522,7 +522,7 @@ public class Zello {
     //region Setters
 
     /**
-     * Specifies whether the Zello for Work app should be launched on the start of the OS.
+     * Specifies whether the ZelloWork app should be launched on the start of the OS.
      * <p>
      *     Configured autorun behavior persists between app launches.
      * </p>
@@ -558,13 +558,13 @@ public class Zello {
     }
 
     /**
-     * Sets an optional external id tag used by Zello Server Recording.
+     * Sets an optional external id tag used by ZelloWork Server Recording.
      * <p>
-     *     When set the provided <code>id</code> is included in the metadata of all messages sent by
-     *     Zello, and could be accessed using Zello server API to query recordings metadata.
+     *     When set, the provided <code>id</code> is included in the metadata of all messages sent by
+     *     Zello and can be accessed using the ZelloWork server API to query recordings metadata.
      * </p>
      * <p>
-     *     The method has no effect unless the Zello Server Recording feature is turned on for the
+     *     The method has no effect unless the ZelloWork Server Recording feature is turned on for the
      *     current network.
      * </p>.
      * @param id Nullable; String indicating the external id.

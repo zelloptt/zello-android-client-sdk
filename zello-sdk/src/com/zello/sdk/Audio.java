@@ -7,7 +7,7 @@ import android.content.IntentFilter;
 
 /**
  * <p>
- *     Manages {@link AudioMode} used by Zello for Work app.
+ *     Manages {@link AudioMode} used by ZelloWork app.
  * </p>
  * <p>
  *     To use, retrieve the current <code>Audio</code> instance using the {@link Zello#getAudio()} method. For specific usage, please see the sample projects.

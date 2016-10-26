@@ -3,7 +3,7 @@ package com.zello.sdk;
 import android.app.Activity;
 
 /**
- * The <code>Tab</code> enum represents the contact selection UI tabs of the Zello for Work app.
+ * The <code>Tab</code> enum represents the contact selection UI tabs of the ZelloWork app.
  * @see Zello#selectContact(String, Tab[], Tab, Theme, Activity)
  */
 public enum Tab {

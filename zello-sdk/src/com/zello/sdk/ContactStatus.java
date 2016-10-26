@@ -38,7 +38,7 @@ public enum ContactStatus {
 	 *     Contact is online but currently busy.
 	 * </p>
 	 * <p>
-	 *     Messages will be delivered to the Zello for Work app of the contact with this status and
+	 *     Messages will be delivered to the ZelloWork app of the contact with this status and
 	 *     will be saved to the history. However they won't play live and won't be delivered to the Zello SDK.
 	 * </p>
 	 */
