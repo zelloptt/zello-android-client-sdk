@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Zello Sample SDK Sample PTT</string>
+    <string name="app_name">Zello SDK Sample PTT</string>
 
     <string name="locked">PTT App is locked. Please unlock the app using the sample misc project.</string>
 
