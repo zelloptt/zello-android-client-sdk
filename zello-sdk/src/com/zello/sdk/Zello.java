@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class Zello {
 
-    private static Zello _instance;
+    private static volatile Zello _instance;
 
     ArrayList<Events> events = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class Zello {
      * @see #unconfigure()
      */
     public void configure(String packageName, Context context) {
-        doConfiguration(packageName, context);
+        doConfigure(packageName, context);
     }
 
     /**
@@ -83,7 +83,7 @@ public class Zello {
      */
     public void configure(String packageName, Context context, Events event) {
         subscribeToEvents(event);
-        doConfiguration(packageName, context);
+        doConfigure(packageName, context);
     }
 
     //endregion
@@ -659,7 +659,7 @@ public class Zello {
 
     }
 
-    private synchronized void doConfiguration(String packageName, Context context) {
+    private synchronized void doConfigure(String packageName, Context context) {
         if (!_configured) {
             _configured = true;
 
