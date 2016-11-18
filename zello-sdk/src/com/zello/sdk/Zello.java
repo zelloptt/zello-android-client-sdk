@@ -17,14 +17,13 @@ import java.util.ArrayList;
  */
 public class Zello {
 
-    private static Zello _instance = null;
+    private static Zello _instance;
 
     ArrayList<Events> events = new ArrayList<>();
 
-    Sdk sdk;
-
+    private Sdk _sdk;
     // Protect against multiple attempts to configure SDK.
-    boolean configured = false;
+    private boolean _configured;
 
     //region Instance
 
@@ -100,7 +99,8 @@ public class Zello {
      * @see #leavePowerSavingMode()
      */
     public void enterPowerSavingMode() {
-        sdk.onPause();
+		checkConfiguration();
+		_sdk.onPause();
     }
 
     /**
@@ -108,20 +108,17 @@ public class Zello {
      * @see #enterPowerSavingMode()
      */
     public void leavePowerSavingMode() {
-        sdk.onResume();
+		checkConfiguration();
+		_sdk.onResume();
     }
 
     /**
      * Disconnects the SDK from ZelloWork app and unsubscribes all <code>Events</code> handlers.
      * @see #configure(String, Context)
      */
-    public synchronized void unconfigure() {
-        if (configured) {
-            sdk.onDestroy();
-            events.clear();
-            sdk = null;
-            configured = false;
-        }
+    public void unconfigure() {
+		checkConfiguration();
+		doUnconfigure();
     }
 
     //endregion
@@ -135,7 +132,7 @@ public class Zello {
      */
     public void subscribeToEvents(Events event) {
         if (!events.contains(event)) {
-            events.add(event);
+			events.add(event);
         }
     }
 
@@ -146,7 +143,7 @@ public class Zello {
      */
     public void unsubscribeFromEvents(Events event) {
         if (events.contains(event)) {
-            events.remove(event);
+			events.remove(event);
         }
     }
 
@@ -175,7 +172,8 @@ public class Zello {
      * @see Events#onLastContactsTabChanged(Tab)
      */
     public void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
-        sdk.selectContact(title, tabs, activeTab, theme);
+		checkConfiguration();
+		_sdk.selectContact(title, tabs, activeTab, theme);
     }
 
     /**
@@ -200,7 +198,8 @@ public class Zello {
      * @see Events#onLastContactsTabChanged(Tab)
      */
     public void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme, Activity activity) {
-        sdk.selectContact(title, tabs, activeTab, theme, activity);
+		checkConfiguration();
+		_sdk.selectContact(title, tabs, activeTab, theme, activity);
     }
 
     //region Sending Messages
@@ -216,7 +215,8 @@ public class Zello {
      * @see Events#onMessageStateChanged()
      */
     public void beginMessage() {
-        sdk.beginMessage();
+		checkConfiguration();
+		_sdk.beginMessage();
     }
 
     /**
@@ -230,7 +230,8 @@ public class Zello {
      * @see Events#onMessageStateChanged()
      */
     public void endMessage() {
-        sdk.endMessage();
+		checkConfiguration();
+		_sdk.endMessage();
     }
 
     //endregion
@@ -249,7 +250,8 @@ public class Zello {
      * @see Events#onContactsChanged()
      */
     public void connectChannel(String channel) {
-        sdk.connectChannel(channel);
+		checkConfiguration();
+		_sdk.connectChannel(channel);
     }
 
     /**
@@ -264,7 +266,8 @@ public class Zello {
      * @see Events#onContactsChanged()
      */
     public void disconnectChannel(String channel) {
-        sdk.disconnectChannel(channel);
+		checkConfiguration();
+		_sdk.disconnectChannel(channel);
     }
 
     //endregion
@@ -277,7 +280,8 @@ public class Zello {
      * @param mute    Whether the contact should be muted or not.
      */
     public void muteContact(Contact contact, boolean mute) {
-        sdk.muteContact(contact, mute);
+		checkConfiguration();
+		_sdk.muteContact(contact, mute);
     }
 
     //endregion
@@ -299,7 +303,8 @@ public class Zello {
      * @see Events#onAppStateChanged()
      */
     public boolean signIn(String network, String username, String password) {
-        return sdk.signIn(network, username, password);
+		checkConfiguration();
+		return _sdk.signIn(network, username, password);
     }
 
     /**
@@ -329,7 +334,8 @@ public class Zello {
      * @see Events#onAppStateChanged()
      */
     public boolean signIn(String network, String username, String password, boolean perishable) {
-        return sdk.signIn(network, username, password, perishable);
+		checkConfiguration();
+		return _sdk.signIn(network, username, password, perishable);
     }
 
     /**
@@ -345,7 +351,8 @@ public class Zello {
      * @see Events#onAppStateChanged()
      */
     public void signOut() {
-        sdk.signOut();
+		checkConfiguration();
+		_sdk.signOut();
     }
 
     /**
@@ -357,7 +364,8 @@ public class Zello {
      * @see #signIn(String, String, String, boolean)
      */
     public void cancelSignIn() {
-        sdk.cancel();
+		checkConfiguration();
+		_sdk.cancel();
     }
 
     //endregion
@@ -380,7 +388,8 @@ public class Zello {
      * @see #unlock()
      */
     public void lock(String applicationName, String packageName) {
-        sdk.lock(applicationName, packageName);
+		checkConfiguration();
+		_sdk.lock(applicationName, packageName);
     }
 
     /**
@@ -388,7 +397,8 @@ public class Zello {
      * @see #lock(String, String)
      */
     public void unlock() {
-        sdk.unlock();
+		checkConfiguration();
+		_sdk.unlock();
     }
 
     //endregion
@@ -403,7 +413,8 @@ public class Zello {
      * @see Events#onAppStateChanged()
      */
     public void setStatus(Status status) {
-        sdk.setStatus(status);
+		checkConfiguration();
+		_sdk.setStatus(status);
     }
 
     /**
@@ -413,7 +424,8 @@ public class Zello {
      * @see AppState#getStatusMessage()
      */
     public void setStatusMessage(String message) {
-        sdk.setStatusMessage(message);
+		checkConfiguration();
+		_sdk.setStatusMessage(message);
     }
 
     //endregion
@@ -422,7 +434,8 @@ public class Zello {
      * Opens the main screen of the standard ZelloWork app.
      */
     public void openMainScreen() {
-        sdk.openMainScreen();
+		checkConfiguration();
+		_sdk.openMainScreen();
     }
 
     //region Getters
@@ -439,7 +452,8 @@ public class Zello {
      * @see Events#onMessageStateChanged()
      */
     public void getMessageIn(MessageIn message) {
-        sdk.getMessageIn(message);
+		checkConfiguration();
+		_sdk.getMessageIn(message);
     }
 
     /**
@@ -454,7 +468,8 @@ public class Zello {
      * @see Events#onMessageStateChanged()
      */
     public void getMessageOut(MessageOut message) {
-        sdk.getMessageOut(message);
+		checkConfiguration();
+		_sdk.getMessageOut(message);
     }
 
     /**
@@ -469,7 +484,8 @@ public class Zello {
      * @see Events#onAppStateChanged()
      */
     public void getAppState(AppState state) {
-        sdk.getAppState(state);
+		checkConfiguration();
+		_sdk.getAppState(state);
     }
 
     /**
@@ -485,7 +501,8 @@ public class Zello {
      * @see Events#onSelectedContactChanged()
      */
     public void getSelectedContact(Contact contact) {
-        sdk.getSelectedContact(contact);
+		checkConfiguration();
+		_sdk.getSelectedContact(contact);
     }
 
     /**
@@ -504,7 +521,8 @@ public class Zello {
      * @see Events#onContactsChanged()
      */
     public Contacts getContacts() {
-        return sdk.getContacts();
+		checkConfiguration();
+		return _sdk.getContacts();
     }
 
     /**
@@ -514,7 +532,8 @@ public class Zello {
      * @see Events#onAudioStateChanged()
      */
     public Audio getAudio() {
-        return sdk.getAudio();
+		checkConfiguration();
+		return _sdk.getAudio();
     }
 
     //endregion
@@ -531,7 +550,8 @@ public class Zello {
      * @see AppState#isAutoRunEnabled()
      */
     public void setAutoRun(boolean enable) {
-        sdk.setAutoRun(enable);
+		checkConfiguration();
+		_sdk.setAutoRun(enable);
     }
 
     /**
@@ -554,7 +574,8 @@ public class Zello {
      * @see AppState#isChannelAutoConnectEnabled()
      */
     public void setAutoConnectChannels(boolean connect) {
-        sdk.setAutoConnectChannels(connect);
+		checkConfiguration();
+		_sdk.setAutoConnectChannels(connect);
     }
 
     /**
@@ -571,7 +592,8 @@ public class Zello {
      * @see AppState#getExternalId()
      */
     public void setExternalId(String id) {
-        sdk.setExternalId(id);
+		checkConfiguration();
+		_sdk.setExternalId(id);
     }
 
     /**
@@ -588,7 +610,8 @@ public class Zello {
      * @see Events#onSelectedContactChanged()
      */
     public void setSelectedContact(Contact contact) {
-        sdk.setSelectedContact(contact);
+		checkConfiguration();
+		_sdk.setSelectedContact(contact);
     }
 
     /**
@@ -605,7 +628,8 @@ public class Zello {
      * @see Events#onSelectedContactChanged()
      */
     public void setSelectedUserOrGateway(String name) {
-        sdk.setSelectedUserOrGateway(name);
+		checkConfiguration();
+		_sdk.setSelectedUserOrGateway(name);
     }
 
      /**
@@ -621,7 +645,8 @@ public class Zello {
      * @see Events#onSelectedContactChanged()
      */
     public void setSelectedChannelOrGroup(String name) {
-        sdk.setSelectedChannelOrGroup(name);
+		checkConfiguration();
+		_sdk.setSelectedChannelOrGroup(name);
     }
 
     //endregion
@@ -635,16 +660,30 @@ public class Zello {
     }
 
     private synchronized void doConfiguration(String packageName, Context context) {
-        if (!configured) {
-            configured = true;
+        if (!_configured) {
+            _configured = true;
 
-            sdk = new Sdk();
-            sdk.onCreate(packageName, context);
+			_sdk = new Sdk();
+			_sdk.onCreate(packageName, context);
 
             // Updates should be on by default
             leavePowerSavingMode();
         }
     }
+
+	private synchronized void doUnconfigure() {
+		_sdk.onDestroy();
+		_sdk = null;
+		events.clear();
+
+		_configured = false;
+	}
+
+	private void checkConfiguration() {
+		if (!_configured) {
+			throw new RuntimeException("The SDK has not yet been configured. Call Zello.configure() first.");
+		}
+	}
 
     //endregion
 
