@@ -151,6 +151,17 @@ public class Zello {
 
     //region Zello SDK Methods
 
+	//region Permissions
+
+	public void requestVitalPermissions() {
+		checkConfiguration();
+		_sdk.requestVitalPermissions();
+	}
+
+	//endregion
+
+	//region Contact Selection
+
     /**
      * Opens an activity, which lets the user select a user or channel to talk to.
      * <p>
@@ -201,6 +212,8 @@ public class Zello {
 		checkConfiguration();
 		_sdk.selectContact(title, tabs, activeTab, theme, activity);
     }
+
+	//endregion
 
     //region Sending Messages
 
@@ -430,13 +443,17 @@ public class Zello {
 
     //endregion
 
-    /**
+	//region Opening PTT app
+
+	/**
      * Opens the main screen of the standard ZelloWork app.
      */
     public void openMainScreen() {
 		checkConfiguration();
 		_sdk.openMainScreen();
     }
+
+	//endregion
 
     //region Getters
 

@@ -49,6 +49,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private static final int AWAKE_TIMER = 1;
 
 	private static final String _pttActivityClass = "com.zello.sdk.Activity";
+	private static final String _pttInvisibleActivityClass = "com.zello.sdk.InvisibleActivity";
 	private static Intent _serviceIntent;
 
 	//endregion
@@ -240,6 +241,26 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Zello SDK Methods
 
+	//region Permissions
+
+	void requestVitalPermissions() {
+		Context context = _context;
+		if (context != null) {
+			try {
+				Intent intent = new Intent();
+				intent.setComponent(new ComponentName(_package, _pttInvisibleActivityClass));
+				intent.putExtra(Constants.EXTRA_REQUEST_VITAL_PERMISSIONS, true);
+				context.startActivity(intent);
+			} catch (Exception ignored) {
+				// ActivityNotFoundException
+			}
+		}
+	}
+
+	//endregion
+
+	//region Contact Selection
+
 	void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
 		Context context = _context.getApplicationContext();
 		if (context != null) {
@@ -287,6 +308,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			}
 		}
 	}
+
+	//endregion
 
 	//region Sending Messages
 
@@ -472,6 +495,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//endregion
 
+	//region Opening PTT app
+
 	void openMainScreen() {
 		Context context = _context;
 		if (context != null) {
@@ -483,6 +508,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			}
 		}
 	}
+
+	//endregion
 
 	//region Getters
 
