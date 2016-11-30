@@ -45,6 +45,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private BroadcastReceiver _receiverContactSelected; // Broadcast receiver for selected contact broadcasts
 	//	private BroadcastReceiver _receiverContactChanged; // Broadcast receiver for changes in contacts' states
 	private BroadcastReceiver _receiverActiveTab; // Broadcast receiver for last selected contact list tab
+	private BroadcastReceiver _receiverPermissionErrors; // Broadcast receiver for permissions errors
 
 	private static final int AWAKE_TIMER = 1;
 
@@ -139,6 +140,14 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			Intent intentStickyAppState = context.registerReceiver(_receiverAppState, new IntentFilter(_package + "." + Constants.ACTION_APP_STATE));
 			updateAppState(intentStickyAppState);
 			updateContacts();
+			// Register to receive app permissions broadcasts
+			_receiverPermissionErrors = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					handlePermissionError(intent);
+				}
+			};
+			context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_package + "." + Constants.ACTION_PERMISSION_ERRORS));
 			// Register to receive message state broadcasts
 			_receiverMessageState = new BroadcastReceiver() {
 				@Override
@@ -187,6 +196,9 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			if (_receiverAppState != null) {
 				context.unregisterReceiver(_receiverAppState);
 			}
+			if (_receiverPermissionErrors != null) {
+				context.unregisterReceiver(_receiverPermissionErrors);
+			}
 			if (_receiverMessageState != null) {
 				context.unregisterReceiver(_receiverMessageState);
 			}
@@ -210,6 +222,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 		_receiverPackage = null;
 		_receiverAppState = null;
+		_receiverPermissionErrors = null;
 		_receiverMessageState = null;
 		_receiverContactSelected = null;
 //		_receiverContactChanged = null;
@@ -921,6 +934,26 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	private void handlePermissionError(Intent intent) {
+		if (intent != null) {
+			PermissionError error = intToPermissionError(intent.getIntExtra(Constants.EXTRA_LATEST_PERMISSION_ERROR, PermissionError.NONE.ordinal()));
+			if (error == PermissionError.MICROPHONE_NOT_GRANTED) {
+				Context context = _context;
+				if (context != null) {
+					try {
+						Intent errorIntent = new Intent();
+						errorIntent.setComponent(new ComponentName(_package, _pttInvisibleActivityClass));
+						errorIntent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
+						errorIntent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
+						context.startActivity(errorIntent);
+					} catch (Exception ignored) {
+						// ActivityNotFoundException
+					}
+				}
+			}
+		}
+	}
+
 	private boolean isConnected() {
 		return _serviceBound && !_serviceConnecting;
 	}
@@ -978,6 +1011,18 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			}
 		} else {
 			return Error.NONE;
+		}
+	}
+
+	static PermissionError intToPermissionError(int error) {
+		if (error > PermissionError.NONE.ordinal()) {
+			if (error == PermissionError.MICROPHONE_NOT_GRANTED.ordinal()) {
+				return PermissionError.MICROPHONE_NOT_GRANTED;
+			} else {
+				return PermissionError.UNKNOWN;
+			}
+		} else {
+			return PermissionError.NONE;
 		}
 	}
 
