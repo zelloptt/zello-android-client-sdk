@@ -220,6 +220,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_dirtyContacts = true;
 
 		_sdk = Zello.getInstance();
+		_sdk.requestVitalPermissions();
 		_sdk.subscribeToEvents(this);
 		_audio = _sdk.getAudio();
 

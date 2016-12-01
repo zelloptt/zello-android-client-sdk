@@ -59,7 +59,8 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         pttButton.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
 
         Zello.getInstance().configure("com.pttsdk", this, this);
-        audio = Zello.getInstance().getAudio();
+		Zello.getInstance().requestVitalPermissions();
+		audio = Zello.getInstance().getAudio();
 
         connectChannelButton.setOnClickListener(new View.OnClickListener() {
             @Override
