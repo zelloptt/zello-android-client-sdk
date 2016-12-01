@@ -397,6 +397,13 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		updateAudioMode();
 	}
 
+	@Override
+	public void onMicrophonePermissionNotGranted() {
+		if (_active) {
+			_sdk.showMicrophonePermissionDialog();
+		}
+	}
+
 	private void showMenuItem(Menu menu, int itemId, boolean show) {
 		MenuItem item = menu.findItem(itemId);
 		if (item != null) {

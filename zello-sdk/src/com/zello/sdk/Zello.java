@@ -153,9 +153,34 @@ public class Zello {
 
 	//region Permissions
 
+	/**
+	 * Opens a dialog that requests all of the vital run time permissions needed by the ZelloWork app to function properly.
+	 * <p>
+	 * This method is only necessary for Android devices running 6.0 (API 23) and above.
+	 * This method requests run time permissions for the microphone, phone, and external storage
+	 * </p>
+	 * @see Zello#beginMessage()
+	 * @see Zello#showMicrophonePermissionDialog()
+	 * @see Events#onMicrophonePermissionNotGranted()
+	 */
 	public void requestVitalPermissions() {
 		checkConfiguration();
 		_sdk.requestVitalPermissions();
+	}
+
+	/**
+	 * Opens a popup dialog that tells the user that they cannot send voice messages until the
+	 * permission to record audio has been granted.
+	 * <p>
+	 * The most appropriate place to call this method is when <code>onMicrophonePermissionNotGranted()</code>
+	 * is called on the <code>Events</code> interface.
+	 * </p>
+	 * @see Events#onMicrophonePermissionNotGranted()
+	 * @see Zello#requestVitalPermissions()
+	 */
+	public void showMicrophonePermissionDialog() {
+		checkConfiguration();
+		_sdk.showMicrophonePermissionDialog();
 	}
 
 	//endregion
@@ -223,9 +248,14 @@ public class Zello {
      *     The method is asynchronous. When the message status changes, <code>onMessageStateChanged()</code>
      *     is called on the <code>Events</code> interface.
      * </p>
+	 * <p>
+	 *     If the microphone permission is not granted, <code>onMicrophonePermissionNotGranted()</code>
+	 *     is called on the <code>Events</code> interface.
+	 * </p>
      * @see #endMessage()
      * @see #selectContact(String, Tab[], Tab, Theme)
      * @see Events#onMessageStateChanged()
+	 * @see Events#onMicrophonePermissionNotGranted()
      */
     public void beginMessage() {
 		checkConfiguration();
@@ -336,9 +366,9 @@ public class Zello {
      *     is called on the <code>Events</code> interface. To cancel the sign in process, use <code>cancelSignIn()</code>.
      *     method.
      * </p>
-     * @param network  The network name or URL.
-     * @param username The username to authenticate.
-     * @param password The password for the username.
+     * @param network    The network name or URL.
+     * @param username   The username to authenticate.
+     * @param password   The password for the username.
      * @param perishable Whether or not the authentication information should be saved.
      * @return 			 boolean indicating whether a sign in was initiated or not.
      * @see #signIn(String, String, String)
@@ -443,7 +473,7 @@ public class Zello {
 
     //endregion
 
-	//region Opening PTT app
+	//region Opening ZelloWork app
 
 	/**
      * Opens the main screen of the standard ZelloWork app.

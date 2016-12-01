@@ -141,7 +141,12 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
         updateUI();
     }
 
-    //endregion
+	@Override
+	public void onMicrophonePermissionNotGranted() {
+
+	}
+
+	//endregion
 
     private void updateUI() {
         if (appState.isSignedIn()) {

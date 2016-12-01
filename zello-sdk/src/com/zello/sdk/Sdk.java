@@ -270,6 +270,21 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	void showMicrophonePermissionDialog() {
+		Context context = _context;
+		if (context != null) {
+			try {
+				Intent intent = new Intent();
+				intent.setComponent(new ComponentName(_package, _pttInvisibleActivityClass));
+				intent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
+				intent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
+				context.startActivity(intent);
+			} catch (Exception ignored) {
+				// ActivityNotFoundException
+			}
+		}
+	}
+
 	//endregion
 
 	//region Contact Selection
@@ -938,17 +953,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (intent != null) {
 			PermissionError error = intToPermissionError(intent.getIntExtra(Constants.EXTRA_LATEST_PERMISSION_ERROR, PermissionError.NONE.ordinal()));
 			if (error == PermissionError.MICROPHONE_NOT_GRANTED) {
-				Context context = _context;
-				if (context != null) {
-					try {
-						Intent errorIntent = new Intent();
-						errorIntent.setComponent(new ComponentName(_package, _pttInvisibleActivityClass));
-						errorIntent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
-						errorIntent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
-						context.startActivity(errorIntent);
-					} catch (Exception ignored) {
-						// ActivityNotFoundException
-					}
+				for (Events event : Zello.getInstance().events) {
+					event.onMicrophonePermissionNotGranted();
 				}
 			}
 		}

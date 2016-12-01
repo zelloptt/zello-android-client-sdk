@@ -167,6 +167,10 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 	public void onAudioStateChanged() {
 	}
 
+	@Override
+	public void onMicrophonePermissionNotGranted() {
+	}
+
 	private void chooseActiveContact() {
 		// Activity title; optional
 		String title = getResources().getString(R.string.select_contact_title);

@@ -19,6 +19,8 @@ import com.zello.sdk.Zello;
 
 public class PttActivity extends Activity implements com.zello.sdk.Events {
 
+	private boolean active;
+
     private TextView statusTextView;
     private ToggleButton connectChannelButton;
     private Button pttButton;
@@ -125,6 +127,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     protected void onResume() {
         super.onResume();
 
+		active = true;
         Zello.getInstance().leavePowerSavingMode();
     }
 
@@ -132,6 +135,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     protected void onPause() {
         super.onPause();
 
+		active = false;
         Zello.getInstance().enterPowerSavingMode();
     }
 
@@ -229,7 +233,14 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
     }
 
-    //endregion
+	@Override
+	public void onMicrophonePermissionNotGranted() {
+		if (active) {
+			Zello.getInstance().showMicrophonePermissionDialog();
+		}
+	}
+
+	//endregion
 
     private void updateUI() {
         Zello.getInstance().getAppState(appState);
