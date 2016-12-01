@@ -49,7 +49,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private static final int AWAKE_TIMER = 1;
 
 	private static final String _pttActivityClass = "com.zello.sdk.Activity";
-	private static final String _pttInvisibleActivityClass = "com.zello.sdk.InvisibleActivity";
+	private static final String _pttPermissionsActivityClass = "com.zello.sdk.PermissionsActivity";
 	private static Intent _serviceIntent;
 
 	//endregion
@@ -239,7 +239,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (context != null) {
 			try {
 				Intent intent = new Intent();
-				intent.setComponent(new ComponentName(_package, _pttInvisibleActivityClass));
+				intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
 				intent.putExtra(Constants.EXTRA_REQUEST_VITAL_PERMISSIONS, true);
 				context.startActivity(intent);
 			} catch (Exception ignored) {
@@ -253,7 +253,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (context != null) {
 			try {
 				Intent intent = new Intent();
-				intent.setComponent(new ComponentName(_package, _pttInvisibleActivityClass));
+				intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
 				intent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
 				intent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
 				context.startActivity(intent);
