@@ -69,6 +69,10 @@ class Constants {
 	static final String EXTRA_EP = "EP";
 	static final String EXTRA_SP = "SP";
 	static final String EXTRA_WA = "WA"; // When used as a value of EXTRA_MODE, should include an index of the wearable, i.e. WA0, WA2 etc.
+	static final String EXTRA_REQUEST_VITAL_PERMISSIONS = "REQUEST_VITAL_PERMISSIONS";
+	static final String EXTRA_LATEST_PERMISSION_ERROR = "LATEST_PERMISSION_ERROR";
+	static final String EXTRA_PERMISSION_DIALOG = "PERMISSION_DIALOG";
+	static final String EXTRA_PERMISSION_MICROPHONE = "PERMISSION_MICROPHONE";
 
 	static final String VALUE_BEGIN_MESSAGE = "BEGIN_MESSAGE";
 	static final String VALUE_END_MESSAGE = "END_MESSAGE";
@@ -97,5 +101,6 @@ class Constants {
 	static final String ACTION_MESSAGE_STATE = "MESSAGE_STATE";
 	static final String ACTION_CONTACT_SELECTED = "CONTACT_SELECTED";
 	static final String ACTION_AUDIO_STATE = "AUDIO_STATE";
+	static final String ACTION_PERMISSION_ERRORS = "PERMISSION_ERRORS";
 
 }

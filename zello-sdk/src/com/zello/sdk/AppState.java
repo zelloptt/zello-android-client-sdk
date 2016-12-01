@@ -49,7 +49,6 @@ public class AppState {
 	 * </p>
 	 */
 	public void reset() {
-		//_available = false;
 		_customBuild = false;
 		_configuring = false;
 		_locked = false;

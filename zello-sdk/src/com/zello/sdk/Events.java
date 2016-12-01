@@ -90,4 +90,22 @@ public interface Events {
 	 */
 	void onAudioStateChanged();
 
+	/**
+	 * <p>
+	 *     Called when an invocation of the {@link Zello#beginMessage()} method failed because the microphone permission hasn't been granted.
+	 * </p>
+	 * <p>
+	 *     This method is invoked on the UI thread.
+	 * </p>
+	 * <p>
+	 *     The normal use case for handling this error would be to call {@link Zello#showMicrophonePermissionDialog()}.
+	 *     However, it is the responsibility of the app using the SDK to determine if they should handle this error or not.
+	 *     For example, if there are multiple apps using the SDK, they will all receive this callback. The {@link Zello#showMicrophonePermissionDialog()}
+	 *     method should likely only be on one of these apps (the one in the foreground).
+	 * </p>
+	 * @see Zello#showMicrophonePermissionDialog()
+	 * @see Zello#beginMessage()
+	 */
+	void onMicrophonePermissionNotGranted();
+
 }

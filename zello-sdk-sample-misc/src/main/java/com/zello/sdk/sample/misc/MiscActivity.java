@@ -211,7 +211,12 @@ public class MiscActivity extends Activity implements com.zello.sdk.Events {
         }
     }
 
-    //endregion
+	@Override
+	public void onMicrophonePermissionNotGranted() {
+
+	}
+
+	//endregion
 
     private void showMenuItem(Menu menu, int itemId, boolean show) {
         MenuItem item = menu.findItem(itemId);

@@ -19,6 +19,8 @@ import com.zello.sdk.Zello;
 
 public class PttActivity extends Activity implements com.zello.sdk.Events {
 
+	private boolean active;
+
     private TextView statusTextView;
     private ToggleButton connectChannelButton;
     private Button pttButton;
@@ -49,7 +51,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         speakerButton = (NoToggleButton)findViewById(R.id.audio_speaker);
         earpieceButton = (NoToggleButton)findViewById(R.id.audio_earpiece);
         bluetoothButton = (NoToggleButton)findViewById(R.id.audio_bluetooth);
-        audioModeView = (View)findViewById(R.id.audio_mode);
+        audioModeView = findViewById(R.id.audio_mode);
         messageStateTextView = (TextView)findViewById(R.id.messageStateTextView);
         selectedContactTextView = (TextView)findViewById(R.id.selectedContactTextView);
 
@@ -57,7 +59,8 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         pttButton.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
 
         Zello.getInstance().configure("com.pttsdk", this, this);
-        audio = Zello.getInstance().getAudio();
+		Zello.getInstance().requestVitalPermissions();
+		audio = Zello.getInstance().getAudio();
 
         connectChannelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +128,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     protected void onResume() {
         super.onResume();
 
+		active = true;
         Zello.getInstance().leavePowerSavingMode();
     }
 
@@ -132,6 +136,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     protected void onPause() {
         super.onPause();
 
+		active = false;
         Zello.getInstance().enterPowerSavingMode();
     }
 
@@ -229,7 +234,14 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
     }
 
-    //endregion
+	@Override
+	public void onMicrophonePermissionNotGranted() {
+		if (active) {
+			Zello.getInstance().showMicrophonePermissionDialog();
+		}
+	}
+
+	//endregion
 
     private void updateUI() {
         Zello.getInstance().getAppState(appState);

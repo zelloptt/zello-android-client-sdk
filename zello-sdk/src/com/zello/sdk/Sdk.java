@@ -43,12 +43,13 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
 	private BroadcastReceiver _receiverMessageState; // Broadcast receiver for message state broadcasts
 	private BroadcastReceiver _receiverContactSelected; // Broadcast receiver for selected contact broadcasts
-	//	private BroadcastReceiver _receiverContactChanged; // Broadcast receiver for changes in contacts' states
 	private BroadcastReceiver _receiverActiveTab; // Broadcast receiver for last selected contact list tab
+	private BroadcastReceiver _receiverPermissionErrors; // Broadcast receiver for permissions errors
 
 	private static final int AWAKE_TIMER = 1;
 
 	private static final String _pttActivityClass = "com.zello.sdk.Activity";
+	private static final String _pttPermissionsActivityClass = "com.zello.sdk.PermissionsActivity";
 	private static Intent _serviceIntent;
 
 	//endregion
@@ -72,14 +73,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_appState._available = isAppAvailable();
 		if (context != null) {
 			// Spin up the main app
-//			Intent intent = new Intent(Intent.ACTION_VIEW, null);
-//			intent.setClassName(packageName, "com.loudtalks.client.ui.AutoStartActivity");
-//			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//			intent.putExtra("com.loudtalks.refresh", true);
-//			try {
-//				context.startActivity(intent);
-//			} catch (Throwable ignored) {
-//			}
 			connect();
 			// Register to receive package install broadcasts
 			_receiverPackage = new BroadcastReceiver() {
@@ -118,7 +111,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			};
 			IntentFilter filterPackage = new IntentFilter();
 			filterPackage.addAction(Intent.ACTION_PACKAGE_ADDED);
-			//noinspection deprecation
 			filterPackage.addAction(Intent.ACTION_PACKAGE_INSTALL);
 			filterPackage.addAction(Intent.ACTION_PACKAGE_REMOVED);
 			filterPackage.addAction(Intent.ACTION_PACKAGE_REPLACED);
@@ -138,6 +130,14 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			Intent intentStickyAppState = context.registerReceiver(_receiverAppState, new IntentFilter(_package + "." + Constants.ACTION_APP_STATE));
 			updateAppState(intentStickyAppState);
 			updateContacts();
+			// Register to receive app permissions broadcasts
+			_receiverPermissionErrors = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					handlePermissionError(intent);
+				}
+			};
+			context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_package + "." + Constants.ACTION_PERMISSION_ERRORS));
 			// Register to receive message state broadcasts
 			_receiverMessageState = new BroadcastReceiver() {
 				@Override
@@ -156,14 +156,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			};
 			Intent intentStickySelectedContact = context.registerReceiver(_receiverContactSelected, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_SELECTED));
 			updateSelectedContact(intentStickySelectedContact);
-			// Register to receive changes in contacts' states
-//			_receiverContactChanged = new BroadcastReceiver() {
-//				@Override
-//				public void onReceive(Context context, Intent intent) {
-//					updateContact();
-//				}
-//			};
-//			context.registerReceiver(_receiverContactChanged, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_CHANGED));
 			// Register to receive last selected contact list tab
 			_receiverActiveTab = new BroadcastReceiver() {
 				@Override
@@ -186,15 +178,15 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			if (_receiverAppState != null) {
 				context.unregisterReceiver(_receiverAppState);
 			}
+			if (_receiverPermissionErrors != null) {
+				context.unregisterReceiver(_receiverPermissionErrors);
+			}
 			if (_receiverMessageState != null) {
 				context.unregisterReceiver(_receiverMessageState);
 			}
 			if (_receiverContactSelected != null) {
 				context.unregisterReceiver(_receiverContactSelected);
 			}
-//			if (_receiverContactChanged != null) {
-//				context.unregisterReceiver(_receiverContactChanged);
-//			}
 			if (_receiverActiveTab != null) {
 				context.unregisterReceiver(_receiverActiveTab);
 			}
@@ -209,9 +201,9 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 		_receiverPackage = null;
 		_receiverAppState = null;
+		_receiverPermissionErrors = null;
 		_receiverMessageState = null;
 		_receiverContactSelected = null;
-//		_receiverContactChanged = null;
 		_receiverActiveTab = null;
 		stopAwakeTimer();
 		_handler = null;
@@ -239,6 +231,41 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//endregion
 
 	//region Zello SDK Methods
+
+	//region Permissions
+
+	void requestVitalPermissions() {
+		Context context = _context;
+		if (context != null) {
+			try {
+				Intent intent = new Intent();
+				intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
+				intent.putExtra(Constants.EXTRA_REQUEST_VITAL_PERMISSIONS, true);
+				context.startActivity(intent);
+			} catch (Exception ignored) {
+				// ActivityNotFoundException
+			}
+		}
+	}
+
+	void showMicrophonePermissionDialog() {
+		Context context = _context;
+		if (context != null) {
+			try {
+				Intent intent = new Intent();
+				intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
+				intent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
+				intent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
+				context.startActivity(intent);
+			} catch (Exception ignored) {
+				// ActivityNotFoundException
+			}
+		}
+	}
+
+	//endregion
+
+	//region Contact Selection
 
 	void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
 		Context context = _context.getApplicationContext();
@@ -287,6 +314,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			}
 		}
 	}
+
+	//endregion
 
 	//region Sending Messages
 
@@ -472,6 +501,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//endregion
 
+	//region Opening PTT app
+
 	void openMainScreen() {
 		Context context = _context;
 		if (context != null) {
@@ -483,6 +514,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			}
 		}
 	}
+
+	//endregion
 
 	//region Getters
 
@@ -786,10 +819,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_appState._lastError = intToError(intent.getIntExtra(Constants.EXTRA_STATE_LAST_ERROR, Error.NONE.ordinal()));
 			_appState._externalId = intent.getStringExtra(Constants.EXTRA_EID);
 		}
-//		Contacts contacts = _contacts;
-//		if (contacts != null) {
-//			contacts.invalidate();
-//		}
 		fireAppStateChanged();
 	}
 
@@ -852,13 +881,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-//	private void updateContact() {
-//		Contacts contacts = _contacts;
-//		if (contacts != null) {
-//			contacts.update();
-//		}
-//	}
-
 	private void updateSelectedContact(Intent intent) {
 		String name = intent != null ? intent.getStringExtra(Constants.EXTRA_CONTACT_NAME) : null; // Contact name
 		boolean selected = name != null && name.length() > 0;
@@ -890,6 +912,17 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 			for (Events event : Zello.getInstance().events) {
 				event.onLastContactsTabChanged(tab);
+			}
+		}
+	}
+
+	private void handlePermissionError(Intent intent) {
+		if (intent != null) {
+			PermissionError error = intToPermissionError(intent.getIntExtra(Constants.EXTRA_LATEST_PERMISSION_ERROR, PermissionError.NONE.ordinal()));
+			if (error == PermissionError.MICROPHONE_NOT_GRANTED) {
+				for (Events event : Zello.getInstance().events) {
+					event.onMicrophonePermissionNotGranted();
+				}
 			}
 		}
 	}
@@ -951,6 +984,18 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			}
 		} else {
 			return Error.NONE;
+		}
+	}
+
+	static PermissionError intToPermissionError(int error) {
+		if (error > PermissionError.NONE.ordinal()) {
+			if (error == PermissionError.MICROPHONE_NOT_GRANTED.ordinal()) {
+				return PermissionError.MICROPHONE_NOT_GRANTED;
+			} else {
+				return PermissionError.UNKNOWN;
+			}
+		} else {
+			return PermissionError.NONE;
 		}
 	}
 
