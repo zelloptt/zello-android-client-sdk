@@ -43,7 +43,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
 	private BroadcastReceiver _receiverMessageState; // Broadcast receiver for message state broadcasts
 	private BroadcastReceiver _receiverContactSelected; // Broadcast receiver for selected contact broadcasts
-	//	private BroadcastReceiver _receiverContactChanged; // Broadcast receiver for changes in contacts' states
 	private BroadcastReceiver _receiverActiveTab; // Broadcast receiver for last selected contact list tab
 	private BroadcastReceiver _receiverPermissionErrors; // Broadcast receiver for permissions errors
 
@@ -74,14 +73,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_appState._available = isAppAvailable();
 		if (context != null) {
 			// Spin up the main app
-//			Intent intent = new Intent(Intent.ACTION_VIEW, null);
-//			intent.setClassName(packageName, "com.loudtalks.client.ui.AutoStartActivity");
-//			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//			intent.putExtra("com.loudtalks.refresh", true);
-//			try {
-//				context.startActivity(intent);
-//			} catch (Throwable ignored) {
-//			}
 			connect();
 			// Register to receive package install broadcasts
 			_receiverPackage = new BroadcastReceiver() {
@@ -120,7 +111,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			};
 			IntentFilter filterPackage = new IntentFilter();
 			filterPackage.addAction(Intent.ACTION_PACKAGE_ADDED);
-			//noinspection deprecation
 			filterPackage.addAction(Intent.ACTION_PACKAGE_INSTALL);
 			filterPackage.addAction(Intent.ACTION_PACKAGE_REMOVED);
 			filterPackage.addAction(Intent.ACTION_PACKAGE_REPLACED);
@@ -166,14 +156,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			};
 			Intent intentStickySelectedContact = context.registerReceiver(_receiverContactSelected, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_SELECTED));
 			updateSelectedContact(intentStickySelectedContact);
-			// Register to receive changes in contacts' states
-//			_receiverContactChanged = new BroadcastReceiver() {
-//				@Override
-//				public void onReceive(Context context, Intent intent) {
-//					updateContact();
-//				}
-//			};
-//			context.registerReceiver(_receiverContactChanged, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_CHANGED));
 			// Register to receive last selected contact list tab
 			_receiverActiveTab = new BroadcastReceiver() {
 				@Override
@@ -205,9 +187,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			if (_receiverContactSelected != null) {
 				context.unregisterReceiver(_receiverContactSelected);
 			}
-//			if (_receiverContactChanged != null) {
-//				context.unregisterReceiver(_receiverContactChanged);
-//			}
 			if (_receiverActiveTab != null) {
 				context.unregisterReceiver(_receiverActiveTab);
 			}
@@ -225,7 +204,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_receiverPermissionErrors = null;
 		_receiverMessageState = null;
 		_receiverContactSelected = null;
-//		_receiverContactChanged = null;
 		_receiverActiveTab = null;
 		stopAwakeTimer();
 		_handler = null;
@@ -841,10 +819,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_appState._lastError = intToError(intent.getIntExtra(Constants.EXTRA_STATE_LAST_ERROR, Error.NONE.ordinal()));
 			_appState._externalId = intent.getStringExtra(Constants.EXTRA_EID);
 		}
-//		Contacts contacts = _contacts;
-//		if (contacts != null) {
-//			contacts.invalidate();
-//		}
 		fireAppStateChanged();
 	}
 
@@ -906,13 +880,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_contacts = new Contacts(_package, context, _handler);
 		}
 	}
-
-//	private void updateContact() {
-//		Contacts contacts = _contacts;
-//		if (contacts != null) {
-//			contacts.update();
-//		}
-//	}
 
 	private void updateSelectedContact(Intent intent) {
 		String name = intent != null ? intent.getStringExtra(Constants.EXTRA_CONTACT_NAME) : null; // Contact name
