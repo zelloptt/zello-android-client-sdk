@@ -100,7 +100,7 @@ public interface Events {
 	 * <p>
 	 *     The normal use case for handling this error would be to call {@link Zello#showMicrophonePermissionDialog()}.
 	 *     However, it is the responsibility of the app using the SDK to determine if they should handle this error or not.
-	 *     For example, if there are multiple apps using the SDK, they will all receive this this callback. The {@link Zello#showMicrophonePermissionDialog()}
+	 *     For example, if there are multiple apps using the SDK, they will all receive this callback. The {@link Zello#showMicrophonePermissionDialog()}
 	 *     method should likely only be on one of these apps (the one in the foreground).
 	 * </p>
 	 * @see Zello#showMicrophonePermissionDialog()
