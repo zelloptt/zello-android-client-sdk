@@ -51,11 +51,11 @@ public class Zello {
     /**
      * Configures the Zello SDK.
      * <p>
-     * You must call <code>configure(String, Context)</code> or <code>configure(String, Context, Events)</code> before using any other SDK methods.
-     * In most cases, the <code>Application.onCreate()</code> method is the best place to do this.
+     * 		You must call <code>configure(String, Context)</code> or <code>configure(String, Context, Events)</code> before using any other SDK methods.
+     * 		In most cases, the <code>Application.onCreate()</code> method is the best place to do this.
      * </p>
      * <p>
-     * If the apk was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
+     * 		If the apk was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
      * </p>
      * @param packageName The package name of the ZelloWork app.
      * @param context The context for the app.
@@ -69,11 +69,11 @@ public class Zello {
     /**
      * Configures the Zello SDK and subscribes for Zello SDK <code>Events</code>.
      * <p>
-     * You must call <code>configure(String, Context)</code> or <code>configure(String, Context, Events)</code> before using any other SDK methods.
-     * In most cases, the <code>Application.onCreate()</code> method is the best place to do this.
+     * 		You must call <code>configure(String, Context)</code> or <code>configure(String, Context, Events)</code> before using any other SDK methods.
+     * 		In most cases, the <code>Application.onCreate()</code> method is the best place to do this.
      * </p>
      * <p>
-     * If the apk was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
+     * 		If the apk was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
      * </p>
      * @param packageName The package name of the ZelloWork app.
      * @param context The context for the app.
@@ -93,8 +93,8 @@ public class Zello {
     /**
      * Limits communication between the ZelloWork app and the server to optimize power and data consumption.
      * <p>
-     * Call this method when the Zello UI is not visible to minimize app power and data use. When in power saving mode the app won't receive non-essential status updates.
-     * Call <code>leavePowerSavingMode</code> to resume status updates when the Zello UI is back on the screen.
+     * 		Call this method when the Zello UI is not visible to minimize app power and data use. When in power saving mode the app won't receive non-essential status updates.
+     * 		Call <code>leavePowerSavingMode</code> to resume status updates when the Zello UI is back on the screen.
      * </p>
      * @see #leavePowerSavingMode()
      */
@@ -156,8 +156,12 @@ public class Zello {
 	/**
 	 * Opens a dialog that requests all of the vital run time permissions needed by the ZelloWork app to function properly.
 	 * <p>
-	 * This method is only necessary for Android devices running 6.0 (API 23) and above.
-	 * This method requests run time permissions for the microphone, phone, and external storage
+	 * 		This method is only necessary for Android devices running 6.0 (API 23) and above.
+	 * 		This method requests run time permissions for the microphone, phone, and external storage.
+	 * </p>
+	 * <p>
+	 *		If these permissions have already been granted, this method will have no effect.
+	 *		In addition, if the device is running Android 5.1 (API 22) or less, this method will have no effect.
 	 * </p>
 	 * @see Zello#beginMessage()
 	 * @see Zello#showMicrophonePermissionDialog()
@@ -172,8 +176,15 @@ public class Zello {
 	 * Opens a popup dialog that tells the user that they cannot send voice messages until the
 	 * permission to record audio has been granted.
 	 * <p>
-	 * The most appropriate place to call this method is when <code>onMicrophonePermissionNotGranted()</code>
-	 * is called on the <code>Events</code> interface.
+	 * 		This method is only necessary for Android devices running 6.0 (API 23) and above.
+	 * </p>
+	 * <p>
+	 * 		The most appropriate place to call this method is when <code>onMicrophonePermissionNotGranted()</code>
+	 * 		is called on the <code>Events</code> interface.
+	 * </p>
+	 * <p>
+	 *     	If the microphone permission has already been granted, this method will have no effect.
+	 * 		In addition, if the device is running Android 5.1 (API 22) or less, this method will have no effect.
 	 * </p>
 	 * @see Events#onMicrophonePermissionNotGranted()
 	 * @see Zello#requestVitalPermissions()
@@ -190,12 +201,12 @@ public class Zello {
     /**
      * Opens an activity, which lets the user select a user or channel to talk to.
      * <p>
-     * The Zello SDK provides a built-in UI for contact selection that is available when the user is signed in.
-     * You can customize the title of the activity (leave <code>null</code> for default), the tabs available,
-     * initial tab, and specify a dark or light theme.
+     * 		The Zello SDK provides a built-in UI for contact selection that is available when the user is signed in.
+     * 		You can customize the title of the activity (leave <code>null</code> for default), the tabs available,
+     * 		initial tab, and specify a dark or light theme.
      * </p>
      * <p>
-     * Use this method when you don't have an activity on the screen (i.e. from a service).
+     * 		Use this method when you don't have an activity on the screen (i.e. from a service).
      * </p>
      * @param title     Activity title. Can be <code>null</code>
      * @param tabs		Set of displayed tabs.
@@ -215,12 +226,12 @@ public class Zello {
     /**
      * Opens an activity, which lets the user select a user or channel to talk to, from another activity.
      * <p>
-     * The Zello SDK provides a built-in UI for contact selection that is available when the user is signed in.
-     * You can customize the title of the activity (leave <code>null</code> for default), the tabs available,
-     * initial tab, and specify a dark or light theme.
+     * 		The Zello SDK provides a built-in UI for contact selection that is available when the user is signed in.
+     * 		You can customize the title of the activity (leave <code>null</code> for default), the tabs available,
+     * 		initial tab, and specify a dark or light theme.
      * </p>
      * <p>
-     * Use this method to open a contact selection UI from an existing activity.
+     * 		Use this method to open a contact selection UI from an existing activity.
      * </p>
      * @param title     Activity title. Can be <code>null</code>
      * @param tabs		Set of displayed tabs.
@@ -476,7 +487,7 @@ public class Zello {
 	//region Opening ZelloWork app
 
 	/**
-     * Opens the main screen of the standard ZelloWork app.
+     * Opens the main screen of the ZelloWork app.
      */
     public void openMainScreen() {
 		checkConfiguration();
@@ -490,9 +501,9 @@ public class Zello {
     /**
      * Gets info about the current active incoming voice message.
      * <p>
-     * The method updates provided instance of <code>MessageIn</code> object with the current data.
-     * The object will not update automatically, so call this method every time you need to get the
-     * current info about an active incoming voice message.
+     * 		The method updates the provided instance of the <code>MessageIn</code> object with the current data.
+     * 		The object will not update automatically, so call this method every time you need to get the
+     * 		current info about an active incoming voice message.
      * </p>
      * @param message The object to copy data to.
      * @see MessageIn
@@ -506,9 +517,9 @@ public class Zello {
     /**
      * Gets info about the current active outgoing voice message.
      * <p>
-     * The method updates provided instance of <code>MessageOut</code> object with the current data.
-     * The object will not update automatically, so call this method every time you need to get the
-     * current info about an active outgoing voice message.
+     * 		The method updates the provided instance of the <code>MessageOut</code> object with the current data.
+     * 		The object will not update automatically, so call this method every time you need to get the
+     * 		current info about an active outgoing voice message.
      * </p>
      * @param message The object to copy data to.
      * @see MessageOut
@@ -522,9 +533,9 @@ public class Zello {
     /**
      * Gets info about the current application state.
      * <p>
-     * The method updates provided instance of <code>AppState</code> object with the current data.
-     * The object will not update automatically, so call this method every time you need to get the
-     * current info about ZelloWork app and SDK state.
+     * 		The method updates the provided instance of the <code>AppState</code> object with the current data.
+     * 		The object will not update automatically, so call this method every time you need to get the
+     * 		current info about ZelloWork app and SDK state.
      * </p>
      * @param state The object to copy data to.
      * @see AppState
@@ -538,9 +549,9 @@ public class Zello {
     /**
      * Gets info about currently selected contact.
      * <p>
-     * The method updates provided instance of <code>Contact</code> object with the current data.
-     * The object will not update automatically, so call this method every time you need to get the
-     * info about currently selected contact.
+     * 		The method updates the provided instance of the <code>Contact</code> object with the current data.
+     * 		The object will not update automatically, so call this method every time you need to get the
+     * 		info about currently selected contact.
      * </p>
      * @param contact The object to copy data to.
      * @see Contact
@@ -614,7 +625,6 @@ public class Zello {
      *     The method doesn't affect the channels previously connected or disconnected by the user or
      *     the SDK.
      * </p>
-     *
      * @param connect Enables autoconnect.
      * @see #connectChannel(String)
      * @see #disconnectChannel(String)
@@ -634,7 +644,7 @@ public class Zello {
      * <p>
      *     The method has no effect unless the ZelloWork Server Recording feature is turned on for the
      *     current network.
-     * </p>.
+     * </p>
      * @param id Nullable; String indicating the external id.
      * @see AppState#getExternalId()
      */
