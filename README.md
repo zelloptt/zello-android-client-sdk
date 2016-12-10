@@ -121,6 +121,12 @@ public class MyActivity extends Activity implements com.zello.sdk.Events {
    @Override
    void onSelectedContactChanged(){}
    
+   @Override
+   void onLastContactsTabChanged(){}
+   
+   @Override
+   void onMicrophonePermissionNotGranted(){}
+   
    // ...
 }
 ```
