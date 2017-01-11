@@ -59,7 +59,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         pttButton.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
 
         Zello.getInstance().configure("com.pttsdk", this, this);
-		Zello.getInstance().requestVitalPermissions();
+		Zello.getInstance().requestVitalPermissions(this);
 		audio = Zello.getInstance().getAudio();
 
         connectChannelButton.setOnClickListener(new View.OnClickListener() {
@@ -237,7 +237,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	public void onMicrophonePermissionNotGranted() {
 		if (active) {
-			Zello.getInstance().showMicrophonePermissionDialog();
+			Zello.getInstance().showMicrophonePermissionDialog(this);
 		}
 	}
 

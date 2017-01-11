@@ -220,7 +220,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_dirtyContacts = true;
 
 		_sdk = Zello.getInstance();
-		_sdk.requestVitalPermissions();
+		_sdk.requestVitalPermissions(this);
 		_sdk.subscribeToEvents(this);
 		_audio = _sdk.getAudio();
 
@@ -401,7 +401,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	public void onMicrophonePermissionNotGranted() {
 		if (_active) {
-			_sdk.showMicrophonePermissionDialog();
+			_sdk.showMicrophonePermissionDialog(this);
 		}
 	}
 
