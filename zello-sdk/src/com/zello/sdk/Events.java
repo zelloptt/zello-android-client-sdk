@@ -103,6 +103,7 @@ public interface Events {
 	 *     For example, if there are multiple apps using the SDK, they will all receive this callback. The {@link Zello#showMicrophonePermissionDialog()}
 	 *     method should likely only be on one of these apps (the one in the foreground).
 	 * </p>
+	 * @see Zello#showMicrophonePermissionDialog(Activity)
 	 * @see Zello#showMicrophonePermissionDialog()
 	 * @see Zello#beginMessage()
 	 */

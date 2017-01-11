@@ -239,9 +239,23 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (context != null) {
 			try {
 				Intent intent = new Intent();
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
 				intent.putExtra(Constants.EXTRA_REQUEST_VITAL_PERMISSIONS, true);
 				context.startActivity(intent);
+			} catch (Exception ignored) {
+				// ActivityNotFoundException
+			}
+		}
+	}
+
+	void requestVitalPermissions(Activity activity) {
+		if (activity != null) {
+			try {
+				Intent intent = new Intent();
+				intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
+				intent.putExtra(Constants.EXTRA_REQUEST_VITAL_PERMISSIONS, true);
+				activity.startActivity(intent);
 			} catch (Exception ignored) {
 				// ActivityNotFoundException
 			}
@@ -253,10 +267,25 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (context != null) {
 			try {
 				Intent intent = new Intent();
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
 				intent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
 				intent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
 				context.startActivity(intent);
+			} catch (Exception ignored) {
+				// ActivityNotFoundException
+			}
+		}
+	}
+
+	void showMicrophonePermissionDialog(Activity activity) {
+		if (activity != null) {
+			try {
+				Intent intent = new Intent();
+				intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
+				intent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
+				intent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
+				activity.startActivity(intent);
 			} catch (Exception ignored) {
 				// ActivityNotFoundException
 			}
