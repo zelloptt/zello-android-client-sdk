@@ -20,7 +20,6 @@ public class Contacts {
 
 	private static final String _authoritySuffix = ".provider";
 	private static final String _contactsPath = "/contacts";
-	//private static final String _contactPath = "/contacts/#";
 	private static final String _columnName = "name";
 	private static final String _columnFullName = "fullname";
 	private static final String _columnDisplayName = "displayname";
@@ -55,7 +54,7 @@ public class Contacts {
 
 	//region Package Private Methods
 
-	/* package */ Contacts(String packageName, Context context, Handler handler) {
+	Contacts(String packageName, Context context, Handler handler) {
 		_context = context;
 		_observer = ContactsObserver.create(this, handler);
 		Uri uri = _uri;
@@ -66,7 +65,7 @@ public class Contacts {
 		query();
 	}
 
-	/* package */ void close() {
+	void close() {
 		_context = null;
 		clean();
 		ContactsObserver observer = _observer;
@@ -76,7 +75,7 @@ public class Contacts {
 		_observer = null;
 	}
 
-	/* package */ void invalidate() {
+	void invalidate() {
 		_invalid = true;
 
 		for (Events event : Zello.getInstance().events) {
@@ -95,7 +94,7 @@ public class Contacts {
 	 *     Returns the number of contacts in the list.
 	 * </p>
 	 * <p>
-	 *     NB: The method may take non trivial time to execute so should not be used from UI thread.
+	 *     NB: This method may take nontrivial time to execute, so it should not be called from the UI thread.
 	 * </p>
 	 * @return the number of contacts for the user.
      */
@@ -117,7 +116,7 @@ public class Contacts {
 	 *     Returns the <code>Contact</code> at the specified index.
 	 * </p>
 	 * <p>
-	 *     NB: The method may take non trivial time to execute so should not be used from UI thread.
+	 *     NB: This method may take nontrivial time to execute, so it should not be called from the UI thread.
 	 * </p>
 	 * @param index Index indicating which <code>Contact</code> to retrieve.
 	 * @return <code>Contact</code> at the specified index.

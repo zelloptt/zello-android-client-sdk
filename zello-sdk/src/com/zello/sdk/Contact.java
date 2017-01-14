@@ -2,7 +2,7 @@ package com.zello.sdk;
 
 /**
  * The <code>Contact</code> class represents a contact of the current user.
- * Contact can be another user, radio gateway, group channel or dynamic channel (see {@link ContactType})
+ * A Contact can be another user, a radio gateway, a group channel or a dynamic channel (see {@link ContactType}).
  */
 public class Contact {
 
@@ -115,8 +115,8 @@ public class Contact {
 	 * Returns the number of online users in the channel.
 	 * </p>
 	 * <p>
-	 * For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>0</code> will be returned).
-	 * For {@link ContactType#CHANNEL} and {@link ContactType#GROUP} this value will be the number of users online in the channel or group, respectively.
+	 *     For {@link ContactType#CHANNEL} and {@link ContactType#GROUP} this value will be the number of users online in the channel or group, respectively.
+	 *     For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>0</code> will be returned).
 	 * </p>
 	 * @return number of online users under the <code>Contact</code> for the <code>ContactType</code>.
      */
@@ -129,7 +129,8 @@ public class Contact {
 	 * Returns the number of total users in the channel.
 	 * </p>
 	 * <p>
-	 * For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>0</code> will be returned).* For {@link ContactType#USER} and  {@link ContactType#GATEWAY}, this value will be 0.
+	 *     For {@link ContactType#CHANNEL} and {@link ContactType#GROUP} this value will be the number of total users in the channel or group, respectively.
+	 *     For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>0</code> will be returned).
 	 * </p>
 	 * @return number of total users under the <code>Contact</code> for the <code>ContactType</code>.
 	 */
@@ -162,7 +163,7 @@ public class Contact {
 	/**
 	 * Returns whether the channel has the no disconnect setting enabled or not.
 	 * <p>
-	 *     * For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>false</code> will be returned).
+	 *     For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>false</code> will be returned).
 	 * </p>
 	 * @return boolean indicating if the <code>Contact</code> has the no disconnect setting enabled.
      */

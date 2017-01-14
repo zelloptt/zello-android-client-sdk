@@ -55,7 +55,7 @@ public class Zello {
      * 		In most cases, the <code>Application.onCreate()</code> method is the best place to do this.
      * </p>
      * <p>
-     * 		If the apk was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
+     * 		If the APK was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
      * </p>
      * @param packageName The package name of the ZelloWork app.
      * @param context The context for the app.
@@ -73,7 +73,7 @@ public class Zello {
      * 		In most cases, the <code>Application.onCreate()</code> method is the best place to do this.
      * </p>
      * <p>
-     * 		If the apk was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
+     * 		If the APK was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
      * </p>
      * @param packageName The package name of the ZelloWork app.
      * @param context The context for the app.
@@ -93,7 +93,7 @@ public class Zello {
     /**
      * Limits communication between the ZelloWork app and the server to optimize power and data consumption.
      * <p>
-     * 		Call this method when the Zello UI is not visible to minimize app power and data use. When in power saving mode the app won't receive non-essential status updates.
+     * 		Call this method when the Zello UI is not visible to minimize app power and data use. When in power saving mode, the app won't receive non-essential status updates.
      * 		Call <code>leavePowerSavingMode</code> to resume status updates when the Zello UI is back on the screen.
      * </p>
      * @see #leavePowerSavingMode()
@@ -256,7 +256,7 @@ public class Zello {
     /**
      * Starts sending a voice message to the currently selected user or channel.
      * <p>
-     *     The method is asynchronous. When the message status changes, <code>onMessageStateChanged()</code>
+     *     This method is asynchronous. When the message status changes, <code>onMessageStateChanged()</code>
      *     is called on the <code>Events</code> interface.
      * </p>
 	 * <p>
@@ -276,8 +276,8 @@ public class Zello {
     /**
      * Stops sending a voice message.
      * <p>
-     *     The method has no effect if there is no active outgoing message.
-     *     The method is asynchronous. When the message status changes, <code>onMessageStateChanged()</code>
+     *     This method has no effect if there is no active outgoing message.
+     *     This method is asynchronous. When the message status changes, <code>onMessageStateChanged()</code>
      *     is called on the <code>Events</code> interface.
      * </p>
      * @see #beginMessage()
@@ -295,7 +295,7 @@ public class Zello {
     /**
      * Connects the user to a channel.
      * <p>
-     *     The method is asynchronous. When the channel is connected, <code>onContactsChanged()</code>
+     *     This method is asynchronous. When the channel is connected, <code>onContactsChanged()</code>
      *     is called on the <code>Events</code> interface.
      * </p>
      * @param channel The name of the channel to connect to.
@@ -311,7 +311,7 @@ public class Zello {
     /**
      * Disconnects the user from a channel.
      * <p>
-     *     The method is asynchronous. When the channel is disconnected, <code>onContactsChanged()</code>
+     *     This method is asynchronous. When the channel is disconnected, <code>onContactsChanged()</code>
      *     is called on the <code>Events</code> interface.
      * </p>
      * @param channel The name of the channel to disconnect from.
@@ -345,7 +345,7 @@ public class Zello {
     /**
      * Signs the user into the network with the passed in login credentials.
      * <p>
-     *     See <code>signIn(String, String, String, Boolean)</code>
+     *     See <code>signIn(String, String, String, Boolean)</code> for more details.
      * </p>
      * @param network  The network name or URL.
      * @param username The username to authenticate.
@@ -368,13 +368,13 @@ public class Zello {
      *     When connecting to a standalone server, use the full server domain name or IP.
      * </p>
      * <p>
-     *     The standard sign in behavior is to save logon credentials so that the next time the app is
+     *     The standard sign in behavior is to save login credentials so that the next time the app is
      *     started it signs in automatically. Set <code>perishable</code> to <code>true</code> to sign in
-     *     without saving logon credentials.
+     *     without saving login credentials.
      * </p>
      * <p>
-     *     The method is asynchronous. When sign in fails or succeeds, <code>onAppStateChanged()</code>
-     *     is called on the <code>Events</code> interface. To cancel the sign in process, use <code>cancelSignIn()</code>.
+     *     This method is asynchronous. When sign in fails or succeeds, <code>onAppStateChanged()</code>
+     *     is called on the <code>Events</code> interface. To cancel the sign in process, use the <code>cancelSignIn()</code>
      *     method.
      * </p>
      * @param network    The network name or URL.
@@ -395,10 +395,10 @@ public class Zello {
     /**
      * Signs out currently signed in user.
      * <p>
-     *     The method does not remove saved user credentials.
+     *     This method does not remove saved user credentials.
      * </p>
      * <p>
-     *     The method is asynchronous. When the sign out succeeds, <code>onAppStateChanged()</code>
+     *     This method is asynchronous. When the sign out succeeds, <code>onAppStateChanged()</code>
      *     is called on the <code>Events</code> interface.
      * </p>
      * @see #signIn(String, String, String, boolean)
@@ -411,7 +411,6 @@ public class Zello {
 
     /**
      * Cancels the currently running sign in process.
-     *
      * <p>
      *     This method won't have an effect if the user is already signed in.
      * </p>
@@ -501,8 +500,8 @@ public class Zello {
     /**
      * Gets info about the current active incoming voice message.
      * <p>
-     * 		The method updates the provided instance of the <code>MessageIn</code> object with the current data.
-     * 		The object will not update automatically, so call this method every time you need to get the
+     * 		This method updates the provided instance of the <code>MessageIn</code> object with the current data.
+     * 		The object will not update automatically, so this method must be called every time you need to get the
      * 		current info about an active incoming voice message.
      * </p>
      * @param message The object to copy data to.
@@ -517,8 +516,8 @@ public class Zello {
     /**
      * Gets info about the current active outgoing voice message.
      * <p>
-     * 		The method updates the provided instance of the <code>MessageOut</code> object with the current data.
-     * 		The object will not update automatically, so call this method every time you need to get the
+     * 		This method updates the provided instance of the <code>MessageOut</code> object with the current data.
+     * 		The object will not update automatically, so this method must be called every time you need to get the
      * 		current info about an active outgoing voice message.
      * </p>
      * @param message The object to copy data to.
@@ -533,9 +532,9 @@ public class Zello {
     /**
      * Gets info about the current application state.
      * <p>
-     * 		The method updates the provided instance of the <code>AppState</code> object with the current data.
-     * 		The object will not update automatically, so call this method every time you need to get the
-     * 		current info about ZelloWork app and SDK state.
+     * 		This method updates the provided instance of the <code>AppState</code> object with the current data.
+     * 		The object will not update automatically, so this method must be called every time you need to get the
+     * 		current info about ZelloWork app and Zello SDK state.
      * </p>
      * @param state The object to copy data to.
      * @see AppState
@@ -547,10 +546,10 @@ public class Zello {
     }
 
     /**
-     * Gets info about currently selected contact.
+     * Gets info about the currently selected contact.
      * <p>
-     * 		The method updates the provided instance of the <code>Contact</code> object with the current data.
-     * 		The object will not update automatically, so call this method every time you need to get the
+     * 		This method updates the provided instance of the <code>Contact</code> object with the current data.
+     * 		The object will not update automatically, so this method must be called every time you need to get the
      * 		info about currently selected contact.
      * </p>
      * @param contact The object to copy data to.
@@ -566,16 +565,16 @@ public class Zello {
     /**
      * Gets the list of users and channels in the contact list of the current user.
      * <p>
-     *     The list includes users, channels and their statuses. The object returned will not update
+     *     The returned list will includes users, channels and their statuses. It will not update
      *     automatically, so use this method to get a fresh copy of the list when needed.
      * </p>
      * <p>
-     *     When the list is updated in any way <code>onContactsChanged()</code> is called on
+     *     When the list is updated in any way, <code>onContactsChanged()</code> is called on
      *     the <code>Events</code> interface. Possible reasons for the contact list being updated include
-     *     changes of online status of users, channels connecting and disconnecting, and modifications
+     *     changes of online status of users, channels connecting and disconnecting and modifications
      *     made to the contact list through web console or API.
      * </p>
-     * @return The contact list for the currently signed in user
+     * @return The contact list for the currently signed in user.
      * @see Events#onContactsChanged()
      */
     public Contacts getContacts() {
@@ -585,7 +584,7 @@ public class Zello {
 
     /**
      * Gets an instance of the <code>Audio</code> class that is used to control Zello audio settings.
-     * @return The Audio
+     * @return The audio instance.
      * @see Audio
      * @see Events#onAudioStateChanged()
      */
@@ -622,8 +621,8 @@ public class Zello {
      *     automatically on first sign in.
      * </p>
      * <p>
-     *     The method doesn't affect the channels previously connected or disconnected by the user or
-     *     the SDK.
+     *     This method doesn't affect the channels previously connected or disconnected by the user or
+     *     the Zello SDK.
      * </p>
      * @param connect Enables autoconnect.
      * @see #connectChannel(String)
@@ -654,7 +653,7 @@ public class Zello {
     }
 
     /**
-     * Selects a contact (user or channel) to send the messages to.
+     * Selects a contact (user or channel) to send messages to.
      * <p>
      *     Use a <code>Contact</code> object from the list returned by
      *     <code>Zello.getContacts()</code> method as an argument.
@@ -672,7 +671,7 @@ public class Zello {
     }
 
     /**
-     * Selects a contact (user or gateway) to send the messages to.
+     * Selects a contact (user or gateway) to send messages to.
      * <p>
      *     Use a <code>Contact</code> object from the list returned by
      *     <code>Zello.getContacts()</code> method as an argument.
@@ -690,7 +689,7 @@ public class Zello {
     }
 
      /**
-     * Selects a contact (channel or group) to send the messages to.
+     * Selects a contact (channel or group) to send messages to.
      * <p>
      *     Use a <code>Contact</code> object from the list returned by
      *     <code>Zello.getContacts()</code> method as an argument.

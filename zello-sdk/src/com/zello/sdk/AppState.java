@@ -41,7 +41,7 @@ public class AppState {
 
 	/**
 	 * <p>
-	 *     Resets the <code>Appstate</code> instance back to the default values.
+	 *     Resets the <code>AppState</code> instance back to the default values.
 	 * </p>
 	 * <p>
 	 *     This method will not affect the state of the Zello SDK.
@@ -106,7 +106,7 @@ public class AppState {
 	 *     Determines if the ZelloWork app is a custom build.
 	 * </p>
 	 * <p>
-	 *     This method will return true if the PTT .apk was downloaded from zellowork.com.
+	 *     This method will return true if the PTT APK was downloaded from zellowork.com.
 	 * </p>
 	 * @return boolean indicating if the app is a custom build.
 	 */
@@ -138,7 +138,7 @@ public class AppState {
 	}
 
 	/**
-	 * Determines if the user is currently signed into ZelloWork network.
+	 * Determines if the user is currently signed into a ZelloWork network.
 	 * @return boolean indicating if the user is signed in.
 	 * @see Zello#signIn(String, String, String)
 	 * @see Zello#signIn(String, String, String, boolean)
@@ -194,9 +194,9 @@ public class AppState {
 	 * 		Determines if the ZelloWork app is waiting for the network to be available.
 	 * </p>
 	 * <p>
-	 *     If Android OS reports that there is no internet connection the app will wait for connection
-	 *     to become available and this method will return <code>true</code>. When connection is restored
-	 *     the app signs in automatically.
+	 *     If the Android OS reports that there is no internet connection, the ZelloWork app will wait for the connection
+	 *     to become available and this method will return <code>true</code>. When internet connection is restored,
+	 *     the ZelloWork app will sign in automatically.
 	 * </p>
 	 * @return boolean indicating if the app is waiting for the network.
      */

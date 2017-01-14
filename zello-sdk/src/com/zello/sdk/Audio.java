@@ -107,9 +107,8 @@ public class Audio {
 	 *     Sets the current <code>AudioMode</code> to <code>mode</code>.
 	 * </p>
 	 * <p>
-	 *     The method is asynchronous so using <code>Audio.getMode()</code> immediatelly after calling
-	 *     it may return the previous audio mode. {@link Events#onAudioStateChanged()} is called when
-	 *     audio mode changes.
+	 *     This method is asynchronous. When the mode has changed, <code>onAudioStateChanged()</code>
+	 *     is called on the <code>Events</code> interface.
 	 * </p>
 	 * @param mode <code>AudioMode</code> indicating the new form of audio output.
 	 * @see #getMode()

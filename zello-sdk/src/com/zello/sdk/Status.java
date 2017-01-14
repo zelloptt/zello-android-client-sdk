@@ -17,7 +17,7 @@ public enum Status {
 	 *     User is online and available to talk.
 	 * </p>
 	 * <p>
-	 *     Messages will be immediately delivered to the Zello SDK with this status.
+	 *     Messages will be immediately delivered to the Zello SDK and will play live.
 	 *     Delivered messages will call the {@link Events#onMessageStateChanged()} method.
 	 * </p>
 	 * @see Events#onMessageStateChanged()
@@ -28,7 +28,8 @@ public enum Status {
 	 *      User is online but currently busy.
 	 * </p>
 	 * <p>
-	 *      Messages will not be delivered to the Zello SDK with this status, but they will be delivered to the ZelloWork app.
+	 *      Messages will not be delivered to the Zello SDK and will not play live.
+	 *      However, they will be delivered to the ZelloWork app and save in history.
 	 * </p>
 	 * */
 	BUSY,
@@ -37,7 +38,12 @@ public enum Status {
 	 *     User is online but only available to talk with the selected <code>Contact</code>.
 	 * </p>
 	 * <p>
-	 *     Messages from a non-selected <code>Contact</code> will not be delivered to the Zello SDK with this status, but they will be delivered to the ZelloWork app.
+	 *     Messages from the selected <code>Contact</code> will be immediately delivered to the Zello SDK and will play live.
+	 *     Delivered messages will call the {@link Events#onMessageStateChanged()} method.
+	 * </p>
+	 * <p>
+	 *     Messages from a non-selected <code>Contact</code> will not be delivered to the Zello SDK and will not play live.
+	 *     However, they will be delivered to the ZelloWork app and save in history.
 	 * </p>
 	 * @see Zello#getSelectedContact(Contact)
 	 * @see Zello#selectContact(String, Tab[], Tab, Theme)

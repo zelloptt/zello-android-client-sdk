@@ -15,7 +15,7 @@ public enum ContactStatus {
 	 *     Contact is offline.
 	 * </p>
 	 * <p>
-	 *     Messages cannot be sent to a channel with this status. If channel is <code>OFFLINE</code> you need
+	 *     Messages cannot be sent to a channel with this status. If the channel is <code>OFFLINE</code> you need
 	 *     to connect to it before sending the message.
 	 * </p>
 	 * <p>
@@ -38,8 +38,8 @@ public enum ContactStatus {
 	 *     Contact is online but currently busy.
 	 * </p>
 	 * <p>
-	 *     Messages will be delivered to the ZelloWork app of the contact with this status and
-	 *     will be saved to the history. However they won't play live and won't be delivered to the Zello SDK.
+	 *     Messages will be delivered to a contact with this status and
+	 *     will be saved to their history. However, they won't play live and won't be delivered to the Zello SDK.
 	 * </p>
 	 */
 	BUSY,
@@ -49,8 +49,8 @@ public enum ContactStatus {
 	 * </p>
 	 * <p>
 	 *     Messages sent to a contact with this status will be saved on the server and delivered to
-	 *     the contact the next time they sign in. Depending on the plattform and configuration they
-	 *     may also get the push notification about the message.
+	 *     the contact the next time they sign in. Depending on the platform and configuration, they
+	 *     may also get a push notification about the message.
 	 * </p>
 	 */
 	STANDBY,
