@@ -623,7 +623,7 @@ public class Zello {
     /**
      * Gets the list of users and channels in the contact list of the current user.
      * <p>
-     *     The returned list will includes users, channels and their statuses. It will not update
+     *     The returned list includes users, channels and their statuses. It will not update
      *     automatically, so use this method to get a fresh copy of the list when needed.
      * </p>
      * <p>

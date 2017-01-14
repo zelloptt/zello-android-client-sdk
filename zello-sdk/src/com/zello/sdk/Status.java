@@ -18,7 +18,8 @@ public enum Status {
 	 * </p>
 	 * <p>
 	 *     Messages will be immediately delivered to the Zello SDK and will play live.
-	 *     Delivered messages will call the {@link Events#onMessageStateChanged()} method.
+	 *     Delivered messages will call the <code>onMessageStateChanged()</code>
+	 *     method on the <code>Events</code> interface.
 	 * </p>
 	 * @see Events#onMessageStateChanged()
 	 */
@@ -39,7 +40,8 @@ public enum Status {
 	 * </p>
 	 * <p>
 	 *     Messages from the selected <code>Contact</code> will be immediately delivered to the Zello SDK and will play live.
-	 *     Delivered messages will call the {@link Events#onMessageStateChanged()} method.
+	 *     Delivered messages will call the <code>onMessageStateChanged()</code>
+	 *     method on the <code>Events</code> interface.
 	 * </p>
 	 * <p>
 	 *     Messages from a non-selected <code>Contact</code> will not be delivered to the Zello SDK and will not play live.

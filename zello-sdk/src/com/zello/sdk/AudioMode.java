@@ -31,7 +31,7 @@ public enum AudioMode {
 	 *     Bluetooth headset.
 	 * </p>
 	 * <p>
-	 *     This mode is required when recording from Bluetooth or using mono headsets.
+	 *     This mode is required to record from Bluetooth or when using mono headsets.
 	 * </p>
 	 */
 	BLUETOOTH,

@@ -94,7 +94,7 @@ public class Contacts {
 	 *     Returns the number of contacts in the list.
 	 * </p>
 	 * <p>
-	 *     NB: This method may take nontrivial time to execute, so it should not be called from the UI thread.
+	 *     NB: This method may take nontrivial time to execute, so do not call it from the UI thread.
 	 * </p>
 	 * @return the number of contacts for the user.
      */
@@ -116,7 +116,7 @@ public class Contacts {
 	 *     Returns the <code>Contact</code> at the specified index.
 	 * </p>
 	 * <p>
-	 *     NB: This method may take nontrivial time to execute, so it should not be called from the UI thread.
+	 *     NB: This method may take nontrivial time to execute, so do not call it from the UI thread.
 	 * </p>
 	 * @param index Index indicating which <code>Contact</code> to retrieve.
 	 * @return <code>Contact</code> at the specified index.
