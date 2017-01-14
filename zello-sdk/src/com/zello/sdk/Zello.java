@@ -163,6 +163,10 @@ public class Zello {
 	 *		If these permissions have already been granted, this method will have no effect.
 	 *		In addition, if the device is running Android 5.1 (API 22) or less, this method will have no effect.
 	 * </p>
+	 * <p>
+	 * 		Use this method when you don't have an activity on the screen (ex. from a service).
+	 * </p>
+	 * @see Zello#requestVitalPermissions(Activity)
 	 * @see Zello#beginMessage()
 	 * @see Zello#showMicrophonePermissionDialog()
 	 * @see Events#onMicrophonePermissionNotGranted()
@@ -170,6 +174,30 @@ public class Zello {
 	public void requestVitalPermissions() {
 		checkConfiguration();
 		_sdk.requestVitalPermissions();
+	}
+
+	/**
+	 * Opens a dialog that requests all of the vital run time permissions needed by the ZelloWork app to function properly.
+	 * <p>
+	 * 		This method is only necessary for Android devices running 6.0 (API 23) and above.
+	 * 		This method requests run time permissions for the microphone, phone, and external storage.
+	 * </p>
+	 * <p>
+	 *		If these permissions have already been granted, this method will have no effect.
+	 *		In addition, if the device is running Android 5.1 (API 22) or less, this method will have no effect.
+	 * </p>
+	 * <p>
+	 * 		Use this method to open the permissions UI from an existing activity.
+	 * </p>
+	 * @param activity
+	 * @see Zello#requestVitalPermissions()
+	 * @see Zello#beginMessage()
+	 * @see Zello#showMicrophonePermissionDialog()
+	 * @see Events#onMicrophonePermissionNotGranted()
+	 */
+	public void requestVitalPermissions(Activity activity) {
+		checkConfiguration();
+		_sdk.requestVitalPermissions(activity);
 	}
 
 	/**
@@ -186,12 +214,42 @@ public class Zello {
 	 *     	If the microphone permission has already been granted, this method will have no effect.
 	 * 		In addition, if the device is running Android 5.1 (API 22) or less, this method will have no effect.
 	 * </p>
+	 * <p>
+	 * 		Use this method when you don't have an activity on the screen (ex. from a service).
+	 * </p>
+	 * @see Zello#showMicrophonePermissionDialog(Activity)
 	 * @see Events#onMicrophonePermissionNotGranted()
 	 * @see Zello#requestVitalPermissions()
 	 */
 	public void showMicrophonePermissionDialog() {
 		checkConfiguration();
 		_sdk.showMicrophonePermissionDialog();
+	}
+
+	/**
+	 * Opens a popup dialog that tells the user that they cannot send voice messages until the
+	 * permission to record audio has been granted.
+	 * <p>
+	 * 		This method is only necessary for Android devices running 6.0 (API 23) and above.
+	 * </p>
+	 * <p>
+	 * 		The most appropriate place to call this method is when <code>onMicrophonePermissionNotGranted()</code>
+	 * 		is called on the <code>Events</code> interface.
+	 * </p>
+	 * <p>
+	 *     	If the microphone permission has already been granted, this method will have no effect.
+	 * 		In addition, if the device is running Android 5.1 (API 22) or less, this method will have no effect.
+	 * </p>
+	 * <p>
+	 * 		Use this method to open the permissions UI from an existing activity.
+	 * </p>
+	 * @see Zello#showMicrophonePermissionDialog()
+	 * @see Events#onMicrophonePermissionNotGranted()
+	 * @see Zello#requestVitalPermissions()
+	 */
+	public void showMicrophonePermissionDialog(Activity activity) {
+		checkConfiguration();
+		_sdk.showMicrophonePermissionDialog(activity);
 	}
 
 	//endregion
@@ -206,7 +264,7 @@ public class Zello {
      * 		initial tab, and specify a dark or light theme.
      * </p>
      * <p>
-     * 		Use this method when you don't have an activity on the screen (i.e. from a service).
+     * 		Use this method when you don't have an activity on the screen (ex. from a service).
      * </p>
      * @param title     Activity title. Can be <code>null</code>
      * @param tabs		Set of displayed tabs.
