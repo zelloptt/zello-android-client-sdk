@@ -559,7 +559,7 @@ public class Zello {
      * Gets info about the current active incoming voice message.
      * <p>
      * 		This method updates the provided instance of the <code>MessageIn</code> object with the current data.
-     * 		The object will not update automatically, so this method must be called every time you need to get the
+     * 		The object will not update automatically, so call this method every time you need to get the
      * 		current info about an active incoming voice message.
      * </p>
      * @param message The object to copy data to.
@@ -575,7 +575,7 @@ public class Zello {
      * Gets info about the current active outgoing voice message.
      * <p>
      * 		This method updates the provided instance of the <code>MessageOut</code> object with the current data.
-     * 		The object will not update automatically, so this method must be called every time you need to get the
+     * 		The object will not update automatically, so call this method every time you need to get the
      * 		current info about an active outgoing voice message.
      * </p>
      * @param message The object to copy data to.
@@ -591,7 +591,7 @@ public class Zello {
      * Gets info about the current application state.
      * <p>
      * 		This method updates the provided instance of the <code>AppState</code> object with the current data.
-     * 		The object will not update automatically, so this method must be called every time you need to get the
+     * 		The object will not update automatically, so call this method every time you need to get the
      * 		current info about ZelloWork app and Zello SDK state.
      * </p>
      * @param state The object to copy data to.
@@ -607,7 +607,7 @@ public class Zello {
      * Gets info about the currently selected contact.
      * <p>
      * 		This method updates the provided instance of the <code>Contact</code> object with the current data.
-     * 		The object will not update automatically, so this method must be called every time you need to get the
+     * 		The object will not update automatically, so call this method every time you need to get the
      * 		info about currently selected contact.
      * </p>
      * @param contact The object to copy data to.

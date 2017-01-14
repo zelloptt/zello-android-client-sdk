@@ -30,7 +30,6 @@ public class Audio {
 
 	//region Package Private Methods
 
-	/* package */
 	Audio(String packageName, Context context) {
 		_package = packageName;
 		_context = context;
@@ -50,7 +49,6 @@ public class Audio {
 		}
 	}
 
-	/* package */
 	void close() {
 		Context context = _context;
 		if (context != null && _receiver != null) {

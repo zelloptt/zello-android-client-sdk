@@ -45,7 +45,7 @@ public class AppState {
 	 * </p>
 	 * <p>
 	 *     This method will not affect the state of the Zello SDK.
-	 *     This will only reset the values for this copied instance of the <code>Appstate</code>.
+	 *     This will only reset the values for this copied instance of the <code>AppState</code>.
 	 * </p>
 	 */
 	public void reset() {
