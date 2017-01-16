@@ -17,8 +17,8 @@ public enum Status {
 	 *     User is online and available to talk.
 	 * </p>
 	 * <p>
-	 *     Messages will be immediately delivered to the Zello SDK and will play live.
-	 *     Delivered messages will call the <code>onMessageStateChanged()</code>
+	 *     Messages are immediately delivered to the Zello SDK and play live.
+	 *     Delivered messages call the <code>onMessageStateChanged()</code>
 	 *     method on the <code>Events</code> interface.
 	 * </p>
 	 * @see Events#onMessageStateChanged()
@@ -29,8 +29,8 @@ public enum Status {
 	 *      User is online but currently busy.
 	 * </p>
 	 * <p>
-	 *      Messages will not be delivered to the Zello SDK and will not play live.
-	 *      However, they will be delivered to the ZelloWork app and save in history.
+	 *      Messages are not delivered to the Zello SDK and do not play live.
+	 *      However, they are delivered to the ZelloWork app and save in history.
 	 * </p>
 	 * */
 	BUSY,
@@ -39,13 +39,13 @@ public enum Status {
 	 *     User is online but only available to talk with the selected <code>Contact</code>.
 	 * </p>
 	 * <p>
-	 *     Messages from the selected <code>Contact</code> will be immediately delivered to the Zello SDK and will play live.
-	 *     Delivered messages will call the <code>onMessageStateChanged()</code>
+	 *     Messages from the selected <code>Contact</code> are immediately delivered to the Zello SDK and play live.
+	 *     Delivered messages call the <code>onMessageStateChanged()</code>
 	 *     method on the <code>Events</code> interface.
 	 * </p>
 	 * <p>
-	 *     Messages from a non-selected <code>Contact</code> will not be delivered to the Zello SDK and will not play live.
-	 *     However, they will be delivered to the ZelloWork app and save in history.
+	 *     Messages from a non-selected <code>Contact</code> are not delivered to the Zello SDK and do not play live.
+	 *     However, they are delivered to the ZelloWork app and save in history.
 	 * </p>
 	 * @see Zello#getSelectedContact(Contact)
 	 * @see Zello#selectContact(String, Tab[], Tab, Theme)

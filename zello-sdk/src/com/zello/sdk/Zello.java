@@ -160,8 +160,8 @@ public class Zello {
 	 * 		This method requests run time permissions for the microphone, phone, and external storage.
 	 * </p>
 	 * <p>
-	 *		If these permissions have already been granted, this method will have no effect.
-	 *		In addition, if the device is running Android 5.1 (API 22) or less, this method will have no effect.
+	 *		If these permissions have already been granted, this method has no effect.
+	 *		In addition, if the device is running Android 5.1 (API 22) or less, this method has no effect.
 	 * </p>
 	 * <p>
 	 * 		Use this method when you don't have an activity on the screen (ex. from a service).
@@ -183,13 +183,13 @@ public class Zello {
 	 * 		This method requests run time permissions for the microphone, phone, and external storage.
 	 * </p>
 	 * <p>
-	 *		If these permissions have already been granted, this method will have no effect.
-	 *		In addition, if the device is running Android 5.1 (API 22) or less, this method will have no effect.
+	 *		If these permissions have already been granted, this method has no effect.
+	 *		In addition, if the device is running Android 5.1 (API 22) or less, this method has no effect.
 	 * </p>
 	 * <p>
 	 * 		Use this method to open the permissions UI from an existing activity.
 	 * </p>
-	 * @param activity
+	 * @param activity Caller activity.
 	 * @see Zello#requestVitalPermissions()
 	 * @see Zello#beginMessage()
 	 * @see Zello#showMicrophonePermissionDialog()
@@ -211,8 +211,8 @@ public class Zello {
 	 * 		is called on the <code>Events</code> interface.
 	 * </p>
 	 * <p>
-	 *     	If the microphone permission has already been granted, this method will have no effect.
-	 * 		In addition, if the device is running Android 5.1 (API 22) or less, this method will have no effect.
+	 *     	If the microphone permission has already been granted, this method has no effect.
+	 * 		In addition, if the device is running Android 5.1 (API 22) or less, this method has no effect.
 	 * </p>
 	 * <p>
 	 * 		Use this method when you don't have an activity on the screen (ex. from a service).
@@ -237,8 +237,8 @@ public class Zello {
 	 * 		is called on the <code>Events</code> interface.
 	 * </p>
 	 * <p>
-	 *     	If the microphone permission has already been granted, this method will have no effect.
-	 * 		In addition, if the device is running Android 5.1 (API 22) or less, this method will have no effect.
+	 *     	If the microphone permission has already been granted, this method has no effect.
+	 * 		In addition, if the device is running Android 5.1 (API 22) or less, this method has no effect.
 	 * </p>
 	 * <p>
 	 * 		Use this method to open the permissions UI from an existing activity.
@@ -266,7 +266,7 @@ public class Zello {
      * <p>
      * 		Use this method when you don't have an activity on the screen (ex. from a service).
      * </p>
-     * @param title     Activity title. Can be <code>null</code>
+     * @param title     Activity title. Can be <code>null</code>.
      * @param tabs		Set of displayed tabs.
      * @param activeTab Initially active tab.
      * @param theme     Visual theme for activity.
@@ -291,7 +291,7 @@ public class Zello {
      * <p>
      * 		Use this method to open a contact selection UI from an existing activity.
      * </p>
-     * @param title     Activity title. Can be <code>null</code>
+     * @param title     Activity title. Can be <code>null</code>.
      * @param tabs		Set of displayed tabs.
      * @param activeTab Initially active tab.
      * @param theme     Visual theme for activity.
@@ -335,6 +335,8 @@ public class Zello {
      * Stops sending a voice message.
      * <p>
      *     This method has no effect if there is no active outgoing message.
+	 * </p>
+	 * <p>
      *     This method is asynchronous. When the message status changes, <code>onMessageStateChanged()</code>
      *     is called on the <code>Events</code> interface.
      * </p>
@@ -432,8 +434,10 @@ public class Zello {
      * </p>
      * <p>
      *     This method is asynchronous. When sign in fails or succeeds, <code>onAppStateChanged()</code>
-     *     is called on the <code>Events</code> interface. To cancel the sign in process, use the <code>cancelSignIn()</code>
-     *     method.
+     *     is called on the <code>Events</code> interface.
+	 * </p>
+	 * <p>
+	 *     To cancel the sign in process, use the <code>cancelSignIn()</code> method.
      * </p>
      * @param network    The network name or URL.
      * @param username   The username to authenticate.
@@ -486,7 +490,7 @@ public class Zello {
     /**
      * Locks the default ZelloWork app UI to prevent users from accessing it.
      * <p>
-     *     In this locked state, the ZelloWork app, when accessed by user, will only display an
+     *     In this locked state, the ZelloWork app, when accessed by user, only displays an
      *     information screen with the name of your app that can be clicked to open the main activity.
      *     This does NOT interfere with the sending and receiving of messages through the SDK.
      * </p>
@@ -559,7 +563,7 @@ public class Zello {
      * Gets info about the current active incoming voice message.
      * <p>
      * 		This method updates the provided instance of the <code>MessageIn</code> object with the current data.
-     * 		The object will not update automatically, so call this method every time you need to get the
+     * 		The object does not update automatically, so call this method every time you need to get the
      * 		current info about an active incoming voice message.
      * </p>
      * @param message The object to copy data to.
@@ -575,7 +579,7 @@ public class Zello {
      * Gets info about the current active outgoing voice message.
      * <p>
      * 		This method updates the provided instance of the <code>MessageOut</code> object with the current data.
-     * 		The object will not update automatically, so call this method every time you need to get the
+     * 		The object does not update automatically, so call this method every time you need to get the
      * 		current info about an active outgoing voice message.
      * </p>
      * @param message The object to copy data to.
@@ -591,7 +595,7 @@ public class Zello {
      * Gets info about the current application state.
      * <p>
      * 		This method updates the provided instance of the <code>AppState</code> object with the current data.
-     * 		The object will not update automatically, so call this method every time you need to get the
+     * 		The object does not update automatically, so call this method every time you need to get the
      * 		current info about ZelloWork app and Zello SDK state.
      * </p>
      * @param state The object to copy data to.
@@ -607,7 +611,7 @@ public class Zello {
      * Gets info about the currently selected contact.
      * <p>
      * 		This method updates the provided instance of the <code>Contact</code> object with the current data.
-     * 		The object will not update automatically, so call this method every time you need to get the
+     * 		The object does not update automatically, so call this method every time you need to get the
      * 		info about currently selected contact.
      * </p>
      * @param contact The object to copy data to.
@@ -623,7 +627,7 @@ public class Zello {
     /**
      * Gets the list of users and channels in the contact list of the current user.
      * <p>
-     *     The returned list includes users, channels and their statuses. It will not update
+     *     The returned list includes users, channels and their statuses. It does not update
      *     automatically, so use this method to get a fresh copy of the list when needed.
      * </p>
      * <p>
@@ -699,7 +703,7 @@ public class Zello {
      *     Zello and can be accessed using the ZelloWork server API to query recordings metadata.
      * </p>
      * <p>
-     *     The method has no effect unless the ZelloWork Server Recording feature is turned on for the
+     *     This method has no effect unless the ZelloWork Server Recording feature is turned on for the
      *     current network.
      * </p>
      * @param id Nullable; String indicating the external id.
@@ -716,12 +720,13 @@ public class Zello {
      *     Use a <code>Contact</code> object from the list returned by
      *     <code>Zello.getContacts()</code> method as an argument.
      * </p>
-     * @param contact Nullable; a contact to select. A null value will deselect the current contact.
+     * @param contact Nullable; a contact to select. A null value deselects the current contact.
      * @see #getSelectedContact(Contact)
      * @see #setSelectedUserOrGateway(String)
      * @see #setSelectedChannelOrGroup(String)
      * @see #selectContact(String, Tab[], Tab, Theme, Activity)
      * @see Events#onSelectedContactChanged()
+	 * @see #getContacts()
      */
     public void setSelectedContact(Contact contact) {
 		checkConfiguration();
@@ -735,11 +740,12 @@ public class Zello {
      *     <code>Zello.getContacts()</code> method as an argument.
      * </p>
      *
-     * @param name Nullable; The name of the user or gateway to select. A null value will deselect the current contact.
+     * @param name Nullable; The name of the user or gateway to select. A null value deselects the current contact.
      * @see #setSelectedContact(Contact)
      * @see #setSelectedChannelOrGroup(String)
      * @see #selectContact(String, Tab[], Tab, Theme, Activity)
      * @see Events#onSelectedContactChanged()
+	 * @see #getContacts()
      */
     public void setSelectedUserOrGateway(String name) {
 		checkConfiguration();
@@ -752,7 +758,7 @@ public class Zello {
      *     Use a <code>Contact</code> object from the list returned by
      *     <code>Zello.getContacts()</code> method as an argument.
      * </p>
-     * @param name Nullable; The name of the channel or group to select. A null value will deselect the current contact.
+     * @param name Nullable; The name of the channel or group to select. A null value deselects the current contact.
      * @see #setSelectedContact(Contact)
      * @see #setSelectedUserOrGateway(String)
      * @see #selectContact(String, Tab[], Tab, Theme, Activity)

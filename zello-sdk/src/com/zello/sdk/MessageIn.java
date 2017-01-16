@@ -25,8 +25,8 @@ public class MessageIn {
 	 *     Resets the <code>MessageIn</code> instance back to the default values.
 	 * </p>
 	 * <p>
-	 *     This method will not affect the state of the incoming message to the ZelloWork app.
-	 *     This will only reset the values for this copied instance of the <code>MessageIn</code>.
+	 *     This method does not affect the state of the incoming message to the ZelloWork app.
+	 *     This method only resets the values for this copied instance of the <code>MessageIn</code>.
 	 * </p>
 	 */
 	public void reset() {
@@ -47,10 +47,11 @@ public class MessageIn {
 	 *     Returns an instance of the <code>Contact</code> that is sending the user the message.
 	 * </p>
 	 * <p>
-	 *     If the <code>ContactType</code> is {@link ContactType#CHANNEL} or {@link ContactType#GROUP}, the returned <code>Contact</code> will be the channel or group, respectively.
-	 *     For channels and groups, get the original author of the message by using the {@link #getAuthor()} method.
+	 *     If the <code>ContactType</code> is {@link ContactType#CHANNEL} or {@link ContactType#GROUP}, the returned <code>Contact</code> is the channel or group, respectively.
+	 *     For channels and groups, use the <code>getAuthor()</code> method to get the original author of the message.
 	 * </p>
 	 * @return The <code>Contact</code> that is sending the message.
+	 * @see #getAuthor()
      */
 	public Contact getFrom() {
 		return _from;
