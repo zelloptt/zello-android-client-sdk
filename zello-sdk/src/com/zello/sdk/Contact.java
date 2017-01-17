@@ -2,7 +2,7 @@ package com.zello.sdk;
 
 /**
  * The <code>Contact</code> class represents a contact of the current user.
- * Contact can be another user, radio gateway, group channel or dynamic channel (see {@link ContactType})
+ * A Contact can be another user, a radio gateway, a group channel or a dynamic channel (see {@link ContactType}).
  */
 public class Contact {
 
@@ -27,7 +27,7 @@ public class Contact {
 	 *     Resets the <code>Contact</code> instance back to the default values.
 	 * </p>
 	 * <p>
-	 *     This method will only reset the values for this copied instance of the <code>Contact</code>.
+	 *     This method only resets the values for this copied instance of the <code>Contact</code>.
 	 * </p>
 	 */
 	public void reset() {
@@ -56,7 +56,8 @@ public class Contact {
 	 *     Returns the identifying name of the <code>Contact</code>.
 	 * </p>
 	 * <p>
-	 *     Username is returned for users and gateways. Channel name is returned for channels.
+	 *     For {@link ContactType#CHANNEL} the value is the channel name.
+	 *     For {@link ContactType#USER} and {@link ContactType#GATEWAY} the value is the username.
 	 * </p>
 	 * @return Name of the <code>Contact</code>.
      */
@@ -77,7 +78,7 @@ public class Contact {
 	 *     Returns the display name for the <code>Contact</code>.
 	 * </p>
 	 * <p>
-	 *     Use this function if you need to show the contact on the screen as it will use the best
+	 *     Use this function if you need to show the contact on the screen as it uses the best
 	 *     available data to build the human-readable name.
 	 * </p>
 	 * @return Nullable; Display Name for the <code>Contact</code>.
@@ -115,8 +116,8 @@ public class Contact {
 	 * Returns the number of online users in the channel.
 	 * </p>
 	 * <p>
-	 * For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>0</code> will be returned).
-	 * For {@link ContactType#CHANNEL} and {@link ContactType#GROUP} this value will be the number of users online in the channel or group, respectively.
+	 *     For {@link ContactType#CHANNEL} and {@link ContactType#GROUP} this value is the number of users online in the channel or group, respectively.
+	 *     For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>0</code> is returned).
 	 * </p>
 	 * @return number of online users under the <code>Contact</code> for the <code>ContactType</code>.
      */
@@ -129,7 +130,8 @@ public class Contact {
 	 * Returns the number of total users in the channel.
 	 * </p>
 	 * <p>
-	 * For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>0</code> will be returned).* For {@link ContactType#USER} and  {@link ContactType#GATEWAY}, this value will be 0.
+	 *     For {@link ContactType#CHANNEL} and {@link ContactType#GROUP} this value is the number of total users in the channel or group, respectively.
+	 *     For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>0</code> is returned).
 	 * </p>
 	 * @return number of total users under the <code>Contact</code> for the <code>ContactType</code>.
 	 */
@@ -142,7 +144,7 @@ public class Contact {
 	 *     Returns the title for the <code>Contact</code>.
 	 * </p>
 	 * <p>
-	 *     For {@link ContactType#CHANNEL} and {@link ContactType#GROUP} this value is not defined (<code>null</code> will be returned)
+	 *     For {@link ContactType#CHANNEL} and {@link ContactType#GROUP} this value is not defined (<code>null</code> is returned)
 	 * </p>
 	 *
 	 * @return Nullable; The title for the <code>Contact</code>.
@@ -162,7 +164,7 @@ public class Contact {
 	/**
 	 * Returns whether the channel has the no disconnect setting enabled or not.
 	 * <p>
-	 *     * For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>false</code> will be returned).
+	 *     For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>false</code> is returned).
 	 * </p>
 	 * @return boolean indicating if the <code>Contact</code> has the no disconnect setting enabled.
      */

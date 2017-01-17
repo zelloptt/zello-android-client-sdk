@@ -71,8 +71,10 @@ public interface Events {
 	 * <p>
 	 *     This method is invoked on the UI thread.
 	 *     To retrieve the current <code>Contacts</code> snapshot, call the {@link Zello#getContacts()} method.
-	 *     The best approach, when dealing with large contact lists (in 1000s) is to run both <code>getContacts()</code>
-	 *     and any contact processing in a background thread, then post the result to UI thread for display.
+	 * </p>
+	 * <p>
+	 *     When dealing with large contact lists (1000+ contacts), the best approach is to run both <code>getContacts()</code>
+	 *     and any contact processing in a background thread and then post the result to UI thread for display.
 	 * </p>
 	 * @see Zello#getContacts()
 	 */

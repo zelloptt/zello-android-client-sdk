@@ -5,7 +5,7 @@ package com.zello.sdk;
  *     The <code>ContactStatus</code> enum represents the status of a {@link Contact}.
  * </p>
  * <p>
- *     For the status of the authenticated user, see the {@link Status} enum.
+ *     For the status of the current user, see the {@link Status} enum.
  * </p>
  * */
 public enum ContactStatus {
@@ -15,12 +15,12 @@ public enum ContactStatus {
 	 *     Contact is offline.
 	 * </p>
 	 * <p>
-	 *     Messages cannot be sent to a channel with this status. If channel is <code>OFFLINE</code> you need
+	 *     Messages cannot be sent to a channel with this status. If the channel is <code>OFFLINE</code> you need
 	 *     to connect to it before sending the message.
 	 * </p>
 	 * <p>
-	 *     Messages can be sent to a user with this status and will be saved locally for later delivery, which
-	 *     will happen when user comes back online.
+	 *     Messages can be sent to a user with this status and are saved locally for later delivery, which
+	 *     happens when the user comes back online.
 	 * </p>
 	 */
 	OFFLINE,
@@ -29,7 +29,7 @@ public enum ContactStatus {
 	 *     Contact is online and available to talk.
 	 * </p>
 	 * <p>
-	 *     Messages will be immediately delivered to a contact with this status.
+	 *     Messages are immediately delivered to a contact with this status.
 	 * </p>
 	 */
 	AVAILABLE,
@@ -38,8 +38,8 @@ public enum ContactStatus {
 	 *     Contact is online but currently busy.
 	 * </p>
 	 * <p>
-	 *     Messages will be delivered to the ZelloWork app of the contact with this status and
-	 *     will be saved to the history. However they won't play live and won't be delivered to the Zello SDK.
+	 *     Messages are delivered to a contact with this status and are saved to their history.
+	 *     However, they do not play live and are not delivered to the Zello SDK.
 	 * </p>
 	 */
 	BUSY,
@@ -48,9 +48,9 @@ public enum ContactStatus {
 	 *     Contact is offline but was recently online.
 	 * </p>
 	 * <p>
-	 *     Messages sent to a contact with this status will be saved on the server and delivered to
-	 *     the contact the next time they sign in. Depending on the plattform and configuration they
-	 *     may also get the push notification about the message.
+	 *     Messages sent to a contact with this status are saved on the server and delivered to
+	 *     the contact the next time they sign in. Depending on the platform and configuration, they
+	 *     may also get a push notification about the message.
 	 * </p>
 	 */
 	STANDBY,

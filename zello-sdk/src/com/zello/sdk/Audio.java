@@ -30,7 +30,6 @@ public class Audio {
 
 	//region Package Private Methods
 
-	/* package */
 	Audio(String packageName, Context context) {
 		_package = packageName;
 		_context = context;
@@ -50,7 +49,6 @@ public class Audio {
 		}
 	}
 
-	/* package */
 	void close() {
 		Context context = _context;
 		if (context != null && _receiver != null) {
@@ -107,9 +105,8 @@ public class Audio {
 	 *     Sets the current <code>AudioMode</code> to <code>mode</code>.
 	 * </p>
 	 * <p>
-	 *     The method is asynchronous so using <code>Audio.getMode()</code> immediatelly after calling
-	 *     it may return the previous audio mode. {@link Events#onAudioStateChanged()} is called when
-	 *     audio mode changes.
+	 *     This method is asynchronous. When the mode has changed, <code>onAudioStateChanged()</code>
+	 *     is called on the <code>Events</code> interface.
 	 * </p>
 	 * @param mode <code>AudioMode</code> indicating the new form of audio output.
 	 * @see #getMode()
@@ -141,7 +138,6 @@ public class Audio {
 	public int getWearableCount() {
 		return _wearables;
 	}
-
 
 	//endregion
 

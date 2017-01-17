@@ -25,8 +25,8 @@ public class MessageOut {
 	 *     Resets the <code>MessageOut</code> instance back to the default values.
 	 * </p>
 	 * <p>
-	 *     This method will not affect the state of the incoming message to the ZelloWork app.
-	 *     This will only reset the values for this copied instance of the <code>MessageOut</code>.
+	 *     This method does not affect the state of the outgoing message to the ZelloWork app.
+	 *     This method only resets the values for this copied instance of the <code>MessageOut</code>.
 	 * </p>
 	 */
 	public void reset() {

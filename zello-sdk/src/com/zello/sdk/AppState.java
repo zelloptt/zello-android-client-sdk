@@ -5,7 +5,7 @@ package com.zello.sdk;
  *     The <code>AppState</code> class represents the current state of the ZelloWork app.
  * </p>
  * <p>
- *     To use, retrieve the current <code>AppState</code> values using the {@link Zello#getAppState(AppState)} method. For specific usage, please see the sample projects.
+ *     To use, retrieve the current <code>AppState</code> values using the <code>Zello.getAppState(AppState)</code> method. For specific usage, please see the sample projects.
  * </p>
  * @see Zello#getAppState(AppState)
  */
@@ -41,11 +41,11 @@ public class AppState {
 
 	/**
 	 * <p>
-	 *     Resets the <code>Appstate</code> instance back to the default values.
+	 *     Resets the <code>AppState</code> instance back to the default values.
 	 * </p>
 	 * <p>
-	 *     This method will not affect the state of the Zello SDK.
-	 *     This will only reset the values for this copied instance of the <code>Appstate</code>.
+	 *     This method does not affect the state of the Zello SDK.
+	 *     This method only resets the values for this copied instance of the <code>AppState</code>.
 	 * </p>
 	 */
 	public void reset() {
@@ -84,7 +84,7 @@ public class AppState {
 	 *     Determines if the ZelloWork app is available on the device.
 	 * </p>
 	 * <p>
-	 *     This method will return <code>false</code> if the ZelloWork app is not installed on the device
+	 *     This method returns <code>false</code> if the ZelloWork app is not installed on the device
 	 *     or if the app is in a state of error.
 	 * </p>
 	 * @return boolean indicating if the app is available to communicate with.
@@ -106,7 +106,7 @@ public class AppState {
 	 *     Determines if the ZelloWork app is a custom build.
 	 * </p>
 	 * <p>
-	 *     This method will return true if the PTT .apk was downloaded from zellowork.com.
+	 *     This method returns true if the PTT APK was downloaded from zellowork.com.
 	 * </p>
 	 * @return boolean indicating if the app is a custom build.
 	 */
@@ -127,7 +127,7 @@ public class AppState {
 	 *     Determines if the ZelloWork app is currently locked.
 	 * </p>
 	 * <p>
-	 *     If the ZelloWork app is locked, the UI will only display an information screen with the name of your app that can be clicked to open the main activity.
+	 *     If the ZelloWork app is locked, the UI only displays an information screen with the name of your app that can be clicked to open the main activity.
 	 *     Being locked does NOT interfere with the sending and receiving of messages through the ZelloWork app.
 	 * </p>
 	 * @return boolean indicating if the app is currently locked.
@@ -138,7 +138,7 @@ public class AppState {
 	}
 
 	/**
-	 * Determines if the user is currently signed into ZelloWork network.
+	 * Determines if the user is currently signed into a ZelloWork network.
 	 * @return boolean indicating if the user is signed in.
 	 * @see Zello#signIn(String, String, String)
 	 * @see Zello#signIn(String, String, String, boolean)
@@ -171,7 +171,7 @@ public class AppState {
 	 *      Determines if the sign in request for the user is being cancelled.
 	 *  </p>
 	 *  <p>
-	 *      This method will return <code>true</code> if the <code>Zello.cancelSignIn()</code> method is called
+	 *      This method returns <code>true</code> if the <code>Zello.cancelSignIn()</code> method is called
 	 *      and cancellation hasn't completed yet.
 	 *  </p>
 	 * @return boolean indicating if the authentication request is being cancelled.
@@ -194,9 +194,9 @@ public class AppState {
 	 * 		Determines if the ZelloWork app is waiting for the network to be available.
 	 * </p>
 	 * <p>
-	 *     If Android OS reports that there is no internet connection the app will wait for connection
-	 *     to become available and this method will return <code>true</code>. When connection is restored
-	 *     the app signs in automatically.
+	 *     If the Android OS reports that there is no internet connection, the ZelloWork app waits for the connection
+	 *     to become available and this method returns <code>true</code>. When internet connection is restored,
+	 *     the ZelloWork app signs in automatically.
 	 * </p>
 	 * @return boolean indicating if the app is waiting for the network.
      */
@@ -209,7 +209,7 @@ public class AppState {
 	 *     Determines if the auto run setting is enabled.
 	 * </p>
 	 * <p>
-	 *     The auto run feature determines if ZelloWork app will be launched on the start of the OS or not.
+	 *     The auto run feature determines if ZelloWork app should be launched on the start of the OS or not.
 	 *     This feature can be enabled or disabled using the <code>Zello.setAutoRun(boolean)</code> method.
 	 * </p>
 	 * @return boolean indicating whether or not auto run is enabled.
@@ -224,7 +224,7 @@ public class AppState {
 	 *     Determines if the auto connect channel setting is enabled.
 	 * </p>
 	 * <p>
-	 *     The auto connect channel feature determines whether or not any new channel that the user is added to will automatically connect.
+	 *     The auto connect channel feature determines whether or not any new channel that the user is added to should automatically connect.
 	 * </p>
 	 * @return boolean indicating whether or not auto connect channels is enabled.
 	 * @see Zello#setAutoConnectChannels(boolean)
@@ -247,12 +247,12 @@ public class AppState {
 
 	/**
 	 * <p>
-	 *     Returns if the contacts list for the user available to display.
+	 *     Determines if the contacts list for the user is available to display.
 	 * </p>
 	 * <p>
-	 *     When <code>true</code> it is possible to use {@link Zello#getContacts()} to fetch the list
+	 *     When <code>true</code>, it is possible to use {@link Zello#getContacts()} to fetch the list
 	 *     of the contacts even when user is not online. The last cached copy of the list is returned
-	 *     in that case.
+	 *     in this case.
 	 * </p>
 	 *
 	 * @return boolean indicating if the contacts should be shown or not.
@@ -327,7 +327,7 @@ public class AppState {
 	 * 	   Returns an optional external id tag used by ZelloWork Server Recording.
 	 * </p>
 	 * <p>
-	 *     The method will return null unless the ZelloWork Server Recording feature is turned on for the
+	 *     This method returns null unless the ZelloWork Server Recording feature is turned on for the
 	 *     current network.
 	 * </p>
 	 * @return Nullable; The external id for the app.
