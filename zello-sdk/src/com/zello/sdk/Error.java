@@ -3,6 +3,7 @@ package com.zello.sdk;
 /**
  * The <code>Error</code> enum represents some of the authentication errors that can be encountered in the Zello SDK.
  */
+@SuppressWarnings("WeakerAccess")
 public enum Error {
 
 	/**
@@ -60,6 +61,10 @@ public enum Error {
 	/**
 	 * Incorrect credentials were input too many times.
 	 */
-	TOO_MANY_SIGNIN_ATTEMPTS
+	TOO_MANY_SIGNIN_ATTEMPTS,
+	/**
+	 * Connection is unreliable and is causing the app to repeatedly sign in.
+	 */
+	UNRELIABLE_CONNECTION
 
 }

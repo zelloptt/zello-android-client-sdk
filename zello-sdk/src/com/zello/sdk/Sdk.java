@@ -678,7 +678,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 					Log.i("zello sdk", "disconnecting because sdk was destroyed");
 					try {
 						context.unbindService(this);
-					} catch (Throwable t) {
+					} catch (Throwable ignore) {
 					}
 					_context = null;
 					_appState._error = false;
@@ -751,7 +751,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 					_appState._error = true;
 					try {
 						context.unbindService(this);
-					} catch (Throwable t) {
+					} catch (Throwable ignore) {
 					}
 				}
 				if (_serviceConnecting) {
@@ -772,7 +772,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				if (context != null) {
 					try {
 						context.unbindService(this);
-					} catch (Throwable t) {
+					} catch (Throwable ignore) {
 					}
 				}
 			} else {
@@ -982,7 +982,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Static Methods
 
-	static Error intToError(int error) {
+	private static Error intToError(int error) {
 		if (error > Error.NONE.ordinal()) {
 			if (error == Error.INVALID_CREDENTIALS.ordinal()) {
 				return Error.INVALID_CREDENTIALS;
@@ -1008,6 +1008,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				return Error.SERVER_LICENSE_PROBLEM;
 			} else if (error == Error.TOO_MANY_SIGNIN_ATTEMPTS.ordinal()) {
 				return Error.TOO_MANY_SIGNIN_ATTEMPTS;
+			} else if (error == Error.UNRELIABLE_CONNECTION.ordinal()) {
+				return Error.UNRELIABLE_CONNECTION;
 			} else {
 				return Error.UNKNOWN;
 			}
@@ -1016,7 +1018,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	static PermissionError intToPermissionError(int error) {
+	private static PermissionError intToPermissionError(int error) {
 		if (error > PermissionError.NONE.ordinal()) {
 			if (error == PermissionError.MICROPHONE_NOT_GRANTED.ordinal()) {
 				return PermissionError.MICROPHONE_NOT_GRANTED;
@@ -1058,7 +1060,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	static String tabToString(Tab tab) {
+	private static String tabToString(Tab tab) {
 		switch (tab) {
 			case RECENTS:
 				return Constants.VALUE_RECENTS;
@@ -1070,7 +1072,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return null;
 	}
 
-	static String tabsToString(Tab[] tabs) {
+	private static String tabsToString(Tab[] tabs) {
 		String s = null;
 		if (tabs != null) {
 			for (Tab tab : tabs) {
@@ -1087,7 +1089,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return s;
 	}
 
-	static Tab stringToTab(String s) {
+	private static Tab stringToTab(String s) {
 		if (s.equals(Constants.VALUE_USERS)) {
 			return Tab.USERS;
 		}
@@ -1097,18 +1099,18 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return Tab.RECENTS;
 	}
 
-	static String bytesToHex(byte[] data) {
+	private static String bytesToHex(byte[] data) {
 		if (data != null) {
-			StringBuffer buf = new StringBuffer();
-			for (int i = 0; i < data.length; i++) {
-				int halfbyte = (data[i] >>> 4) & 0x0F;
+			StringBuilder buf = new StringBuilder();
+			for (byte c : data) {
+				int halfbyte = (c >>> 4) & 0x0F;
 				int two_halfs = 0;
 				do {
 					if ((0 <= halfbyte) && (halfbyte <= 9))
 						buf.append((char) ('0' + halfbyte));
 					else
 						buf.append((char) ('a' + (halfbyte - 10)));
-					halfbyte = data[i] & 0x0F;
+					halfbyte = c & 0x0F;
 				} while (two_halfs++ < 1);
 			}
 			return buf.toString();
@@ -1116,7 +1118,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return null;
 	}
 
-	static String md5(String s) {
+	private static String md5(String s) {
 		if (s != null && s.length() > 0) {
 			try {
 				MessageDigest digester = MessageDigest.getInstance("MD5");
