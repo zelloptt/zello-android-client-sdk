@@ -14,22 +14,34 @@ dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
 }
 
-task deleteJar(type: Delete) {
+task deleteZelloSdkJar(type: Delete) {
     delete 'libs/zello-sdk.jar'
 }
 
-task createJar(type: Copy) {
+task createZelloSdkJar(type: Copy) {
+    description "Creates SDK jar in the project root folder"
     from('build/intermediates/bundles/release/')
-    into('libs')
+    into('../')
     include('classes.jar')
     rename('classes.jar', 'zello-sdk.jar')
 }
 
-createJar.dependsOn(deleteJar, build)
+createZelloSdkJar.dependsOn(deleteZelloSdkJar, build)
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'assembleRelease') {
+        task.finalizedBy 'createZelloSdkJar'
+    }
+}
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '25.0.1'
+    compileSdkVersion 23
+    buildToolsVersion '25.0.2'
+
+    defaultConfig {
+        targetSdkVersion 23
+        minSdkVersion 9
+    }
 
     sourceSets {
         main {
