@@ -3,7 +3,6 @@ package com.zello.sdk;
 /**
  * The <code>Error</code> enum represents some of the authentication errors that can be encountered in the Zello SDK.
  */
-@SuppressWarnings("WeakerAccess")
 public enum Error {
 
 	/**
