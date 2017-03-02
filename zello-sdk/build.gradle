@@ -14,23 +14,46 @@ dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
 }
 
-task deleteZelloSdkJar(type: Delete) {
-    delete 'libs/zello-sdk.jar'
-}
-
-task createZelloSdkJar(type: Copy) {
+task zelloSdkJarCreate(type: Copy) {
     description "Creates SDK jar in the project root folder"
+    delete 'libs/zello-sdk.jar'
     from('build/intermediates/bundles/release/')
     into('../')
     include('classes.jar')
     rename('classes.jar', 'zello-sdk.jar')
 }
 
-createZelloSdkJar.dependsOn(deleteZelloSdkJar, build)
+android.libraryVariants.all { variant ->
+    if (variant.name.equals('release')) {
+        task("zelloSdkDocCreate", type: Javadoc) {
+            title ""
+            description "Creates Zello SDK Javadoc in the project root folder"
+            destinationDir = new File("${project.getProjectDir()}/../docs", "zello-sdk-documentation")
+            source = android.sourceSets.main.java.srcDirs
+            ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+            println("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
+            classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
+            exclude '**/Constants.java'
+            exclude '**/ContactObserver*.java'
+            options.memberLevel = JavadocMemberLevel.PUBLIC
+            options.noTree = false
+            options.noNavBar = false
+            options.noIndex = false
+            options.splitIndex = false
+            options.use = false
+            options.version = false
+            options.author = false
+            options.noDeprecated = true
+            options.noDeprecatedList = true
+            options.stylesheetFile = new File(projectDir, "../docs/stylesheet.css");
+        }
+    }
+}
 
 tasks.whenTaskAdded { task ->
     if (task.name == 'assembleRelease') {
-        task.finalizedBy 'createZelloSdkJar'
+        task.finalizedBy 'zelloSdkJarCreate'
+        task.finalizedBy 'zelloSdkDocCreate'
     }
 }
 
