@@ -243,6 +243,7 @@ public class Zello {
 	 * <p>
 	 * 		Use this method to open the permissions UI from an existing activity.
 	 * </p>
+	 * @param activity  Caller activity.
 	 * @see Zello#showMicrophonePermissionDialog()
 	 * @see Events#onMicrophonePermissionNotGranted()
 	 * @see Zello#requestVitalPermissions()
@@ -296,7 +297,7 @@ public class Zello {
      * @param activeTab Initially active tab.
      * @param theme     Visual theme for activity.
      * @param activity  Caller activity.
-     * @see #selectContact(String, Tab[], Tab, Theme)
+	 * @see #selectContact(String, Tab[], Tab, Theme)
      * @see #setSelectedContact(Contact)
      * @see #getSelectedContact(Contact)
      * @see Events#onSelectedContactChanged()

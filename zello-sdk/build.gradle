@@ -14,22 +14,124 @@ dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
 }
 
-task deleteJar(type: Delete) {
-    delete 'libs/zello-sdk.jar'
+task zelloSdkJarDeleteFromRoot(type: Delete) {
+    description "Deletes SDK jar from the root folder of the project"
+    delete '../zello-sdk.jar'
 }
 
-task createJar(type: Copy) {
-    from('build/intermediates/bundles/release/')
-    into('libs')
-    include('classes.jar')
-    rename('classes.jar', 'zello-sdk.jar')
+task zelloSdkJarDeployReleaseToRoot() {
+    description "Copies a release build of the SDK jar to the root folder of the project"
+    delete {
+        delete '../zello-sdk.jar'
+    }
+    copy {
+        from "build/intermediates/bundles/release/classes.jar"
+        into '../'
+        rename('classes.jar', 'zello-sdk.jar')
+    }
 }
 
-createJar.dependsOn(deleteJar, build)
+task zelloSdkJarDeleteFromSamples(type: Delete) {
+    description "Deletes SDK jars from all sample projects"
+    delete '../zello-sdk-sample/libs/zello-sdk.jar', '../zello-sdk-sample-contacts/libs/zello-sdk.jar', '../zello-sdk-sample-misc/libs/zello-sdk.jar', '../zello-sdk-sample-ptt/libs/zello-sdk.jar', '../zello-sdk-sample-signin/libs/zello-sdk.jar'
+}
+
+android.buildTypes.all { buildType ->
+    task("zelloSdkJarDeploy${buildType.name.capitalize()}ToSamples") {
+        description "Copies a ${buildType.name} build of the SDK jar to all sample projects"
+        delete {
+            delete '../zello-sdk-sample/libs/zello-sdk.jar'
+        }
+        delete {
+            delete '../zello-sdk-sample-contacts/libs/zello-sdk.jar'
+        }
+        delete {
+            delete '../zello-sdk-sample-misc/libs/zello-sdk.jar'
+        }
+        delete {
+            delete '../zello-sdk-sample-ptt/libs/zello-sdk.jar'
+        }
+        delete {
+            delete '../zello-sdk-sample-signin/libs/zello-sdk.jar'
+        }
+        copy {
+            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            into '../zello-sdk-sample/libs'
+            rename('classes.jar', 'zello-sdk.jar')
+        }
+        copy {
+            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            into '../zello-sdk-sample-contacts/libs'
+            rename('classes.jar', 'zello-sdk.jar')
+        }
+        copy {
+            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            into '../zello-sdk-sample-misc/libs'
+            rename('classes.jar', 'zello-sdk.jar')
+        }
+        copy {
+            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            into '../zello-sdk-sample-ptt/libs'
+            rename('classes.jar', 'zello-sdk.jar')
+        }
+        copy {
+            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            into '../zello-sdk-sample-signin/libs'
+            rename('classes.jar', 'zello-sdk.jar')
+        }
+    }
+}
+
+task zelloSdkDocDelete(type: Delete) {
+    description "Deletes Zello SDK Javadoc from the project root folder"
+    delete '../docs/zello-sdk-documentation'
+}
+
+android.libraryVariants.all { variant ->
+    if (variant.name.equals('release')) {
+        task("zelloSdkDocCreate", type: Javadoc, dependsOn: "zelloSdkDocDelete") {
+            title ""
+            description "Creates Zello SDK Javadoc in the project root folder"
+            destinationDir = new File("${project.getProjectDir()}/../docs", "zello-sdk-documentation")
+            source = android.sourceSets.main.java.srcDirs
+            ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+            classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
+            exclude '**/Constants.java'
+            exclude '**/ContactObserver*.java'
+            options.memberLevel = JavadocMemberLevel.PUBLIC
+            options.noTree = false
+            options.noNavBar = false
+            options.noIndex = false
+            options.splitIndex = false
+            options.use = false
+            options.version = false
+            options.author = false
+            options.noDeprecated = true
+            options.noDeprecatedList = true
+            options.stylesheetFile = new File(projectDir, "../docs/stylesheet.css");
+        }
+    }
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'assembleRelease') {
+        task.finalizedBy 'zelloSdkDocCreate'
+        task.finalizedBy 'zelloSdkJarDeployReleaseToRoot'
+        task.finalizedBy 'zelloSdkJarDeployReleaseToSamples'
+    }
+    if (task.name == 'assembleDebug') {
+        task.finalizedBy 'zelloSdkJarDeployDebugToSamples'
+    }
+}
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion '25.0.1'
+    compileSdkVersion 23
+    buildToolsVersion '25.0.2'
+
+    defaultConfig {
+        targetSdkVersion 23
+        minSdkVersion 9
+    }
 
     sourceSets {
         main {

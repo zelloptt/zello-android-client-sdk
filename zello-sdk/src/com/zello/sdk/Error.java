@@ -60,6 +60,10 @@ public enum Error {
 	/**
 	 * Incorrect credentials were input too many times.
 	 */
-	TOO_MANY_SIGNIN_ATTEMPTS
+	TOO_MANY_SIGNIN_ATTEMPTS,
+	/**
+	 * Connection is unreliable and is causing the app to repeatedly sign in.
+	 */
+	UNRELIABLE_CONNECTION
 
 }
