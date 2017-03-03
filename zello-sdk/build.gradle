@@ -14,13 +14,70 @@ dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
 }
 
-task zelloSdkJarCreate(type: Copy) {
-    description "Creates SDK jar in the project root folder"
-    delete 'libs/zello-sdk.jar'
+task zelloSdkJarDeployRelease(type: Copy) {
+    description "Copies a release build of the SDK jar to the root folder of the project"
     from('build/intermediates/bundles/release/')
     into('../')
     include('classes.jar')
     rename('classes.jar', 'zello-sdk.jar')
+}
+
+task zelloSdkJarDeployReleaseToSamples {
+    description "Copies a release build of the SDK jar to all sample projects"
+    copy {
+        from 'build/intermediates/bundles/release/classes.jar'
+        into '../zello-sdk-sample/libs'
+        rename('classes.jar', 'zello-sdk.jar')
+    }
+    copy {
+        from 'build/intermediates/bundles/release/classes.jar'
+        into '../zello-sdk-sample-contacts/libs'
+        rename('classes.jar', 'zello-sdk.jar')
+    }
+    copy {
+        from 'build/intermediates/bundles/release/classes.jar'
+        into '../zello-sdk-sample-misc/libs'
+        rename('classes.jar', 'zello-sdk.jar')
+    }
+    copy {
+        from 'build/intermediates/bundles/release/classes.jar'
+        into '../zello-sdk-sample-ptt/libs'
+        rename('classes.jar', 'zello-sdk.jar')
+    }
+    copy {
+        from 'build/intermediates/bundles/release/classes.jar'
+        into '../zello-sdk-sample-signin/libs'
+        rename('classes.jar', 'zello-sdk.jar')
+    }
+}
+
+task zelloSdkJarDeployDebugToSamples {
+    description "Copies a debug build of the SDK jar to all sample projects"
+    copy {
+        from 'build/intermediates/bundles/debug/classes.jar'
+        into '../zello-sdk-sample/libs'
+        rename('classes.jar', 'zello-sdk.jar')
+    }
+    copy {
+        from 'build/intermediates/bundles/debug/classes.jar'
+        into '../zello-sdk-sample-contacts/libs'
+        rename('classes.jar', 'zello-sdk.jar')
+    }
+    copy {
+        from 'build/intermediates/bundles/debug/classes.jar'
+        into '../zello-sdk-sample-misc/libs'
+        rename('classes.jar', 'zello-sdk.jar')
+    }
+    copy {
+        from 'build/intermediates/bundles/debug/classes.jar'
+        into '../zello-sdk-sample-ptt/libs'
+        rename('classes.jar', 'zello-sdk.jar')
+    }
+    copy {
+        from 'build/intermediates/bundles/debug/classes.jar'
+        into '../zello-sdk-sample-signin/libs'
+        rename('classes.jar', 'zello-sdk.jar')
+    }
 }
 
 android.libraryVariants.all { variant ->
@@ -52,8 +109,12 @@ android.libraryVariants.all { variant ->
 
 tasks.whenTaskAdded { task ->
     if (task.name == 'assembleRelease') {
-        task.finalizedBy 'zelloSdkJarCreate'
+        task.finalizedBy 'zelloSdkJarDeployRelease'
+        task.finalizedBy 'zelloSdkJarDeployReleaseToSamples'
         task.finalizedBy 'zelloSdkDocCreate'
+    }
+    if (task.name == 'assembleDebug') {
+        task.finalizedBy 'zelloSdkJarDeployDebugToSamples'
     }
 }
 
