@@ -14,81 +14,87 @@ dependencies {
     compile fileTree(include: '*.jar', dir: 'libs')
 }
 
-task zelloSdkJarDeployRelease(type: Copy) {
+task zelloSdkJarDeleteFromRoot(type: Delete) {
+    description "Deletes SDK jar from the root folder of the project"
+    delete '../zello-sdk.jar'
+}
+
+task zelloSdkJarDeployReleaseToRoot() {
     description "Copies a release build of the SDK jar to the root folder of the project"
-    from('build/intermediates/bundles/release/')
-    into('../')
-    include('classes.jar')
-    rename('classes.jar', 'zello-sdk.jar')
-}
-
-task zelloSdkJarDeployReleaseToSamples {
-    description "Copies a release build of the SDK jar to all sample projects"
-    copy {
-        from 'build/intermediates/bundles/release/classes.jar'
-        into '../zello-sdk-sample/libs'
-        rename('classes.jar', 'zello-sdk.jar')
+    delete {
+        delete '../zello-sdk.jar'
     }
     copy {
-        from 'build/intermediates/bundles/release/classes.jar'
-        into '../zello-sdk-sample-contacts/libs'
-        rename('classes.jar', 'zello-sdk.jar')
-    }
-    copy {
-        from 'build/intermediates/bundles/release/classes.jar'
-        into '../zello-sdk-sample-misc/libs'
-        rename('classes.jar', 'zello-sdk.jar')
-    }
-    copy {
-        from 'build/intermediates/bundles/release/classes.jar'
-        into '../zello-sdk-sample-ptt/libs'
-        rename('classes.jar', 'zello-sdk.jar')
-    }
-    copy {
-        from 'build/intermediates/bundles/release/classes.jar'
-        into '../zello-sdk-sample-signin/libs'
+        from "build/intermediates/bundles/release/classes.jar"
+        into '../'
         rename('classes.jar', 'zello-sdk.jar')
     }
 }
 
-task zelloSdkJarDeployDebugToSamples {
-    description "Copies a debug build of the SDK jar to all sample projects"
-    copy {
-        from 'build/intermediates/bundles/debug/classes.jar'
-        into '../zello-sdk-sample/libs'
-        rename('classes.jar', 'zello-sdk.jar')
+task zelloSdkJarDeleteFromSamples(type: Delete) {
+    description "Deletes SDK jars from all sample projects"
+    delete '../zello-sdk-sample/libs/zello-sdk.jar', '../zello-sdk-sample-contacts/libs/zello-sdk.jar', '../zello-sdk-sample-misc/libs/zello-sdk.jar', '../zello-sdk-sample-ptt/libs/zello-sdk.jar', '../zello-sdk-sample-signin/libs/zello-sdk.jar'
+}
+
+android.buildTypes.all { buildType ->
+    task("zelloSdkJarDeploy${buildType.name.capitalize()}ToSamples") {
+        description "Copies a ${buildType.name} build of the SDK jar to all sample projects"
+        delete {
+            delete '../zello-sdk-sample/libs/zello-sdk.jar'
+        }
+        delete {
+            delete '../zello-sdk-sample-contacts/libs/zello-sdk.jar'
+        }
+        delete {
+            delete '../zello-sdk-sample-misc/libs/zello-sdk.jar'
+        }
+        delete {
+            delete '../zello-sdk-sample-ptt/libs/zello-sdk.jar'
+        }
+        delete {
+            delete '../zello-sdk-sample-signin/libs/zello-sdk.jar'
+        }
+        copy {
+            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            into '../zello-sdk-sample/libs'
+            rename('classes.jar', 'zello-sdk.jar')
+        }
+        copy {
+            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            into '../zello-sdk-sample-contacts/libs'
+            rename('classes.jar', 'zello-sdk.jar')
+        }
+        copy {
+            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            into '../zello-sdk-sample-misc/libs'
+            rename('classes.jar', 'zello-sdk.jar')
+        }
+        copy {
+            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            into '../zello-sdk-sample-ptt/libs'
+            rename('classes.jar', 'zello-sdk.jar')
+        }
+        copy {
+            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            into '../zello-sdk-sample-signin/libs'
+            rename('classes.jar', 'zello-sdk.jar')
+        }
     }
-    copy {
-        from 'build/intermediates/bundles/debug/classes.jar'
-        into '../zello-sdk-sample-contacts/libs'
-        rename('classes.jar', 'zello-sdk.jar')
-    }
-    copy {
-        from 'build/intermediates/bundles/debug/classes.jar'
-        into '../zello-sdk-sample-misc/libs'
-        rename('classes.jar', 'zello-sdk.jar')
-    }
-    copy {
-        from 'build/intermediates/bundles/debug/classes.jar'
-        into '../zello-sdk-sample-ptt/libs'
-        rename('classes.jar', 'zello-sdk.jar')
-    }
-    copy {
-        from 'build/intermediates/bundles/debug/classes.jar'
-        into '../zello-sdk-sample-signin/libs'
-        rename('classes.jar', 'zello-sdk.jar')
-    }
+}
+
+task zelloSdkDocDelete(type: Delete) {
+    description "Deletes Zello SDK Javadoc from the project root folder"
+    delete '../docs/zello-sdk-documentation'
 }
 
 android.libraryVariants.all { variant ->
     if (variant.name.equals('release')) {
-        task("zelloSdkDocCreate", type: Javadoc) {
+        task("zelloSdkDocCreate", type: Javadoc, dependsOn: "zelloSdkDocDelete") {
             title ""
             description "Creates Zello SDK Javadoc in the project root folder"
             destinationDir = new File("${project.getProjectDir()}/../docs", "zello-sdk-documentation")
             source = android.sourceSets.main.java.srcDirs
             ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-            println("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
             classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
             exclude '**/Constants.java'
             exclude '**/ContactObserver*.java'
@@ -109,9 +115,9 @@ android.libraryVariants.all { variant ->
 
 tasks.whenTaskAdded { task ->
     if (task.name == 'assembleRelease') {
-        task.finalizedBy 'zelloSdkJarDeployRelease'
-        task.finalizedBy 'zelloSdkJarDeployReleaseToSamples'
         task.finalizedBy 'zelloSdkDocCreate'
+        task.finalizedBy 'zelloSdkJarDeployReleaseToRoot'
+        task.finalizedBy 'zelloSdkJarDeployReleaseToSamples'
     }
     if (task.name == 'assembleDebug') {
         task.finalizedBy 'zelloSdkJarDeployDebugToSamples'
