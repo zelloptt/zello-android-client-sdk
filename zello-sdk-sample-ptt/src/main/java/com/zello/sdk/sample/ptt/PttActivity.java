@@ -199,9 +199,9 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
             String author = messageIn.getAuthor().getDisplayName(); // Is message from channel?
 
             if (author != null && author.length() > 0) {
-                messageStateTextView.setText("Recieving message from " + messageIn.getFrom().getDisplayName() + " \\ " + author); // Show channel and author names
+                messageStateTextView.setText("Receiving message from " + messageIn.getFrom().getDisplayName() + " \\ " + author); // Show channel and author names
             } else {
-                messageStateTextView.setText("Recieving message from " + messageIn.getFrom().getDisplayName()); // Show sender name
+                messageStateTextView.setText("Receiving message from " + messageIn.getFrom().getDisplayName()); // Show sender name
             }
         } else if (outgoing) {
             if (messageOut.isConnecting()) {
