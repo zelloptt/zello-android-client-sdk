@@ -237,10 +237,10 @@ Sample | Description
 
 ### Documentation
 
-* [Zello SDK reference] (http://zelloptt.github.io/zello-android-client-sdk/zello-sdk-documentation/)
-* [Zello SDK migration guide (for legacy SDK users)] (https://github.com/zelloptt/zello-android-client-sdk/blob/master/MIGRATION.md)
-* [ZelloWork server API] (http://zellowork.com/api/)
+* [Zello SDK reference](http://zelloptt.github.io/zello-android-client-sdk/zello-sdk-documentation/)
+* [Zello SDK migration guide (for legacy SDK users)](https://github.com/zelloptt/zello-android-client-sdk/blob/master/MIGRATION.md)
+* [ZelloWork server API](http://zellowork.com/api/)
 
 ### See also
 
-* [ZelloWork server API libraries] (https://github.com/zelloptt/zello-for-work-server-api-libs)
+* [ZelloWork server API libraries](https://github.com/zelloptt/zello-for-work-server-api-libs)
