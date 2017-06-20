@@ -16,7 +16,7 @@ The Zello Android client SDK allows you to integrate [ZelloWork](https://zellowo
 
 ## Current Version
 
-The stable release for the ZelloWork Android SDK is v3.62.
+The stable release for the ZelloWork Android SDK is v3.71.
 
 ## Installation
 
@@ -32,7 +32,7 @@ Before you can use the SDK, you must install the ZelloWork app on your phone. Yo
 
 ### Install Android Studio and configure your project
 
-[Download Android Studio](https://developer.android.com/studio/index.html) and install it. Open your existing project or create a new one. The minimum API level supported by the SDK is 4 (Donut).
+[Download Android Studio](https://developer.android.com/studio/index.html) and install it. Open your existing project or create a new one. The minimum API level supported by the SDK is 9 (Gingerbread).
 
 Place [zello-sdk.jar](https://github.com/zelloptt/zello-android-client-sdk/blob/master/zello-sdk.jar?raw=true) file into `libs` folder of your project, then right-click the file in Android Studio and select “Add as Library…”.
 

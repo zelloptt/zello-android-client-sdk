@@ -16,12 +16,12 @@ dependencies {
 }
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 23
     buildToolsVersion '25.0.1'
     defaultConfig {
         applicationId "com.zello.sdk.sample"
-        minSdkVersion 4
-        targetSdkVersion 21
+        minSdkVersion 9
+        targetSdkVersion 23
     }
     sourceSets {
         main {
