@@ -363,8 +363,11 @@ public class Zello {
 	 * <p>
 	 *     This method has no effect if there was no last incoming live voice message or if there is an active outgoing message.
 	 * </p>
+	 * <p>
+	 *     This method is asynchronous. When the message status changes, <code>onMessageStateChanged()</code>
+	 *     is called on the <code>Events</code> interface.
+	 * </p>
 	 * @see Events#onMessageStateChanged()
-	 * @see Events#onAppStateChanged()
 	 * @see #isLastMessageReplayAvailable()
 	 */
 	public void replayLastIncomingMessage() {
@@ -377,6 +380,7 @@ public class Zello {
 	 *     Determines if there is a message available to replay.
 	 * </p>
 	 * @return boolean indicating whether there is an available message to replay.
+	 * @see Events#onLastMessageReplayAvailableChanged()
 	 * @see Zello#replayLastIncomingMessage()
 	 */
 	public boolean isLastMessageReplayAvailable() {
