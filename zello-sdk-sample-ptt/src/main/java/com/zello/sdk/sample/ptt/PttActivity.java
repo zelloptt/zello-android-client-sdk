@@ -19,23 +19,23 @@ import com.zello.sdk.Zello;
 
 public class PttActivity extends Activity implements com.zello.sdk.Events {
 
-	private boolean active;
+	private boolean _active;
 
-    private TextView statusTextView;
-    private ToggleButton connectChannelButton;
-    private Button pttButton;
-    private NoToggleButton speakerButton;
-    private NoToggleButton earpieceButton;
-    private NoToggleButton bluetoothButton;
-    private View audioModeView;
-    private TextView messageStateTextView;
-    private TextView selectedContactTextView;
+    private TextView _statusTextView;
+    private ToggleButton _connectChannelButton;
+    private Button _pttButton;
+    private NoToggleButton _speakerButton;
+    private NoToggleButton _earpieceButton;
+    private NoToggleButton _bluetoothButton;
+    private View _audioModeView;
+    private TextView _messageStateTextView;
+    private TextView _selectedContactTextView;
 
-    private com.zello.sdk.AppState appState = new com.zello.sdk.AppState();
-    private com.zello.sdk.Audio audio;
-    private Contact selectedContact = new Contact();
-    private MessageIn messageIn = new MessageIn();
-    private MessageOut messageOut = new MessageOut();
+    private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
+    private com.zello.sdk.Audio _audio;
+    private Contact _selectedContact = new Contact();
+    private MessageIn _messageIn = new MessageIn();
+    private MessageOut _messageOut = new MessageOut();
 
     //region Lifecycle Methods
 
@@ -45,24 +45,24 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
         setContentView(R.layout.activity_ptt);
 
-        statusTextView = (TextView)findViewById(R.id.statusTextView);
-        connectChannelButton = (ToggleButton)findViewById(R.id.connectChannelButton);
-        pttButton = (SquareButton)findViewById(R.id.pushToTalkButton);
-        speakerButton = (NoToggleButton)findViewById(R.id.audio_speaker);
-        earpieceButton = (NoToggleButton)findViewById(R.id.audio_earpiece);
-        bluetoothButton = (NoToggleButton)findViewById(R.id.audio_bluetooth);
-        audioModeView = findViewById(R.id.audio_mode);
-        messageStateTextView = (TextView)findViewById(R.id.messageStateTextView);
-        selectedContactTextView = (TextView)findViewById(R.id.selectedContactTextView);
+		_statusTextView = (TextView)findViewById(R.id.statusTextView);
+		_connectChannelButton = (ToggleButton)findViewById(R.id.connectChannelButton);
+		_pttButton = (SquareButton)findViewById(R.id.pushToTalkButton);
+		_speakerButton = (NoToggleButton)findViewById(R.id.audio_speaker);
+		_earpieceButton = (NoToggleButton)findViewById(R.id.audio_earpiece);
+		_bluetoothButton = (NoToggleButton)findViewById(R.id.audio_bluetooth);
+		_audioModeView = findViewById(R.id.audio_mode);
+		_messageStateTextView = (TextView)findViewById(R.id.messageStateTextView);
+		_selectedContactTextView = (TextView)findViewById(R.id.selectedContactTextView);
 
         // Constrain PTT button size
-        pttButton.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
+        _pttButton.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
 
         Zello.getInstance().configure("com.pttsdk", this, this);
 		Zello.getInstance().requestVitalPermissions(this);
-		audio = Zello.getInstance().getAudio();
+		_audio = Zello.getInstance().getAudio();
 
-        connectChannelButton.setOnClickListener(new View.OnClickListener() {
+        _connectChannelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onConnectChannelButtonPressed();
@@ -70,7 +70,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         });
 
         // PTT button push/release handler
-        pttButton.setOnTouchListener(new View.OnTouchListener() {
+        _pttButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
@@ -86,29 +86,29 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         });
 
         // Audio modes
-        speakerButton.setOnClickListener(new View.OnClickListener() {
+        _speakerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (audio != null) {
-                    audio.setMode(com.zello.sdk.AudioMode.SPEAKER);
+                if (_audio != null) {
+                    _audio.setMode(com.zello.sdk.AudioMode.SPEAKER);
                 }
             }
         });
 
-        earpieceButton.setOnClickListener(new View.OnClickListener() {
+        _earpieceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (audio != null) {
-                    audio.setMode(com.zello.sdk.AudioMode.EARPIECE);
+                if (_audio != null) {
+                    _audio.setMode(com.zello.sdk.AudioMode.EARPIECE);
                 }
             }
         });
 
-        bluetoothButton.setOnClickListener(new View.OnClickListener() {
+        _bluetoothButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (audio != null) {
-                    audio.setMode(com.zello.sdk.AudioMode.BLUETOOTH);
+                if (_audio != null) {
+                    _audio.setMode(com.zello.sdk.AudioMode.BLUETOOTH);
                 }
             }
         });
@@ -128,7 +128,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     protected void onResume() {
         super.onResume();
 
-		active = true;
+		_active = true;
         Zello.getInstance().leavePowerSavingMode();
     }
 
@@ -136,7 +136,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     protected void onPause() {
         super.onPause();
 
-		active = false;
+		_active = false;
         Zello.getInstance().enterPowerSavingMode();
     }
 
@@ -153,15 +153,16 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
         menu.clear();
 
-        Zello.getInstance().getAppState(appState);
+        Zello.getInstance().getAppState(_appState);
 
-        if (appState.isSignedIn()) {
-            getMenuInflater().inflate(R.menu.menu, menu);
-            showMenuItem(menu, R.id.menu_mute_contact, true);
+        if (_appState.isSignedIn()) {
+			Zello.getInstance().getSelectedContact(_selectedContact);
 
-            Zello.getInstance().getSelectedContact(selectedContact);
-            String itemTitle = selectedContact.getMuted() ? "Unmute Contact" : "Mute Contact";
-            menu.getItem(0).setTitle(itemTitle);
+			getMenuInflater().inflate(R.menu.menu, menu);
+            showMenuItem(menu, R.id.menu_mute_contact, _selectedContact.getDisplayName() != null);
+			showMenuItem(menu, R.id.menu_replay, Zello.getInstance().isLastMessageReplayAvailable());
+
+            menu.getItem(0).setTitle(_selectedContact.getMuted() ? R.string.unmute_contact : R.string.mute_contact);
         }
 
         return true;
@@ -170,10 +171,12 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_mute_contact) {
-            Zello.getInstance().getSelectedContact(selectedContact);
+            Zello.getInstance().getSelectedContact(_selectedContact);
 
-            Zello.getInstance().muteContact(selectedContact, !selectedContact.getMuted());
-        }
+            Zello.getInstance().muteContact(_selectedContact, !_selectedContact.getMuted());
+        } else if (item.getItemId() == R.id.menu_replay) {
+			Zello.getInstance().replayLastIncomingMessage();
+		}
 
         return true;
     }
@@ -189,28 +192,28 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onMessageStateChanged() {
-        Zello.getInstance().getMessageIn(messageIn);
-        Zello.getInstance().getMessageOut(messageOut);
+        Zello.getInstance().getMessageIn(_messageIn);
+        Zello.getInstance().getMessageOut(_messageOut);
 
-        boolean incoming = messageIn.isActive(); // Is incoming message active?
-        boolean outgoing = messageOut.isActive(); // Is outgoing message active?
+        boolean incoming = _messageIn.isActive(); // Is incoming message _active?
+        boolean outgoing = _messageOut.isActive(); // Is outgoing message _active?
 
         if (incoming) {
-            String author = messageIn.getAuthor().getDisplayName(); // Is message from channel?
+            String author = _messageIn.getAuthor().getDisplayName(); // Is message from channel?
 
             if (author != null && author.length() > 0) {
-                messageStateTextView.setText("Receiving message from " + messageIn.getFrom().getDisplayName() + " \\ " + author); // Show channel and author names
+                _messageStateTextView.setText("Receiving message from " + _messageIn.getFrom().getDisplayName() + " \\ " + author); // Show channel and author names
             } else {
-                messageStateTextView.setText("Receiving message from " + messageIn.getFrom().getDisplayName()); // Show sender name
+                _messageStateTextView.setText("Receiving message from " + _messageIn.getFrom().getDisplayName()); // Show sender name
             }
         } else if (outgoing) {
-            if (messageOut.isConnecting()) {
-                messageStateTextView.setText("Connecting to " + selectedContact.getDisplayName());
+            if (_messageOut.isConnecting()) {
+                _messageStateTextView.setText("Connecting to " + _selectedContact.getDisplayName());
             } else {
-                messageStateTextView.setText("Outgoing Message to " + selectedContact.getDisplayName());
+                _messageStateTextView.setText("Outgoing Message to " + _selectedContact.getDisplayName());
             }
         } else {
-            messageStateTextView.setText("");
+            _messageStateTextView.setText("");
         }
     }
 
@@ -236,21 +239,26 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
 	@Override
 	public void onMicrophonePermissionNotGranted() {
-		if (active) {
+		if (_active) {
 			Zello.getInstance().showMicrophonePermissionDialog(this);
 		}
+	}
+
+	@Override
+	public void onLastMessageReplayAvailableChanged() {
+		updateUIForAvailableContact();
 	}
 
 	//endregion
 
     private void updateUI() {
-        Zello.getInstance().getAppState(appState);
+        Zello.getInstance().getAppState(_appState);
 
-        if (appState.isSignedIn()) {
-            Zello.getInstance().getSelectedContact(selectedContact);
+        if (_appState.isSignedIn()) {
+            Zello.getInstance().getSelectedContact(_selectedContact);
 
-            if (selectedContact != null && selectedContact.getDisplayName() != null) {
-                if (selectedContact.getStatus() == ContactStatus.AVAILABLE) {
+            if (_selectedContact.getDisplayName() != null) {
+                if (_selectedContact.getStatus() == ContactStatus.AVAILABLE) {
                     updateUIForAvailableContact();
                 } else {
                     updateUIForUnavailableContact();
@@ -258,7 +266,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
             } else {
                 updateUIForNoContact();
             }
-        } else if (appState.isSigningIn()) {
+        } else if (_appState.isSigningIn()) {
             updateUIForSigningIn();
         } else {
             updateUIForDisconnected();
@@ -268,12 +276,12 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     private void updateUIForAvailableContact() {
         Helper.invalidateOptionsMenu(this);
 
-        statusTextView.setVisibility(View.INVISIBLE);
+        _statusTextView.setVisibility(View.INVISIBLE);
 
-        pttButton.setVisibility(View.VISIBLE);
-        audioModeView.setVisibility(View.VISIBLE);
-        selectedContactTextView.setVisibility(View.VISIBLE);
-        selectedContactTextView.setText("Selected Contact: " + selectedContact.getDisplayName());
+        _pttButton.setVisibility(View.VISIBLE);
+        _audioModeView.setVisibility(View.VISIBLE);
+        _selectedContactTextView.setVisibility(View.VISIBLE);
+        _selectedContactTextView.setText("Selected Contact: " + _selectedContact.getDisplayName());
 
         updateConnectChannelButton();
         updateAudioMode();
@@ -282,62 +290,62 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     private void updateUIForUnavailableContact() {
         Helper.invalidateOptionsMenu(this);
 
-        statusTextView.setVisibility(View.VISIBLE);
+        _statusTextView.setVisibility(View.VISIBLE);
 
-        pttButton.setVisibility(View.INVISIBLE);
-        audioModeView.setVisibility(View.INVISIBLE);
-        speakerButton.setVisibility(View.INVISIBLE);
-        bluetoothButton.setVisibility(View.INVISIBLE);
-        earpieceButton.setVisibility(View.INVISIBLE);
-        connectChannelButton.setVisibility(View.INVISIBLE);
-        selectedContactTextView.setVisibility(View.INVISIBLE);
+        _pttButton.setVisibility(View.INVISIBLE);
+        _audioModeView.setVisibility(View.INVISIBLE);
+        _speakerButton.setVisibility(View.INVISIBLE);
+        _bluetoothButton.setVisibility(View.INVISIBLE);
+        _earpieceButton.setVisibility(View.INVISIBLE);
+        _connectChannelButton.setVisibility(View.INVISIBLE);
+        _selectedContactTextView.setVisibility(View.INVISIBLE);
 
-        statusTextView.setText(R.string.unavailable_selected_contact);
+        _statusTextView.setText(R.string.unavailable_selected_contact);
     }
 
     private void updateUIForNoContact() {
         Helper.invalidateOptionsMenu(this);
 
-        statusTextView.setVisibility(View.VISIBLE);
+        _statusTextView.setVisibility(View.VISIBLE);
 
-        pttButton.setVisibility(View.INVISIBLE);
-        audioModeView.setVisibility(View.INVISIBLE);
-        speakerButton.setVisibility(View.INVISIBLE);
-        bluetoothButton.setVisibility(View.INVISIBLE);
-        earpieceButton.setVisibility(View.INVISIBLE);
-        connectChannelButton.setVisibility(View.INVISIBLE);
-        selectedContactTextView.setVisibility(View.INVISIBLE);
+        _pttButton.setVisibility(View.INVISIBLE);
+        _audioModeView.setVisibility(View.INVISIBLE);
+        _speakerButton.setVisibility(View.INVISIBLE);
+        _bluetoothButton.setVisibility(View.INVISIBLE);
+        _earpieceButton.setVisibility(View.INVISIBLE);
+        _connectChannelButton.setVisibility(View.INVISIBLE);
+        _selectedContactTextView.setVisibility(View.INVISIBLE);
 
-        statusTextView.setText(R.string.no_selected_contact);
+        _statusTextView.setText(R.string.no_selected_contact);
     }
 
     private void updateUIForSigningIn() {
         Helper.invalidateOptionsMenu(this);
 
-        statusTextView.setVisibility(View.VISIBLE);
+        _statusTextView.setVisibility(View.VISIBLE);
 
-        pttButton.setVisibility(View.INVISIBLE);
-        audioModeView.setVisibility(View.INVISIBLE);
-        speakerButton.setVisibility(View.INVISIBLE);
-        bluetoothButton.setVisibility(View.INVISIBLE);
-        earpieceButton.setVisibility(View.INVISIBLE);
-        connectChannelButton.setVisibility(View.INVISIBLE);
-        selectedContactTextView.setVisibility(View.INVISIBLE);
+        _pttButton.setVisibility(View.INVISIBLE);
+        _audioModeView.setVisibility(View.INVISIBLE);
+        _speakerButton.setVisibility(View.INVISIBLE);
+        _bluetoothButton.setVisibility(View.INVISIBLE);
+        _earpieceButton.setVisibility(View.INVISIBLE);
+        _connectChannelButton.setVisibility(View.INVISIBLE);
+        _selectedContactTextView.setVisibility(View.INVISIBLE);
 
-        statusTextView.setText(R.string.sign_in_status_signing_in);
+        _statusTextView.setText(R.string.sign_in_status_signing_in);
     }
 
     private void updateUIForDisconnected() {
         Helper.invalidateOptionsMenu(this);
 
-        statusTextView.setVisibility(View.VISIBLE);
+        _statusTextView.setVisibility(View.VISIBLE);
 
-        pttButton.setVisibility(View.INVISIBLE);
-        audioModeView.setVisibility(View.INVISIBLE);
-        connectChannelButton.setVisibility(View.INVISIBLE);
-        selectedContactTextView.setVisibility(View.INVISIBLE);
+        _pttButton.setVisibility(View.INVISIBLE);
+        _audioModeView.setVisibility(View.INVISIBLE);
+        _connectChannelButton.setVisibility(View.INVISIBLE);
+        _selectedContactTextView.setVisibility(View.INVISIBLE);
 
-        statusTextView.setText(R.string.sign_in_status_offline);
+        _statusTextView.setText(R.string.sign_in_status_offline);
     }
 
     private void showMenuItem(Menu menu, int itemId, boolean show) {
@@ -353,46 +361,46 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
         // Can't set new mode while the mode is being changed
         boolean currentlyChangingMode = false;
-        if (audio != null) {
-            speaker = audio.isModeAvailable(com.zello.sdk.AudioMode.SPEAKER);
-            earpiece = audio.isModeAvailable(com.zello.sdk.AudioMode.EARPIECE);
-            bluetooth = audio.isModeAvailable(com.zello.sdk.AudioMode.BLUETOOTH);
-            mode = audio.getMode();
-            currentlyChangingMode = audio.isModeChanging();
+        if (_audio != null) {
+            speaker = _audio.isModeAvailable(com.zello.sdk.AudioMode.SPEAKER);
+            earpiece = _audio.isModeAvailable(com.zello.sdk.AudioMode.EARPIECE);
+            bluetooth = _audio.isModeAvailable(com.zello.sdk.AudioMode.BLUETOOTH);
+            mode = _audio.getMode();
+            currentlyChangingMode = _audio.isModeChanging();
         }
 
         // If none of the modes is available, the client app is old and needs to be updated
         if (bluetooth || earpiece || speaker) {
-            speakerButton.setVisibility(speaker ? View.VISIBLE : View.GONE);
+            _speakerButton.setVisibility(speaker ? View.VISIBLE : View.GONE);
             if (speaker) {
-                speakerButton.setChecked(mode == com.zello.sdk.AudioMode.SPEAKER);
-                speakerButton.setEnabled(!currentlyChangingMode && (earpiece || bluetooth));
+                _speakerButton.setChecked(mode == com.zello.sdk.AudioMode.SPEAKER);
+                _speakerButton.setEnabled(!currentlyChangingMode && (earpiece || bluetooth));
             }
 
-            earpieceButton.setVisibility(earpiece ? View.VISIBLE : View.GONE);
+            _earpieceButton.setVisibility(earpiece ? View.VISIBLE : View.GONE);
             if (earpiece) {
-                earpieceButton.setChecked(mode == com.zello.sdk.AudioMode.EARPIECE);
-                earpieceButton.setEnabled(!currentlyChangingMode && (speaker || bluetooth));
+                _earpieceButton.setChecked(mode == com.zello.sdk.AudioMode.EARPIECE);
+                _earpieceButton.setEnabled(!currentlyChangingMode && (speaker || bluetooth));
             }
 
-            bluetoothButton.setVisibility(bluetooth ? View.VISIBLE : View.GONE);
+            _bluetoothButton.setVisibility(bluetooth ? View.VISIBLE : View.GONE);
             if (bluetooth) {
-                bluetoothButton.setChecked(mode == com.zello.sdk.AudioMode.BLUETOOTH);
-                bluetoothButton.setEnabled(!currentlyChangingMode && (speaker || earpiece));
+                _bluetoothButton.setChecked(mode == com.zello.sdk.AudioMode.BLUETOOTH);
+                _bluetoothButton.setEnabled(!currentlyChangingMode && (speaker || earpiece));
             }
         }
 
-        audioModeView.setVisibility(speaker || earpiece || bluetooth ? View.VISIBLE : View.GONE);
+        _audioModeView.setVisibility(speaker || earpiece || bluetooth ? View.VISIBLE : View.GONE);
     }
 
     private void onConnectChannelButtonPressed() {
-        com.zello.sdk.ContactType type = selectedContact.getType();
+        com.zello.sdk.ContactType type = _selectedContact.getType();
         if (type == com.zello.sdk.ContactType.CHANNEL || type == com.zello.sdk.ContactType.GROUP) {
-            com.zello.sdk.ContactStatus status = selectedContact.getStatus();
+            com.zello.sdk.ContactStatus status = _selectedContact.getStatus();
             if (status == com.zello.sdk.ContactStatus.OFFLINE) {
-                Zello.getInstance().connectChannel(selectedContact.getName());
+                Zello.getInstance().connectChannel(_selectedContact.getName());
             } else if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
-                Zello.getInstance().disconnectChannel(selectedContact.getName());
+                Zello.getInstance().disconnectChannel(_selectedContact.getName());
             }
         }
     }
@@ -400,14 +408,14 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
     private void updateConnectChannelButton() {
         boolean showConnect = false, connected = false, canConnect = false;
 
-        com.zello.sdk.ContactType type = selectedContact.getType();
-        com.zello.sdk.ContactStatus status = selectedContact.getStatus();
+        com.zello.sdk.ContactType type = _selectedContact.getType();
+        com.zello.sdk.ContactStatus status = _selectedContact.getStatus();
         switch (type) {
             case USER:
             case GATEWAY:
             case CHANNEL:
             case GROUP: {
-                showConnect = !selectedContact.getNoDisconnect();
+                showConnect = !_selectedContact.getNoDisconnect();
                 if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
                     canConnect = true;
                     connected = true;
@@ -420,9 +428,9 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
             }
         }
 
-        connectChannelButton.setEnabled(canConnect);
-        connectChannelButton.setChecked(connected);
-        connectChannelButton.setVisibility(showConnect ? View.VISIBLE : View.GONE);
+        _connectChannelButton.setEnabled(canConnect);
+        _connectChannelButton.setChecked(connected);
+        _connectChannelButton.setVisibility(showConnect ? View.VISIBLE : View.GONE);
     }
 
 }

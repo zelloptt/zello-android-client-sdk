@@ -5,6 +5,7 @@ import android.app.Activity;
 /**
  * The <code>Events</code> interface enables monitoring of Zello SDK state and property changes
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public interface Events {
 
 	/**
@@ -110,5 +111,13 @@ public interface Events {
 	 * @see Zello#beginMessage()
 	 */
 	void onMicrophonePermissionNotGranted();
+
+	/**
+	 * <p>
+	 *     Called when the value of {@link Zello#isLastMessageReplayAvailable()} changed.
+	 * </p>
+	 * @see Zello#replayLastIncomingMessage()
+	 */
+	void onLastMessageReplayAvailableChanged();
 
 }

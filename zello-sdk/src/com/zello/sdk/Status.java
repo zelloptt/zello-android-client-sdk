@@ -10,6 +10,7 @@ import android.app.Activity;
  *     For the status of a {@link Contact}, see the {@link ContactStatus} enum.
  * </p>
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public enum Status {
 
 	/**

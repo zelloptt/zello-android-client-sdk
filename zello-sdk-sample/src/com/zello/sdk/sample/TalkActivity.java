@@ -31,6 +31,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private View _viewTalkScreen;
 	private SquareButton _btnTalk;
 	private ToggleButton _btnConnect;
+	private ImageButton _btnReplay;
 	private View _viewContactNotSelected;
 	private View _viewContactInfo;
 	private ImageView _imgMessageStatus;
@@ -77,6 +78,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_viewTalkScreen = _viewContent.findViewById(R.id.talk_screen);
 		_viewContactInfo = _viewTalkScreen.findViewById(R.id.contact_info);
 		_btnTalk = (SquareButton) _viewTalkScreen.findViewById(R.id.talk);
+		_btnReplay = (ImageButton) findViewById(R.id.button_replay);
 		_btnConnect = (ToggleButton) findViewById(R.id.button_connect);
 		_viewContactNotSelected = _viewTalkScreen.findViewById(R.id.contact_not_selected);
 		_viewAudioMode = findViewById(R.id.audio_mode);
@@ -188,6 +190,12 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				if (_appState.isReconnecting() || _appState.isWaitingForNetwork() || (_appState.isSigningIn() && !_appState.isCancellingSignin())) {
 					_sdk.cancelSignIn();
 				}
+			}
+		});
+		_btnReplay.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				_sdk.replayLastIncomingMessage();
 			}
 		});
 
@@ -403,6 +411,11 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		if (_active) {
 			_sdk.showMicrophonePermissionDialog(this);
 		}
+	}
+
+	@Override
+	public void onLastMessageReplayAvailableChanged() {
+		updateAppState();
 	}
 
 	private void showMenuItem(Menu menu, int itemId, boolean show) {
@@ -696,6 +709,13 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		if (listVisibility == View.VISIBLE) {
 			updateContactList();
 		}
+		if (talkVisibility == View.VISIBLE) {
+			updateTalkScreen();
+		}
+	}
+
+	private void updateTalkScreen() {
+		_btnReplay.setVisibility(_sdk.isLastMessageReplayAvailable() ? View.VISIBLE : View.GONE);
 	}
 
 	private void updateContactList() {

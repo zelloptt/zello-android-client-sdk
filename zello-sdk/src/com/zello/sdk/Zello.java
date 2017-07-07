@@ -15,6 +15,7 @@ import java.util.ArrayList;
  *     For specific usage, see the sample projects.
  * </p>
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Zello {
 
     private static volatile Zello _instance;
@@ -350,6 +351,40 @@ public class Zello {
     }
 
     //endregion
+
+	//region Replaying Messages
+
+	/**
+	 * Replays the last received live voice message.
+	 * <p>
+	 *     There is no expiration for messages that can be played using this method.
+	 *     The last received live message is only changed by overriding it with a new live message, signing out, exiting the ZelloWork app or deleting the contact that sent the message.
+	 * </p>
+	 * <p>
+	 *     This method has no effect if there was no last incoming live voice message or if there is an active outgoing message.
+	 * </p>
+	 * @see Events#onMessageStateChanged()
+	 * @see Events#onAppStateChanged()
+	 * @see #isLastMessageReplayAvailable()
+	 */
+	public void replayLastIncomingMessage() {
+		checkConfiguration();
+		_sdk.replayLastIncomingMessage();
+	}
+
+	/**
+	 * <p>
+	 *     Determines if there is a message available to replay.
+	 * </p>
+	 * @return boolean indicating whether there is an available message to replay.
+	 * @see Zello#replayLastIncomingMessage()
+	 */
+	public boolean isLastMessageReplayAvailable() {
+		checkConfiguration();
+		return _sdk.isLastMessageReplayAvailable();
+	}
+
+	//endregion
 
     //region Channels
 

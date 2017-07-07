@@ -167,6 +167,15 @@
                             android:text="@string/contact_not_selected"/>
                     </FrameLayout>
 
+                    <ImageButton
+                        android:id="@+id/button_replay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dip"
+                        android:contentDescription="@string/button_replay"
+                        android:src="@android:drawable/ic_menu_rotate"/>
+
                     <ToggleButton
                         android:id="@+id/button_connect"
                         android:layout_width="wrap_content"

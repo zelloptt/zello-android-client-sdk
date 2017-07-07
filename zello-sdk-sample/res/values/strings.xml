@@ -42,6 +42,7 @@
     <string name="menu_unmute">Unmute</string>
     <string name="menu_talk">Talk</string>
     <string name="button_close">Close</string>
+    <string name="button_replay">Replay last message</string>
     <string name="button_sigin_in">Sign in</string>
     <string name="button_cancel">Cancel</string>
     <string name="channel_connect">Connect channel</string>

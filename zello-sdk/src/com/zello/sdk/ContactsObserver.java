@@ -4,6 +4,7 @@ import android.database.ContentObserver;
 import android.os.Build;
 import android.os.Handler;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 abstract class ContactsObserver extends ContentObserver {
 
 	private Contacts _contacts;

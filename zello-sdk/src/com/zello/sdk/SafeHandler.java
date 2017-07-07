@@ -5,6 +5,7 @@ import android.os.Message;
 
 import java.lang.ref.WeakReference;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 class SafeHandler<T extends SafeHandlerEvents> extends Handler {
 
 	private final WeakReference<T> _t;

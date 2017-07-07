@@ -14,11 +14,11 @@ import com.zello.sdk.*;
 
 public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
-    private ListView contactsListView;
-    private TextView statusTextView;
-    private TextView selectedContactTextView;
+    private ListView _contactsListView;
+    private TextView _statusTextView;
+    private TextView _selectedContactTextView;
 
-    private com.zello.sdk.AppState appState = new com.zello.sdk.AppState();
+    private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
 
     //region Lifecycle Methods
 
@@ -28,17 +28,17 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
         setContentView(R.layout.activity_contacts);
 
-        contactsListView = (ListView)findViewById(R.id.contactsListView);
-        statusTextView = (TextView)findViewById(R.id.statusTextView);
-        selectedContactTextView = (TextView)findViewById(R.id.selectedContactTextView);
+		_contactsListView = (ListView)findViewById(R.id.contactsListView);
+		_statusTextView = (TextView)findViewById(R.id.statusTextView);
+		_selectedContactTextView = (TextView)findViewById(R.id.selectedContactTextView);
 
         Zello.getInstance().configure("com.pttsdk", this, this);
 
         // Contact list pick handler
-        contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        _contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ListAdapter adapter = (ListAdapter)contactsListView.getAdapter();
+                ListAdapter adapter = (ListAdapter) _contactsListView.getAdapter();
                 if (adapter != null) {
                     com.zello.sdk.Contact contact = (com.zello.sdk.Contact)adapter.getItem(position);
                     if (contact != null) {
@@ -82,8 +82,8 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
         menu.clear();
 
-        Zello.getInstance().getAppState(appState);
-        if (appState.isAvailable() && !appState.isInitializing()) {
+        Zello.getInstance().getAppState(_appState);
+        if (_appState.isAvailable() && !_appState.isInitializing()) {
             getMenuInflater().inflate(R.menu.menu, menu);
 
             showMenuItem(menu, R.id.menu_select_contact, true);
@@ -117,23 +117,23 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     //endregion
 
     private void updateContactList() {
-        ListAdapter adapter = (ListAdapter)contactsListView.getAdapter();
+        ListAdapter adapter = (ListAdapter) _contactsListView.getAdapter();
         boolean newAdapter = false;
         if (adapter == null) {
             newAdapter = true;
             adapter = new ListAdapter();
         }
         adapter.setContacts(Zello.getInstance().getContacts());
-        Parcelable state = contactsListView.onSaveInstanceState();
+        Parcelable state = _contactsListView.onSaveInstanceState();
         if (newAdapter) {
-            contactsListView.setAdapter(adapter);
+            _contactsListView.setAdapter(adapter);
         } else {
             adapter.notifyDataSetChanged();
         }
         if (state != null) {
-            contactsListView.onRestoreInstanceState(state);
+            _contactsListView.onRestoreInstanceState(state);
         }
-        contactsListView.setFocusable(adapter.getCount() > 0);
+        _contactsListView.setFocusable(adapter.getCount() > 0);
     }
 
     //region Zello SDK Events
@@ -150,7 +150,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
         String name = selectedContact.getDisplayName();
         if (name != null) {
-            selectedContactTextView.setText("Selected Contact: " + selectedContact.getDisplayName());
+            _selectedContactTextView.setText("Selected Contact: " + selectedContact.getDisplayName());
         }
     }
 
@@ -169,28 +169,33 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
     }
 
-    @Override
-    public void onAppStateChanged() {
-        Zello.getInstance().getAppState(appState);
+	@Override
+	public void onLastMessageReplayAvailableChanged() {
 
-        if (appState.isSignedIn()) {
+	}
+
+	@Override
+    public void onAppStateChanged() {
+        Zello.getInstance().getAppState(_appState);
+
+        if (_appState.isSignedIn()) {
             Helper.invalidateOptionsMenu(this);
 
-            statusTextView.setVisibility(View.INVISIBLE);
-            contactsListView.setVisibility(View.VISIBLE);
-            selectedContactTextView.setVisibility(View.VISIBLE);
+            _statusTextView.setVisibility(View.INVISIBLE);
+            _contactsListView.setVisibility(View.VISIBLE);
+            _selectedContactTextView.setVisibility(View.VISIBLE);
 
             updateContactList();
-        } else if (appState.isSigningIn()) {
-            statusTextView.setVisibility(View.VISIBLE);
-            statusTextView.setText(R.string.sign_in_status_signing_in);
-            contactsListView.setVisibility(View.INVISIBLE);
-            selectedContactTextView.setVisibility(View.INVISIBLE);
+        } else if (_appState.isSigningIn()) {
+            _statusTextView.setVisibility(View.VISIBLE);
+            _statusTextView.setText(R.string.sign_in_status_signing_in);
+            _contactsListView.setVisibility(View.INVISIBLE);
+            _selectedContactTextView.setVisibility(View.INVISIBLE);
         } else {
-            statusTextView.setVisibility(View.VISIBLE);
-            statusTextView.setText(R.string.sign_in_status_offline);
-            contactsListView.setVisibility(View.INVISIBLE);
-            selectedContactTextView.setVisibility(View.INVISIBLE);
+            _statusTextView.setVisibility(View.VISIBLE);
+            _statusTextView.setText(R.string.sign_in_status_offline);
+            _contactsListView.setVisibility(View.INVISIBLE);
+            _selectedContactTextView.setVisibility(View.INVISIBLE);
         }
     }
 
