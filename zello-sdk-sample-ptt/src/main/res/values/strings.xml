@@ -13,4 +13,11 @@
 
     <string name="unmute_contact">Unmute Contact</string>
     <string name="mute_contact">Mute Contact</string>
+
+    <string formatted="false" name="selected_contact">Selected Contact: %s</string>
+
+    <string formatted="false" name="receiving_message_channel_author">Receiving message from %s \\ %s</string>
+    <string formatted="false" name="receiving_message_sender">Receiving message from %s</string>
+    <string formatted="false" name="connecting_to_contact">Connecting to %s</string>
+    <string formatted="false" name="outgoing_message_to_contact">Outgoing message to %s</string>
 </resources>

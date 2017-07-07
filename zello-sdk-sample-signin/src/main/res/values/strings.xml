@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Zello SDK Sample Sign In</string>
 
-    <string name="signing_in">SIGNING IN..."</string>
+    <string name="signing_in">SIGNING IN\u2026"</string>
     <string name="signed_in">YOU ARE SIGNED IN.</string>
 
     <string name="error_unknown">Unknown error.</string>

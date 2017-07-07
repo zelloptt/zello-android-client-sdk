@@ -195,27 +195,27 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         Zello.getInstance().getMessageIn(_messageIn);
         Zello.getInstance().getMessageOut(_messageOut);
 
-        boolean incoming = _messageIn.isActive(); // Is incoming message _active?
-        boolean outgoing = _messageOut.isActive(); // Is outgoing message _active?
+        boolean incoming = _messageIn.isActive(); // Is the incoming message active?
+        boolean outgoing = _messageOut.isActive(); // Is the outgoing message active?
 
+		String text = "";
         if (incoming) {
-            String author = _messageIn.getAuthor().getDisplayName(); // Is message from channel?
+            String author = _messageIn.getAuthor().getDisplayName(); // Is the message from a channel?
 
             if (author != null && author.length() > 0) {
-                _messageStateTextView.setText("Receiving message from " + _messageIn.getFrom().getDisplayName() + " \\ " + author); // Show channel and author names
+				text = getResources().getString(R.string.receiving_message_channel_author, _messageIn.getFrom().getDisplayName(), author); // Show channel and author names
             } else {
-                _messageStateTextView.setText("Receiving message from " + _messageIn.getFrom().getDisplayName()); // Show sender name
+                text = getResources().getString(R.string.receiving_message_sender, _messageIn.getFrom().getDisplayName()); // Show sender name
             }
         } else if (outgoing) {
             if (_messageOut.isConnecting()) {
-                _messageStateTextView.setText("Connecting to " + _selectedContact.getDisplayName());
+                text = getResources().getString(R.string.connecting_to_contact, _selectedContact.getDisplayName());
             } else {
-                _messageStateTextView.setText("Outgoing Message to " + _selectedContact.getDisplayName());
+				text = getResources().getString(R.string.outgoing_message_to_contact, _selectedContact.getDisplayName());
             }
-        } else {
-            _messageStateTextView.setText("");
         }
-    }
+		_messageStateTextView.setText(text);
+	}
 
     @Override
     public void onSelectedContactChanged() {
@@ -281,7 +281,7 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
         _pttButton.setVisibility(View.VISIBLE);
         _audioModeView.setVisibility(View.VISIBLE);
         _selectedContactTextView.setVisibility(View.VISIBLE);
-        _selectedContactTextView.setText("Selected Contact: " + _selectedContact.getDisplayName());
+        _selectedContactTextView.setText(getResources().getString(R.string.selected_contact, _selectedContact.getDisplayName()));
 
         updateConnectChannelButton();
         updateAudioMode();

@@ -150,7 +150,7 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
         String name = selectedContact.getDisplayName();
         if (name != null) {
-            _selectedContactTextView.setText("Selected Contact: " + selectedContact.getDisplayName());
+            _selectedContactTextView.setText(getResources().getString(R.string.selected_contact, selectedContact.getDisplayName()));
         }
     }
 

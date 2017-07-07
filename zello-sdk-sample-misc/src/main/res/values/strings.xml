@@ -7,7 +7,7 @@
     <string name="status_locked">The PTT app is locked.</string>
 
     <string name="sign_in_status_offline">Please sign in using the sample sign in project.</string>
-    <string name="sign_in_status_signing_in">Signing in...</string>
+    <string name="sign_in_status_signing_in">Signing in\u2026</string>
 
     <string name="menu_available">Available</string>
     <string name="menu_solo">Solo</string>
