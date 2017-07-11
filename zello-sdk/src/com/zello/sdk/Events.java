@@ -112,12 +112,4 @@ public interface Events {
 	 */
 	void onMicrophonePermissionNotGranted();
 
-	/**
-	 * <p>
-	 *     Called when the value of {@link Zello#isLastMessageReplayAvailable()} changed.
-	 * </p>
-	 * @see Zello#replayLastIncomingMessage()
-	 */
-	void onLastMessageReplayAvailableChanged();
-
 }

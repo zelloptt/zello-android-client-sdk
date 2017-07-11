@@ -925,12 +925,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (intent != null) {
 			boolean oldLastMessageReplayAvailable = _lastMessageReplayAvailable;
 			_lastMessageReplayAvailable = intent.getBooleanExtra(Constants.EXTRA_LAST_MESSAGE_REPLAY_AVAILABLE, false);
-
-			if (oldLastMessageReplayAvailable != _lastMessageReplayAvailable) {
-				for (Events event : Zello.getInstance().events) {
-					event.onLastMessageReplayAvailableChanged();
-				}
-			}
 		}
 	}
 

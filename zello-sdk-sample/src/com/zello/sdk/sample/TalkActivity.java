@@ -383,6 +383,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	public void onMessageStateChanged() {
 		updateMessageState();
+		updateAppState();
 	}
 
 	@Override
@@ -411,11 +412,6 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		if (_active) {
 			_sdk.showMicrophonePermissionDialog(this);
 		}
-	}
-
-	@Override
-	public void onLastMessageReplayAvailableChanged() {
-		updateAppState();
 	}
 
 	private void showMenuItem(Menu menu, int itemId, boolean show) {

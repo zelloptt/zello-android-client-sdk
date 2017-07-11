@@ -192,6 +192,8 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onMessageStateChanged() {
+		updateUIForAvailableContact();
+
         Zello.getInstance().getMessageIn(_messageIn);
         Zello.getInstance().getMessageOut(_messageOut);
 
@@ -242,11 +244,6 @@ public class PttActivity extends Activity implements com.zello.sdk.Events {
 		if (_active) {
 			Zello.getInstance().showMicrophonePermissionDialog(this);
 		}
-	}
-
-	@Override
-	public void onLastMessageReplayAvailableChanged() {
-		updateUIForAvailableContact();
 	}
 
 	//endregion

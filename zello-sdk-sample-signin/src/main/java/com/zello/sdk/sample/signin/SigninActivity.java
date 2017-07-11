@@ -146,11 +146,6 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
 
 	}
 
-	@Override
-	public void onLastMessageReplayAvailableChanged() {
-
-	}
-
 	//endregion
 
     private void updateUI() {

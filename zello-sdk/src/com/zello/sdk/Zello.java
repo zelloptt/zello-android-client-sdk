@@ -56,7 +56,7 @@ public class Zello {
      * 		In most cases, the <code>Application.onCreate()</code> method is the best place to do this.
      * </p>
      * <p>
-     * 		If the APK was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
+     * 		If the APK was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the APK use "com.pttsdk".
      * </p>
      * @param packageName The package name of the ZelloWork app.
      * @param context The context for the app.
@@ -358,7 +358,7 @@ public class Zello {
 	 * Replays the last received live voice message.
 	 * <p>
 	 *     There is no expiration for messages that can be played using this method.
-	 *     The last received live message is only changed by overriding it with a new live message, signing out, exiting the ZelloWork app or deleting the contact that sent the message.
+	 *     The last received live message is only changed by overriding it with a new live message, signing out or deleting the contact that sent the message.
 	 * </p>
 	 * <p>
 	 *     This method has no effect if there was no last incoming live voice message or if there is an active outgoing message.
@@ -376,11 +376,16 @@ public class Zello {
 	}
 
 	/**
+	 * Determines if there is a message available to replay.
 	 * <p>
-	 *     Determines if there is a message available to replay.
+	 *     This method can be used to determine whether or not your UI should display a button to replay the last incoming message.
+	 *	   There are several places where you should call this method:
+	 *	   <code>Events.onMessageStateChanged()</code> when a live incoming voice message is received or when the contact that sent the last incoming message is deleted.
+	 *	   <code>Events.onAppStateChanged()</code> when the user signs out.
 	 * </p>
 	 * @return boolean indicating whether there is an available message to replay.
-	 * @see Events#onLastMessageReplayAvailableChanged()
+	 * @see Events#onMessageStateChanged()
+	 * @see Events#onAppStateChanged()
 	 * @see Zello#replayLastIncomingMessage()
 	 */
 	public boolean isLastMessageReplayAvailable() {

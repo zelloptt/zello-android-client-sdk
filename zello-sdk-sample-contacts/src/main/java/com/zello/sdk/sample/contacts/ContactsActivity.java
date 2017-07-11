@@ -170,11 +170,6 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     }
 
 	@Override
-	public void onLastMessageReplayAvailableChanged() {
-
-	}
-
-	@Override
     public void onAppStateChanged() {
         Zello.getInstance().getAppState(_appState);
 
