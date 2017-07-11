@@ -923,7 +923,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	private void updateLastMessageReplayAvailable(Intent intent) {
 		if (intent != null) {
-			boolean oldLastMessageReplayAvailable = _lastMessageReplayAvailable;
 			_lastMessageReplayAvailable = intent.getBooleanExtra(Constants.EXTRA_LAST_MESSAGE_REPLAY_AVAILABLE, false);
 		}
 	}

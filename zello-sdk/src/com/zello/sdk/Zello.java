@@ -355,13 +355,13 @@ public class Zello {
 	//region Replaying Messages
 
 	/**
-	 * Replays the last received live voice message.
+	 * Replays the last played voice message.
 	 * <p>
 	 *     There is no expiration for messages that can be played using this method.
-	 *     The last received live message is only changed by overriding it with a new live message, signing out or deleting the contact that sent the message.
+	 *     The last played message is only changed by overriding it with a new message, signing out or deleting the contact that sent the message.
 	 * </p>
 	 * <p>
-	 *     This method has no effect if there was no last incoming live voice message or if there is an active outgoing message.
+	 *     This method has no effect if there was no last played voice message or if there is an active outgoing message.
 	 * </p>
 	 * <p>
 	 *     This method is asynchronous. When the message status changes, <code>onMessageStateChanged()</code>
@@ -378,12 +378,12 @@ public class Zello {
 	/**
 	 * Determines if there is a message available to replay.
 	 * <p>
-	 *     This method can be used to determine whether or not your UI should display a button to replay the last incoming message.
-	 *	   There are several places where you should call this method:
+	 *     Use this method to determine whether or not your UI should display a button to replay the last incoming message.
+	 *	   There are two events that may trigger a change in the last message availability:
 	 *	   <code>Events.onMessageStateChanged()</code> when a live incoming voice message is received or when the contact that sent the last incoming message is deleted.
 	 *	   <code>Events.onAppStateChanged()</code> when the user signs out.
 	 * </p>
-	 * @return boolean indicating whether there is an available message to replay.
+	 * @return boolean indicating whether there is a message to replay.
 	 * @see Events#onMessageStateChanged()
 	 * @see Events#onAppStateChanged()
 	 * @see Zello#replayLastIncomingMessage()
