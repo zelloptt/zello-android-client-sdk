@@ -6,6 +6,7 @@ import android.app.Activity;
  * The <code>Tab</code> enum represents the contact selection UI tabs of the ZelloWork app.
  * @see Zello#selectContact(String, Tab[], Tab, Theme, Activity)
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public enum Tab {
 
 	/**

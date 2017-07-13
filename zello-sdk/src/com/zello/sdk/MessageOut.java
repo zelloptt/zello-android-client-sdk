@@ -4,6 +4,7 @@ package com.zello.sdk;
  * The <code>MessageOut</code> class represents an outgoing voice message.
  * @see Zello#getMessageOut(MessageOut)
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class MessageOut {
 
 	//region Package Private Variables

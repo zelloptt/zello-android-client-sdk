@@ -3,6 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu_mute_contact"
-        android:title="Mute Contact"/>
+    android:id="@+id/menu_mute_contact"
+    android:title="Mute Contact"/>
+
+    <item
+        android:id="@+id/menu_replay"
+        android:title="Replay last message"/>
+
 </menu>

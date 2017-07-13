@@ -20,6 +20,7 @@ import java.security.MessageDigest;
  * The Sdk class acts as the implementation of the Zello SDK methods.
  * To use, instantiate an instance of the Sdk class.
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Private Variables
@@ -39,6 +40,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private boolean _serviceConnecting; // Service is bound but is still connecting
 	private String _delayedNetwork, _delayedUsername, _delayedPassword;
 	private boolean _delayedPerishable;
+	private boolean _lastMessageReplayAvailable;
 	private BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
 	private BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
 	private BroadcastReceiver _receiverMessageState; // Broadcast receiver for message state broadcasts
@@ -364,6 +366,23 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_END_MESSAGE);
 			context.sendBroadcast(intent);
 		}
+	}
+
+	//endregion
+
+	//region Replaying Messages
+
+	void replayLastIncomingMessage() {
+		Context context = _context;
+		if (context != null) {
+			Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_REPLAY_MESSAGE);
+			context.sendBroadcast(intent);
+		}
+	}
+
+	public boolean isLastMessageReplayAvailable() {
+		return _lastMessageReplayAvailable;
 	}
 
 	//endregion
@@ -827,6 +846,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private void updateAppState(Intent intent) {
 		_appState.reset();
 		if (intent != null) {
+			updateLastMessageReplayAvailable(intent);
+
 			_appState._customBuild = intent.getBooleanExtra(Constants.EXTRA_STATE_CUSTOM_BUILD, false);
 			_appState._configuring = intent.getBooleanExtra(Constants.EXTRA_STATE_CONFIGURING, false);
 			_appState._locked = intent.getBooleanExtra(Constants.EXTRA_STATE_LOCKED, false);
@@ -855,6 +876,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		boolean out = false;
 		boolean in = false;
 		if (intent != null) {
+			updateLastMessageReplayAvailable(intent);
+
 			out = intent.getBooleanExtra(Constants.EXTRA_MESSAGE_OUT, false);
 			in = !out && intent.getBooleanExtra(Constants.EXTRA_MESSAGE_IN, false);
 			if (out) {
@@ -895,6 +918,12 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 		for (Events event : Zello.getInstance().events) {
 			event.onMessageStateChanged();
+		}
+	}
+
+	private void updateLastMessageReplayAvailable(Intent intent) {
+		if (intent != null) {
+			_lastMessageReplayAvailable = intent.getBooleanExtra(Constants.EXTRA_LAST_MESSAGE_REPLAY_AVAILABLE, false);
 		}
 	}
 

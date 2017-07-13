@@ -5,6 +5,7 @@ import android.os.Build;
 import java.lang.reflect.Field;
 import java.util.UUID;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 class Util {
 
 	static String toLowerCaseLexicographically(CharSequence s) {

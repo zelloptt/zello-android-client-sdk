@@ -11,7 +11,10 @@
     <string name="status_group_users_count" formatted="false">Users online: %count%/%total%</string>
 
     <string name="sign_in_status_offline">Please sign in using the sample sign in project.</string>
-    <string name="sign_in_status_signing_in">Signing in...</string>
+    <string name="sign_in_status_signing_in">Signing in\u2026</string>
 
     <string name="select_contact_title">Select Contact</string>
+
+    <string formatted="false" name="selected_contact">Selected Contact: %s</string>
+
 </resources>

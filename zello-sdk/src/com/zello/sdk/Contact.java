@@ -4,6 +4,7 @@ package com.zello.sdk;
  * The <code>Contact</code> class represents a contact of the current user.
  * A Contact can be another user, a radio gateway, a group channel or a dynamic channel (see {@link ContactType}).
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Contact {
 
 	//region Package Private Properties

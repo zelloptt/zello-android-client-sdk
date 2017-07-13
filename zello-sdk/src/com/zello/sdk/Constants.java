@@ -1,5 +1,6 @@
 package com.zello.sdk;
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Constants {
 
 	public static final int STAY_AWAKE_TIMEOUT = 3000;
@@ -72,9 +73,11 @@ public class Constants {
 	public static final String EXTRA_LATEST_PERMISSION_ERROR = "LATEST_PERMISSION_ERROR";
 	public static final String EXTRA_PERMISSION_DIALOG = "PERMISSION_DIALOG";
 	public static final String EXTRA_PERMISSION_MICROPHONE = "PERMISSION_MICROPHONE";
+	public static final String EXTRA_LAST_MESSAGE_REPLAY_AVAILABLE = "STATE_LAST_MESSAGE_REPLAY_AVAILABLE";
 
 	public static final String VALUE_BEGIN_MESSAGE = "BEGIN_MESSAGE";
 	public static final String VALUE_END_MESSAGE = "END_MESSAGE";
+	public static final String VALUE_REPLAY_MESSAGE = "REPLAY_MESSAGE";
 	public static final String VALUE_CONNECT = "CONNECT";
 	public static final String VALUE_DISCONNECT = "DISCONNECT";
 	public static final String VALUE_MUTE = "MUTE";

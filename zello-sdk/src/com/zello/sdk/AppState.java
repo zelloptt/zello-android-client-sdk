@@ -9,6 +9,7 @@ package com.zello.sdk;
  * </p>
  * @see Zello#getAppState(AppState)
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class AppState {
 
 	//region Package Private Variables

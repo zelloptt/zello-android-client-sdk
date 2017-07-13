@@ -4,6 +4,7 @@ package com.zello.sdk;
  * The <code>MessageIn</code> class represents an incoming voice message.
  * @see Zello#getMessageIn(MessageIn)
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class MessageIn {
 
 	//region Package Private Variables
@@ -91,5 +92,7 @@ public class MessageIn {
 			message._active = _active;
 		}
 	}
+
+	//endregion
 
 }

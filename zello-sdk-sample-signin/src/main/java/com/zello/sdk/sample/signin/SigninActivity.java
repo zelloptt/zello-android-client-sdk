@@ -16,66 +16,66 @@ import com.zello.sdk.Zello;
 
 public class SigninActivity extends Activity implements com.zello.sdk.Events {
 
-    //region Lifecycle Methods
+    private EditText _networkEdit;
+    private EditText _usernameEdit;
+    private EditText _passwordEdit;
+    private Button _loginButton;
+    private TextView _textView;
+    private CheckBox _perishableCheckBox;
+    private RelativeLayout _signingInView;
+    private RelativeLayout _signInView;
+    private Button _cancelButton;
+    private Button _signOutButton;
+    private TextView _errorTextView;
+    private boolean _signInAttempted = false;
 
-    private EditText networkEdit;
-    private EditText usernameEdit;
-    private EditText passwordEdit;
-    private Button loginButton;
-    private TextView textView;
-    private CheckBox perishableCheckBox;
-    private RelativeLayout signingInView;
-    private RelativeLayout signInView;
-    private Button cancelButton;
-    private Button signOutButton;
-    private TextView errorTextView;
-    private boolean signInAttempted = false;
+    private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
 
-    private com.zello.sdk.AppState appState = new com.zello.sdk.AppState();
+	//region Lifecycle Methods
 
-    @Override
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_signin);
 
-        signInView = (RelativeLayout)findViewById(R.id.signInView);
-        networkEdit = (EditText)findViewById(R.id.networkEdit);
-        usernameEdit = (EditText)findViewById(R.id.usernameEdit);
-        passwordEdit = (EditText)findViewById(R.id.passwordEdit);
-        loginButton = (Button)findViewById(R.id.loginButton);
-        textView = (TextView)findViewById(R.id.statusTextView);
-        perishableCheckBox = (CheckBox)findViewById(R.id.checkBox);
-        signingInView = (RelativeLayout)findViewById(R.id.signingInView);
-        cancelButton = (Button)findViewById(R.id.cancelButton);
-        errorTextView = (TextView)findViewById(R.id.incorrectPasswordTextView);
-        signOutButton = (Button)findViewById(R.id.signOutButton);
+		_signInView = (RelativeLayout)findViewById(R.id.signInView);
+		_networkEdit = (EditText)findViewById(R.id.networkEdit);
+		_usernameEdit = (EditText)findViewById(R.id.usernameEdit);
+		_passwordEdit = (EditText)findViewById(R.id.passwordEdit);
+		_loginButton = (Button)findViewById(R.id.loginButton);
+		_textView = (TextView)findViewById(R.id.statusTextView);
+		_perishableCheckBox = (CheckBox)findViewById(R.id.checkBox);
+		_signingInView = (RelativeLayout)findViewById(R.id.signingInView);
+		_cancelButton = (Button)findViewById(R.id.cancelButton);
+		_errorTextView = (TextView)findViewById(R.id.incorrectPasswordTextView);
+		_signOutButton = (Button)findViewById(R.id.signOutButton);
 
         Zello.getInstance().configure("com.pttsdk", this, this);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+        _loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String network = networkEdit.getText().toString();
-                String username = usernameEdit.getText().toString();
-                String password = passwordEdit.getText().toString();
-                boolean perishable = perishableCheckBox.isChecked();
+                String network = _networkEdit.getText().toString();
+                String username = _usernameEdit.getText().toString();
+                String password = _passwordEdit.getText().toString();
+                boolean perishable = _perishableCheckBox.isChecked();
 
-                signInAttempted = true;
+				_signInAttempted = true;
                 Zello.getInstance().signIn(network, username, password, perishable);
 
                 hideKeyboard();
             }
         });
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        _cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Zello.getInstance().cancelSignIn();
             }
         });
 
-        signOutButton.setOnClickListener(new View.OnClickListener() {
+        _signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Zello.getInstance().signOut();
@@ -136,7 +136,7 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onAppStateChanged() {
-        Zello.getInstance().getAppState(appState);
+        Zello.getInstance().getAppState(_appState);
 
         updateUI();
     }
@@ -149,34 +149,34 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
 	//endregion
 
     private void updateUI() {
-        if (appState.isSignedIn()) {
-            signInView.setVisibility(View.INVISIBLE);
-            signingInView.setVisibility(View.VISIBLE);
+        if (_appState.isSignedIn()) {
+            _signInView.setVisibility(View.INVISIBLE);
+            _signingInView.setVisibility(View.VISIBLE);
 
-            textView.setText(R.string.signed_in);
+            _textView.setText(R.string.signed_in);
 
-            cancelButton.setVisibility(View.INVISIBLE);
-            signOutButton.setVisibility(View.VISIBLE);
-        } else if (appState.isSigningIn()) {
-            textView.setText(R.string.signing_in);
-            cancelButton.setVisibility(View.VISIBLE);
-            signOutButton.setVisibility(View.INVISIBLE);
+            _cancelButton.setVisibility(View.INVISIBLE);
+            _signOutButton.setVisibility(View.VISIBLE);
+        } else if (_appState.isSigningIn()) {
+            _textView.setText(R.string.signing_in);
+            _cancelButton.setVisibility(View.VISIBLE);
+            _signOutButton.setVisibility(View.INVISIBLE);
 
-            signInView.setVisibility(View.INVISIBLE);
-            signingInView.setVisibility(View.VISIBLE);
+            _signInView.setVisibility(View.INVISIBLE);
+            _signingInView.setVisibility(View.VISIBLE);
         } else {
-            signInView.setVisibility(View.VISIBLE);
-            signingInView.setVisibility(View.INVISIBLE);
+            _signInView.setVisibility(View.VISIBLE);
+            _signingInView.setVisibility(View.INVISIBLE);
 
-            signOutButton.setVisibility(View.INVISIBLE);
+            _signOutButton.setVisibility(View.INVISIBLE);
         }
 
-        if (signInAttempted) {
-            String error = getErrorText(appState.getLastError());
+        if (_signInAttempted) {
+            String error = getErrorText(_appState.getLastError());
             if (error == null) {
-                errorTextView.setText("");
+                _errorTextView.setText("");
             } else {
-                errorTextView.setText(error);
+                _errorTextView.setText(error);
             }
         }
     }
@@ -215,7 +215,7 @@ public class SigninActivity extends Activity implements com.zello.sdk.Events {
     }
 
     private void hideKeyboard() {
-        View view = this.getCurrentFocus();
+        View view = getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);

@@ -13,7 +13,8 @@ import android.util.Log;
  * <p>
  *     To use, get the current snapshot of <code>Contacts</code> using the {@link Zello#getContacts()} method. For specific usage, please see the sample projects.
  * </p>
- * */
+ */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Contacts {
 
 	//region Private Properties

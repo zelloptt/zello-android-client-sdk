@@ -4,6 +4,7 @@ package com.zello.sdk;
  * The <code>AudioMode</code> enum represents the audio modes available with Zello SDK.
  * @see Audio
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public enum AudioMode {
 
 	/**

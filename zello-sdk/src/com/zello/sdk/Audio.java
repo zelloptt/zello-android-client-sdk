@@ -13,6 +13,7 @@ import android.content.IntentFilter;
  *     To use, retrieve the current <code>Audio</code> instance using the {@link Zello#getAudio()} method. For specific usage, please see the sample projects.
  * </p>
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Audio {
 
 	//region Private Properties
