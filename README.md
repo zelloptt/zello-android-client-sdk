@@ -16,7 +16,7 @@ The Zello Android client SDK allows you to integrate [ZelloWork](https://zellowo
 
 ## Current Version
 
-The stable release for the ZelloWork Android SDK is v3.71.
+The stable release for the ZelloWork Android SDK is v3.77.
 
 ## Installation
 
@@ -207,19 +207,8 @@ public class MyActivity extends Activity {
       Zello.getInstance().leavePowerSavingMode();
    }
 ```
-When your app no longer needs the SDK, call `Zello.getInstance().unconfigure()` to release resources. Most apps should do it in `Application.onTerminate()`:
+When your app no longer needs the SDK, call `Zello.getInstance().unconfigure()` to release resources.
 
-```java
-public class App extends Application {
-
-   @Override
-   public void onTerminate() {
-      super.onTerminate();
-      Zello.getInstance().unconfigure();
-   }
-   
-}
-```
 ## Going live with your Zello-enabled app
 All apps using Zello SDK must adhere to the following guidelines:
 
