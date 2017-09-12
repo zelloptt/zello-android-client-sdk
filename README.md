@@ -16,7 +16,7 @@ The Zello Android client SDK allows you to integrate [ZelloWork](https://zellowo
 
 ## Current Version
 
-The stable release for the ZelloWork Android SDK is v3.77.
+The stable release for the ZelloWork Android SDK is v3.80.
 
 ## Installation
 
