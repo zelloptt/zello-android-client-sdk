@@ -4,6 +4,14 @@
     </style>
 
     <style name="AppTheme" parent="AppThemeBase">
+        <item name="textStyle">@style/TextView</item>
+    </style>
+
+    <style name="TextView">
+        <item name="android:lineSpacingExtra">0dip</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:lines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
 </resources>

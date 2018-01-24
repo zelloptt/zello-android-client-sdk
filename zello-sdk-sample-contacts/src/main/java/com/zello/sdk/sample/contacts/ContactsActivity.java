@@ -52,6 +52,8 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
                 }
             }
         });
+
+		onAppStateChanged();
     }
 
     @Override

@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
-            android:padding="@dimen/control_padding" />
+            android:padding="@dimen/control_padding"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <Button
             android:id="@+id/cancel"
@@ -246,8 +247,8 @@
             <!-- Incoming message indication -->
 
             <include
-                layout="@layout/message"
                 android:id="@+id/message_info"
+                layout="@layout/message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

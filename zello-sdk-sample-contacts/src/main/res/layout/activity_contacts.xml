@@ -1,42 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    android:clipChildren="false"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="10dip"
     tools:context=".ContactsActivity">
 
     <ListView
         android:id="@+id/contactsListView"
         android:layout_width="match_parent"
-        android:layout_height="465dp"
-        android:layout_above="@+id/selectedContactTextView"
-        android:layout_alignEnd="@+id/statusTextView"
-        android:layout_alignRight="@+id/statusTextView" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/statusTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:text="Please sign in using the sample sign in project."
         android:textAlignment="center"
+        android:padding="@dimen/activity_margin"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/selectedContactTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal|bottom"
-        android:text="Selected Contact:"
+        android:padding="@dimen/activity_margin"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 </FrameLayout>
