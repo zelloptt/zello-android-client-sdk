@@ -1,7 +1,6 @@
 package com.zello.sdk.sample;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -10,7 +9,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -353,6 +351,10 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				_sdk.endMessage();
 				return true;
 			}
+			case R.id.menu_ptt_buttons: {
+				openPttButtonsScreen();
+				return true;
+			}
 			case R.id.menu_about: {
 				showAbout();
 				return true;
@@ -433,6 +435,10 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		if (item != null) {
 			item.setVisible(show);
 		}
+	}
+
+	private void openPttButtonsScreen() {
+		_sdk.showPttButtonsScreen(this);
 	}
 
 	private void showAbout() {

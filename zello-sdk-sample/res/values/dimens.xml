@@ -4,5 +4,9 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="talk_button_size">300dip</dimen>
+    <dimen name="control_padding">10dp</dimen>
+    <dimen name="control_margin">5dp</dimen>
+    <dimen name="contact_icon_size">14sp</dimen>
+    <dimen name="ptt_button_size">100dip</dimen>
 
 </resources>

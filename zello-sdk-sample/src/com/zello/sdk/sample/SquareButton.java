@@ -2,9 +2,8 @@ package com.zello.sdk.sample;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.Button;
 
-public class SquareButton extends Button {
+public class SquareButton extends android.support.v7.widget.AppCompatButton {
 
 	private int _maxWidth = Integer.MAX_VALUE;
 	private int _maxHeight = Integer.MAX_VALUE;

@@ -1,10 +1,10 @@
 package com.zello.sdk.sample;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.zello.sdk.Zello;
 
-public class AnotherActivity extends Activity implements com.zello.sdk.Events {
+public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.Events {
 
 	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
 	private com.zello.sdk.MessageIn _messageIn = new com.zello.sdk.MessageIn();

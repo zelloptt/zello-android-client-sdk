@@ -2,19 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
+    android:background="#dddddd"
     android:clipChildren="false"
+    android:clipToPadding="false"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="@dimen/control_padding">
 
     <ImageView
-        android:id="@+id/contact_image"
+        android:id="@+id/message_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/control_padding"
         android:layout_marginRight="@dimen/control_padding"
-        android:src="@drawable/user_offline" />
+        android:src="@drawable/message_in" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,29 +25,15 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/contact_name"
+            android:id="@+id/message_name"
             style="?attr/textStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/contact_mute"
-                android:layout_width="@dimen/contact_icon_size"
-                android:layout_height="@dimen/contact_icon_size"
-                android:src="@drawable/contact_muted" />
-
-            <TextView
-                android:id="@+id/contact_status"
-                style="?attr/textStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/message_status"
+            style="?attr/textStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </LinearLayout>

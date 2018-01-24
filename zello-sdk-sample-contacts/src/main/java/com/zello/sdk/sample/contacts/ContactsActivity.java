@@ -1,8 +1,8 @@
 package com.zello.sdk.sample.contacts;
 
-import android.app.Activity;
 import android.os.Parcelable;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.zello.sdk.Tab;
 import com.zello.sdk.Zello;
 
-public class ContactsActivity extends Activity implements com.zello.sdk.Events {
+public class ContactsActivity extends AppCompatActivity implements com.zello.sdk.Events {
 
     private ListView _contactsListView;
     private TextView _statusTextView;

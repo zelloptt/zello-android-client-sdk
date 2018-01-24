@@ -1,5 +1,6 @@
 package com.zello.sdk.sample.contacts;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 
 public class ListAdapter extends BaseAdapter {
 
-	private ArrayList<com.zello.sdk.Contact> _contacts = new ArrayList<com.zello.sdk.Contact>();
+	private ArrayList<com.zello.sdk.Contact> _contacts = new ArrayList<>();
 
 	public ListAdapter() {
 		super();
@@ -64,6 +65,7 @@ public class ListAdapter extends BaseAdapter {
 		return _contacts.size();
 	}
 
+	@SuppressLint("InflateParams")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view;
@@ -81,10 +83,10 @@ public class ListAdapter extends BaseAdapter {
 	}
 
 	public static void configureView(View view, com.zello.sdk.Contact contact) {
-		ImageView imgContactStatus = (ImageView) view.findViewById(R.id.contact_image);
+		ImageView imgContactStatus = view.findViewById(R.id.contact_image);
 		View viewContactMute = view.findViewById(R.id.contact_mute);
-		TextView txtContactName = (TextView) view.findViewById(R.id.contact_name);
-		TextView txtContactStatus = (TextView) view.findViewById(R.id.contact_status);
+		TextView txtContactName = view.findViewById(R.id.contact_name);
+		TextView txtContactStatus = view.findViewById(R.id.contact_status);
 		if (contact != null) {
 			String displayName = contact.getDisplayName(); // Contact name or a full name if not empty
 			String title = contact.getTitle();

@@ -67,6 +67,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/menu_ptt_buttons"
+        android:title="@string/menu_ptt_buttons"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/menu_about"
         android:title="@string/menu_about"
         app:showAsAction="never" />
