@@ -10,8 +10,11 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Zello.getInstance().configure("net.loudtalks", this); // Use to connect to apk from zellowork.com
-        //Zello.getInstance().configure("com.pttsdk", this); // Use with generic apk
+		// Use to connect to an app installed from an apk obtained from https://www.zellowork.com
+		//Zello.getInstance().configure("net.loudtalks", this);
+
+		// Use with an app installed from a generic PTT SDK apk obtained from https://github.com/zelloptt/zello-android-client-sdk/releases
+		Zello.getInstance().configure("com.pttsdk", this);
     }
 
     @Override

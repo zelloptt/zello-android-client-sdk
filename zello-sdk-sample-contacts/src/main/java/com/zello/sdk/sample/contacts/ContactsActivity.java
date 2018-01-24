@@ -10,7 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.zello.sdk.*;
+import com.zello.sdk.Tab;
+import com.zello.sdk.Zello;
 
 public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
@@ -28,11 +29,15 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
         setContentView(R.layout.activity_contacts);
 
-		_contactsListView = (ListView)findViewById(R.id.contactsListView);
-		_statusTextView = (TextView)findViewById(R.id.statusTextView);
-		_selectedContactTextView = (TextView)findViewById(R.id.selectedContactTextView);
+		_contactsListView = findViewById(R.id.contactsListView);
+		_statusTextView = findViewById(R.id.statusTextView);
+		_selectedContactTextView = findViewById(R.id.selectedContactTextView);
 
-        Zello.getInstance().configure("com.pttsdk", this, this);
+		// Use to connect to an app installed from an apk obtained from https://www.zellowork.com
+		//Zello.getInstance().configure("net.loudtalks", this);
+
+		// Use with an app installed from a generic PTT SDK apk obtained from https://github.com/zelloptt/zello-android-client-sdk/releases
+		Zello.getInstance().configure("com.pttsdk", this);
 
         // Contact list pick handler
         _contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -52,7 +57,6 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         Zello.getInstance().unsubscribeFromEvents(this);
         Zello.getInstance().unconfigure();
     }
@@ -60,14 +64,12 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     @Override
     protected void onResume() {
         super.onResume();
-
         Zello.getInstance().leavePowerSavingMode();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
         Zello.getInstance().enterPowerSavingMode();
     }
 
@@ -79,16 +81,13 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-
         menu.clear();
-
         Zello.getInstance().getAppState(_appState);
         if (_appState.isAvailable() && !_appState.isInitializing()) {
             getMenuInflater().inflate(R.menu.menu, menu);
 
             showMenuItem(menu, R.id.menu_select_contact, true);
         }
-
         return true;
     }
 
@@ -110,7 +109,6 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
                 break;
             }
         }
-
         return true;
     }
 
@@ -140,7 +138,6 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onMessageStateChanged() {
-
     }
 
     @Override
@@ -156,7 +153,6 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onAudioStateChanged() {
-
     }
 
     @Override
@@ -166,7 +162,6 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
     @Override
     public void onLastContactsTabChanged(Tab tab) {
-
     }
 
 	@Override
@@ -174,12 +169,10 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
         Zello.getInstance().getAppState(_appState);
 
         if (_appState.isSignedIn()) {
-            Helper.invalidateOptionsMenu(this);
-
+            invalidateOptionsMenu();
             _statusTextView.setVisibility(View.INVISIBLE);
             _contactsListView.setVisibility(View.VISIBLE);
             _selectedContactTextView.setVisibility(View.VISIBLE);
-
             updateContactList();
         } else if (_appState.isSigningIn()) {
             _statusTextView.setVisibility(View.VISIBLE);
@@ -196,7 +189,6 @@ public class ContactsActivity extends Activity implements com.zello.sdk.Events {
 
 	@Override
 	public void onMicrophonePermissionNotGranted() {
-
 	}
 
 	//endregion

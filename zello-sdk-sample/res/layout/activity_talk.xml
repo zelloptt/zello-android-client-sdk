@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:id="@+id/talk_root"
+<FrameLayout android:id="@+id/talk_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -23,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
-            android:padding="10dip"/>
+            android:padding="10dip" />
 
         <Button
             android:id="@+id/cancel"
@@ -31,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dip"
-            android:text="@string/button_cancel"/>
+            android:text="@string/button_cancel" />
     </LinearLayout>
 
     <!-- Login screen -->
@@ -47,7 +46,7 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/username"/>
+            android:text="@string/username" />
 
         <EditText
             android:id="@+id/username"
@@ -55,13 +54,13 @@
             android:layout_height="wrap_content"
             android:inputType="text|textNoSuggestions"
             android:lines="1"
-            android:maxLength="40"/>
+            android:maxLength="40" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dip"
-            android:text="@string/password"/>
+            android:text="@string/password" />
 
         <EditText
             android:id="@+id/password"
@@ -69,14 +68,14 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword"
             android:lines="1"
-            android:maxLength="40"/>
+            android:maxLength="40" />
 
         <TextView
             android:id="@+id/network_label"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dip"
-            android:text="@string/network"/>
+            android:text="@string/network" />
 
         <EditText
             android:id="@+id/network"
@@ -84,13 +83,13 @@
             android:layout_height="wrap_content"
             android:inputType="text|textNoSuggestions"
             android:lines="1"
-            android:maxLength="128"/>
+            android:maxLength="128" />
 
         <CheckBox
             android:id="@+id/perishable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/perishable"/>
+            android:text="@string/perishable" />
 
         <TextView
             android:id="@+id/error"
@@ -99,7 +98,7 @@
             android:layout_marginTop="5dip"
             android:background="#ff0000"
             android:gravity="center_horizontal"
-            android:padding="5dip"/>
+            android:padding="5dip" />
 
         <Button
             android:id="@+id/login"
@@ -107,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dip"
-            android:text="@string/button_sigin_in"/>
+            android:text="@string/button_sigin_in" />
     </LinearLayout>
 
     <LinearLayout
@@ -127,7 +126,7 @@
             <ListView
                 android:id="@+id/contact_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
             <!-- Talk screen -->
 
@@ -157,14 +156,14 @@
                             android:id="@+id/contact_info"
                             layout="@layout/contact"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
 
                         <TextView
                             android:id="@+id/contact_not_selected"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:text="@string/contact_not_selected"/>
+                            android:text="@string/contact_not_selected" />
                     </FrameLayout>
 
                     <ImageButton
@@ -174,7 +173,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="10dip"
                         android:contentDescription="@string/button_replay"
-                        android:src="@android:drawable/ic_menu_rotate"/>
+                        android:src="@android:drawable/ic_menu_rotate" />
 
                     <ToggleButton
                         android:id="@+id/button_connect"
@@ -182,7 +181,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="10dip"
-                        android:contentDescription="@string/channel_connect"/>
+                        android:contentDescription="@string/channel_connect" />
 
                     <ImageButton
                         android:id="@+id/button_close"
@@ -191,7 +190,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="10dip"
                         android:contentDescription="@string/button_close"
-                        android:src="@android:drawable/ic_delete"/>
+                        android:src="@android:drawable/ic_delete" />
                 </LinearLayout>
 
                 <!-- The talk button -->
@@ -212,7 +211,7 @@
                         android:longClickable="false"
                         android:maxHeight="100dip"
                         android:maxWidth="100dip"
-                        android:text="@string/talk_button"/>
+                        android:text="@string/talk_button" />
                 </LinearLayout>
 
                 <!-- Audio modes -->
@@ -230,21 +229,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textOff="@string/audio_speaker"
-                        android:textOn="@string/audio_speaker"/>
+                        android:textOn="@string/audio_speaker" />
 
                     <com.zello.sdk.sample.NoToggleButton
                         android:id="@+id/audio_earpiece"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textOff="@string/audio_earpiece"
-                        android:textOn="@string/audio_earpiece"/>
+                        android:textOn="@string/audio_earpiece" />
 
                     <com.zello.sdk.sample.NoToggleButton
                         android:id="@+id/audio_bluetooth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textOff="@string/audio_bluetooth"
-                        android:textOn="@string/audio_bluetooth"/>
+                        android:textOn="@string/audio_bluetooth" />
                 </LinearLayout>
 
                 <!-- Incoming message indication -->
@@ -266,7 +265,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dip"
-                        android:src="@drawable/message_in"/>
+                        android:src="@drawable/message_in" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -279,13 +278,13 @@
                             android:id="@+id/message_name"
                             style="?attr/textStyle"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
 
                         <TextView
                             android:id="@+id/message_status"
                             style="?attr/textStyle"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

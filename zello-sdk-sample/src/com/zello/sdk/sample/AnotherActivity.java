@@ -5,8 +5,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.*;
-import android.widget.*;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.zello.sdk.Zello;
 
@@ -29,11 +32,11 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 		System.out.println("AnotherActivity.onCreate");
 
 		setContentView(R.layout.activity_another);
-		_textMessageInfo = (TextView) findViewById(R.id.network);
+		_textMessageInfo = findViewById(R.id.network);
 		_viewMessageInfo = findViewById(R.id.message_info);
-		_imgMessageStatus = (ImageView) _viewMessageInfo.findViewById(R.id.message_image);
-		_txtMessageName = (TextView) _viewMessageInfo.findViewById(R.id.message_name);
-		_txtMessageStatus = (TextView) _viewMessageInfo.findViewById(R.id.message_status);
+		_imgMessageStatus = _viewMessageInfo.findViewById(R.id.message_image);
+		_txtMessageName = _viewMessageInfo.findViewById(R.id.message_name);
+		_txtMessageStatus = _viewMessageInfo.findViewById(R.id.message_status);
 
 		Zello.getInstance().subscribeToEvents(this);
 		updateAppState();
@@ -100,7 +103,6 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.menu_set_status:
 			case R.id.menu_available:
 			case R.id.menu_solo:
 			case R.id.menu_busy: {
@@ -287,7 +289,7 @@ public class AnotherActivity extends Activity implements com.zello.sdk.Events {
 		}
 		_textMessageInfo.setText(_appState.getNetwork());
 		System.out.println(state);
-		Helper.invalidateOptionsMenu(this);
+		invalidateOptionsMenu();
 	}
 
 }

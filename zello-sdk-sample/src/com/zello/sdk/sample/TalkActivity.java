@@ -1,5 +1,6 @@
 package com.zello.sdk.sample;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -8,14 +9,28 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.view.*;
-import android.widget.*;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.zello.sdk.Zello;
 
 import java.text.NumberFormat;
 
-public class TalkActivity extends Activity implements com.zello.sdk.Events {
+public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Events {
 
 	private View _viewState;
 	private TextView _txtState;
@@ -59,38 +74,39 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	private static String _keyPassword = "password";
 	private static String _keyNetwork = "network";
 
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_talk);
 		_viewState = findViewById(R.id.state_screen);
-		_txtState = (TextView) _viewState.findViewById(R.id.state);
-		_btnCancel = (Button) _viewState.findViewById(R.id.cancel);
+		_txtState = _viewState.findViewById(R.id.state);
+		_btnCancel = _viewState.findViewById(R.id.cancel);
 		_viewLogin = findViewById(R.id.login_screen);
-		_txtNetwork = (TextView) _viewLogin.findViewById(R.id.network_label);
-		_editUsername = (EditText) _viewLogin.findViewById(R.id.username);
-		_editPassword = (EditText) _viewLogin.findViewById(R.id.password);
-		_editNetwork = (EditText) _viewLogin.findViewById(R.id.network);
-		_checkPerishable = (CheckBox) _viewLogin.findViewById(R.id.perishable);
+		_txtNetwork = _viewLogin.findViewById(R.id.network_label);
+		_editUsername = _viewLogin.findViewById(R.id.username);
+		_editPassword = _viewLogin.findViewById(R.id.password);
+		_editNetwork = _viewLogin.findViewById(R.id.network);
+		_checkPerishable = _viewLogin.findViewById(R.id.perishable);
 		_viewContent = findViewById(R.id.content_screen);
-		_listContacts = (ListView) _viewContent.findViewById(R.id.contact_list);
+		_listContacts = _viewContent.findViewById(R.id.contact_list);
 		_viewTalkScreen = _viewContent.findViewById(R.id.talk_screen);
 		_viewContactInfo = _viewTalkScreen.findViewById(R.id.contact_info);
-		_btnTalk = (SquareButton) _viewTalkScreen.findViewById(R.id.talk);
-		_btnReplay = (ImageButton) findViewById(R.id.button_replay);
-		_btnConnect = (ToggleButton) findViewById(R.id.button_connect);
+		_btnTalk = _viewTalkScreen.findViewById(R.id.talk);
+		_btnReplay = findViewById(R.id.button_replay);
+		_btnConnect = findViewById(R.id.button_connect);
 		_viewContactNotSelected = _viewTalkScreen.findViewById(R.id.contact_not_selected);
 		_viewAudioMode = findViewById(R.id.audio_mode);
-		_btnSpeaker = (ToggleButton) _viewAudioMode.findViewById(R.id.audio_speaker);
-		_btnEarpiece = (ToggleButton) _viewAudioMode.findViewById(R.id.audio_earpiece);
-		_btnBluetooth = (ToggleButton) _viewAudioMode.findViewById(R.id.audio_bluetooth);
+		_btnSpeaker = _viewAudioMode.findViewById(R.id.audio_speaker);
+		_btnEarpiece = _viewAudioMode.findViewById(R.id.audio_earpiece);
+		_btnBluetooth = _viewAudioMode.findViewById(R.id.audio_bluetooth);
 		_viewMessageInfo = findViewById(R.id.message_info);
-		_imgMessageStatus = (ImageView) _viewMessageInfo.findViewById(R.id.message_image);
-		_txtMessageName = (TextView) _viewMessageInfo.findViewById(R.id.message_name);
-		_txtMessageStatus = (TextView) _viewMessageInfo.findViewById(R.id.message_status);
-		_btnLogin = (Button) _viewLogin.findViewById(R.id.login);
-		_txtError = (TextView) _viewLogin.findViewById(R.id.error);
+		_imgMessageStatus = _viewMessageInfo.findViewById(R.id.message_image);
+		_txtMessageName = _viewMessageInfo.findViewById(R.id.message_name);
+		_txtMessageStatus = _viewMessageInfo.findViewById(R.id.message_status);
+		_btnLogin = _viewLogin.findViewById(R.id.login);
+		_txtError = _viewLogin.findViewById(R.id.error);
 
 		// Constrain PTT button size
 		_btnTalk.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
@@ -101,7 +117,6 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			public boolean onTouch(View v, MotionEvent event) {
 				int action = event.getAction();
 				if (action == MotionEvent.ACTION_DOWN) {
-					//Zello.getInstance().setExternalId(java.util.UUID.randomUUID().toString());
 					_sdk.beginMessage();
 				} else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
 					_sdk.endMessage();
@@ -169,8 +184,8 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_editUsername.setText(Helper.loadValue(this, _keyUsername));
 		_editPassword.setText(Helper.loadValue(this, _keyPassword));
 		_editNetwork.setText(Helper.loadValue(this, _keyNetwork));
-		_editPassword = (EditText) _viewLogin.findViewById(R.id.password);
-		_editNetwork = (EditText) _viewLogin.findViewById(R.id.network);
+		_editPassword = _viewLogin.findViewById(R.id.password);
+		_editNetwork = _viewLogin.findViewById(R.id.network);
 		_btnLogin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -279,13 +294,13 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 				busy = status == com.zello.sdk.Status.BUSY;
 			}
 			showMenuItem(menu, R.id.menu_select_contact, select);
-			showMenuItem(menu, R.id.menu_lock_ptt_app ,!_appState.isLocked());
-			showMenuItem(menu, R.id.menu_unlock_ptt_app ,_appState.isLocked());
-			showMenuItem(menu, R.id.menu_enable_auto_run ,!_appState.isAutoRunEnabled());
+			showMenuItem(menu, R.id.menu_lock_ptt_app, !_appState.isLocked());
+			showMenuItem(menu, R.id.menu_unlock_ptt_app, _appState.isLocked());
+			showMenuItem(menu, R.id.menu_enable_auto_run, !_appState.isAutoRunEnabled());
 			showMenuItem(menu, R.id.menu_disable_auto_run, _appState.isAutoRunEnabled());
 			showMenuItem(menu, R.id.menu_enable_auto_connect_channels, !_appState.isChannelAutoConnectEnabled());
 			showMenuItem(menu, R.id.menu_disable_auto_connect_channels, _appState.isChannelAutoConnectEnabled());
-			showMenuItem(menu, R.id.menu_about ,true);
+			showMenuItem(menu, R.id.menu_about, true);
 			showMenuItem(menu, R.id.menu_available, available);
 			showMenuItem(menu, R.id.menu_solo, solo);
 			showMenuItem(menu, R.id.menu_busy, busy);
@@ -296,7 +311,6 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.menu_set_status:
 			case R.id.menu_available:
 			case R.id.menu_solo:
 			case R.id.menu_busy: {
@@ -420,7 +434,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 			item.setVisible(show);
 		}
 	}
-	
+
 	private void showAbout() {
 		System.out.println("showAbout");
 		Intent intent = new Intent(this, AnotherActivity.class);
@@ -645,7 +659,7 @@ public class TalkActivity extends Activity implements com.zello.sdk.Events {
 		_viewState.setVisibility(stateVisibility);
 		_viewLogin.setVisibility(loginVisibility);
 		_viewContent.setVisibility(contentVisibility);
-		Helper.invalidateOptionsMenu(this);
+		invalidateOptionsMenu();
 	}
 
 	private void updateStateScreen() {
