@@ -602,6 +602,19 @@ public class Zello {
 
 	//endregion
 
+	//region App settings
+
+	/**
+	 * Opens the PTT buttons settings screen.
+	 * @param activity Nullable, Caller activity.
+	 */
+	public void showPttButtonsScreen(Activity activity) {
+		checkConfiguration();
+		_sdk.showPttButtonsScreen(activity);
+	}
+
+	//endregion
+
     //region Getters
 
     /**

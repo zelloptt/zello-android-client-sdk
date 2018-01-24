@@ -37,6 +37,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private Audio _audio;
 	private AppState _appState = new AppState();
 	private boolean _serviceBound; // Service is bound
+	private Intent _serviceIntent; // Service connect/disconnect intent
 	private boolean _serviceConnecting; // Service is bound but is still connecting
 	private String _delayedNetwork, _delayedUsername, _delayedPassword;
 	private boolean _delayedPerishable;
@@ -52,7 +53,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	private static final String _pttActivityClass = "com.zello.sdk.Activity";
 	private static final String _pttPermissionsActivityClass = "com.zello.sdk.PermissionsActivity";
-	private static Intent _serviceIntent;
+	private static final String _pttPttButtonsActivityClass = "com.zello.sdk.PTTButtonsActivity";
 
 	//endregion
 
@@ -81,31 +82,33 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				@Override
 				public void onReceive(Context context, Intent intent) {
 					updateAppAvailable();
-					if (intent != null) {
-						String action = intent.getAction();
-						if (action != null) {
-							if (action.equals(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE) || action.equals(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE)) {
-								String[] pkgs = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
-								if (pkgs != null) {
-									for (String pkg : pkgs) {
-										if (pkg.equalsIgnoreCase(_package)) {
-											reconnect();
-											updateSelectedContact(null);
-											updateContacts();
-											break;
-										}
-									}
+					if (intent == null || _handler == null) {
+						return;
+					}
+					String action = intent.getAction();
+					if (action == null) {
+						return;
+					}
+					if (action.equals(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE) || action.equals(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE)) {
+						String[] pkgs = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
+						if (pkgs != null) {
+							for (String pkg : pkgs) {
+								if (pkg.equalsIgnoreCase(_package)) {
+									reconnect();
+									updateSelectedContact(null);
+									updateContacts();
+									break;
 								}
-							} else {
-								Uri data = intent.getData();
-								if (data != null) {
-									String pkg = data.getSchemeSpecificPart();
-									if (pkg != null && pkg.equalsIgnoreCase(_package)) {
-										reconnect();
-										updateSelectedContact(null);
-										updateContacts();
-									}
-								}
+							}
+						}
+					} else {
+						Uri data = intent.getData();
+						if (data != null) {
+							String pkg = data.getSchemeSpecificPart();
+							if (pkg != null && pkg.equalsIgnoreCase(_package)) {
+								reconnect();
+								updateSelectedContact(null);
+								updateContacts();
 							}
 						}
 					}
@@ -245,7 +248,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
 				intent.putExtra(Constants.EXTRA_REQUEST_VITAL_PERMISSIONS, true);
 				context.startActivity(intent);
-			} catch (Exception ignored) {
+			} catch (Throwable ignored) {
 				// ActivityNotFoundException
 			}
 		}
@@ -258,7 +261,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
 				intent.putExtra(Constants.EXTRA_REQUEST_VITAL_PERMISSIONS, true);
 				activity.startActivity(intent);
-			} catch (Exception ignored) {
+			} catch (Throwable ignored) {
 				// ActivityNotFoundException
 			}
 		}
@@ -274,7 +277,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				intent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
 				intent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
 				context.startActivity(intent);
-			} catch (Exception ignored) {
+			} catch (Throwable ignored) {
 				// ActivityNotFoundException
 			}
 		}
@@ -288,7 +291,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				intent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
 				intent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
 				activity.startActivity(intent);
-			} catch (Exception ignored) {
+			} catch (Throwable ignored) {
 				// ActivityNotFoundException
 			}
 		}
@@ -316,7 +319,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 						intent.putExtra(Constants.EXTRA_THEME, Constants.VALUE_LIGHT);
 					}
 					context.startActivity(intent);
-				} catch (Exception ignored) {
+				} catch (Throwable ignored) {
 					// ActivityNotFoundException
 				}
 			}
@@ -339,7 +342,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 						intent.putExtra(Constants.EXTRA_THEME, Constants.VALUE_LIGHT);
 					}
 					activity.startActivity(intent);
-				} catch (Exception ignored) {
+				} catch (Throwable ignored) {
 					// ActivityNotFoundException
 				}
 			}
@@ -557,8 +560,28 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			try {
 				Intent LaunchIntent = context.getPackageManager().getLaunchIntentForPackage(_package);
 				context.startActivity(LaunchIntent);
-			} catch (Exception ignored) {
+			} catch (Throwable ignored) {
 				// PackageManager.NameNotFoundException, ActivityNotFoundException
+			}
+		}
+	}
+
+	//endregion
+
+	//region App settings
+
+	void showPttButtonsScreen(Activity activity) {
+		Context context = activity != null ? activity : _context;
+		if (context != null) {
+			try {
+				Intent intent = new Intent();
+				if (activity == null) {
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				}
+				intent.setComponent(new ComponentName(_package, _pttPttButtonsActivityClass));
+				context.startActivity(intent);
+			} catch (Throwable ignored) {
+				// ActivityNotFoundException
 			}
 		}
 	}
@@ -686,7 +709,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (context != null) {
 			if (_serviceConnecting) {
 				_serviceConnecting = false;
-				context.startService(getServiceIntent());
+				context.startService(_serviceIntent);
 				if (_delayedNetwork != null) {
 					signIn(_delayedNetwork, _delayedUsername, _delayedPassword, _delayedPerishable);
 				}
@@ -697,7 +720,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 					Log.i("zello sdk", "disconnecting because sdk was destroyed");
 					try {
 						context.unbindService(this);
-					} catch (Throwable ignore) {
+					} catch (Throwable ignored) {
 					}
 					_context = null;
 					_appState._error = false;
@@ -759,8 +782,18 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				fireAppStateChanged();
 
 				if (!_serviceBound) {
+					_serviceIntent = getServiceIntentNew();
 					try {
-						_serviceBound = context.bindService(getServiceIntent(), this, Context.BIND_AUTO_CREATE);
+						_serviceBound = context.bindService(_serviceIntent, this, Context.BIND_AUTO_CREATE);
+					} catch (Throwable t) {
+						_serviceConnecting = false;
+						Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
+					}
+				}
+				if (!_serviceBound) {
+					_serviceIntent = getServiceIntentOld();
+					try {
+						_serviceBound = context.bindService(_serviceIntent, this, Context.BIND_AUTO_CREATE);
 					} catch (Throwable t) {
 						_serviceConnecting = false;
 						Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
@@ -770,7 +803,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 					_appState._error = true;
 					try {
 						context.unbindService(this);
-					} catch (Throwable ignore) {
+					} catch (Throwable ignored) {
 					}
 				}
 				if (_serviceConnecting) {
@@ -791,7 +824,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				if (context != null) {
 					try {
 						context.unbindService(this);
-					} catch (Throwable ignore) {
+					} catch (Throwable ignored) {
 					}
 				}
 			} else {
@@ -800,14 +833,14 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	private Intent getServiceIntent() {
-		Intent intent = _serviceIntent;
-		if (intent == null) {
-			intent = new Intent();
-			intent.setClassName(_package, "com.loudtalks.client.ui.Svc");
-			_serviceIntent = intent;
-		}
-		return intent;
+	private Intent getServiceIntentNew() {
+		Intent intent = new Intent();
+		return intent.setClassName(_package, "com.zello.client.ui.Svc");
+	}
+
+	private Intent getServiceIntentOld() {
+		Intent intent = new Intent();
+		return intent.setClassName(_package, "com.loudtalks.client.ui.Svc");
 	}
 
 	private void reconnect() {
@@ -994,7 +1027,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (context != null) {
 			try {
 				return null != context.getPackageManager().getLaunchIntentForPackage(_package);
-			} catch (Exception e) {
+			} catch (Throwable ignored) {
 				// PackageManager.NameNotFoundException
 			}
 		}
@@ -1102,20 +1135,20 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	private static String tabsToString(Tab[] tabs) {
-		String s = null;
+		StringBuilder s = null;
 		if (tabs != null) {
 			for (Tab tab : tabs) {
 				String name = tabToString(tab);
 				if (name != null) {
 					if (s == null) {
-						s = name;
+						s = new StringBuilder(name);
 					} else {
-						s += "," + name;
+						s.append(",").append(name);
 					}
 				}
 			}
 		}
-		return s;
+		return s != null ? s.toString() : null;
 	}
 
 	private static Tab stringToTab(String s) {
@@ -1135,10 +1168,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				int halfbyte = (c >>> 4) & 0x0F;
 				int two_halfs = 0;
 				do {
-					if ((0 <= halfbyte) && (halfbyte <= 9))
+					if ((0 <= halfbyte) && (halfbyte <= 9)) {
 						buf.append((char) ('0' + halfbyte));
-					else
+					} else {
 						buf.append((char) ('a' + (halfbyte - 10)));
+					}
 					halfbyte = c & 0x0F;
 				} while (two_halfs++ < 1);
 			}
