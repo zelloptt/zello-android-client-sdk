@@ -21,6 +21,21 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/menu_select_contact"
+        android:title="@string/menu_select_contact"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_lock_ptt_app"
+        android:title="@string/menu_lock_ptt_app"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_unlock_ptt_app"
+        android:title="@string/menu_unlock_ptt_app"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/menu_enable_auto_run"
         android:title="@string/menu_enable_auto_run"
         app:showAsAction="never" />
@@ -41,7 +56,22 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/menu_open_app"
-        android:title="@string/menu_open_app"
+        android:id="@+id/menu_start_message"
+        android:title="@string/menu_start_message"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_stop_message"
+        android:title="@string/menu_stop_message"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_ptt_buttons"
+        android:title="@string/menu_ptt_buttons"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_about"
+        android:title="@string/menu_about"
         app:showAsAction="never" />
 </menu>

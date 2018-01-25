@@ -3,6 +3,7 @@
 
     <string name="lock">Lock</string>
     <string name="unlock">Unlock</string>
+    <string name="external_id">External ID</string>
 
     <string name="status_locked">The PTT app is locked.</string>
 
