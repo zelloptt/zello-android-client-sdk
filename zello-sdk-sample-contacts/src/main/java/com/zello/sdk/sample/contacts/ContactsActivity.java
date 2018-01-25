@@ -38,6 +38,7 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 
 		// Use with an app installed from a generic PTT SDK apk obtained from https://github.com/zelloptt/zello-android-client-sdk/releases
 		Zello.getInstance().configure("com.pttsdk", this);
+		Zello.getInstance().subscribeToEvents(this);
 
         // Contact list pick handler
         _contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
