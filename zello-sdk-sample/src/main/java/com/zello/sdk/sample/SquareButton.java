@@ -51,7 +51,6 @@ public class SquareButton extends AppCompatButton {
 		int measuredHeight = Math.min(getDefaultSize(Integer.MAX_VALUE, heightMeasureSpec), _maxHeight);
 		int min = Math.min(measuredHeight, measuredWidth);
 		setMeasuredDimension(min, min);
-		invalidate();
 	}
 
 	private void update() {
