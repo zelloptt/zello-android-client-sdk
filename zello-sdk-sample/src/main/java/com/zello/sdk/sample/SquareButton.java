@@ -1,9 +1,10 @@
 package com.zello.sdk.sample;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 
-public class SquareButton extends android.support.v7.widget.AppCompatButton {
+public class SquareButton extends AppCompatButton {
 
 	private int _maxWidth = Integer.MAX_VALUE;
 	private int _maxHeight = Integer.MAX_VALUE;
@@ -21,21 +22,27 @@ public class SquareButton extends android.support.v7.widget.AppCompatButton {
 	}
 
 	@Override
-	public void setMaxWidth(int maxWidth) {
+	public void setMaxWidth(final int maxWidth) {
 		super.setMaxWidth(maxWidth);
-		if (_maxWidth != maxWidth) {
-			_maxWidth = maxWidth;
-			requestLayout();
-		}
+		post(new Runnable() {
+			@Override
+			public void run() {
+				_maxWidth = maxWidth;
+				update();
+			}
+		});
 	}
 
 	@Override
-	public void setMaxHeight(int maxHeight) {
+	public void setMaxHeight(final int maxHeight) {
 		super.setMaxHeight(maxHeight);
-		if (_maxHeight != maxHeight) {
-			_maxHeight = maxHeight;
-			requestLayout();
-		}
+		post(new Runnable() {
+			@Override
+			public void run() {
+				_maxHeight = maxHeight;
+				update();
+			}
+		});
 	}
 
 	@Override
@@ -44,6 +51,13 @@ public class SquareButton extends android.support.v7.widget.AppCompatButton {
 		int measuredHeight = Math.min(getDefaultSize(Integer.MAX_VALUE, heightMeasureSpec), _maxHeight);
 		int min = Math.min(measuredHeight, measuredWidth);
 		setMeasuredDimension(min, min);
+		invalidate();
+	}
+
+	private void update() {
+		requestLayout();
+		invalidate();
+		setText(getText());
 	}
 
 }

@@ -16,9 +16,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.zello.sdk.*;
+import com.zello.sdk.Events;
+import com.zello.sdk.Tab;
+import com.zello.sdk.Zello;
 
-public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Events {
+public class MiscActivity extends AppCompatActivity implements Events {
 
 	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
 
@@ -68,7 +70,13 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 			}
 		});
 
+		// Use to connect to an app installed from an apk obtained from https://www.zellowork.com
+		//Zello.getInstance().configure("net.loudtalks", this, this);
+
+		// Use with an app installed from a generic PTT SDK apk obtained from https://github.com/zelloptt/zello-android-client-sdk/releases
 		Zello.getInstance().configure("com.pttsdk", this, this);
+
+		onAppStateChanged();
 	}
 
 	@Override
@@ -171,12 +179,10 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 	@Override
 	public void onMessageStateChanged() {
-
 	}
 
 	@Override
 	public void onSelectedContactChanged() {
-
 	}
 
 	@Override
@@ -186,12 +192,10 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 	@Override
 	public void onContactsChanged() {
-
 	}
 
 	@Override
 	public void onLastContactsTabChanged(Tab tab) {
-
 	}
 
 	@Override

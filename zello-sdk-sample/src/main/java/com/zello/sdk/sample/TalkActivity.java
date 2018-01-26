@@ -106,9 +106,6 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		_btnLogin = _viewLogin.findViewById(R.id.login);
 		_txtError = _viewLogin.findViewById(R.id.error);
 
-		// Constrain PTT button size
-		_btnTalk.setMaxHeight(getResources().getDimensionPixelSize(R.dimen.talk_button_size));
-
 		// PTT button push/release handler
 		_btnTalk.setOnTouchListener(new View.OnTouchListener() {
 			@Override

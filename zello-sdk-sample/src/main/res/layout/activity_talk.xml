@@ -206,8 +206,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_talk"
                     android:longClickable="false"
-                    android:maxHeight="@dimen/ptt_button_size"
-                    android:maxWidth="@dimen/ptt_button_size"
+                    android:maxHeight="@dimen/talk_button_size"
+                    android:maxWidth="@dimen/talk_button_size"
                     android:text="@string/talk_button"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>

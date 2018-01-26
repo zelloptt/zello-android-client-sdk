@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-    android:id="@+id/menu_mute_contact"
-    android:title="Mute Contact"/>
+        android:id="@+id/menu_mute_contact"
+        android:title="@string/mute_contact" />
 
     <item
         android:id="@+id/menu_replay"
-        android:title="Replay last message"/>
-
+        android:title="@string/replay_last_message" />
 </menu>
