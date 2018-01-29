@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Zello SDK Sample PTT</string>
+    <string name="select_contact_title">Select a contact</string>
 
     <string name="locked">PTT App is locked. Please unlock the app using the sample misc project.</string>
 
@@ -8,8 +9,7 @@
     <string name="audio_bluetooth">BLUETOOTH</string>
     <string name="sign_in_status_offline">Please sign in using the sample sign in project.</string>
     <string name="sign_in_status_signing_in">Signing in\u2026</string>
-    <string name="no_selected_contact">Please select an available contact using the sample contact project.</string>
-    <string name="unavailable_selected_contact">Contact unavailable. Please select an available contact using the sample contact project.</string>
+    <string name="no_selected_contact">Please select a contact using the menu or the sample contact project.</string>
     <string name="talk_button">Push to talk</string>
 
     <string name="unmute_contact">Unmute contact</string>
@@ -17,6 +17,7 @@
     <string name="replay_last_message">Replay last message</string>
     <string name="connect_channel">Connect channel</string>
     <string name="disconnect_channel">Disconnect channel</string>
+    <string name="menu_select_contact">Select contact</string>
 
     <string formatted="false" name="selected_contact">Selected contact: %s</string>
 
