@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.zello.sdk.BluetoothAccessoryState;
+import com.zello.sdk.BluetoothAccessoryType;
 import com.zello.sdk.Zello;
 
 public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.Events {
@@ -171,6 +173,10 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 
 	@Override
 	public void onMicrophonePermissionNotGranted() {
+	}
+
+	@Override
+	public void onBluetoothAccessoryStateChanged(BluetoothAccessoryType bluetoothAccessoryType, BluetoothAccessoryState bluetoothAccessoryState, String s, String s1) {
 	}
 
 	private void chooseActiveContact() {

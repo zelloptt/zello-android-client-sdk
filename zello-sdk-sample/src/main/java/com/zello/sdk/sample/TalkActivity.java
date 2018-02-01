@@ -22,8 +22,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.zello.sdk.BluetoothAccessoryState;
+import com.zello.sdk.BluetoothAccessoryType;
 import com.zello.sdk.Zello;
 
 import java.text.NumberFormat;
@@ -60,7 +63,6 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	private boolean _dirtyContacts; // Contact list needs to be refreshed next time before it's presented to the user
 	private com.zello.sdk.Contact _contextContact; // Contact for which currently active context menu is being displayed
 
-	private com.zello.sdk.Zello _sdk;
 	private com.zello.sdk.Audio _audio;
 	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
 	private com.zello.sdk.MessageIn _messageIn = new com.zello.sdk.MessageIn();
@@ -72,10 +74,30 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	private static String _keyPassword = "password";
 	private static String _keyNetwork = "network";
 
-	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		final Object event = new Object();
+
+		new Thread() {
+			@Override
+			public void run() {
+				// Do lengthy operation
+				event.notify();
+			}
+		}.run();
+
+		new Thread() {
+			@Override
+			public void run() {
+				// Wait for the lengthy operation above to complete
+				event.wait();
+				Toast.makeText(TalkActivity.this, "Job complete", Toast.LENGTH_SHORT).show();
+			}
+		}.start();
+
+
 
 		setContentView(R.layout.activity_talk);
 		_viewState = findViewById(R.id.state_screen);
@@ -112,9 +134,9 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 			public boolean onTouch(View v, MotionEvent event) {
 				int action = event.getAction();
 				if (action == MotionEvent.ACTION_DOWN) {
-					_sdk.beginMessage();
+					Zello.getInstance().beginMessage();
 				} else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
-					_sdk.endMessage();
+					Zello.getInstance().endMessage();
 				}
 				return false;
 			}
@@ -128,7 +150,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				if (adapter != null) {
 					com.zello.sdk.Contact contact = (com.zello.sdk.Contact) adapter.getItem(position);
 					if (contact != null) {
-						_sdk.setSelectedContact(contact);
+						Zello.getInstance().setSelectedContact(contact);
 					}
 				}
 			}
@@ -191,21 +213,21 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				Helper.saveValue(TalkActivity.this, _keyUsername, username);
 				Helper.saveValue(TalkActivity.this, _keyPassword, password);
 				Helper.saveValue(TalkActivity.this, _keyNetwork, network);
-				_sdk.signIn(network, username, password, perishable);
+				Zello.getInstance().signIn(network, username, password, perishable);
 			}
 		});
 		_btnCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (_appState.isReconnecting() || _appState.isWaitingForNetwork() || (_appState.isSigningIn() && !_appState.isCancellingSignin())) {
-					_sdk.cancelSignIn();
+					Zello.getInstance().cancelSignIn();
 				}
 			}
 		});
 		_btnReplay.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				_sdk.replayLastIncomingMessage();
+				Zello.getInstance().replayLastIncomingMessage();
 			}
 		});
 
@@ -237,10 +259,17 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 		_dirtyContacts = true;
 
-		_sdk = Zello.getInstance();
-		_sdk.requestVitalPermissions(this);
-		_sdk.subscribeToEvents(this);
-		_audio = _sdk.getAudio();
+		// Use to connect to an app installed from an apk obtained from https://www.zellowork.com
+		//Zello.getInstance().configure("net.loudtalks", this);
+
+		// Use with an app installed from a generic PTT SDK apk obtained from https://github.com/zelloptt/zello-android-client-sdk/releases
+		Zello.getInstance().configure("com.pttsdk", this);
+
+		Zello zello = Zello.getInstance();
+		zello.requestVitalPermissions(this);
+		zello.subscribeToEvents(this);
+		zello.setShowBluetoothAccessoriesNotifications(false);
+		_audio = zello.getAudio();
 
 		updateAppState();
 		updateAudioMode();
@@ -251,14 +280,16 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		_sdk.unsubscribeFromEvents(this);
+		Zello zello = Zello.getInstance();
+		zello.unsubscribeFromEvents(this);
+		zello.unconfigure();
 		_audio = null;
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		_sdk.leavePowerSavingMode();
+		Zello.getInstance().leavePowerSavingMode();
 		_active = true;
 		updateContactList();
 	}
@@ -266,7 +297,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	@Override
 	protected void onPause() {
 		super.onPause();
-		_sdk.enterPowerSavingMode();
+		Zello.getInstance().enterPowerSavingMode();
 		_active = false;
 	}
 
@@ -341,11 +372,11 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				return true;
 			}
 			case R.id.menu_start_message: {
-				_sdk.beginMessage();
+				Zello.getInstance().beginMessage();
 				return true;
 			}
 			case R.id.menu_stop_message: {
-				_sdk.endMessage();
+				Zello.getInstance().endMessage();
 				return true;
 			}
 			case R.id.menu_ptt_buttons: {
@@ -369,15 +400,15 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				if (listInfo.targetView != null && listInfo.targetView.getParent() == _listContacts && _contextContact != null) {
 					switch (item.getItemId()) {
 						case R.id.menu_talk: {
-							_sdk.setSelectedContact(_contextContact);
+							Zello.getInstance().setSelectedContact(_contextContact);
 							break;
 						}
 						case R.id.menu_mute: {
-							_sdk.muteContact(_contextContact, true);
+							Zello.getInstance().muteContact(_contextContact, true);
 							break;
 						}
 						case R.id.menu_unmute: {
-							_sdk.muteContact(_contextContact, false);
+							Zello.getInstance().muteContact(_contextContact, false);
 							break;
 						}
 					}
@@ -423,8 +454,13 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	@Override
 	public void onMicrophonePermissionNotGranted() {
 		if (_active) {
-			_sdk.showMicrophonePermissionDialog(this);
+			Zello.getInstance().showMicrophonePermissionDialog(this);
 		}
+	}
+
+	@Override
+	public void onBluetoothAccessoryStateChanged(BluetoothAccessoryType type, BluetoothAccessoryState state, String name, String description) {
+		Toast.makeText(this, description, Toast.LENGTH_SHORT).show();
 	}
 
 	private void showMenuItem(Menu menu, int itemId, boolean show) {
@@ -435,7 +471,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	private void openPttButtonsScreen() {
-		_sdk.showPttButtonsScreen(this);
+		Zello.getInstance().showPttButtonsScreen(this);
 	}
 
 	private void showAbout() {
@@ -459,37 +495,37 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
 
 		// Since Zello was initialized in the Activity, pass in this as Activity parameter
-		_sdk.selectContact(title, tabs, tab, theme, this);
+		Zello.getInstance().selectContact(title, tabs, tab, theme, this);
 	}
 
 	private void lockPttApp() {
 		// Configure PTT app to display information screen with the name of this app that can be clicked to open main activity
-		_sdk.lock(getString(R.string.app_name), getPackageName());
+		Zello.getInstance().lock(getString(R.string.app_name), getPackageName());
 	}
 
 	private void unlockPttApp() {
 		// Switch PTT app back to normal UI mode
-		_sdk.unlock();
+		Zello.getInstance().unlock();
 	}
 
 	private void enableAutoRun() {
 		// Enable client auto-run option
-		_sdk.setAutoRun(true);
+		Zello.getInstance().setAutoRun(true);
 	}
 
 	private void disableAutoRun() {
 		// Disable client auto-run option
-		_sdk.setAutoRun(false);
+		Zello.getInstance().setAutoRun(false);
 	}
 
 	private void enableAutoConnectChannels() {
 		// Enable auto-connecting to new channels
-		_sdk.setAutoConnectChannels(true);
+		Zello.getInstance().setAutoConnectChannels(true);
 	}
 
 	private void disableAutoConnectChannels() {
 		// Disable auto-connecting to new channels
-		_sdk.setAutoConnectChannels(false);
+		Zello.getInstance().setAutoConnectChannels(false);
 	}
 
 	private void chooseStatus() {
@@ -503,19 +539,19 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 					case 0: {
-						_sdk.setStatus(com.zello.sdk.Status.AVAILABLE);
+						Zello.getInstance().setStatus(com.zello.sdk.Status.AVAILABLE);
 						break;
 					}
 					case 1: {
-						_sdk.setStatus(com.zello.sdk.Status.SOLO);
+						Zello.getInstance().setStatus(com.zello.sdk.Status.SOLO);
 						break;
 					}
 					case 2: {
-						_sdk.setStatus(com.zello.sdk.Status.BUSY);
+						Zello.getInstance().setStatus(com.zello.sdk.Status.BUSY);
 						break;
 					}
 					case 3: {
-						_sdk.signOut();
+						Zello.getInstance().signOut();
 						break;
 					}
 				}
@@ -534,7 +570,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	private void updateSelectedContact() {
-		_sdk.getSelectedContact(_selectedContact);
+		Zello.getInstance().getSelectedContact(_selectedContact);
 		String name = _selectedContact.getName(); // Contact name
 		boolean selected = name != null && name.length() > 0;
 		boolean canTalk = false, showConnect = false, connected = false, canConnect = false;
@@ -578,8 +614,8 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	private void updateMessageState() {
-		_sdk.getMessageIn(_messageIn);
-		_sdk.getMessageOut(_messageOut);
+		Zello.getInstance().getMessageIn(_messageIn);
+		Zello.getInstance().getMessageOut(_messageOut);
 		boolean incoming = _messageIn.isActive(); // Is incoming message active?
 		boolean outgoing = _messageOut.isActive(); // Is outgoing message active?
 		if (outgoing) {
@@ -636,7 +672,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	private void updateAppState() {
-		_sdk.getAppState(_appState);
+		Zello.getInstance().getAppState(_appState);
 		int stateVisibility = View.GONE;
 		int loginVisibility = View.GONE;
 		int contentVisibility = View.GONE;
@@ -728,7 +764,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	private void updateTalkScreen() {
-		_btnReplay.setVisibility(_sdk.isLastMessageReplayAvailable() ? View.VISIBLE : View.GONE);
+		_btnReplay.setVisibility(Zello.getInstance().isLastMessageReplayAvailable() ? View.VISIBLE : View.GONE);
 	}
 
 	private void updateContactList() {
@@ -741,7 +777,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				newAdapter = true;
 				adapter = new ListAdapter();
 			}
-			adapter.setContacts(_sdk.getContacts());
+			adapter.setContacts(Zello.getInstance().getContacts());
 			Parcelable state = _listContacts.onSaveInstanceState();
 			if (newAdapter) {
 				_listContacts.setAdapter(adapter);
@@ -760,9 +796,9 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		if (type == com.zello.sdk.ContactType.CHANNEL || type == com.zello.sdk.ContactType.GROUP) {
 			com.zello.sdk.ContactStatus status = _selectedContact.getStatus();
 			if (status == com.zello.sdk.ContactStatus.OFFLINE) {
-				_sdk.connectChannel(_selectedContact.getName());
+				Zello.getInstance().connectChannel(_selectedContact.getName());
 			} else if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
-				_sdk.disconnectChannel(_selectedContact.getName());
+				Zello.getInstance().disconnectChannel(_selectedContact.getName());
 			}
 		}
 	}

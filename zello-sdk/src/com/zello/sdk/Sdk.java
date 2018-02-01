@@ -41,6 +41,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private boolean _serviceConnecting; // Service is bound but is still connecting
 	private String _delayedNetwork, _delayedUsername, _delayedPassword;
 	private boolean _delayedPerishable;
+	private Boolean _delayedShowBtAcceccoriesNotifications;
 	private boolean _lastMessageReplayAvailable;
 	private BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
 	private BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
@@ -48,12 +49,13 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private BroadcastReceiver _receiverContactSelected; // Broadcast receiver for selected contact broadcasts
 	private BroadcastReceiver _receiverActiveTab; // Broadcast receiver for last selected contact list tab
 	private BroadcastReceiver _receiverPermissionErrors; // Broadcast receiver for permissions errors
+	private BroadcastReceiver _receiverBtAccessoryState; // Broadcast receiver for bluetooth accessory state broadcasts
 
 	private static final int AWAKE_TIMER = 1;
 
 	private static final String _pttActivityClass = "com.zello.sdk.Activity";
 	private static final String _pttPermissionsActivityClass = "com.zello.sdk.PermissionsActivity";
-	private static final String _pttPttButtonsActivityClass = "com.zello.sdk.PTTButtonsActivity";
+	private static final String _pttPttButtonsActivityClass = "com.zello.sdk.PttButtonsActivity";
 
 	//endregion
 
@@ -169,6 +171,14 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				}
 			};
 			context.registerReceiver(_receiverActiveTab, new IntentFilter(_activeTabAction));
+			// Register to receive bluetooth accessory state broadcasts
+			_receiverBtAccessoryState = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					handleBtAccessoryState(intent);
+				}
+			};
+			context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_package + "." + Constants.ACTION_BT_ACCESSORY_STATE));
 		}
 	}
 
@@ -195,6 +205,9 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			if (_receiverActiveTab != null) {
 				context.unregisterReceiver(_receiverActiveTab);
 			}
+			if (_receiverBtAccessoryState != null) {
+				context.unregisterReceiver(_receiverBtAccessoryState);
+			}
 		}
 		Contacts contacts = _contacts;
 		if (contacts != null) {
@@ -210,6 +223,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_receiverMessageState = null;
 		_receiverContactSelected = null;
 		_receiverActiveTab = null;
+		_receiverBtAccessoryState = null;
 		stopAwakeTimer();
 		_handler = null;
 		if (!_serviceConnecting) {
@@ -624,39 +638,45 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Setters
 
 	void setAutoRun(boolean enable) {
-		if (isConnected()) {
-			Context context = _context;
-			if (context != null) {
-				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUTO_RUN);
-				intent.putExtra(Constants.EXTRA_STATE_AUTO_RUN, enable);
-				context.sendBroadcast(intent);
-			}
+		if (!isConnected()) {
+			return;
 		}
+		Context context = _context;
+		if (context == null) {
+			return;
+		}
+		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUTO_RUN);
+		intent.putExtra(Constants.EXTRA_STATE_AUTO_RUN, enable);
+		context.sendBroadcast(intent);
 	}
 
 	void setAutoConnectChannels(boolean connect) {
-		if (isConnected()) {
-			Context context = _context;
-			if (context != null) {
-				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUTO_CHANNELS);
-				intent.putExtra(Constants.EXTRA_STATE_AUTO_CHANNELS, connect);
-				context.sendBroadcast(intent);
-			}
+		if (!isConnected()) {
+			return;
 		}
+		Context context = _context;
+		if (context == null) {
+			return;
+		}
+		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUTO_CHANNELS);
+		intent.putExtra(Constants.EXTRA_STATE_AUTO_CHANNELS, connect);
+		context.sendBroadcast(intent);
 	}
 
 	void setExternalId(String id) {
-		if (isConnected()) {
-			Context context = _context;
-			if (context != null) {
-				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_EID);
-				intent.putExtra(Constants.EXTRA_EID, id == null ? "" : id);
-				context.sendBroadcast(intent);
-			}
+		if (!isConnected()) {
+			return;
 		}
+		Context context = _context;
+		if (context == null) {
+			return;
+		}
+		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_EID);
+		intent.putExtra(Constants.EXTRA_EID, id == null ? "" : id);
+		context.sendBroadcast(intent);
 	}
 
 	void setSelectedContact(Contact contact) {
@@ -674,6 +694,21 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	void setSelectedChannelOrGroup(String name) {
 		selectContact(1, name);
+	}
+
+	public void setShowBluetoothAccessoriesNotifications(boolean show) {
+		if (!isConnected()) {
+			_delayedShowBtAcceccoriesNotifications = show;
+			return;
+		}
+		Context context = _context;
+		if (context == null) {
+			return;
+		}
+		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_SHOW_BT_ACCESSORIES_NOTIFICATIONS);
+		intent.putExtra(Constants.EXTRA_VALUE, show);
+		context.sendBroadcast(intent);
 	}
 
 	//endregion
@@ -710,11 +745,15 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			if (_serviceConnecting) {
 				_serviceConnecting = false;
 				context.startService(_serviceIntent);
+				if (_delayedShowBtAcceccoriesNotifications != null) {
+					setShowBluetoothAccessoriesNotifications(_delayedShowBtAcceccoriesNotifications);
+				}
 				if (_delayedNetwork != null) {
 					signIn(_delayedNetwork, _delayedUsername, _delayedPassword, _delayedPerishable);
 				}
 				_delayedNetwork = _delayedUsername = _delayedPassword = null;
 				_delayedPerishable = false;
+				_delayedShowBtAcceccoriesNotifications = null;
 				// If service is not bound, the component was destroyed and the service needs to be disconnected
 				if (!_serviceBound) {
 					Log.i("zello sdk", "disconnecting because sdk was destroyed");
@@ -955,9 +994,10 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	private void updateLastMessageReplayAvailable(Intent intent) {
-		if (intent != null) {
-			_lastMessageReplayAvailable = intent.getBooleanExtra(Constants.EXTRA_LAST_MESSAGE_REPLAY_AVAILABLE, false);
+		if (intent == null) {
+			return;
 		}
+			_lastMessageReplayAvailable = intent.getBooleanExtra(Constants.EXTRA_LAST_MESSAGE_REPLAY_AVAILABLE, false);
 	}
 
 	private void updateContacts() {
@@ -998,24 +1038,38 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	private void updateSelectedTab(Intent intent) {
-		if (intent != null) {
+		if (intent == null) {
+			return;
+		}
 			Tab tab = stringToTab(intent.getStringExtra(Constants.EXTRA_TAB));
-
 			for (Events event : Zello.getInstance().events) {
 				event.onLastContactsTabChanged(tab);
 			}
-		}
 	}
 
 	private void handlePermissionError(Intent intent) {
-		if (intent != null) {
+		if (intent == null) {
+			return;
+		}
 			PermissionError error = intToPermissionError(intent.getIntExtra(Constants.EXTRA_LATEST_PERMISSION_ERROR, PermissionError.NONE.ordinal()));
 			if (error == PermissionError.MICROPHONE_NOT_GRANTED) {
 				for (Events event : Zello.getInstance().events) {
 					event.onMicrophonePermissionNotGranted();
 				}
 			}
+	}
+
+	private void handleBtAccessoryState(Intent intent) {
+		if (intent == null) {
+			return;
 		}
+			BluetoothAccessoryType type = intToBtAccessoryType(intent.getIntExtra(Constants.EXTRA_TYPE, BluetoothAccessoryType.SPP.ordinal()));
+			BluetoothAccessoryState state = intToBtAccessoryState(intent.getIntExtra(Constants.EXTRA_STATE, BluetoothAccessoryState.ERROR.ordinal()));
+			String name = intent.getStringExtra(Constants.EXTRA_NAME);
+			String description = intent.getStringExtra(Constants.EXTRA_DESCRIPTION);
+			for (Events event : Zello.getInstance().events) {
+				event.onBluetoothAccessoryStateChanged(type, state, name, description);
+			}
 	}
 
 	private boolean isConnected() {
@@ -1159,6 +1213,23 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			return Tab.CHANNELS;
 		}
 		return Tab.RECENTS;
+	}
+
+	private static BluetoothAccessoryType intToBtAccessoryType(int type) {
+		if (type == BluetoothAccessoryType.LE.ordinal()) {
+			return BluetoothAccessoryType.LE;
+		}
+		return BluetoothAccessoryType.SPP;
+	}
+
+	private static BluetoothAccessoryState intToBtAccessoryState(int state) {
+		if (state == BluetoothAccessoryState.CONNECTED.ordinal()) {
+			return BluetoothAccessoryState.CONNECTED;
+		}
+		if (state == BluetoothAccessoryState.DISCONNECTED.ordinal()) {
+			return BluetoothAccessoryState.DISCONNECTED;
+		}
+		return BluetoothAccessoryState.ERROR;
 	}
 
 	private static String bytesToHex(byte[] data) {

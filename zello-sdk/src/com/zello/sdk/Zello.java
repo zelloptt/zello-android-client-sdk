@@ -867,6 +867,19 @@ public class Zello {
 		_sdk.setSelectedChannelOrGroup(name);
 	}
 
+	/**
+	 * Asks the host app to suppress UI notifications when Bluetooth PTT buttons connect or disconnect.
+	 * <p>
+	 * When set, the application will not show popup notifications every time a button connects or disconnects.
+	 * </p>
+	 *
+	 * @param show Show Bluetooth PTT buttons' related notifications.
+	 */
+	public void setShowBluetoothAccessoriesNotifications(boolean show) {
+		checkConfiguration();
+		_sdk.setShowBluetoothAccessoriesNotifications(show);
+	}
+
 	//endregion
 
 	//endregion
