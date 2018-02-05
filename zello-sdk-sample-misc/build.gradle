@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
 
     dependencies {
@@ -15,12 +16,13 @@ android {
     buildToolsVersion '27.0.3'
 
     defaultConfig {
-    applicationId "com.zello.sdk.sample.miscellaneous"
-        minSdkVersion 9
-        targetSdkVersion 25
+        applicationId "com.zello.sdk.sample.miscellaneous"
+        minSdkVersion 15
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -30,7 +32,10 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/zello-sdk.jar')
+    implementation fileTree(include: '*.jar', dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+}
+
+repositories {
+    google()
 }

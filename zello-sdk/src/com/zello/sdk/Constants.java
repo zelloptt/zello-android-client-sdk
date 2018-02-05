@@ -64,6 +64,7 @@ public class Constants {
 	public static final String EXTRA_PACKAGE = "PACKAGE";
 	public static final String EXTRA_EID = "EID";
 	public static final String EXTRA_MODE = "MODE";
+	public static final String EXTRA_VALUE = "VALUE";
 	public static final String EXTRA_CHANGING = "CHANGING";
 	public static final String EXTRA_BT = "BT";
 	public static final String EXTRA_EP = "EP";
@@ -74,6 +75,10 @@ public class Constants {
 	public static final String EXTRA_PERMISSION_DIALOG = "PERMISSION_DIALOG";
 	public static final String EXTRA_PERMISSION_MICROPHONE = "PERMISSION_MICROPHONE";
 	public static final String EXTRA_LAST_MESSAGE_REPLAY_AVAILABLE = "STATE_LAST_MESSAGE_REPLAY_AVAILABLE";
+	public static final String EXTRA_TYPE = "TYPE";
+	public static final String EXTRA_STATE = "STATE";
+	public static final String EXTRA_NAME = "NAME";
+	public static final String EXTRA_DESCRIPTION = "DESCRIPTION";
 
 	public static final String VALUE_BEGIN_MESSAGE = "BEGIN_MESSAGE";
 	public static final String VALUE_END_MESSAGE = "END_MESSAGE";
@@ -91,6 +96,7 @@ public class Constants {
 	public static final String VALUE_SET_AUTO_RUN = "SET_AUTO_RUN";
 	public static final String VALUE_SET_AUTO_CHANNELS = "SET_AUTO_CHANNELS";
 	public static final String VALUE_SET_EID = "SET_EID";
+	public static final String VALUE_SET_SHOW_BT_ACCESSORIES_NOTIFICATIONS = "SET_SHOW_BT_ACCESSORIES_NOTIFICATIONS";
 	public static final String VALUE_LOCK = "LOCK";
 	public static final String VALUE_LIGHT = "LIGHT";
 	public static final String VALUE_USERS = "USERS";
@@ -104,5 +110,6 @@ public class Constants {
 	public static final String ACTION_CONTACT_SELECTED = "CONTACT_SELECTED";
 	public static final String ACTION_AUDIO_STATE = "AUDIO_STATE";
 	public static final String ACTION_PERMISSION_ERRORS = "PERMISSION_ERRORS";
+	public static final String ACTION_BT_ACCESSORY_STATE = "BT_ACCESSORY_STATE";
 
 }

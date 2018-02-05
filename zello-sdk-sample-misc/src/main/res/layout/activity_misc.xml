@@ -3,49 +3,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:padding="@dimen/activity_margin"
     tools:context="com.zello.sdk.sample.misc.MiscActivity">
 
     <Button
+        android:id="@+id/lockButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LOCK"
-        android:id="@+id/lockButton"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
     <TextView
+        android:id="@+id/statusTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="App Status"
-        android:id="@+id/statusTextView"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:textAlignment="center" />
+        android:layout_centerVertical="true"
+        android:textAlignment="center"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
+        android:id="@+id/externalIdEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/externalIdEditText"
-        android:singleLine="true"
-        android:layout_below="@+id/externalIdTextView"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/externalIdTextView"
+        android:singleLine="true" />
 
     <TextView
+        android:id="@+id/externalIdTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="External Id"
-        android:id="@+id/externalIdTextView"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/external_id"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 </RelativeLayout>

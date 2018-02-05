@@ -3,6 +3,7 @@
 
     <string name="lock">Lock</string>
     <string name="unlock">Unlock</string>
+    <string name="external_id">External ID</string>
 
     <string name="status_locked">The PTT app is locked.</string>
 
@@ -13,7 +14,7 @@
     <string name="menu_solo">Solo</string>
     <string name="menu_busy">Busy</string>
     <string name="menu_set_status">Set Status</string>
-    <string name="menu_set_status_message">Custom Message</string>
+    <string name="menu_set_status_message">Custom message</string>
     <string name="menu_select_contact">Select contact</string>
     <string name="menu_lock_ptt_app">Lock PTT app</string>
     <string name="menu_unlock_ptt_app">Unlock PTT app</string>
@@ -24,5 +25,5 @@
     <string name="menu_open_app">Open ZelloWork</string>
 
     <string name="ok">OK</string>
-    <string name="cancel">CANCEL</string>
+    <string name="cancel">Cancel</string>
 </resources>

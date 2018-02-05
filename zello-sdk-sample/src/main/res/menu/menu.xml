@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_available"
+        android:icon="@drawable/user_online"
+        android:title="@string/menu_available"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_solo"
+        android:icon="@drawable/user_solo"
+        android:title="@string/menu_solo"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_busy"
+        android:icon="@drawable/user_busy"
+        android:title="@string/menu_busy"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_select_contact"
+        android:title="@string/menu_select_contact"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_lock_ptt_app"
+        android:title="@string/menu_lock_ptt_app"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_unlock_ptt_app"
+        android:title="@string/menu_unlock_ptt_app"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_enable_auto_run"
+        android:title="@string/menu_enable_auto_run"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_disable_auto_run"
+        android:title="@string/menu_disable_auto_run"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_enable_auto_connect_channels"
+        android:title="@string/menu_enable_auto_connect_channels"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_disable_auto_connect_channels"
+        android:title="@string/menu_disable_auto_connect_channels"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_start_message"
+        android:title="@string/menu_start_message"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_stop_message"
+        android:title="@string/menu_stop_message"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_ptt_buttons"
+        android:title="@string/menu_ptt_buttons"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_about"
+        android:title="@string/menu_about"
+        app:showAsAction="never" />
+</menu>

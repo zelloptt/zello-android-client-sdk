@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:id="@+id/talk_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".TalkActivity">
+
+    <!-- Status screen -->
+
+    <LinearLayout
+        android:id="@+id/state_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="@dimen/control_padding">
+
+        <TextView
+            android:id="@+id/state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/control_padding"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/control_margin"
+            android:text="@string/button_cancel" />
+    </LinearLayout>
+
+    <!-- Login screen -->
+
+    <LinearLayout
+        android:id="@+id/login_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="@dimen/control_padding">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/username" />
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text|textNoSuggestions"
+            android:lines="1"
+            android:maxLength="40" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/control_margin"
+            android:text="@string/password" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:lines="1"
+            android:maxLength="40" />
+
+        <TextView
+            android:id="@+id/network_label"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/control_margin"
+            android:text="@string/network" />
+
+        <EditText
+            android:id="@+id/network"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text|textNoSuggestions"
+            android:lines="1"
+            android:maxLength="128" />
+
+        <CheckBox
+            android:id="@+id/perishable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/perishable" />
+
+        <TextView
+            android:id="@+id/error"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/control_margin"
+            android:background="#ff0000"
+            android:gravity="center_horizontal"
+            android:padding="@dimen/control_margin" />
+
+        <Button
+            android:id="@+id/login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/control_margin"
+            android:text="@string/button_sigin_in" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/content_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Contact list -->
+
+        <ListView
+            android:id="@+id/contact_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Talk screen -->
+
+        <LinearLayout
+            android:id="@+id/talk_screen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- Selected contact -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#dddddd"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:gravity="center_vertical">
+
+                    <include
+                        android:id="@+id/contact_info"
+                        layout="@layout/contact"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/contact_not_selected"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/contact_not_selected" />
+                </FrameLayout>
+
+                <ImageButton
+                    android:id="@+id/button_replay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/control_padding"
+                    android:layout_marginRight="@dimen/control_padding"
+                    android:contentDescription="@string/button_replay"
+                    android:src="@android:drawable/ic_menu_rotate" />
+
+                <ToggleButton
+                    android:id="@+id/button_connect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/control_padding"
+                    android:layout_marginRight="@dimen/control_padding"
+                    android:contentDescription="@string/channel_connect" />
+
+                <ImageButton
+                    android:id="@+id/button_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/control_padding"
+                    android:layout_marginRight="@dimen/control_padding"
+                    android:contentDescription="@string/button_close"
+                    android:src="@android:drawable/ic_delete" />
+            </LinearLayout>
+
+            <!-- The talk button -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/control_padding">
+
+                <com.zello.sdk.sample.SquareButton
+                    android:id="@+id/talk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_talk"
+                    android:longClickable="false"
+                    android:maxHeight="@dimen/talk_button_size"
+                    android:maxWidth="@dimen/talk_button_size"
+                    android:text="@string/talk_button"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+
+            <!-- Audio modes -->
+
+            <LinearLayout
+                android:id="@+id/audio_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="@dimen/control_padding">
+
+                <com.zello.sdk.sample.NoToggleButton
+                    android:id="@+id/audio_speaker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff="@string/audio_speaker"
+                    android:textOn="@string/audio_speaker" />
+
+                <com.zello.sdk.sample.NoToggleButton
+                    android:id="@+id/audio_earpiece"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff="@string/audio_earpiece"
+                    android:textOn="@string/audio_earpiece" />
+
+                <com.zello.sdk.sample.NoToggleButton
+                    android:id="@+id/audio_bluetooth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOff="@string/audio_bluetooth"
+                    android:textOn="@string/audio_bluetooth" />
+            </LinearLayout>
+
+            <!-- Incoming message indication -->
+
+            <include
+                android:id="@+id/message_info"
+                layout="@layout/message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </FrameLayout>
+</FrameLayout>

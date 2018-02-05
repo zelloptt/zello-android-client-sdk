@@ -1,42 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
     android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical"
-        android:padding="10dip"
-        android:orientation="horizontal"
-        android:clipChildren="false"
     tools:context=".ContactsActivity">
 
     <ListView
-        android:layout_width="match_parent"
-        android:layout_height="465dp"
         android:id="@+id/contactsListView"
-        android:layout_above="@+id/selectedContactTextView"
-        android:layout_alignRight="@+id/statusTextView"
-        android:layout_alignEnd="@+id/statusTextView" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Please sign in using the sample sign in project."
         android:id="@+id/statusTextView"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:textAlignment="center"
-        android:layout_gravity="center" />
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Selected Contact:"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:padding="@dimen/activity_margin"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
         android:id="@+id/selectedContactTextView"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal|bottom" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:padding="@dimen/activity_margin"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 </FrameLayout>

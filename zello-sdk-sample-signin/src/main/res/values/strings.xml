@@ -1,8 +1,15 @@
 <resources>
     <string name="app_name">Zello SDK Sample Sign In</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="network">Network URL</string>
+    <string name="sign_in">Sign in"</string>
+    <string name="sign_out">Sign out"</string>
+    <string name="perishable">Do not save account data</string>
+    <string name="cancel">Cancel</string>
 
-    <string name="signing_in">SIGNING IN\u2026"</string>
-    <string name="signed_in">YOU ARE SIGNED IN.</string>
+    <string name="signing_in">Signing in\u2026"</string>
+    <string name="signed_in">You are signed in.</string>
 
     <string name="error_unknown">Unknown error.</string>
     <string name="error_invalid_credentials">Invalid username or password.</string>

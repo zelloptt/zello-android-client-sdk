@@ -1,0 +1,8 @@
+<resources>
+
+    <dimen name="talk_button_size">300dip</dimen>
+    <dimen name="control_padding">10dp</dimen>
+    <dimen name="control_margin">5dp</dimen>
+    <dimen name="contact_icon_size">14sp</dimen>
+
+</resources>

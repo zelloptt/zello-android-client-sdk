@@ -1,118 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:padding="@dimen/activity_margin"
     tools:context=".SigninActivity">
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/signInView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/signInView">
+        android:orientation="vertical">
 
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/networkEdit"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="41dp"
-            android:hint="Network URL"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/network"
             android:singleLine="true" />
 
         <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/passwordEdit"
-            android:layout_below="@+id/networkEdit"
-            android:layout_marginTop="42dp"
-            android:hint="Password"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignRight="@+id/usernameEdit"
-            android:layout_alignEnd="@+id/usernameEdit"
-            android:singleLine="true" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/usernameEdit"
-            android:layout_below="@+id/networkEdit"
-            android:layout_alignRight="@+id/networkEdit"
-            android:layout_alignEnd="@+id/networkEdit"
-            android:layout_alignLeft="@+id/networkEdit"
-            android:layout_alignStart="@+id/networkEdit"
-            android:hint="Username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/username"
             android:singleLine="true" />
 
-        <Button
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/passwordEdit"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign in"
-            android:id="@+id/loginButton"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:singleLine="true" />
 
         <CheckBox
+            android:id="@+id/checkPerishable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Do not save account data"
-            android:id="@+id/checkBox"
-            android:layout_below="@+id/passwordEdit"
-            android:layout_alignRight="@+id/loginButton"
-            android:layout_alignEnd="@+id/loginButton" />
+            android:text="@string/perishable" />
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/sign_in" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text=""
             android:id="@+id/incorrectPasswordTextView"
-            android:layout_below="@+id/loginButton"
-            android:layout_centerHorizontal="true" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
 
-    </RelativeLayout>
-
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/signingInView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/signingInView">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Status"
             android:id="@+id/statusTextView"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel"
             android:id="@+id/cancelButton"
-            android:layout_below="@+id/statusTextView"
-            android:layout_centerHorizontal="true" />
-
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign out"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/cancel" />
+
+        <Button
             android:id="@+id/signOutButton"
-            android:layout_below="@+id/cancelButton"
-            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/sign_out"
             android:visibility="invisible" />
-
-    </RelativeLayout>
-
-</RelativeLayout>
+    </LinearLayout>
+</FrameLayout>
