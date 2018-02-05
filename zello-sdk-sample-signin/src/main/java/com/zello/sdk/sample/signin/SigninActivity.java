@@ -10,6 +10,10 @@ import android.widget.EditText;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.zello.sdk.AppState;
+import com.zello.sdk.BluetoothAccessoryState;
+import com.zello.sdk.BluetoothAccessoryType;
+import com.zello.sdk.Error;
 import com.zello.sdk.Tab;
 import com.zello.sdk.Zello;
 
@@ -28,7 +32,7 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 	private TextView _errorTextView;
 	private boolean _signInAttempted = false;
 
-	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
+	private AppState _appState = new AppState();
 
 	//region Lifecycle Methods
 
@@ -142,6 +146,10 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 	public void onMicrophonePermissionNotGranted() {
 	}
 
+	@Override
+	public void onBluetoothAccessoryStateChanged(BluetoothAccessoryType bluetoothAccessoryType, BluetoothAccessoryState bluetoothAccessoryState, String s, String s1) {
+	}
+
 	//endregion
 
 	private void updateUI() {
@@ -169,7 +177,7 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 		}
 	}
 
-	private String getErrorText(com.zello.sdk.Error error) {
+	private String getErrorText(Error error) {
 		switch (error) {
 			case UNKNOWN:
 				return getResources().getString(R.string.error_unknown);

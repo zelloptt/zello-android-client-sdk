@@ -10,10 +10,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.zello.sdk.AppState;
+import com.zello.sdk.Audio;
+import com.zello.sdk.AudioMode;
+import com.zello.sdk.BluetoothAccessoryState;
+import com.zello.sdk.BluetoothAccessoryType;
 import com.zello.sdk.Contact;
+import com.zello.sdk.ContactStatus;
+import com.zello.sdk.ContactType;
 import com.zello.sdk.MessageIn;
 import com.zello.sdk.MessageOut;
 import com.zello.sdk.Tab;
+import com.zello.sdk.Theme;
 import com.zello.sdk.Zello;
 
 public class PttActivity extends AppCompatActivity implements com.zello.sdk.Events {
@@ -30,12 +38,12 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 	private TextView _messageStateTextView;
 	private TextView _selectedContactTextView;
 
-	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
-	private com.zello.sdk.Audio _audio;
+	private AppState _appState = new AppState();
+	private Audio _audio;
 	private Contact _selectedContact = new Contact();
 	private MessageIn _messageIn = new MessageIn();
 	private MessageOut _messageOut = new MessageOut();
-	private com.zello.sdk.Tab _activeTab = com.zello.sdk.Tab.RECENTS;
+	private Tab _activeTab = Tab.RECENTS;
 
 	//region Lifecycle Methods
 
@@ -82,7 +90,6 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 				} else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
 					Zello.getInstance().endMessage();
 				}
-
 				return false;
 			}
 		});
@@ -92,7 +99,7 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 			@Override
 			public void onClick(View v) {
 				if (_audio != null) {
-					_audio.setMode(com.zello.sdk.AudioMode.SPEAKER);
+					_audio.setMode(AudioMode.SPEAKER);
 				}
 			}
 		});
@@ -101,7 +108,7 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 			@Override
 			public void onClick(View v) {
 				if (_audio != null) {
-					_audio.setMode(com.zello.sdk.AudioMode.EARPIECE);
+					_audio.setMode(AudioMode.EARPIECE);
 				}
 			}
 		});
@@ -110,7 +117,7 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 			@Override
 			public void onClick(View v) {
 				if (_audio != null) {
-					_audio.setMode(com.zello.sdk.AudioMode.BLUETOOTH);
+					_audio.setMode(AudioMode.BLUETOOTH);
 				}
 			}
 		});
@@ -172,19 +179,16 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.menu_mute_contact: {
+			case R.id.menu_mute_contact:
 				Zello.getInstance().getSelectedContact(_selectedContact);
 				Zello.getInstance().muteContact(_selectedContact, !_selectedContact.getMuted());
 				return true;
-			}
-			case R.id.menu_replay: {
+			case R.id.menu_replay:
 				Zello.getInstance().replayLastIncomingMessage();
 				return true;
-			}
-			case R.id.menu_select_contact: {
+			case R.id.menu_select_contact:
 				chooseActiveContact();
 				return true;
-			}
 		}
 		return false;
 	}
@@ -251,6 +255,10 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 		if (_active) {
 			Zello.getInstance().showMicrophonePermissionDialog(this);
 		}
+	}
+
+	@Override
+	public void onBluetoothAccessoryStateChanged(BluetoothAccessoryType bluetoothAccessoryType, BluetoothAccessoryState bluetoothAccessoryState, String s, String s1) {
 	}
 
 	//endregion
@@ -349,14 +357,14 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 
 	private void updateAudioMode() {
 		boolean speaker = false, earpiece = false, bluetooth = false;
-		com.zello.sdk.AudioMode mode = com.zello.sdk.AudioMode.SPEAKER;
+		AudioMode mode = AudioMode.SPEAKER;
 
 		// Can't set new mode while the mode is being changed
 		boolean currentlyChangingMode = false;
 		if (_audio != null) {
-			speaker = _audio.isModeAvailable(com.zello.sdk.AudioMode.SPEAKER);
-			earpiece = _audio.isModeAvailable(com.zello.sdk.AudioMode.EARPIECE);
-			bluetooth = _audio.isModeAvailable(com.zello.sdk.AudioMode.BLUETOOTH);
+			speaker = _audio.isModeAvailable(AudioMode.SPEAKER);
+			earpiece = _audio.isModeAvailable(AudioMode.EARPIECE);
+			bluetooth = _audio.isModeAvailable(AudioMode.BLUETOOTH);
 			mode = _audio.getMode();
 			currentlyChangingMode = _audio.isModeChanging();
 		}
@@ -365,19 +373,19 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 		if (bluetooth || earpiece || speaker) {
 			_speakerButton.setVisibility(speaker ? View.VISIBLE : View.GONE);
 			if (speaker) {
-				_speakerButton.setChecked(mode == com.zello.sdk.AudioMode.SPEAKER);
+				_speakerButton.setChecked(mode == AudioMode.SPEAKER);
 				_speakerButton.setEnabled(!currentlyChangingMode && (earpiece || bluetooth));
 			}
 
 			_earpieceButton.setVisibility(earpiece ? View.VISIBLE : View.GONE);
 			if (earpiece) {
-				_earpieceButton.setChecked(mode == com.zello.sdk.AudioMode.EARPIECE);
+				_earpieceButton.setChecked(mode == AudioMode.EARPIECE);
 				_earpieceButton.setEnabled(!currentlyChangingMode && (speaker || bluetooth));
 			}
 
 			_bluetoothButton.setVisibility(bluetooth ? View.VISIBLE : View.GONE);
 			if (bluetooth) {
-				_bluetoothButton.setChecked(mode == com.zello.sdk.AudioMode.BLUETOOTH);
+				_bluetoothButton.setChecked(mode == AudioMode.BLUETOOTH);
 				_bluetoothButton.setEnabled(!currentlyChangingMode && (speaker || earpiece));
 			}
 		}
@@ -386,12 +394,12 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 	}
 
 	private void onConnectChannelButtonPressed() {
-		com.zello.sdk.ContactType type = _selectedContact.getType();
-		if (type == com.zello.sdk.ContactType.CHANNEL || type == com.zello.sdk.ContactType.GROUP) {
-			com.zello.sdk.ContactStatus status = _selectedContact.getStatus();
-			if (status == com.zello.sdk.ContactStatus.OFFLINE) {
+		ContactType type = _selectedContact.getType();
+		if (type == ContactType.CHANNEL || type == ContactType.GROUP) {
+			ContactStatus status = _selectedContact.getStatus();
+			if (status == ContactStatus.OFFLINE) {
 				Zello.getInstance().connectChannel(_selectedContact.getName());
-			} else if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
+			} else if (status == ContactStatus.AVAILABLE) {
 				Zello.getInstance().disconnectChannel(_selectedContact.getName());
 			}
 		}
@@ -400,24 +408,23 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 	private void updateConnectChannelButton() {
 		boolean showConnect = false, connected = false, canConnect = false;
 
-		com.zello.sdk.ContactType type = _selectedContact.getType();
-		com.zello.sdk.ContactStatus status = _selectedContact.getStatus();
+		ContactType type = _selectedContact.getType();
+		ContactStatus status = _selectedContact.getStatus();
 		switch (type) {
 			case USER:
 			case GATEWAY:
 			case CHANNEL:
-			case GROUP: {
+			case GROUP:
 				showConnect = !_selectedContact.getNoDisconnect();
-				if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
+				if (status == ContactStatus.AVAILABLE) {
 					canConnect = true;
 					connected = true;
-				} else if (status == com.zello.sdk.ContactStatus.OFFLINE) {
+				} else if (status == ContactStatus.OFFLINE) {
 					canConnect = true;
-				} else if (status == com.zello.sdk.ContactStatus.CONNECTING) {
+				} else if (status == ContactStatus.CONNECTING) {
 					connected = true;
 				}
 				break;
-			}
 		}
 
 		_connectChannelButton.setEnabled(canConnect);
@@ -429,30 +436,28 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 		// Activity title; optional
 		String title = getResources().getString(R.string.select_contact_title);
 		// Set of displayed tabs; required; any combination of RECENTS, USERS and CHANNELS
-		com.zello.sdk.Tab[] tabs = new com.zello.sdk.Tab[]{com.zello.sdk.Tab.RECENTS, com.zello.sdk.Tab.USERS, com.zello.sdk.Tab.CHANNELS};
+		Tab[] tabs = new Tab[]{Tab.RECENTS, Tab.USERS, Tab.CHANNELS};
 		// Initially active tab; optional; can be RECENTS, USERS or CHANNELS
-		com.zello.sdk.Tab tab = _activeTab;
+		Tab tab = _activeTab;
 		// Visual theme; optional; can be DARK or LIGHT
-		com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
+		Theme theme = Theme.DARK;
 
 		// Since Zello was initialized in the Activity, pass in this as Activity parameter
 		Zello.getInstance().selectContact(title, tabs, tab, theme, this);
 	}
 
 	private boolean getCanTalk() {
-		com.zello.sdk.ContactType type = _selectedContact.getType();
-		com.zello.sdk.ContactStatus status = _selectedContact.getStatus();
+		ContactType type = _selectedContact.getType();
+		ContactStatus status = _selectedContact.getStatus();
 		switch (type) {
 			case USER:
-			case GATEWAY: {
+			case GATEWAY:
 				// User or radio gateway
-				return status != com.zello.sdk.ContactStatus.OFFLINE; // Not offline
-			}
+				return status != ContactStatus.OFFLINE; // Not offline
 			case CHANNEL:
-			case GROUP: {
+			case GROUP:
 				// Channel or group
-				return _appState.isSignedIn() && status == com.zello.sdk.ContactStatus.AVAILABLE; // Channel is online
-			}
+				return _appState.isSignedIn() && status == ContactStatus.AVAILABLE; // Channel is online
 		}
 		return false;
 	}

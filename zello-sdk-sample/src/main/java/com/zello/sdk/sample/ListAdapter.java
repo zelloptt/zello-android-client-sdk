@@ -8,18 +8,24 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.zello.sdk.Contact;
+import com.zello.sdk.ContactStatus;
+import com.zello.sdk.ContactType;
+import com.zello.sdk.Contacts;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
+@SuppressWarnings("WeakerAccess")
 public class ListAdapter extends BaseAdapter {
 
-	private ArrayList<com.zello.sdk.Contact> _contacts = new ArrayList<com.zello.sdk.Contact>();
+	private ArrayList<Contact> _contacts = new ArrayList<>();
 
 	public ListAdapter() {
 		super();
 	}
 
-	public void setContacts(com.zello.sdk.Contacts contacts) {
+	public void setContacts(Contacts contacts) {
 		_contacts.clear();
 		if (contacts != null) {
 			int n = contacts.getCount();
@@ -72,7 +78,7 @@ public class ListAdapter extends BaseAdapter {
 		} else {
 			view = ((LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.contact, null);
 		}
-		com.zello.sdk.Contact contact = null;
+		Contact contact = null;
 		if (position >= 0 && position < _contacts.size()) {
 			contact = _contacts.get(position);
 		}
@@ -80,7 +86,7 @@ public class ListAdapter extends BaseAdapter {
 		return view;
 	}
 
-	public static void configureView(View view, com.zello.sdk.Contact contact) {
+	public static void configureView(View view, Contact contact) {
 		ImageView imgContactStatus = (ImageView) view.findViewById(R.id.contact_image);
 		View viewContactMute = view.findViewById(R.id.contact_mute);
 		TextView txtContactName = (TextView) view.findViewById(R.id.contact_name);
@@ -92,8 +98,8 @@ public class ListAdapter extends BaseAdapter {
 				displayName += " (" + title + ")";
 			}
 			String statusText = "";
-			com.zello.sdk.ContactType type = contact.getType();
-			com.zello.sdk.ContactStatus status = contact.getStatus();
+			ContactType type = contact.getType();
+			ContactStatus status = contact.getStatus();
 			Context context = view.getContext();
 
 			switch (type) {
@@ -105,7 +111,7 @@ public class ListAdapter extends BaseAdapter {
 					break;
 				}
 				case CHANNEL: {
-					if (status == com.zello.sdk.ContactStatus.AVAILABLE) {
+					if (status == ContactStatus.AVAILABLE) {
 						String countText = NumberFormat.getInstance().format(contact.getUsersCount());
 						statusText = context.getResources().getString(R.string.status_channel_users_count).replace("%count%", countText);
 					} else {
@@ -143,7 +149,7 @@ public class ListAdapter extends BaseAdapter {
 		return 0;
 	}
 
-	private static String statusToText(Context context, com.zello.sdk.ContactStatus status) {
+	private static String statusToText(Context context, ContactStatus status) {
 		int id = R.string.status_offline;
 		switch (status) {
 			case STANDBY:
@@ -163,7 +169,7 @@ public class ListAdapter extends BaseAdapter {
 		return context.getResources().getString(id);
 	}
 
-	private static int statusToDrawableId(com.zello.sdk.ContactStatus status, com.zello.sdk.ContactType type) {
+	private static int statusToDrawableId(ContactStatus status, ContactType type) {
 		switch (type) {
 			case USER: {
 				// User

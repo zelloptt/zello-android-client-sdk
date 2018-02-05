@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.zello.sdk.BluetoothAccessoryState;
+import com.zello.sdk.BluetoothAccessoryType;
 import com.zello.sdk.Tab;
 import com.zello.sdk.Zello;
 
@@ -44,11 +46,12 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				ListAdapter adapter = (ListAdapter) _contactsListView.getAdapter();
-				if (adapter != null) {
-					com.zello.sdk.Contact contact = (com.zello.sdk.Contact) adapter.getItem(position);
-					if (contact != null) {
-						Zello.getInstance().setSelectedContact(contact);
-					}
+				if (adapter == null) {
+					return;
+				}
+				com.zello.sdk.Contact contact = (com.zello.sdk.Contact) adapter.getItem(position);
+				if (contact != null) {
+					Zello.getInstance().setSelectedContact(contact);
 				}
 			}
 		});
@@ -73,11 +76,6 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 	protected void onPause() {
 		super.onPause();
 		Zello.getInstance().enterPowerSavingMode();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -191,6 +189,10 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 
 	@Override
 	public void onMicrophonePermissionNotGranted() {
+	}
+
+	@Override
+	public void onBluetoothAccessoryStateChanged(BluetoothAccessoryType bluetoothAccessoryType, BluetoothAccessoryState bluetoothAccessoryState, String s, String s1) {
 	}
 
 	//endregion

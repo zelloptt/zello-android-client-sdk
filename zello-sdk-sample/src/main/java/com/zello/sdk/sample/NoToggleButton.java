@@ -20,7 +20,7 @@ public class NoToggleButton extends ToggleButton {
 
 	@Override
 	public void toggle() {
-		// Do not change check state
+		// Do not change the checked state
 	}
 
 }

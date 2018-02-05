@@ -32,7 +32,7 @@ Before you can use the SDK, you must install the ZelloWork app on your phone. Yo
 
 ### Install Android Studio and configure your project
 
-[Download Android Studio](https://developer.android.com/studio/index.html) and install it. Open your existing project or create a new one. The minimum API level supported by the SDK is 9 (Gingerbread).
+[Download Android Studio](https://developer.android.com/studio/index.html) and install it. Open your existing project or create a new one. The minimum API level supported by the SDK is 15 (Ice Cream Sandwich).
 
 Place [zello-sdk.jar](https://github.com/zelloptt/zello-android-client-sdk/blob/master/zello-sdk.jar?raw=true) file into `libs` folder of your project, then right-click the file in Android Studio and select “Add as Library…”.
 

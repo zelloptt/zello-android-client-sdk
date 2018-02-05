@@ -9,7 +9,7 @@
     <string name="cancel">Cancel</string>
 
     <string name="signing_in">Signing in\u2026"</string>
-    <string name="signed_in">You re signed in.</string>
+    <string name="signed_in">You are signed in.</string>
 
     <string name="error_unknown">Unknown error.</string>
     <string name="error_invalid_credentials">Invalid username or password.</string>

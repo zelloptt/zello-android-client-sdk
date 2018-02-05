@@ -16,13 +16,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.zello.sdk.Events;
+import com.zello.sdk.AppState;
+import com.zello.sdk.BluetoothAccessoryState;
+import com.zello.sdk.BluetoothAccessoryType;
+import com.zello.sdk.Status;
 import com.zello.sdk.Tab;
 import com.zello.sdk.Zello;
 
-public class MiscActivity extends AppCompatActivity implements Events {
+public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Events {
 
-	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
+	private AppState _appState = new AppState();
 
 	private Button _lockButton;
 	private TextView _statusTextView;
@@ -118,10 +121,10 @@ public class MiscActivity extends AppCompatActivity implements Events {
 
 			boolean available = false, solo = false, busy = false;
 			if (!_appState.isConfiguring() && _appState.isSignedIn() && !_appState.isSigningIn() && !_appState.isSigningOut()) {
-				com.zello.sdk.Status status = _appState.getStatus();
-				available = status == com.zello.sdk.Status.AVAILABLE;
-				solo = status == com.zello.sdk.Status.SOLO;
-				busy = status == com.zello.sdk.Status.BUSY;
+				Status status = _appState.getStatus();
+				available = status == Status.AVAILABLE;
+				solo = status == Status.SOLO;
+				busy = status == Status.BUSY;
 			}
 
 			showMenuItem(menu, R.id.menu_available, available);
@@ -144,32 +147,25 @@ public class MiscActivity extends AppCompatActivity implements Events {
 		switch (item.getItemId()) {
 			case R.id.menu_available:
 			case R.id.menu_solo:
-			case R.id.menu_busy: {
+			case R.id.menu_busy:
 				chooseStatus();
 				break;
-			}
-			case R.id.menu_enable_auto_run: {
+			case R.id.menu_enable_auto_run:
 				Zello.getInstance().setAutoRun(true);
 				break;
-			}
-			case R.id.menu_disable_auto_run: {
+			case R.id.menu_disable_auto_run:
 				Zello.getInstance().setAutoRun(false);
 				break;
-			}
-			case R.id.menu_enable_auto_connect_channels: {
+			case R.id.menu_enable_auto_connect_channels:
 				Zello.getInstance().setAutoConnectChannels(true);
 				break;
-			}
-			case R.id.menu_disable_auto_connect_channels: {
+			case R.id.menu_disable_auto_connect_channels:
 				Zello.getInstance().setAutoConnectChannels(false);
 				break;
-			}
-			case R.id.menu_open_app: {
+			case R.id.menu_open_app:
 				Zello.getInstance().openMainScreen();
 				break;
-			}
 		}
-
 		return true;
 	}
 
@@ -187,7 +183,6 @@ public class MiscActivity extends AppCompatActivity implements Events {
 
 	@Override
 	public void onAudioStateChanged() {
-
 	}
 
 	@Override
@@ -214,7 +209,10 @@ public class MiscActivity extends AppCompatActivity implements Events {
 
 	@Override
 	public void onMicrophonePermissionNotGranted() {
+	}
 
+	@Override
+	public void onBluetoothAccessoryStateChanged(BluetoothAccessoryType bluetoothAccessoryType, BluetoothAccessoryState bluetoothAccessoryState, String s, String s1) {
 	}
 
 	//endregion
@@ -231,21 +229,18 @@ public class MiscActivity extends AppCompatActivity implements Events {
 		Resources res = getResources();
 		Zello.getInstance().getAppState(_appState);
 
-		com.zello.sdk.Status status = _appState.getStatus();
+		Status status = _appState.getStatus();
 		int selection = -1;
 		switch (status) {
-			case AVAILABLE: {
+			case AVAILABLE:
 				selection = 0;
 				break;
-			}
-			case SOLO: {
+			case SOLO:
 				selection = 1;
 				break;
-			}
-			case BUSY: {
+			case BUSY:
 				selection = 2;
 				break;
-			}
 		}
 		if (_appState.getStatusMessage() != null && !_appState.getStatusMessage().equals("")) {
 			selection = 3;
@@ -256,22 +251,18 @@ public class MiscActivity extends AppCompatActivity implements Events {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
-					case 0: {
-						Zello.getInstance().setStatus(com.zello.sdk.Status.AVAILABLE);
+					case 0:
+						Zello.getInstance().setStatus(Status.AVAILABLE);
 						break;
-					}
-					case 1: {
-						Zello.getInstance().setStatus(com.zello.sdk.Status.SOLO);
+					case 1:
+						Zello.getInstance().setStatus(Status.SOLO);
 						break;
-					}
-					case 2: {
-						Zello.getInstance().setStatus(com.zello.sdk.Status.BUSY);
+					case 2:
+						Zello.getInstance().setStatus(Status.BUSY);
 						break;
-					}
-					case 3: {
+					case 3:
 						createCustomStatusMessageDialog();
 						break;
-					}
 				}
 				dialog.dismiss();
 			}
@@ -335,7 +326,8 @@ public class MiscActivity extends AppCompatActivity implements Events {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		Zello.getInstance().getAppState(_appState);
 		String previousStatus = _appState.getStatusMessage();
-		final EditText statusEditText = new EditText(this);
+		View view = getLayoutInflater().inflate(R.layout.status_dialog, null);
+		final EditText statusEditText = view.findViewById(R.id.editView);
 		statusEditText.setText(previousStatus);
 		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 			@Override
@@ -343,13 +335,9 @@ public class MiscActivity extends AppCompatActivity implements Events {
 				Zello.getInstance().setStatusMessage(statusEditText.getText().toString());
 			}
 		});
-		builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-
-			}
-		});
-		builder.setView(statusEditText);
+		builder.setNegativeButton(R.string.cancel, null);
+		builder.setTitle(R.string.menu_set_status_message);
+		builder.setView(view);
 
 		builder.show();
 	}

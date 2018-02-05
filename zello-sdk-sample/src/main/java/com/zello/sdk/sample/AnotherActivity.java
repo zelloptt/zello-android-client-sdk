@@ -11,16 +11,22 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.zello.sdk.AppState;
 import com.zello.sdk.BluetoothAccessoryState;
 import com.zello.sdk.BluetoothAccessoryType;
+import com.zello.sdk.MessageIn;
+import com.zello.sdk.MessageOut;
+import com.zello.sdk.Status;
+import com.zello.sdk.Tab;
+import com.zello.sdk.Theme;
 import com.zello.sdk.Zello;
 
 public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.Events {
 
-	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
-	private com.zello.sdk.MessageIn _messageIn = new com.zello.sdk.MessageIn();
-	private com.zello.sdk.MessageOut _messageOut = new com.zello.sdk.MessageOut();
-	private com.zello.sdk.Tab _activeTab = com.zello.sdk.Tab.RECENTS;
+	private AppState _appState = new AppState();
+	private MessageIn _messageIn = new MessageIn();
+	private MessageOut _messageOut = new MessageOut();
+	private Tab _activeTab = Tab.RECENTS;
 
 	private TextView _textMessageInfo;
 	private ImageView _imgMessageStatus;
@@ -75,11 +81,11 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 			getMenuInflater().inflate(R.menu.menu, menu);
 			boolean select = false, available = false, solo = false, busy = false;
 			if (!_appState.isConfiguring() && _appState.isSignedIn() && !_appState.isSigningIn() && !_appState.isSigningOut()) {
-				com.zello.sdk.Status status = _appState.getStatus();
+				Status status = _appState.getStatus();
 				select = true;
-				available = status == com.zello.sdk.Status.AVAILABLE;
-				solo = status == com.zello.sdk.Status.SOLO;
-				busy = status == com.zello.sdk.Status.BUSY;
+				available = status == Status.AVAILABLE;
+				solo = status == Status.SOLO;
+				busy = status == Status.BUSY;
 			}
 			menu.findItem(R.id.menu_select_contact).setVisible(select);
 			menu.findItem(R.id.menu_lock_ptt_app).setVisible(!_appState.isLocked());
@@ -159,7 +165,7 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 	}
 
 	@Override
-	public void onLastContactsTabChanged(com.zello.sdk.Tab tab) {
+	public void onLastContactsTabChanged(Tab tab) {
 		_activeTab = tab;
 	}
 
@@ -183,11 +189,11 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 		// Activity title; optional
 		String title = getResources().getString(R.string.select_contact_title);
 		// Set of displayed tabs; required; any combination of RECENTS, USERS and CHANNELS
-		com.zello.sdk.Tab[] tabs = new com.zello.sdk.Tab[]{com.zello.sdk.Tab.RECENTS, com.zello.sdk.Tab.USERS, com.zello.sdk.Tab.CHANNELS};
+		Tab[] tabs = new Tab[]{Tab.RECENTS, Tab.USERS, Tab.CHANNELS};
 		// Initially active tab; optional; can be RECENTS, USERS or CHANNELS
-		com.zello.sdk.Tab tab = _activeTab;
+		Tab tab = _activeTab;
 		// Visual theme; optional; can be DARK or LIGHT
-		com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
+		Theme theme = Theme.DARK;
 
 		Zello.getInstance().selectContact(title, tabs, tab, theme);
 	}
@@ -215,23 +221,23 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 	private void chooseStatus() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		Resources res = getResources();
-		com.zello.sdk.Status status = _appState.getStatus();
-		int selection = status == com.zello.sdk.Status.BUSY ? 2 : (status == com.zello.sdk.Status.SOLO ? 1 : 0);
+		Status status = _appState.getStatus();
+		int selection = status == Status.BUSY ? 2 : (status == Status.SOLO ? 1 : 0);
 		String[] items = new String[]{res.getString(R.string.menu_available), res.getString(R.string.menu_solo), res.getString(R.string.menu_busy), res.getString(R.string.menu_sign_out)};
 		builder.setSingleChoiceItems(items, selection, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
 					case 0: {
-						Zello.getInstance().setStatus(com.zello.sdk.Status.AVAILABLE);
+						Zello.getInstance().setStatus(Status.AVAILABLE);
 						break;
 					}
 					case 1: {
-						Zello.getInstance().setStatus(com.zello.sdk.Status.SOLO);
+						Zello.getInstance().setStatus(Status.SOLO);
 						break;
 					}
 					case 2: {
-						Zello.getInstance().setStatus(com.zello.sdk.Status.BUSY);
+						Zello.getInstance().setStatus(Status.BUSY);
 						break;
 					}
 					case 3: {
