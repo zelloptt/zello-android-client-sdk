@@ -71,13 +71,13 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	@SuppressLint("InlinedApi")
 	@SuppressWarnings("deprecation")
 	void onCreate(String packageName, Context context) {
-		_package = Util.toLowerCaseLexicographically(Util.emptyIfNull(packageName));
-		_context = context;
-		_handler = new SafeHandler<>(this);
-		_appState._available = isAppAvailable();
 		if (context == null) {
 			return;
 		}
+		_package = Util.toLowerCaseLexicographically(Util.emptyIfNull(packageName));
+		_context = context.getApplicationContext();
+		_handler = new SafeHandler<>(this);
+		_appState._available = isAppAvailable();
 		// Spin up the main app
 		connect();
 		// Register to receive package install broadcasts
