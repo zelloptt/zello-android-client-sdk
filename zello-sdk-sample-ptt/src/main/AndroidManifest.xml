@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.zello.sdk.sample.ptt"
+<manifest
+    package="com.zello.sdk.sample.ptt"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -9,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".PttActivity">
+        <activity android:name="com.zello.sdk.sample.ptt.PttActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
