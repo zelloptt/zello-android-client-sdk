@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
 
     dependencies {
@@ -11,7 +12,7 @@ buildscript {
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile fileTree(include: '*.jar', dir: 'libs')
+    implementation fileTree(include: '*.jar', dir: 'libs')
 }
 
 task zelloSdkJarDeleteFromRoot(type: Delete) {
@@ -94,8 +95,7 @@ android.libraryVariants.all { variant ->
             description "Creates Zello SDK Javadoc in the project root folder"
             destinationDir = new File("${project.getProjectDir()}/../docs", "zello-sdk-documentation")
             source = android.sourceSets.main.java.srcDirs
-            ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-            classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
+            classpath = files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
             exclude '**/Constants.java'
             exclude '**/ContactObserver*.java'
             options.memberLevel = JavadocMemberLevel.PUBLIC
@@ -108,7 +108,7 @@ android.libraryVariants.all { variant ->
             options.author = false
             options.noDeprecated = true
             options.noDeprecatedList = true
-            options.stylesheetFile = new File(projectDir, "../docs/stylesheet.css");
+            options.stylesheetFile = new File(projectDir, "../docs/stylesheet.css")
         }
     }
 }
@@ -130,7 +130,7 @@ android {
 
     defaultConfig {
         targetSdkVersion 27
-        minSdkVersion 9
+        minSdkVersion 15
     }
 
     sourceSets {
