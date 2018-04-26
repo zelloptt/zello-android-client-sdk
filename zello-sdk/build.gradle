@@ -9,6 +9,11 @@ buildscript {
     }
 }
 
+repositories {
+    jcenter()
+    google()
+}
+
 apply plugin: 'com.android.library'
 
 dependencies {
@@ -26,7 +31,7 @@ task zelloSdkJarDeployReleaseToRoot() {
         delete '../zello-sdk.jar'
     }
     copy {
-        from "build/intermediates/bundles/release/classes.jar"
+        from "build/intermediates/intermediate-jars/release/classes.jar"
         into '../'
         rename('classes.jar', 'zello-sdk.jar')
     }
@@ -56,27 +61,27 @@ android.buildTypes.all { buildType ->
             delete '../zello-sdk-sample-signin/libs/zello-sdk.jar'
         }
         copy {
-            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            from "build/intermediates/intermediate-jars/${buildType.name}/classes.jar"
             into '../zello-sdk-sample/libs'
             rename('classes.jar', 'zello-sdk.jar')
         }
         copy {
-            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            from "build/intermediates/intermediate-jars/${buildType.name}/classes.jar"
             into '../zello-sdk-sample-contacts/libs'
             rename('classes.jar', 'zello-sdk.jar')
         }
         copy {
-            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            from "build/intermediates/intermediate-jars/${buildType.name}/classes.jar"
             into '../zello-sdk-sample-misc/libs'
             rename('classes.jar', 'zello-sdk.jar')
         }
         copy {
-            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            from "build/intermediates/intermediate-jars/${buildType.name}/classes.jar"
             into '../zello-sdk-sample-ptt/libs'
             rename('classes.jar', 'zello-sdk.jar')
         }
         copy {
-            from "build/intermediates/bundles/${buildType.name}/classes.jar"
+            from "build/intermediates/intermediate-jars/${buildType.name}/classes.jar"
             into '../zello-sdk-sample-signin/libs'
             rename('classes.jar', 'zello-sdk.jar')
         }
