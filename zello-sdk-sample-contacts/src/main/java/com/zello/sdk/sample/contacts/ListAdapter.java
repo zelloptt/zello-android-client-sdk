@@ -17,6 +17,7 @@ import com.zello.sdk.Contacts;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
+@SuppressWarnings("WeakerAccess")
 public class ListAdapter extends BaseAdapter {
 
 	private ArrayList<Contact> _contacts = new ArrayList<>();
@@ -126,6 +127,16 @@ public class ListAdapter extends BaseAdapter {
 					statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
 					break;
 				}
+				case CONVERSATION: {
+					if (status == ContactStatus.AVAILABLE) {
+						String countText = NumberFormat.getInstance().format(contact.getUsersCount());
+						String totalText = NumberFormat.getInstance().format(contact.getUsersTotal());
+						statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
+					} else {
+						statusText = statusToText(context, status);
+					}
+					break;
+				}
 			}
 
 			imgContactStatus.setImageResource(statusToDrawableId(status, type));
@@ -205,6 +216,15 @@ public class ListAdapter extends BaseAdapter {
 						return R.drawable.group_online;
 					default:
 						return R.drawable.channel_offline;
+				}
+			}
+			case CONVERSATION: {
+				// Channel
+				switch (status) {
+					case AVAILABLE:
+						return R.drawable.conversation_online;
+					default:
+						return R.drawable.conversation_offline;
 				}
 			}
 		}

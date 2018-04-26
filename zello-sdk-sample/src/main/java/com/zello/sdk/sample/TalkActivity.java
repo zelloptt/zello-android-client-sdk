@@ -265,6 +265,8 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		updateAudioMode();
 		updateMessageState();
 		updateSelectedContact();
+
+		_editUsername.selectAll();
 	}
 
 	@Override
@@ -577,7 +579,8 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 					break;
 				}
 				case CHANNEL:
-				case GROUP: {
+				case GROUP:
+				case CONVERSATION: {
 					showConnect = !_selectedContact.getNoDisconnect();
 					if (_appState.isSignedIn()) {
 						if (status == ContactStatus.AVAILABLE) {
@@ -783,7 +786,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 	private void connectChannel() {
 		ContactType type = _selectedContact.getType();
-		if (type == ContactType.CHANNEL || type == ContactType.GROUP) {
+		if (type == ContactType.CHANNEL || type == ContactType.GROUP || type == ContactType.CONVERSATION) {
 			ContactStatus status = _selectedContact.getStatus();
 			if (status == ContactStatus.OFFLINE) {
 				Zello.getInstance().connectChannel(_selectedContact.getName());

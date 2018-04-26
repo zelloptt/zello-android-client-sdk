@@ -1,5 +1,6 @@
 package com.zello.sdk.sample;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +71,7 @@ public class ListAdapter extends BaseAdapter {
 		return _contacts.size();
 	}
 
+	@SuppressLint("InflateParams")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view;
@@ -87,10 +89,10 @@ public class ListAdapter extends BaseAdapter {
 	}
 
 	public static void configureView(View view, Contact contact) {
-		ImageView imgContactStatus = (ImageView) view.findViewById(R.id.contact_image);
+		ImageView imgContactStatus = view.findViewById(R.id.contact_image);
 		View viewContactMute = view.findViewById(R.id.contact_mute);
-		TextView txtContactName = (TextView) view.findViewById(R.id.contact_name);
-		TextView txtContactStatus = (TextView) view.findViewById(R.id.contact_status);
+		TextView txtContactName = view.findViewById(R.id.contact_name);
+		TextView txtContactStatus = view.findViewById(R.id.contact_status);
 		if (contact != null) {
 			String displayName = contact.getDisplayName(); // Contact name or a full name if not empty
 			String title = contact.getTitle();
@@ -123,6 +125,16 @@ public class ListAdapter extends BaseAdapter {
 					String countText = NumberFormat.getInstance().format(contact.getUsersTotal());
 					String totalText = NumberFormat.getInstance().format(contact.getUsersTotal());
 					statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
+					break;
+				}
+				case CONVERSATION: {
+					if (status == ContactStatus.AVAILABLE) {
+						String countText = NumberFormat.getInstance().format(contact.getUsersCount());
+						String totalText = NumberFormat.getInstance().format(contact.getUsersTotal());
+						statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
+					} else {
+						statusText = statusToText(context, status);
+					}
 					break;
 				}
 			}
@@ -204,6 +216,15 @@ public class ListAdapter extends BaseAdapter {
 						return R.drawable.group_online;
 					default:
 						return R.drawable.channel_offline;
+				}
+			}
+			case CONVERSATION: {
+				// Channel
+				switch (status) {
+					case AVAILABLE:
+						return R.drawable.conversation_online;
+					default:
+						return R.drawable.conversation_offline;
 				}
 			}
 		}

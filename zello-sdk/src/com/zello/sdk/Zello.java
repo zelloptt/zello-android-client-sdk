@@ -856,7 +856,7 @@ public class Zello {
 	 * <code>Zello.getContacts()</code> method as an argument.
 	 * </p>
 	 *
-	 * @param name Nullable; The name of the channel or group to select. A null value deselects the current contact.
+	 * @param name Nullable; The name of the channel or group or contact to select. A null value deselects the current contact.
 	 * @see #setSelectedContact(Contact)
 	 * @see #setSelectedUserOrGateway(String)
 	 * @see #selectContact(String, Tab[], Tab, Theme, Activity)

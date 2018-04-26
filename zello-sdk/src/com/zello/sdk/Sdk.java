@@ -130,7 +130,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
 		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
 		filterPackage.addDataScheme("package");
-		context.registerReceiver(_receiverPackage, filterPackage);
+		_context.registerReceiver(_receiverPackage, filterPackage);
 		// Register to receive app state broadcasts
 		_receiverAppState = new BroadcastReceiver() {
 			@Override
@@ -138,7 +138,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				updateAppState(intent);
 			}
 		};
-		Intent intentStickyAppState = context.registerReceiver(_receiverAppState, new IntentFilter(_package + "." + Constants.ACTION_APP_STATE));
+		Intent intentStickyAppState = _context.registerReceiver(_receiverAppState, new IntentFilter(_package + "." + Constants.ACTION_APP_STATE));
 		updateAppState(intentStickyAppState);
 		updateContacts();
 		// Register to receive app permissions broadcasts
@@ -148,7 +148,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				handlePermissionError(intent);
 			}
 		};
-		context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_package + "." + Constants.ACTION_PERMISSION_ERRORS));
+		_context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_package + "." + Constants.ACTION_PERMISSION_ERRORS));
 		// Register to receive message state broadcasts
 		_receiverMessageState = new BroadcastReceiver() {
 			@Override
@@ -156,7 +156,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				updateMessageState(intent);
 			}
 		};
-		Intent intentStickyMessageState = context.registerReceiver(_receiverMessageState, new IntentFilter(_package + "." + Constants.ACTION_MESSAGE_STATE));
+		Intent intentStickyMessageState = _context.registerReceiver(_receiverMessageState, new IntentFilter(_package + "." + Constants.ACTION_MESSAGE_STATE));
 		updateMessageState(intentStickyMessageState);
 		// Register to receive selected contact broadcasts
 		_receiverContactSelected = new BroadcastReceiver() {
@@ -165,7 +165,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				updateSelectedContact(intent);
 			}
 		};
-		Intent intentStickySelectedContact = context.registerReceiver(_receiverContactSelected, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_SELECTED));
+		Intent intentStickySelectedContact = _context.registerReceiver(_receiverContactSelected, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_SELECTED));
 		updateSelectedContact(intentStickySelectedContact);
 		// Register to receive last selected contact list tab
 		_receiverActiveTab = new BroadcastReceiver() {
@@ -174,7 +174,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				updateSelectedTab(intent);
 			}
 		};
-		context.registerReceiver(_receiverActiveTab, new IntentFilter(_activeTabAction));
+		_context.registerReceiver(_receiverActiveTab, new IntentFilter(_activeTabAction));
 		// Register to receive bluetooth accessory state broadcasts
 		_receiverBtAccessoryState = new BroadcastReceiver() {
 			@Override
@@ -182,7 +182,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				handleBtAccessoryState(intent);
 			}
 		};
-		context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_package + "." + Constants.ACTION_BT_ACCESSORY_STATE));
+		_context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_package + "." + Constants.ACTION_BT_ACCESSORY_STATE));
 	}
 
 	void onDestroy() {
@@ -459,7 +459,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, mute ? Constants.VALUE_MUTE : Constants.VALUE_UNMUTE);
 		intent.putExtra(Constants.EXTRA_CONTACT_NAME, contact.getName());
-		intent.putExtra(Constants.EXTRA_CONTACT_TYPE, type == ContactType.CHANNEL || type == ContactType.GROUP ? 1 : 0);
+		intent.putExtra(Constants.EXTRA_CONTACT_TYPE, type == ContactType.CHANNEL || type == ContactType.GROUP || type == ContactType.CONVERSATION ? 1 : 0);
 		context.sendBroadcast(intent);
 	}
 
@@ -485,6 +485,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				intent.putExtra(Constants.EXTRA_PASSWORD, md5(password));
 				intent.putExtra(Constants.EXTRA_PERISHABLE, perishable);
 				context.sendBroadcast(intent);
+				context.startService(_serviceIntent);
 			}
 		} else if (_serviceBound && _serviceConnecting) {
 			_delayedNetwork = network;
@@ -711,7 +712,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	void setSelectedContact(Contact contact) {
 		if (contact != null) {
 			ContactType type = contact.getType();
-			selectContact(type == ContactType.CHANNEL || type == ContactType.GROUP ? 1 : 0, contact.getName());
+			selectContact(type == ContactType.CHANNEL || type == ContactType.GROUP || type == ContactType.CONVERSATION ? 1 : 0, contact.getName());
 		} else {
 			selectContact(0, null);
 		}
@@ -1062,7 +1063,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_selectedContact._usersTotal = intent.getIntExtra(Constants.EXTRA_CHANNEL_USERS_TOTAL, 0);
 			_selectedContact._title = intent.getStringExtra(Constants.EXTRA_CONTACT_TITLE);
 			_selectedContact._muted = intent.getIntExtra(Constants.EXTRA_CONTACT_MUTED, 0) != 0;
-			_selectedContact._noDisconnect = intent.getIntExtra(Constants.EXTRA_CHANNEL_NO_DISCONNECT, _selectedContact._type != ContactType.CHANNEL ? 1 : 0) != 0;
+			_selectedContact._noDisconnect = intent.getIntExtra(Constants.EXTRA_CHANNEL_NO_DISCONNECT,
+					_selectedContact._type != ContactType.CHANNEL && _selectedContact._type != ContactType.GROUP && _selectedContact._type != ContactType.CONVERSATION ? 1 : 0) != 0;
 		} else {
 			_selectedContact.reset();
 		}
@@ -1190,6 +1192,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				return ContactType.GROUP;
 			case 2:
 				return ContactType.GATEWAY;
+			case 4:
+				return ContactType.CONVERSATION;
 			default:
 				return ContactType.USER;
 		}

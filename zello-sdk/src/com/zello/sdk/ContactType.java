@@ -21,6 +21,11 @@ public enum ContactType {
 	/**
 	 * <code>Contact</code> is a gateway.
 	 */
-	GATEWAY
+	GATEWAY,
+
+	/**
+	 * <code>Contact</code> is a conversation.
+	 */
+	CONVERSATION
 
 }

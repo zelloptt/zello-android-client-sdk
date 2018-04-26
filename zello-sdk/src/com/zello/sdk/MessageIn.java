@@ -48,8 +48,8 @@ public class MessageIn {
 	 *     Returns an instance of the <code>Contact</code> that is sending the user the message.
 	 * </p>
 	 * <p>
-	 *     If the <code>ContactType</code> is {@link ContactType#CHANNEL} or {@link ContactType#GROUP}, the returned <code>Contact</code> is the channel or group, respectively.
-	 *     For channels and groups, use the <code>getAuthor()</code> method to get the original author of the message.
+	 *     If the <code>ContactType</code> is {@link ContactType#CHANNEL}, {@link ContactType#GROUP} or {@link ContactType#CONVERSATION}, the returned <code>Contact</code> is a channel, a group, or a conversation, respectively.
+	 *     For channels, groups and conversations, use the <code>getAuthor()</code> method to get the original author of the message.
 	 * </p>
 	 * @return The <code>Contact</code> that is sending the message.
 	 * @see #getAuthor()
@@ -63,7 +63,7 @@ public class MessageIn {
 	 *     Returns an instance of the <code>Contact</code> that authored the message.
 	 * </p>
 	 * <p>
-	 *     This method should only be used to get the author of a message when the <code>ContactType</code> of the {@link #getFrom()} method is {@link ContactType#CHANNEL} or {@link ContactType#GROUP}.
+	 *     This method should only be used to get the author of a message when the <code>ContactType</code> of the {@link #getFrom()} method is {@link ContactType#CHANNEL}, {@link ContactType#GROUP} or {@link ContactType#CONVERSATION}.
 	 * </p>
 	 * @return The <code>Contact</code> that authored the message.
      */

@@ -146,17 +146,15 @@ public class Contacts {
 						contact._usersCount = cursor.getInt(_indexUsersCount);
 						break;
 					}
-					case GROUP: {
+					case GROUP:
+					case CONVERSATION: {
 						contact._usersCount = cursor.getInt(_indexUsersCount);
 						contact._usersTotal = cursor.getInt(_indexUsersTotal);
 						break;
 					}
 				}
-				if (_indexNoDisconnect >= 0) {
-					contact._noDisconnect = (contact._type != ContactType.CHANNEL && contact._type != ContactType.GROUP) || cursor.getInt(_indexNoDisconnect) != 0;
-				} else {
-					contact._noDisconnect = contact._type != ContactType.CHANNEL;
-				}
+				contact._noDisconnect = (contact._type != ContactType.CHANNEL && contact._type != ContactType.GROUP && contact._type != ContactType.CONVERSATION) ||
+						(_indexNoDisconnect >= 0 && cursor.getInt(_indexNoDisconnect) != 0);
 				return contact;
 			} catch (Throwable t) {
 				Log.i("zello sdk", "Error in Contacts.getItem: " + t.toString());

@@ -57,8 +57,9 @@ public class Contact {
 	 *     Returns the identifying name of the <code>Contact</code>.
 	 * </p>
 	 * <p>
-	 *     For {@link ContactType#CHANNEL} the value is the channel name.
+	 *     For {@link ContactType#CHANNEL and @link ContactType#GROUP} the value is the channel name.
 	 *     For {@link ContactType#USER} and {@link ContactType#GATEWAY} the value is the username.
+	 *     For {@link ContactType#CONVERSATION} the value is a unique conversation ID.
 	 * </p>
 	 * @return Name of the <code>Contact</code>.
      */
@@ -117,7 +118,7 @@ public class Contact {
 	 * Returns the number of online users in the channel.
 	 * </p>
 	 * <p>
-	 *     For {@link ContactType#CHANNEL} and {@link ContactType#GROUP} this value is the number of users online in the channel or group, respectively.
+	 *     For {@link ContactType#CHANNEL}. {@link ContactType#GROUP} and  and {@link ContactType#CONVERSATION} this value is the number of users online in the channel or group, respectively.
 	 *     For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>0</code> is returned).
 	 * </p>
 	 * @return number of online users under the <code>Contact</code> for the <code>ContactType</code>.
@@ -131,8 +132,8 @@ public class Contact {
 	 * Returns the number of total users in the channel.
 	 * </p>
 	 * <p>
-	 *     For {@link ContactType#CHANNEL} and {@link ContactType#GROUP} this value is the number of total users in the channel or group, respectively.
-	 *     For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>0</code> is returned).
+	 *     For {@link ContactType#GROUP} and {@link ContactType#CONVERSATION} this value is the number of total users in the channel or group, respectively.
+	 *     For {@link ContactType#USER}, {@link ContactType#GATEWAY} and {@link ContactType#CHANNEL} this value is not defined (<code>0</code> is returned).
 	 * </p>
 	 * @return number of total users under the <code>Contact</code> for the <code>ContactType</code>.
 	 */
@@ -165,7 +166,7 @@ public class Contact {
 	/**
 	 * Returns whether the channel has the no disconnect setting enabled or not.
 	 * <p>
-	 *     For {@link ContactType#USER} and {@link ContactType#GATEWAY} this value is not defined (<code>false</code> is returned).
+	 *     For {@link ContactType#USER}, {@link ContactType#GATEWAY} and {@link ContactType#CONVERSATION} this value is not defined (<code>false</code> is returned).
 	 * </p>
 	 * @return boolean indicating if the <code>Contact</code> has the no disconnect setting enabled.
      */
