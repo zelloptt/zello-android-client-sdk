@@ -53,6 +53,14 @@ public class Contact {
 	}
 
 	/**
+	 * Check if the object is empty.
+	 * @return true if the object represents a valid contact.
+	 */
+	public boolean isValid() {
+		return _name != null && !_name.isEmpty();
+	}
+
+	/**
 	 * <p>
 	 *     Returns the identifying name of the <code>Contact</code>.
 	 * </p>

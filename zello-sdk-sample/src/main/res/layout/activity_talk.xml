@@ -178,16 +178,6 @@
                     android:layout_marginEnd="@dimen/control_padding"
                     android:layout_marginRight="@dimen/control_padding"
                     android:contentDescription="@string/channel_connect" />
-
-                <ImageButton
-                    android:id="@+id/button_close"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="@dimen/control_padding"
-                    android:layout_marginRight="@dimen/control_padding"
-                    android:contentDescription="@string/button_close"
-                    android:src="@android:drawable/ic_delete" />
             </LinearLayout>
 
             <!-- The talk button -->

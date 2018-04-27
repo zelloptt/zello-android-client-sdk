@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -75,10 +76,10 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	private Contact _contextContact; // Contact for which currently active context menu is being displayed
 
 	private Audio _audio;
-	private AppState _appState = new AppState();
-	private MessageIn _messageIn = new MessageIn();
-	private MessageOut _messageOut = new MessageOut();
-	private Contact _selectedContact = new Contact();
+	private final AppState _appState = new AppState();
+	private final MessageIn _messageIn = new MessageIn();
+	private final MessageOut _messageOut = new MessageOut();
+	private final Contact _selectedContact = new Contact();
 	private Tab _activeTab = Tab.RECENTS;
 
 	private static String _keyUsername = "username";
@@ -90,6 +91,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_talk);
+
 		_viewState = findViewById(R.id.state_screen);
 		_txtState = _viewState.findViewById(R.id.state);
 		_btnCancel = _viewState.findViewById(R.id.cancel);
@@ -176,14 +178,6 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 			@Override
 			public void onClick(View view) {
 				connectChannel();
-			}
-		});
-
-		// Deselect contact
-		findViewById(R.id.button_close).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Zello.getInstance().setSelectedContact(null);
 			}
 		});
 
@@ -379,8 +373,23 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				showAbout();
 				return true;
 			}
+			case android.R.id.home: {
+				if (handleBackButton()) {
+					return true;
+				}
+			}
 		}
-		return false;
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (handleBackButton()) {
+				return true;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
@@ -453,6 +462,14 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	@Override
 	public void onBluetoothAccessoryStateChanged(BluetoothAccessoryType type, BluetoothAccessoryState state, String name, String description) {
 		Toast.makeText(this, description, Toast.LENGTH_SHORT).show();
+	}
+
+	private boolean handleBackButton() {
+		if (!_selectedContact.isValid()) {
+			return false;
+		}
+		Zello.getInstance().setSelectedContact(null);
+		return true;
 	}
 
 	private void showMenuItem(Menu menu, int itemId, boolean show) {
@@ -563,8 +580,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 	private void updateSelectedContact() {
 		Zello.getInstance().getSelectedContact(_selectedContact);
-		String name = _selectedContact.getName(); // Contact name
-		boolean selected = name != null && name.length() > 0;
+		boolean selected = _selectedContact.isValid();
 		boolean canTalk = false, showConnect = false, connected = false, canConnect = false;
 		if (selected) {
 			// Update info
@@ -740,14 +756,15 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	private void updateContentScreen() {
 		int listVisibility = View.GONE;
 		int talkVisibility = View.GONE;
-		String name = _selectedContact.getName();
-		if (name != null && name.length() != 0) {
+		if (_selectedContact.isValid()) {
 			talkVisibility = View.VISIBLE;
 		} else {
 			listVisibility = View.VISIBLE;
 		}
 		_listContacts.setVisibility(listVisibility);
 		_viewTalkScreen.setVisibility(talkVisibility);
+
+		getSupportActionBar().setDisplayHomeAsUpEnabled(talkVisibility == View.VISIBLE);
 		if (listVisibility == View.VISIBLE) {
 			updateContactList();
 		}
