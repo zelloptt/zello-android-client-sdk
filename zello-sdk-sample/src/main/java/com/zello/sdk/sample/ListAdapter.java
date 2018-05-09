@@ -122,7 +122,7 @@ public class ListAdapter extends BaseAdapter {
 					break;
 				}
 				case GROUP: {
-					String countText = NumberFormat.getInstance().format(contact.getUsersTotal());
+					String countText = NumberFormat.getInstance().format(contact.getUsersCount());
 					String totalText = NumberFormat.getInstance().format(contact.getUsersTotal());
 					statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
 					break;
