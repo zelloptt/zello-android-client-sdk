@@ -65,6 +65,10 @@ public enum Error {
 	/**
 	 * Connection is unreliable and is causing the app to repeatedly sign in.
 	 */
-	UNRELIABLE_CONNECTION
+	UNRELIABLE_CONNECTION,
+	/**
+	 * The device identifier provided does not match the one from the ZelloWork console.
+	 */
+	DEVICE_ID_MISMATCH
 
 }

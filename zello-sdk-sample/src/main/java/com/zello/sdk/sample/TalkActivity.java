@@ -841,6 +841,8 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				return getResources().getString(R.string.error_server_license);
 			case TOO_MANY_SIGNIN_ATTEMPTS:
 				return getResources().getString(R.string.error_brute_force_protection);
+			case DEVICE_ID_MISMATCH:
+				return getResources().getString(R.string.error_device_id_mismatch);
 			default:
 				return null;
 		}
