@@ -1164,6 +1164,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				return Error.TOO_MANY_SIGNIN_ATTEMPTS;
 			} else if (error == Error.UNRELIABLE_CONNECTION.ordinal()) {
 				return Error.UNRELIABLE_CONNECTION;
+			} else if (error == Error.DEVICE_ID_MISMATCH.ordinal()) {
+				return Error.DEVICE_ID_MISMATCH;
 			} else {
 				return Error.UNKNOWN;
 			}

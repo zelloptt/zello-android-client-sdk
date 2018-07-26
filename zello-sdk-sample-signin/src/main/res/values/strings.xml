@@ -24,4 +24,5 @@
     <string name="error_internet_restricted">Internet access is restricted.</string>
     <string name="error_server_license">Server license problem.</string>
     <string name="error_brute_force_protection">You\'ve used incorrect credentials too many times.</string>
+    <string name="error_device_id_mismatch">Not allowed to sign in on this device.</string>
 </resources>
