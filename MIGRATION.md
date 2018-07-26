@@ -9,12 +9,12 @@ Instead of creating an instance of `Sdk` class and initializing it using `Sdk.on
 Old version
 
 ```java
-// Zello activty
+// Zello activity
 public class TalkActivity extends Activity implememts com.zello.sdk.Events {
   private com.zello.sdk.Sdk _sdk = new com.zello.sdk.Sdk();
   
   @Override
-  protected void onCreate(Bundel savedInstanceState) {
+  protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // ...
     _sdk.onCreate("net.loudtalks", this, this);
@@ -30,7 +30,7 @@ public class TalkActivity extends Activity implememts com.zello.sdk.Events {
   private com.zello.sdk.Zello _sdk; // Changed Sdk -> Zello
   
   @Override
-  protected void onCreate(Bundel savedInstanceState) {
+  protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     // ...
     _sdk = Zello.getInstance();
