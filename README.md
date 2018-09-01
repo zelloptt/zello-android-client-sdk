@@ -36,8 +36,7 @@ Before you can use the SDK, you must install the ZelloWork app on your phone. Yo
 
 Place [zello-sdk.jar](https://github.com/zelloptt/zello-android-client-sdk/blob/master/zello-sdk.jar?raw=true) file into `libs` folder of your project, then right-click the file in Android Studio and select “Add as Library…”.
 
-![Adding as a library in Android Studio]
-(https://zellowork.com/img/github/add-zello-sdk-lib.png)
+![Adding as a library in Android Studio](https://zellowork.com/img/github/add-zello-sdk-lib.png)
 
 ## Using the SDK
 
