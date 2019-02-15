@@ -1,5 +1,6 @@
 package com.zello.sdk.sample;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -43,6 +44,8 @@ import com.zello.sdk.Zello;
 
 import java.text.NumberFormat;
 
+@SuppressLint("ClickableViewAccessibility")
+@SuppressWarnings("FieldCanBeLocal")
 public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Events {
 
 	private View _viewState;
@@ -150,12 +153,12 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		_listContacts.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
 			@Override
 			public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-				if (menuInfo != null && menuInfo instanceof AdapterView.AdapterContextMenuInfo) {
+				if (menuInfo instanceof AdapterView.AdapterContextMenuInfo) {
 					AdapterView.AdapterContextMenuInfo listInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
 					if (listInfo.targetView != null && listInfo.targetView.getParent() == _listContacts) {
 						int position = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
 						android.widget.ListAdapter adapter = _listContacts.getAdapter();
-						if (adapter != null && adapter instanceof ListAdapter) {
+						if (adapter instanceof ListAdapter) {
 							if (position >= 0 && adapter.getCount() > position) {
 								_contextContact = (Contact) adapter.getItem(position);
 								if (_contextContact != null) {
@@ -396,7 +399,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	public boolean onContextItemSelected(MenuItem item) {
 		if (item != null) {
 			ContextMenu.ContextMenuInfo menuInfo = item.getMenuInfo();
-			if (menuInfo != null && menuInfo instanceof AdapterView.AdapterContextMenuInfo) {
+			if (menuInfo instanceof AdapterView.AdapterContextMenuInfo) {
 				AdapterView.AdapterContextMenuInfo listInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
 				if (listInfo.targetView != null && listInfo.targetView.getParent() == _listContacts && _contextContact != null) {
 					switch (item.getItemId()) {
@@ -488,8 +491,8 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		Intent intent = new Intent(this, AnotherActivity.class);
 		try {
 			startActivity(intent);
-		} catch (ActivityNotFoundException ignored) {
-			System.out.println("Exception: " + ignored);
+		} catch (ActivityNotFoundException e) {
+			System.out.println("Exception: " + e);
 		}
 	}
 

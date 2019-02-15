@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.3.1'
     }
 }
 
@@ -133,11 +133,11 @@ tasks.whenTaskAdded { task ->
 }
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     defaultConfig {
-        targetSdkVersion 27
-        minSdkVersion 15
+        targetSdkVersion 28
+        minSdkVersion 16
     }
 
     sourceSets {
