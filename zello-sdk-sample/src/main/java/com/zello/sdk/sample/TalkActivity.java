@@ -368,6 +368,14 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				Zello.getInstance().endMessage();
 				return true;
 			}
+			case R.id.menu_send_ptt_down_broadcast: {
+				sendBroadcast(new Intent("com.zello.ptt.down"));
+				return true;
+			}
+			case R.id.menu_send_ptt_up_broadcast: {
+				sendBroadcast(new Intent("com.zello.ptt.up"));
+				return true;
+			}
 			case R.id.menu_ptt_buttons: {
 				openPttButtonsScreen();
 				return true;
