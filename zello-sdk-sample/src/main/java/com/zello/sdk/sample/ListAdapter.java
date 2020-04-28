@@ -78,7 +78,7 @@ public class ListAdapter extends BaseAdapter {
 		if (convertView != null) {
 			view = convertView;
 		} else {
-			view = ((LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.contact, null);
+			view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact, null);
 		}
 		Contact contact = null;
 		if (position >= 0 && position < _contacts.size()) {
@@ -181,6 +181,7 @@ public class ListAdapter extends BaseAdapter {
 		return context.getResources().getString(id);
 	}
 
+	@SuppressWarnings("SwitchStatementWithTooFewBranches")
 	private static int statusToDrawableId(ContactStatus status, ContactType type) {
 		switch (type) {
 			case USER: {

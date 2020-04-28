@@ -4,12 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.zello.sdk.AppState;
 import com.zello.sdk.BluetoothAccessoryState;
@@ -265,7 +266,8 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 		} else if (incoming) {
 			String author = _messageIn.getAuthor().getDisplayName(); // Is message from channel?
 			if (author != null && author.length() > 0) {
-				_txtMessageName.setText(_messageIn.getFrom().getDisplayName() + " \\ " + author); // Show channel and author names
+				// Show channel and author names
+				_txtMessageName.setText(String.format(getResources().getString(R.string.message_in_from_channel), _messageIn.getFrom().getDisplayName(), author));
 			} else {
 				_txtMessageName.setText(_messageIn.getFrom().getDisplayName()); // Show sender name
 			}

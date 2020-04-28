@@ -1,7 +1,7 @@
 package com.zello.sdk.sample.ptt;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.zello.sdk.AppState;
 import com.zello.sdk.Audio;
@@ -47,6 +49,7 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 
 	//region Lifecycle Methods
 
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -348,6 +351,7 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 		}
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	private void setMenuItemText(Menu menu, int itemId, String text) {
 		MenuItem item = menu.findItem(itemId);
 		if (item != null) {

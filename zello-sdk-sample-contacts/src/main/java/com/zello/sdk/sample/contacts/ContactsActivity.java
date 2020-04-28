@@ -2,13 +2,14 @@ package com.zello.sdk.sample.contacts;
 
 import android.os.Parcelable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.zello.sdk.BluetoothAccessoryState;
 import com.zello.sdk.BluetoothAccessoryType;
@@ -91,6 +92,7 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 		return true;
 	}
 
+	@SuppressWarnings("SwitchStatementWithTooFewBranches")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -197,6 +199,7 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 
 	//endregion
 
+	@SuppressWarnings("SameParameterValue")
 	private void showMenuItem(Menu menu, int itemId, boolean show) {
 		MenuItem item = menu.findItem(itemId);
 		if (item != null) {

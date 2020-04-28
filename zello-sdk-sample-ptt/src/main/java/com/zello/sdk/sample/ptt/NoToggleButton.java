@@ -2,9 +2,10 @@ package com.zello.sdk.sample.ptt;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ToggleButton;
 
-public class NoToggleButton extends ToggleButton {
+import androidx.appcompat.widget.AppCompatToggleButton;
+
+public class NoToggleButton extends AppCompatToggleButton {
 
 	public NoToggleButton(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);

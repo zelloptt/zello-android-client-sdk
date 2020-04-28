@@ -1,11 +1,11 @@
 package com.zello.sdk.sample.misc;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +15,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.zello.sdk.AppState;
 import com.zello.sdk.BluetoothAccessoryState;
@@ -322,6 +324,7 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		_statusTextView.setText(R.string.sign_in_status_offline);
 	}
 
+	@SuppressLint("InflateParams")
 	private void createCustomStatusMessageDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		Zello.getInstance().getAppState(_appState);
@@ -344,10 +347,14 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 	private void hideKeyboard() {
 		View view = this.getCurrentFocus();
-		if (view != null) {
-			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		if (view == null) {
+			return;
 		}
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (imm == null) {
+			return;
+		}
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
 }
