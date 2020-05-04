@@ -208,12 +208,13 @@ public class MyActivity extends Activity {
 ```
 When your app no longer needs the SDK, call `Zello.getInstance().unconfigure()` to release resources.
 
-## Going live with your Zello-enabled app
-All apps using Zello SDK must adhere to the following guidelines:
+## Going live with your Zello-enabled app or service
 
-* All UI screens, embedding Zello SDK must include Zello logo
-* Use Zello logo and / or "Zello", "ZelloWork" names, when referencing to Zello inside of your app
-* [Send us the app for review](https://zellowork.com/contact/) before distributing the app to any third parties or customers
+All apps using Zello SDK must adhere to the following:
+
+* All UI screens, embedding the Zello SDK must include the Zello logo
+* Use the Zello logo and "Zello" name, when referencing Zello-powered features inside of your app or service
+* [Send us the app for approval](https://zello.com/contact/) before distributing to any third parties or customers
 
 
 ## Additional resources
