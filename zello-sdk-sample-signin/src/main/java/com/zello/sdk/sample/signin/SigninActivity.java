@@ -179,33 +179,33 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 	private String getErrorText(Error error) {
 		switch (error) {
 			case UNKNOWN:
-				return getResources().getString(R.string.error_unknown);
+				return getString(R.string.error_unknown);
 			case INVALID_CREDENTIALS:
-				return getResources().getString(R.string.error_invalid_credentials);
+				return getString(R.string.error_invalid_credentials);
 			case INVALID_NETWORK_NAME:
-				return getResources().getString(R.string.error_invalid_network_name);
+				return getString(R.string.error_invalid_network_name);
 			case NETWORK_SUSPENDED:
-				return getResources().getString(R.string.error_network_suspended);
+				return getString(R.string.error_network_suspended);
 			case SERVER_SECURE_CONNECT_FAILED:
-				return getResources().getString(R.string.error_secure_connect_failed);
+				return getString(R.string.error_secure_connect_failed);
 			case SERVER_SIGNIN_FAILED:
-				return getResources().getString(R.string.error_server_signin_failed);
+				return getString(R.string.error_server_signin_failed);
 			case NETWORK_SIGNIN_FAILED:
-				return getResources().getString(R.string.error_network_signin_failed);
+				return getString(R.string.error_network_signin_failed);
 			case KICKED:
-				return getResources().getString(R.string.error_kicked);
+				return getString(R.string.error_kicked);
 			case APP_UPDATE_REQUIRED:
-				return getResources().getString(R.string.error_update_required);
+				return getString(R.string.error_update_required);
 			case NO_INTERNET_CONNECTION:
-				return getResources().getString(R.string.error_no_internet);
+				return getString(R.string.error_no_internet);
 			case INTERNET_CONNECTION_RESTRICTED:
-				return getResources().getString(R.string.error_internet_restricted);
+				return getString(R.string.error_internet_restricted);
 			case SERVER_LICENSE_PROBLEM:
-				return getResources().getString(R.string.error_server_license);
+				return getString(R.string.error_server_license);
 			case TOO_MANY_SIGNIN_ATTEMPTS:
-				return getResources().getString(R.string.error_brute_force_protection);
+				return getString(R.string.error_brute_force_protection);
 			case DEVICE_ID_MISMATCH:
-				return getResources().getString(R.string.error_device_id_mismatch);
+				return getString(R.string.error_device_id_mismatch);
 			default:
 				return null;
 		}

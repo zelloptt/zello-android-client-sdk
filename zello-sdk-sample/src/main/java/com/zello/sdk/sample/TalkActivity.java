@@ -166,11 +166,11 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 							if (position >= 0 && adapter.getCount() > position) {
 								_contextContact = (Contact) adapter.getItem(position);
 								if (_contextContact != null) {
-									menu.add(0, R.id.menu_talk, 0, getResources().getString(R.string.menu_talk));
+									menu.add(0, R.id.menu_talk, 0, getString(R.string.menu_talk));
 									if (!_contextContact.getMuted()) {
-										menu.add(0, R.id.menu_mute, 1, getResources().getString(R.string.menu_mute));
+										menu.add(0, R.id.menu_mute, 1, getString(R.string.menu_mute));
 									} else {
-										menu.add(0, R.id.menu_unmute, 1, getResources().getString(R.string.menu_unmute));
+										menu.add(0, R.id.menu_unmute, 1, getString(R.string.menu_unmute));
 									}
 								}
 							}
@@ -450,7 +450,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	@Override
-	public void onLastContactsTabChanged(Tab tab) {
+	public void onLastContactsTabChanged(@NonNull Tab tab) {
 		_activeTab = tab;
 	}
 
@@ -473,7 +473,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	@Override
-	public void onBluetoothAccessoryStateChanged(BluetoothAccessoryType type, BluetoothAccessoryState state, String name, String description) {
+	public void onBluetoothAccessoryStateChanged(@NonNull BluetoothAccessoryType type, @NonNull BluetoothAccessoryState state, String name, String description) {
 		Toast.makeText(this, description, Toast.LENGTH_SHORT).show();
 	}
 
@@ -508,7 +508,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 	private void chooseActiveContact() {
 		// Activity title; optional
-		String title = getResources().getString(R.string.select_contact_title);
+		String title = getString(R.string.select_contact_title);
 		// Set of displayed tabs; required; any combination of RECENTS, USERS and CHANNELS
 		Tab[] tabs = new Tab[]{Tab.RECENTS, Tab.USERS, Tab.CHANNELS};
 		// Initially active tab; optional; can be RECENTS, USERS or CHANNELS
@@ -651,7 +651,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				String author = _messageIn.getAuthor().getDisplayName(); // Is message from channel?
 				if (author != null && author.length() > 0) {
 					// Show channel and author names
-					_txtMessageName.setText(String.format(getResources().getString(R.string.message_in_from_channel), _messageIn.getFrom().getDisplayName(), author));
+					_txtMessageName.setText(getString(R.string.message_in_from_channel, _messageIn.getFrom().getDisplayName(), author));
 				} else {
 					_txtMessageName.setText(_messageIn.getFrom().getDisplayName()); // Show sender name
 				}
@@ -834,33 +834,33 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	private String getErrorText(Error error) {
 		switch (error) {
 			case UNKNOWN:
-				return getResources().getString(R.string.error_unknown);
+				return getString(R.string.error_unknown);
 			case INVALID_CREDENTIALS:
-				return getResources().getString(R.string.error_invalid_credentials);
+				return getString(R.string.error_invalid_credentials);
 			case INVALID_NETWORK_NAME:
-				return getResources().getString(R.string.error_invalid_network_name);
+				return getString(R.string.error_invalid_network_name);
 			case NETWORK_SUSPENDED:
-				return getResources().getString(R.string.error_network_suspended);
+				return getString(R.string.error_network_suspended);
 			case SERVER_SECURE_CONNECT_FAILED:
-				return getResources().getString(R.string.error_secure_connect_failed);
+				return getString(R.string.error_secure_connect_failed);
 			case SERVER_SIGNIN_FAILED:
-				return getResources().getString(R.string.error_server_signin_failed);
+				return getString(R.string.error_server_signin_failed);
 			case NETWORK_SIGNIN_FAILED:
-				return getResources().getString(R.string.error_network_signin_failed);
+				return getString(R.string.error_network_signin_failed);
 			case KICKED:
-				return getResources().getString(R.string.error_kicked);
+				return getString(R.string.error_kicked);
 			case APP_UPDATE_REQUIRED:
-				return getResources().getString(R.string.error_update_required);
+				return getString(R.string.error_update_required);
 			case NO_INTERNET_CONNECTION:
-				return getResources().getString(R.string.error_no_internet);
+				return getString(R.string.error_no_internet);
 			case INTERNET_CONNECTION_RESTRICTED:
-				return getResources().getString(R.string.error_internet_restricted);
+				return getString(R.string.error_internet_restricted);
 			case SERVER_LICENSE_PROBLEM:
-				return getResources().getString(R.string.error_server_license);
+				return getString(R.string.error_server_license);
 			case TOO_MANY_SIGNIN_ATTEMPTS:
-				return getResources().getString(R.string.error_brute_force_protection);
+				return getString(R.string.error_brute_force_protection);
 			case DEVICE_ID_MISMATCH:
-				return getResources().getString(R.string.error_device_id_mismatch);
+				return getString(R.string.error_device_id_mismatch);
 			default:
 				return null;
 		}

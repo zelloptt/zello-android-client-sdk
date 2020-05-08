@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.zello.sdk.AppState;
@@ -166,7 +167,7 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 	}
 
 	@Override
-	public void onLastContactsTabChanged(Tab tab) {
+	public void onLastContactsTabChanged(@NonNull Tab tab) {
 		_activeTab = tab;
 	}
 
@@ -183,12 +184,12 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 	}
 
 	@Override
-	public void onBluetoothAccessoryStateChanged(BluetoothAccessoryType bluetoothAccessoryType, BluetoothAccessoryState bluetoothAccessoryState, String s, String s1) {
+	public void onBluetoothAccessoryStateChanged(@NonNull BluetoothAccessoryType bluetoothAccessoryType, @NonNull BluetoothAccessoryState bluetoothAccessoryState, String s, String s1) {
 	}
 
 	private void chooseActiveContact() {
 		// Activity title; optional
-		String title = getResources().getString(R.string.select_contact_title);
+		String title = getString(R.string.select_contact_title);
 		// Set of displayed tabs; required; any combination of RECENTS, USERS and CHANNELS
 		Tab[] tabs = new Tab[]{Tab.RECENTS, Tab.USERS, Tab.CHANNELS};
 		// Initially active tab; optional; can be RECENTS, USERS or CHANNELS
@@ -267,7 +268,7 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 			String author = _messageIn.getAuthor().getDisplayName(); // Is message from channel?
 			if (author != null && author.length() > 0) {
 				// Show channel and author names
-				_txtMessageName.setText(String.format(getResources().getString(R.string.message_in_from_channel), _messageIn.getFrom().getDisplayName(), author));
+				_txtMessageName.setText(getString(R.string.message_in_from_channel, _messageIn.getFrom().getDisplayName(), author));
 			} else {
 				_txtMessageName.setText(_messageIn.getFrom().getDisplayName()); // Show sender name
 			}
