@@ -12,8 +12,8 @@ public class MessageIn {
 
 	//region Package Private Variables
 
-	final Contact _from = new Contact();
-	final Contact _author = new Contact();
+	final @NonNull Contact _from = new Contact();
+	final @NonNull Contact _author = new Contact();
 	boolean _active;
 
 	//endregion
@@ -21,7 +21,6 @@ public class MessageIn {
 	//region Public Methods
 
 	public MessageIn() {
-
 	}
 
 	/**

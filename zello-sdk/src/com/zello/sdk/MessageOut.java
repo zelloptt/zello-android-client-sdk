@@ -12,7 +12,7 @@ public class MessageOut {
 
 	//region Package Private Variables
 
-	final Contact _to = new Contact();
+	final @NonNull Contact _to = new Contact();
 	boolean _active;
 	boolean _connecting;
 

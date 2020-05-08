@@ -34,12 +34,12 @@ public class AppState {
 	boolean _solo;
 	boolean _autoRun;
 	boolean _autoChannels = true;
-	Error _lastError = Error.NONE;
-	String _statusMessage;
-	String _network;
-	String _networkUrl;
-	String _username;
-	String _externalId;
+	@NonNull Error _lastError = Error.NONE;
+	@Nullable String _statusMessage;
+	@Nullable String _network;
+	@Nullable String _networkUrl;
+	@Nullable String _username;
+	@Nullable String _externalId;
 
 	//endregion
 

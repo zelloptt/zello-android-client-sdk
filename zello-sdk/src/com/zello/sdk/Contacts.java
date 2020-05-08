@@ -35,9 +35,9 @@ public class Contacts {
 	private static final String _columnMuted = "muted";
 	private static final String _columnNoDisconnect = "nodisconnect";
 
-	private ContactsObserver _observer;
-	private Cursor _cursor;
-	private Context _context;
+	private @Nullable ContactsObserver _observer;
+	private @Nullable Cursor _cursor;
+	private @Nullable Context _context;
 	private boolean _invalid;
 	private int _indexName;
 	private int _indexFullName;
@@ -57,7 +57,7 @@ public class Contacts {
 
 	//region Package Private Methods
 
-	Contacts(String packageName, Context context, Handler handler) {
+	Contacts(@Nullable String packageName, @Nullable Context context, @Nullable Handler handler) {
 		_context = context;
 		_observer = ContactsObserver.create(this, handler);
 		Uri uri = _uri;

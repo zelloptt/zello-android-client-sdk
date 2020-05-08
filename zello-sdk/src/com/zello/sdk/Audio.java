@@ -25,10 +25,10 @@ public class Audio {
 	private int _wearable = -1; // Wearable index
 	private int _wearables; // Wearable device count
 	private boolean _changing;
-	private AudioMode _mode; // Current mode
-	private BroadcastReceiver _receiver;
-	private Context _context;
-	private String _package;
+	private @NonNull AudioMode _mode = AudioMode.SPEAKER; // Current mode
+	private @Nullable BroadcastReceiver _receiver;
+	private @Nullable Context _context;
+	private @Nullable String _package;
 
 	//endregion
 
@@ -182,7 +182,7 @@ public class Audio {
 			try {
 				_wearable = Integer.parseInt(mode.substring(Constants.EXTRA_WA.length()));
 			} catch (NumberFormatException ignore) {
-				_wearable = 0;
+				_wearable = -1;
 			}
 		} else if (mode.equals(Constants.EXTRA_EP)) {
 			_mode = AudioMode.EARPIECE;

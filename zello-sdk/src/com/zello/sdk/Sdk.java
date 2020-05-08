@@ -28,31 +28,31 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Private Variables
 
-	private String _package = "";
-	private Context _context;
-	private SafeHandler<Sdk> _handler;
+	private @NonNull String _package = "";
+	private @Nullable Context _context;
+	private @Nullable SafeHandler<Sdk> _handler;
 	private boolean _resumed;
-	private String _activeTabAction = "com.zello.sdk." + Util.generateUuid();
-	private Contact _selectedContact = new Contact();
-	private MessageIn _messageIn = new MessageIn();
-	private MessageOut _messageOut = new MessageOut();
-	private Contacts _contacts;
-	private Audio _audio;
-	private AppState _appState = new AppState();
+	private final @NonNull String _activeTabAction = "com.zello.sdk." + Util.generateUuid();
+	private final @NonNull Contact _selectedContact = new Contact();
+	private final @NonNull MessageIn _messageIn = new MessageIn();
+	private final @NonNull MessageOut _messageOut = new MessageOut();
+	private @Nullable Contacts _contacts;
+	private @Nullable Audio _audio;
+	private final @NonNull AppState _appState = new AppState();
 	private boolean _serviceBound; // Service is bound
-	private Intent _serviceIntent; // Service connect/disconnect intent
+	private @Nullable Intent _serviceIntent; // Service connect/disconnect intent
 	private boolean _serviceConnecting; // Service is bound but is still connecting
-	private String _delayedNetwork, _delayedUsername, _delayedPassword;
+	private @Nullable String _delayedNetwork, _delayedUsername, _delayedPassword;
 	private boolean _delayedPerishable;
-	private Boolean _delayedShowBtAcceccoriesNotifications;
+	private @Nullable Boolean _delayedShowBtAcceccoriesNotifications;
 	private boolean _lastMessageReplayAvailable;
-	private BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
-	private BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
-	private BroadcastReceiver _receiverMessageState; // Broadcast receiver for message state broadcasts
-	private BroadcastReceiver _receiverContactSelected; // Broadcast receiver for selected contact broadcasts
-	private BroadcastReceiver _receiverActiveTab; // Broadcast receiver for last selected contact list tab
-	private BroadcastReceiver _receiverPermissionErrors; // Broadcast receiver for permissions errors
-	private BroadcastReceiver _receiverBtAccessoryState; // Broadcast receiver for bluetooth accessory state broadcasts
+	private @Nullable BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
+	private @Nullable BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
+	private @Nullable BroadcastReceiver _receiverMessageState; // Broadcast receiver for message state broadcasts
+	private @Nullable BroadcastReceiver _receiverContactSelected; // Broadcast receiver for selected contact broadcasts
+	private @Nullable BroadcastReceiver _receiverActiveTab; // Broadcast receiver for last selected contact list tab
+	private @Nullable BroadcastReceiver _receiverPermissionErrors; // Broadcast receiver for permissions errors
+	private @Nullable BroadcastReceiver _receiverBtAccessoryState; // Broadcast receiver for bluetooth accessory state broadcasts
 
 	private static final int AWAKE_TIMER = 1;
 
@@ -77,8 +77,9 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (context == null) {
 			return;
 		}
-		_package = Util.toLowerCaseLexicographically(Util.emptyIfNull(packageName));
-		_context = context.getApplicationContext();
+		context = context.getApplicationContext();
+		_package = Util.emptyIfNull(Util.toLowerCaseLexicographically(packageName));
+		_context = context;
 		_handler = new SafeHandler<>(this);
 		_appState._available = isAppAvailable();
 		// Spin up the main app
@@ -133,7 +134,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
 		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
 		filterPackage.addDataScheme("package");
-		_context.registerReceiver(_receiverPackage, filterPackage);
+		context.registerReceiver(_receiverPackage, filterPackage);
 		// Register to receive app state broadcasts
 		_receiverAppState = new BroadcastReceiver() {
 			@Override
@@ -141,7 +142,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				updateAppState(intent);
 			}
 		};
-		Intent intentStickyAppState = _context.registerReceiver(_receiverAppState, new IntentFilter(_package + "." + Constants.ACTION_APP_STATE));
+		Intent intentStickyAppState = context.registerReceiver(_receiverAppState, new IntentFilter(_package + "." + Constants.ACTION_APP_STATE));
 		updateAppState(intentStickyAppState);
 		updateContacts();
 		// Register to receive app permissions broadcasts
@@ -151,7 +152,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				handlePermissionError(intent);
 			}
 		};
-		_context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_package + "." + Constants.ACTION_PERMISSION_ERRORS));
+		context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_package + "." + Constants.ACTION_PERMISSION_ERRORS));
 		// Register to receive message state broadcasts
 		_receiverMessageState = new BroadcastReceiver() {
 			@Override
@@ -159,7 +160,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				updateMessageState(intent);
 			}
 		};
-		Intent intentStickyMessageState = _context.registerReceiver(_receiverMessageState, new IntentFilter(_package + "." + Constants.ACTION_MESSAGE_STATE));
+		Intent intentStickyMessageState = context.registerReceiver(_receiverMessageState, new IntentFilter(_package + "." + Constants.ACTION_MESSAGE_STATE));
 		updateMessageState(intentStickyMessageState);
 		// Register to receive selected contact broadcasts
 		_receiverContactSelected = new BroadcastReceiver() {
@@ -168,7 +169,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				updateSelectedContact(intent);
 			}
 		};
-		Intent intentStickySelectedContact = _context.registerReceiver(_receiverContactSelected, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_SELECTED));
+		Intent intentStickySelectedContact = context.registerReceiver(_receiverContactSelected, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_SELECTED));
 		updateSelectedContact(intentStickySelectedContact);
 		// Register to receive last selected contact list tab
 		_receiverActiveTab = new BroadcastReceiver() {
@@ -177,7 +178,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				updateSelectedTab(intent);
 			}
 		};
-		_context.registerReceiver(_receiverActiveTab, new IntentFilter(_activeTabAction));
+		context.registerReceiver(_receiverActiveTab, new IntentFilter(_activeTabAction));
 		// Register to receive bluetooth accessory state broadcasts
 		_receiverBtAccessoryState = new BroadcastReceiver() {
 			@Override
@@ -185,7 +186,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				handleBtAccessoryState(intent);
 			}
 		};
-		_context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_package + "." + Constants.ACTION_BT_ACCESSORY_STATE));
+		context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_package + "." + Constants.ACTION_BT_ACCESSORY_STATE));
 	}
 
 	void onDestroy() {
@@ -657,7 +658,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return _contacts;
 	}
 
-	@NonNull Audio getAudio() {
+	@Nullable Audio getAudio() {
 		if (_context != null) {
 			if (_audio == null) {
 				_audio = new Audio(_package, _context);

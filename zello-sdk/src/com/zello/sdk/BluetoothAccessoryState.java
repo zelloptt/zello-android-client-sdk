@@ -4,6 +4,7 @@ package com.zello.sdk;
  * The <code>BluetoothAccessoryState</code> enum represents states of Bluetooth accessories.
  */
 public enum BluetoothAccessoryState {
+
 	/**
 	 * A device has connected.
 	 */
@@ -16,4 +17,5 @@ public enum BluetoothAccessoryState {
 	 * An error occurred.
 	 */
 	ERROR
+
 }

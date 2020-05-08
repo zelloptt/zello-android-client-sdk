@@ -23,9 +23,9 @@ public class Zello {
 
 	private static volatile Zello _instance;
 
-	ArrayList<Events> events = new ArrayList<>();
+	final @NonNull ArrayList<Events> events = new ArrayList<>();
 
-	private Sdk _sdk;
+	private @Nullable Sdk _sdk;
 	// Protect against multiple attempts to configure SDK.
 	private boolean _configured;
 
@@ -109,7 +109,10 @@ public class Zello {
 	 */
 	public void enterPowerSavingMode() {
 		checkConfiguration();
-		_sdk.onPause();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.onPause();
+		}
 	}
 
 	/**
@@ -119,7 +122,10 @@ public class Zello {
 	 */
 	public void leavePowerSavingMode() {
 		checkConfiguration();
-		_sdk.onResume();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.onResume();
+		}
 	}
 
 	/**
@@ -185,7 +191,10 @@ public class Zello {
 	 */
 	public void requestVitalPermissions() {
 		checkConfiguration();
-		_sdk.requestVitalPermissions();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.requestVitalPermissions();
+		}
 	}
 
 	/**
@@ -210,7 +219,10 @@ public class Zello {
 	 */
 	public void requestVitalPermissions(@Nullable Activity activity) {
 		checkConfiguration();
-		_sdk.requestVitalPermissions(activity);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.requestVitalPermissions(activity);
+		}
 	}
 
 	/**
@@ -237,7 +249,10 @@ public class Zello {
 	 */
 	public void showMicrophonePermissionDialog() {
 		checkConfiguration();
-		_sdk.showMicrophonePermissionDialog();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.showMicrophonePermissionDialog();
+		}
 	}
 
 	/**
@@ -265,7 +280,10 @@ public class Zello {
 	 */
 	public void showMicrophonePermissionDialog(@Nullable Activity activity) {
 		checkConfiguration();
-		_sdk.showMicrophonePermissionDialog(activity);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.showMicrophonePermissionDialog(activity);
+		}
 	}
 
 	//endregion
@@ -295,7 +313,10 @@ public class Zello {
 	 */
 	public void selectContact(@Nullable String title, @Nullable Tab[] tabs, @Nullable Tab activeTab, @Nullable Theme theme) {
 		checkConfiguration();
-		_sdk.selectContact(title, tabs, activeTab, theme);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.selectContact(title, tabs, activeTab, theme);
+		}
 	}
 
 	/**
@@ -322,7 +343,10 @@ public class Zello {
 	 */
 	public void selectContact(@Nullable String title, @Nullable Tab[] tabs, @Nullable Tab activeTab, @Nullable Theme theme, @Nullable Activity activity) {
 		checkConfiguration();
-		_sdk.selectContact(title, tabs, activeTab, theme, activity);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.selectContact(title, tabs, activeTab, theme, activity);
+		}
 	}
 
 	//endregion
@@ -347,7 +371,10 @@ public class Zello {
 	 */
 	public void beginMessage() {
 		checkConfiguration();
-		_sdk.beginMessage();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.beginMessage();
+		}
 	}
 
 	/**
@@ -365,7 +392,10 @@ public class Zello {
 	 */
 	public void endMessage() {
 		checkConfiguration();
-		_sdk.endMessage();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.endMessage();
+		}
 	}
 
 	//endregion
@@ -391,7 +421,10 @@ public class Zello {
 	 */
 	public void replayLastIncomingMessage() {
 		checkConfiguration();
-		_sdk.replayLastIncomingMessage();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.replayLastIncomingMessage();
+		}
 	}
 
 	/**
@@ -410,7 +443,12 @@ public class Zello {
 	 */
 	public boolean isLastMessageReplayAvailable() {
 		checkConfiguration();
-		return _sdk.isLastMessageReplayAvailable();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			return sdk.isLastMessageReplayAvailable();
+		} else {
+			return false;
+		}
 	}
 
 	//endregion
@@ -431,7 +469,10 @@ public class Zello {
 	 */
 	public void connectChannel(@Nullable String channel) {
 		checkConfiguration();
-		_sdk.connectChannel(channel);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.connectChannel(channel);
+		}
 	}
 
 	/**
@@ -448,7 +489,10 @@ public class Zello {
 	 */
 	public void disconnectChannel(@Nullable String channel) {
 		checkConfiguration();
-		_sdk.disconnectChannel(channel);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.disconnectChannel(channel);
+		}
 	}
 
 	//endregion
@@ -463,7 +507,10 @@ public class Zello {
 	 */
 	public void muteContact(@Nullable Contact contact, boolean mute) {
 		checkConfiguration();
-		_sdk.muteContact(contact, mute);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.muteContact(contact, mute);
+		}
 	}
 
 	//endregion
@@ -487,7 +534,12 @@ public class Zello {
 	 */
 	public boolean signIn(@Nullable String network, @Nullable String username, @Nullable String password) {
 		checkConfiguration();
-		return _sdk.signIn(network, username, password);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			return sdk.signIn(network, username, password);
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -521,7 +573,12 @@ public class Zello {
 	 */
 	public boolean signIn(@Nullable String network, @Nullable String username, @Nullable String password, boolean perishable) {
 		checkConfiguration();
-		return _sdk.signIn(network, username, password, perishable);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			return sdk.signIn(network, username, password, perishable);
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -539,7 +596,10 @@ public class Zello {
 	 */
 	public void signOut() {
 		checkConfiguration();
-		_sdk.signOut();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.signOut();
+		}
 	}
 
 	/**
@@ -552,7 +612,10 @@ public class Zello {
 	 */
 	public void cancelSignIn() {
 		checkConfiguration();
-		_sdk.cancel();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.cancel();
+		}
 	}
 
 	//endregion
@@ -577,7 +640,10 @@ public class Zello {
 	 */
 	public void lock(@Nullable String applicationName, @Nullable String packageName) {
 		checkConfiguration();
-		_sdk.lock(applicationName, packageName);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.lock(applicationName, packageName);
+		}
 	}
 
 	/**
@@ -587,7 +653,10 @@ public class Zello {
 	 */
 	public void unlock() {
 		checkConfiguration();
-		_sdk.unlock();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.unlock();
+		}
 	}
 
 	//endregion
@@ -604,7 +673,10 @@ public class Zello {
 	 */
 	public void setStatus(@NonNull Status status) {
 		checkConfiguration();
-		_sdk.setStatus(status);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.setStatus(status);
+		}
 	}
 
 	/**
@@ -616,7 +688,10 @@ public class Zello {
 	 */
 	public void setStatusMessage(@Nullable String message) {
 		checkConfiguration();
-		_sdk.setStatusMessage(message);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.setStatusMessage(message);
+		}
 	}
 
 	//endregion
@@ -628,7 +703,10 @@ public class Zello {
 	 */
 	public void openMainScreen() {
 		checkConfiguration();
-		_sdk.openMainScreen();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.openMainScreen();
+		}
 	}
 
 	//endregion
@@ -642,7 +720,10 @@ public class Zello {
 	 */
 	public void showPttButtonsScreen(@Nullable Activity activity) {
 		checkConfiguration();
-		_sdk.showPttButtonsScreen(activity);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.showPttButtonsScreen(activity);
+		}
 	}
 
 	//endregion
@@ -663,7 +744,10 @@ public class Zello {
 	 */
 	public void getMessageIn(@Nullable MessageIn message) {
 		checkConfiguration();
-		_sdk.getMessageIn(message);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.getMessageIn(message);
+		}
 	}
 
 	/**
@@ -680,7 +764,10 @@ public class Zello {
 	 */
 	public void getMessageOut(@Nullable MessageOut message) {
 		checkConfiguration();
-		_sdk.getMessageOut(message);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.getMessageOut(message);
+		}
 	}
 
 	/**
@@ -697,7 +784,10 @@ public class Zello {
 	 */
 	public void getAppState(@Nullable AppState state) {
 		checkConfiguration();
-		_sdk.getAppState(state);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.getAppState(state);
+		}
 	}
 
 	/**
@@ -715,7 +805,10 @@ public class Zello {
 	 */
 	public void getSelectedContact(@Nullable Contact contact) {
 		checkConfiguration();
-		_sdk.getSelectedContact(contact);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.getSelectedContact(contact);
+		}
 	}
 
 	/**
@@ -734,9 +827,14 @@ public class Zello {
 	 * @return The contact list for the currently signed in user.
 	 * @see Events#onContactsChanged()
 	 */
-	public Contacts getContacts() {
+	public @Nullable Contacts getContacts() {
 		checkConfiguration();
-		return _sdk.getContacts();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			return sdk.getContacts();
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -746,9 +844,14 @@ public class Zello {
 	 * @see Audio
 	 * @see Events#onAudioStateChanged()
 	 */
-	public @NonNull Audio getAudio() {
+	public @Nullable Audio getAudio() {
 		checkConfiguration();
-		return _sdk.getAudio();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			return sdk.getAudio();
+		} else {
+			return null;
+		}
 	}
 
 	//endregion
@@ -767,7 +870,10 @@ public class Zello {
 	 */
 	public void setAutoRun(boolean enable) {
 		checkConfiguration();
-		_sdk.setAutoRun(enable);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.setAutoRun(enable);
+		}
 	}
 
 	/**
@@ -791,7 +897,10 @@ public class Zello {
 	 */
 	public void setAutoConnectChannels(boolean connect) {
 		checkConfiguration();
-		_sdk.setAutoConnectChannels(connect);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.setAutoConnectChannels(connect);
+		}
 	}
 
 	/**
@@ -810,7 +919,10 @@ public class Zello {
 	 */
 	public void setExternalId(@Nullable String id) {
 		checkConfiguration();
-		_sdk.setExternalId(id);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.setExternalId(id);
+		}
 	}
 
 	/**
@@ -830,7 +942,10 @@ public class Zello {
 	 */
 	public void setSelectedContact(@Nullable Contact contact) {
 		checkConfiguration();
-		_sdk.setSelectedContact(contact);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.setSelectedContact(contact);
+		}
 	}
 
 	/**
@@ -849,7 +964,10 @@ public class Zello {
 	 */
 	public void setSelectedUserOrGateway(@Nullable String name) {
 		checkConfiguration();
-		_sdk.setSelectedUserOrGateway(name);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.setSelectedUserOrGateway(name);
+		}
 	}
 
 	/**
@@ -867,7 +985,10 @@ public class Zello {
 	 */
 	public void setSelectedChannelOrGroup(@Nullable String name) {
 		checkConfiguration();
-		_sdk.setSelectedChannelOrGroup(name);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.setSelectedChannelOrGroup(name);
+		}
 	}
 
 	/**
@@ -880,7 +1001,10 @@ public class Zello {
 	 */
 	public void setShowBluetoothAccessoriesNotifications(boolean show) {
 		checkConfiguration();
-		_sdk.setShowBluetoothAccessoriesNotifications(show);
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.setShowBluetoothAccessoriesNotifications(show);
+		}
 	}
 
 	//endregion
@@ -899,15 +1023,19 @@ public class Zello {
 		}
 		_configured = true;
 
-		_sdk = new Sdk();
-		_sdk.onCreate(packageName, context);
+		Sdk sdk = new Sdk();
+		sdk.onCreate(packageName, context);
+		_sdk = sdk;
 
 		// Updates should be on by default
 		leavePowerSavingMode();
 	}
 
 	private synchronized void doUnconfigure() {
-		_sdk.onDestroy();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.onDestroy();
+		}
 		_sdk = null;
 		events.clear();
 

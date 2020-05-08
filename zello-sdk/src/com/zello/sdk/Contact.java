@@ -12,15 +12,15 @@ public class Contact {
 
 	//region Package Private Properties
 
-	String _name;
-	String _fullName;
-	String _displayName;
-	ContactType _type = ContactType.USER;
-	ContactStatus _status = ContactStatus.OFFLINE;
-	String _statusMessage;
+	@Nullable String _name;
+	@Nullable String _fullName;
+	@Nullable String _displayName;
+	@NonNull ContactType _type = ContactType.USER;
+	@NonNull ContactStatus _status = ContactStatus.OFFLINE;
+	@Nullable String _statusMessage;
 	int _usersCount;
 	int _usersTotal;
-	String _title;
+	@Nullable String _title;
 	boolean _muted;
 	boolean _noDisconnect;
 
