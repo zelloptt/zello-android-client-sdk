@@ -16,6 +16,9 @@ import android.util.Log;
 
 import java.security.MessageDigest;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * The Sdk class acts as the implementation of the Zello SDK methods.
  * To use, instantiate an instance of the Sdk class.
@@ -25,31 +28,31 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Private Variables
 
-	private String _package = "";
-	private Context _context;
-	private SafeHandler<Sdk> _handler;
+	private @NonNull String _package = "";
+	private @Nullable Context _context;
+	private @Nullable SafeHandler<Sdk> _handler;
 	private boolean _resumed;
-	private String _activeTabAction = "com.zello.sdk." + Util.generateUuid();
-	private Contact _selectedContact = new Contact();
-	private MessageIn _messageIn = new MessageIn();
-	private MessageOut _messageOut = new MessageOut();
-	private Contacts _contacts;
-	private Audio _audio;
-	private AppState _appState = new AppState();
+	private final @NonNull String _activeTabAction = "com.zello.sdk." + Util.generateUuid();
+	private final @NonNull Contact _selectedContact = new Contact();
+	private final @NonNull MessageIn _messageIn = new MessageIn();
+	private final @NonNull MessageOut _messageOut = new MessageOut();
+	private @Nullable Contacts _contacts;
+	private @Nullable Audio _audio;
+	private final @NonNull AppState _appState = new AppState();
 	private boolean _serviceBound; // Service is bound
-	private Intent _serviceIntent; // Service connect/disconnect intent
+	private @Nullable Intent _serviceIntent; // Service connect/disconnect intent
 	private boolean _serviceConnecting; // Service is bound but is still connecting
-	private String _delayedNetwork, _delayedUsername, _delayedPassword;
+	private @Nullable String _delayedNetwork, _delayedUsername, _delayedPassword;
 	private boolean _delayedPerishable;
-	private Boolean _delayedShowBtAcceccoriesNotifications;
+	private @Nullable Boolean _delayedShowBtAcceccoriesNotifications;
 	private boolean _lastMessageReplayAvailable;
-	private BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
-	private BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
-	private BroadcastReceiver _receiverMessageState; // Broadcast receiver for message state broadcasts
-	private BroadcastReceiver _receiverContactSelected; // Broadcast receiver for selected contact broadcasts
-	private BroadcastReceiver _receiverActiveTab; // Broadcast receiver for last selected contact list tab
-	private BroadcastReceiver _receiverPermissionErrors; // Broadcast receiver for permissions errors
-	private BroadcastReceiver _receiverBtAccessoryState; // Broadcast receiver for bluetooth accessory state broadcasts
+	private @Nullable BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
+	private @Nullable BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
+	private @Nullable BroadcastReceiver _receiverMessageState; // Broadcast receiver for message state broadcasts
+	private @Nullable BroadcastReceiver _receiverContactSelected; // Broadcast receiver for selected contact broadcasts
+	private @Nullable BroadcastReceiver _receiverActiveTab; // Broadcast receiver for last selected contact list tab
+	private @Nullable BroadcastReceiver _receiverPermissionErrors; // Broadcast receiver for permissions errors
+	private @Nullable BroadcastReceiver _receiverBtAccessoryState; // Broadcast receiver for bluetooth accessory state broadcasts
 
 	private static final int AWAKE_TIMER = 1;
 
@@ -70,12 +73,13 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	@SuppressLint("InlinedApi")
 	@SuppressWarnings("deprecation")
-	void onCreate(String packageName, Context context) {
+	void onCreate(@Nullable String packageName, @Nullable Context context) {
 		if (context == null) {
 			return;
 		}
-		_package = Util.toLowerCaseLexicographically(Util.emptyIfNull(packageName));
-		_context = context.getApplicationContext();
+		context = context.getApplicationContext();
+		_package = Util.emptyIfNull(Util.toLowerCaseLexicographically(packageName));
+		_context = context;
 		_handler = new SafeHandler<>(this);
 		_appState._available = isAppAvailable();
 		// Spin up the main app
@@ -130,7 +134,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
 		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
 		filterPackage.addDataScheme("package");
-		_context.registerReceiver(_receiverPackage, filterPackage);
+		context.registerReceiver(_receiverPackage, filterPackage);
 		// Register to receive app state broadcasts
 		_receiverAppState = new BroadcastReceiver() {
 			@Override
@@ -138,7 +142,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				updateAppState(intent);
 			}
 		};
-		Intent intentStickyAppState = _context.registerReceiver(_receiverAppState, new IntentFilter(_package + "." + Constants.ACTION_APP_STATE));
+		Intent intentStickyAppState = context.registerReceiver(_receiverAppState, new IntentFilter(_package + "." + Constants.ACTION_APP_STATE));
 		updateAppState(intentStickyAppState);
 		updateContacts();
 		// Register to receive app permissions broadcasts
@@ -148,7 +152,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				handlePermissionError(intent);
 			}
 		};
-		_context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_package + "." + Constants.ACTION_PERMISSION_ERRORS));
+		context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_package + "." + Constants.ACTION_PERMISSION_ERRORS));
 		// Register to receive message state broadcasts
 		_receiverMessageState = new BroadcastReceiver() {
 			@Override
@@ -156,7 +160,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				updateMessageState(intent);
 			}
 		};
-		Intent intentStickyMessageState = _context.registerReceiver(_receiverMessageState, new IntentFilter(_package + "." + Constants.ACTION_MESSAGE_STATE));
+		Intent intentStickyMessageState = context.registerReceiver(_receiverMessageState, new IntentFilter(_package + "." + Constants.ACTION_MESSAGE_STATE));
 		updateMessageState(intentStickyMessageState);
 		// Register to receive selected contact broadcasts
 		_receiverContactSelected = new BroadcastReceiver() {
@@ -165,7 +169,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				updateSelectedContact(intent);
 			}
 		};
-		Intent intentStickySelectedContact = _context.registerReceiver(_receiverContactSelected, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_SELECTED));
+		Intent intentStickySelectedContact = context.registerReceiver(_receiverContactSelected, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_SELECTED));
 		updateSelectedContact(intentStickySelectedContact);
 		// Register to receive last selected contact list tab
 		_receiverActiveTab = new BroadcastReceiver() {
@@ -174,7 +178,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				updateSelectedTab(intent);
 			}
 		};
-		_context.registerReceiver(_receiverActiveTab, new IntentFilter(_activeTabAction));
+		context.registerReceiver(_receiverActiveTab, new IntentFilter(_activeTabAction));
 		// Register to receive bluetooth accessory state broadcasts
 		_receiverBtAccessoryState = new BroadcastReceiver() {
 			@Override
@@ -182,7 +186,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				handleBtAccessoryState(intent);
 			}
 		};
-		_context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_package + "." + Constants.ACTION_BT_ACCESSORY_STATE));
+		context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_package + "." + Constants.ACTION_BT_ACCESSORY_STATE));
 	}
 
 	void onDestroy() {
@@ -272,7 +276,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	void requestVitalPermissions(Activity activity) {
+	void requestVitalPermissions(@Nullable Activity activity) {
 		if (activity == null) {
 			return;
 		}
@@ -301,7 +305,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	void showMicrophonePermissionDialog(Activity activity) {
+	void showMicrophonePermissionDialog(@Nullable Activity activity) {
 		if (activity == null) {
 			return;
 		}
@@ -319,7 +323,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Contact Selection
 
-	void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
+	void selectContact(@Nullable String title, @Nullable Tab[] tabs, @Nullable Tab activeTab, @Nullable Theme theme) {
 		Context context = _context;
 		if (context == null) {
 			return;
@@ -345,7 +349,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme, Activity activity) {
+	void selectContact(@Nullable String title, @Nullable Tab[] tabs, @Nullable Tab activeTab, @Nullable Theme theme, @Nullable Activity activity) {
 		if (activity == null) {
 			return;
 		}
@@ -415,7 +419,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Channels
 
-	void connectChannel(String channel) {
+	void connectChannel(@Nullable String channel) {
 		if (channel == null || channel.isEmpty()) {
 			return;
 		}
@@ -429,7 +433,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		context.sendBroadcast(intent);
 	}
 
-	void disconnectChannel(String channel) {
+	void disconnectChannel(@Nullable String channel) {
 		if (channel == null || channel.isEmpty()) {
 			return;
 		}
@@ -447,7 +451,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Contacts
 
-	void muteContact(Contact contact, boolean mute) {
+	void muteContact(@Nullable Contact contact, boolean mute) {
 		if (contact == null) {
 			return;
 		}
@@ -467,11 +471,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Authentication
 
-	boolean signIn(String network, String username, String password) {
+	boolean signIn(@Nullable String network, @Nullable String username, @Nullable String password) {
 		return signIn(network, username, password, false);
 	}
 
-	boolean signIn(String network, String username, String password, boolean perishable) {
+	boolean signIn(@Nullable String network, @Nullable String username, @Nullable String password, boolean perishable) {
 		if (network == null || network.isEmpty() || username == null || username.isEmpty() || password == null || password.isEmpty()) {
 			return false;
 		}
@@ -530,7 +534,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Locking
 
-	void lock(String applicationName, String packageName) {
+	void lock(@Nullable String applicationName, @Nullable String packageName) {
 		if (applicationName == null || applicationName.isEmpty()) {
 			return;
 		}
@@ -565,7 +569,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Status
 
-	void setStatus(Status status) {
+	void setStatus(@NonNull Status status) {
 		if (!_serviceBound) {
 			return;
 		}
@@ -580,7 +584,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		context.sendBroadcast(intent);
 	}
 
-	void setStatusMessage(String message) {
+	void setStatusMessage(@Nullable String message) {
 		if (!_serviceBound) {
 			return;
 		}
@@ -614,7 +618,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region App settings
 
-	void showPttButtonsScreen(Activity activity) {
+	void showPttButtonsScreen(@Nullable Activity activity) {
 		Context context = activity != null ? activity : _context;
 		if (context == null) {
 			return;
@@ -634,27 +638,27 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Getters
 
-	void getMessageIn(MessageIn message) {
+	void getMessageIn(@Nullable MessageIn message) {
 		_messageIn.copyTo(message);
 	}
 
-	void getMessageOut(MessageOut message) {
+	void getMessageOut(@Nullable MessageOut message) {
 		_messageOut.copyTo(message);
 	}
 
-	void getAppState(AppState state) {
+	void getAppState(@Nullable AppState state) {
 		_appState.copyTo(state);
 	}
 
-	void getSelectedContact(Contact contact) {
+	void getSelectedContact(@Nullable Contact contact) {
 		_selectedContact.copyTo(contact);
 	}
 
-	Contacts getContacts() {
+	@Nullable Contacts getContacts() {
 		return _contacts;
 	}
 
-	Audio getAudio() {
+	@Nullable Audio getAudio() {
 		if (_context != null) {
 			if (_audio == null) {
 				_audio = new Audio(_package, _context);
@@ -695,7 +699,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		context.sendBroadcast(intent);
 	}
 
-	void setExternalId(String id) {
+	void setExternalId(@Nullable String id) {
 		if (!isConnected()) {
 			return;
 		}
@@ -709,7 +713,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		context.sendBroadcast(intent);
 	}
 
-	void setSelectedContact(Contact contact) {
+	void setSelectedContact(@Nullable Contact contact) {
 		if (contact != null) {
 			ContactType type = contact.getType();
 			selectContact(type == ContactType.CHANNEL || type == ContactType.GROUP || type == ContactType.CONVERSATION ? 1 : 0, contact.getName());
@@ -718,11 +722,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	void setSelectedUserOrGateway(String name) {
+	void setSelectedUserOrGateway(@Nullable String name) {
 		selectContact(0, name);
 	}
 
-	void setSelectedChannelOrGroup(String name) {
+	void setSelectedChannelOrGroup(@Nullable String name) {
 		selectContact(1, name);
 	}
 
@@ -750,14 +754,15 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region SafeHandlerEvents
 
 	@Override
-	public void handleMessageFromSafeHandler(Message message) {
-		if (message.what == AWAKE_TIMER) {
-			if (_resumed) {
-				sendStayAwake();
-				Handler h = _handler;
-				if (h != null) {
-					h.sendMessageDelayed(h.obtainMessage(AWAKE_TIMER), Constants.STAY_AWAKE_TIMEOUT);
-				}
+	public void handleMessageFromSafeHandler(@NonNull Message message) {
+		if (message.what != AWAKE_TIMER) {
+			return;
+		}
+		if (_resumed) {
+			sendStayAwake();
+			Handler h = _handler;
+			if (h != null) {
+				h.sendMessageDelayed(h.obtainMessage(AWAKE_TIMER), Constants.STAY_AWAKE_TIMEOUT);
 			}
 		}
 	}
@@ -767,7 +772,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region ServiceConnection
 
 	@Override
-	public void onServiceConnected(ComponentName name, IBinder service) {
+	public void onServiceConnected(@Nullable ComponentName name, @Nullable IBinder service) {
 		if (!_serviceConnecting) {
 			return;
 		}
@@ -801,7 +806,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	@Override
-	public void onServiceDisconnected(ComponentName name) {
+	public void onServiceDisconnected(@Nullable ComponentName name) {
 		_serviceBound = false;
 		if (_serviceConnecting) {
 			_serviceConnecting = false;
@@ -817,7 +822,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Private Methods
 
-	private void selectContact(int type, String name) {
+	private void selectContact(int type, @Nullable String name) {
 		Context context = _context;
 		if (context == null) {
 			return;
@@ -908,12 +913,12 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	private Intent getServiceIntentNew() {
+	private @NonNull Intent getServiceIntentNew() {
 		Intent intent = new Intent();
 		return intent.setClassName(_package, "com.zello.client.ui.Svc");
 	}
 
-	private Intent getServiceIntentOld() {
+	private @NonNull Intent getServiceIntentOld() {
 		Intent intent = new Intent();
 		return intent.setClassName(_package, "com.loudtalks.client.ui.Svc");
 	}
@@ -951,7 +956,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	private void updateAppState(Intent intent) {
+	private void updateAppState(@Nullable Intent intent) {
 		_appState.reset();
 		if (intent != null) {
 			updateLastMessageReplayAvailable(intent);
@@ -980,7 +985,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		fireAppStateChanged();
 	}
 
-	private void updateMessageState(Intent intent) {
+	private void updateMessageState(@Nullable Intent intent) {
 		boolean out = false;
 		boolean in = false;
 		if (intent != null) {
@@ -1029,7 +1034,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	private void updateLastMessageReplayAvailable(Intent intent) {
+	private void updateLastMessageReplayAvailable(@Nullable Intent intent) {
 		if (intent == null) {
 			return;
 		}
@@ -1048,7 +1053,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	private void updateSelectedContact(Intent intent) {
+	private void updateSelectedContact(@Nullable Intent intent) {
 		String name = intent != null ? intent.getStringExtra(Constants.EXTRA_CONTACT_NAME) : null; // Contact name
 		boolean selected = name != null && name.length() > 0;
 		if (selected) {
@@ -1074,7 +1079,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	private void updateSelectedTab(Intent intent) {
+	private void updateSelectedTab(@Nullable Intent intent) {
 		if (intent == null) {
 			return;
 		}
@@ -1084,7 +1089,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	private void handlePermissionError(Intent intent) {
+	private void handlePermissionError(@Nullable Intent intent) {
 		if (intent == null) {
 			return;
 		}
@@ -1096,7 +1101,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	private void handleBtAccessoryState(Intent intent) {
+	private void handleBtAccessoryState(@Nullable Intent intent) {
 		if (intent == null) {
 			return;
 		}
@@ -1136,7 +1141,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Static Methods
 
-	private static Error intToError(int error) {
+	private static @NonNull Error intToError(int error) {
 		if (error > Error.NONE.ordinal()) {
 			if (error == Error.INVALID_CREDENTIALS.ordinal()) {
 				return Error.INVALID_CREDENTIALS;
@@ -1174,7 +1179,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	private static PermissionError intToPermissionError(int error) {
+	private static @NonNull PermissionError intToPermissionError(int error) {
 		if (error > PermissionError.NONE.ordinal()) {
 			if (error == PermissionError.MICROPHONE_NOT_GRANTED.ordinal()) {
 				return PermissionError.MICROPHONE_NOT_GRANTED;
@@ -1186,7 +1191,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	static ContactType intToContactType(int type) {
+	static @NonNull ContactType intToContactType(int type) {
 		switch (type) {
 			case 1:
 				return ContactType.CHANNEL;
@@ -1201,7 +1206,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	static ContactStatus intToContactStatus(int status) {
+	static @NonNull ContactStatus intToContactStatus(int status) {
 		switch (status) {
 			case 1:
 				return ContactStatus.STANDBY;
@@ -1218,19 +1223,21 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	private static String tabToString(Tab tab) {
-		switch (tab) {
-			case RECENTS:
-				return Constants.VALUE_RECENTS;
-			case USERS:
-				return Constants.VALUE_USERS;
-			case CHANNELS:
-				return Constants.VALUE_CHANNELS;
+	private static @Nullable String tabToString(@Nullable Tab tab) {
+		if (tab != null) {
+			switch (tab) {
+				case RECENTS:
+					return Constants.VALUE_RECENTS;
+				case USERS:
+					return Constants.VALUE_USERS;
+				case CHANNELS:
+					return Constants.VALUE_CHANNELS;
+			}
 		}
 		return null;
 	}
 
-	private static String tabsToString(Tab[] tabs) {
+	private static @Nullable String tabsToString(@Nullable Tab[] tabs) {
 		if (tabs == null) {
 			return null;
 		}
@@ -1249,24 +1256,24 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return s != null ? s.toString() : null;
 	}
 
-	private static Tab stringToTab(String s) {
-		if (s.equals(Constants.VALUE_USERS)) {
+	private static @NonNull Tab stringToTab(@Nullable String s) {
+		if (Constants.VALUE_USERS.equals(s)) {
 			return Tab.USERS;
 		}
-		if (s.equals(Constants.VALUE_CHANNELS)) {
+		if (Constants.VALUE_CHANNELS.equals(s)) {
 			return Tab.CHANNELS;
 		}
 		return Tab.RECENTS;
 	}
 
-	private static BluetoothAccessoryType intToBtAccessoryType(int type) {
+	private static @NonNull BluetoothAccessoryType intToBtAccessoryType(int type) {
 		if (type == BluetoothAccessoryType.LE.ordinal()) {
 			return BluetoothAccessoryType.LE;
 		}
 		return BluetoothAccessoryType.SPP;
 	}
 
-	private static BluetoothAccessoryState intToBtAccessoryState(int state) {
+	private static @NonNull BluetoothAccessoryState intToBtAccessoryState(int state) {
 		if (state == BluetoothAccessoryState.CONNECTED.ordinal()) {
 			return BluetoothAccessoryState.CONNECTED;
 		}
@@ -1276,7 +1283,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return BluetoothAccessoryState.ERROR;
 	}
 
-	private static String bytesToHex(byte[] data) {
+	private static @Nullable String bytesToHex(@Nullable byte[] data) {
 		if (data == null) {
 			return null;
 		}
@@ -1296,7 +1303,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return buf.toString();
 	}
 
-	private static String md5(String s) {
+	private static @NonNull String md5(String s) {
 		if (s == null || s.isEmpty()) {
 			return "";
 		}

@@ -2,13 +2,14 @@ package com.zello.sdk.sample.contacts;
 
 import android.os.Parcelable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.zello.sdk.BluetoothAccessoryState;
 import com.zello.sdk.BluetoothAccessoryType;
@@ -91,12 +92,13 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 		return true;
 	}
 
+	@SuppressWarnings("SwitchStatementWithTooFewBranches")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_select_contact: {
 				// Activity title; optional
-				String title = getResources().getString(R.string.select_contact_title);
+				String title = getString(R.string.select_contact_title);
 				// Set of displayed tabs; required; any combination of RECENTS, USERS and CHANNELS
 				com.zello.sdk.Tab[] tabs = new com.zello.sdk.Tab[]{com.zello.sdk.Tab.RECENTS, com.zello.sdk.Tab.USERS, com.zello.sdk.Tab.CHANNELS};
 				// Initially active tab; optional; can be RECENTS, USERS or CHANNELS
@@ -147,7 +149,7 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 
 		String name = selectedContact.getDisplayName();
 		if (name != null) {
-			_selectedContactTextView.setText(getResources().getString(R.string.selected_contact, selectedContact.getDisplayName()));
+			_selectedContactTextView.setText(getString(R.string.selected_contact, selectedContact.getDisplayName()));
 		}
 	}
 
@@ -197,6 +199,7 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 
 	//endregion
 
+	@SuppressWarnings("SameParameterValue")
 	private void showMenuItem(Menu menu, int itemId, boolean show) {
 		MenuItem item = menu.findItem(itemId);
 		if (item != null) {

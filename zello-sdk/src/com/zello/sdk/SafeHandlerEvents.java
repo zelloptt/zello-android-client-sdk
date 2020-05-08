@@ -2,9 +2,11 @@ package com.zello.sdk;
 
 import android.os.Message;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
+import androidx.annotation.NonNull;
+
+@SuppressWarnings("unused")
 interface SafeHandlerEvents {
 
-	void handleMessageFromSafeHandler(Message message);
+	void handleMessageFromSafeHandler(@NonNull Message message);
 
 }

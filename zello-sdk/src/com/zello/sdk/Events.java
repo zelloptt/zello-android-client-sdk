@@ -2,10 +2,13 @@ package com.zello.sdk;
 
 import android.app.Activity;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * The <code>Events</code> interface enables monitoring of Zello SDK state and property changes
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings("unused")
 public interface Events {
 
 	/**
@@ -67,7 +70,7 @@ public interface Events {
 	 * @see Zello#selectContact(String, Tab[], Tab, Theme)
 	 * @see Zello#selectContact(String, Tab[], Tab, Theme, Activity)
 	 */
-	void onLastContactsTabChanged(Tab tab);
+	void onLastContactsTabChanged(@NonNull Tab tab);
 
 	/**
 	 * <p>
@@ -132,7 +135,7 @@ public interface Events {
 	 * @see BluetoothAccessoryState
 	 */
 	void onBluetoothAccessoryStateChanged(
-			BluetoothAccessoryType type, BluetoothAccessoryState state,
-			String name, String description);
+			@NonNull BluetoothAccessoryType type, @NonNull BluetoothAccessoryState state,
+			@Nullable String name, @Nullable String description);
 
 }

@@ -1,6 +1,6 @@
 package com.zello.sdk;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings("unused")
 enum PermissionError {
 
 	NONE,

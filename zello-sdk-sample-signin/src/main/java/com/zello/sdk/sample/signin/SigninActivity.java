@@ -2,13 +2,14 @@ package com.zello.sdk.sample.signin;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.zello.sdk.AppState;
 import com.zello.sdk.BluetoothAccessoryState;
@@ -22,7 +23,6 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 	private EditText _networkEdit;
 	private EditText _usernameEdit;
 	private EditText _passwordEdit;
-	private Button _loginButton;
 	private TextView _textView;
 	private CheckBox _perishableCheckBox;
 	private View _signingInView;
@@ -46,7 +46,6 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 		_networkEdit = findViewById(R.id.networkEdit);
 		_usernameEdit = findViewById(R.id.usernameEdit);
 		_passwordEdit = findViewById(R.id.passwordEdit);
-		_loginButton = findViewById(R.id.loginButton);
 		_textView = findViewById(R.id.statusTextView);
 		_perishableCheckBox = findViewById(R.id.checkPerishable);
 		_signingInView = findViewById(R.id.signingInView);
@@ -60,7 +59,7 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 		// Use with an app installed from a generic PTT SDK apk obtained from https://github.com/zelloptt/zello-android-client-sdk/releases
 		Zello.getInstance().configure("com.pttsdk", this, this);
 
-		_loginButton.setOnClickListener(new View.OnClickListener() {
+		findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				String network = _networkEdit.getText().toString();
@@ -180,44 +179,48 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 	private String getErrorText(Error error) {
 		switch (error) {
 			case UNKNOWN:
-				return getResources().getString(R.string.error_unknown);
+				return getString(R.string.error_unknown);
 			case INVALID_CREDENTIALS:
-				return getResources().getString(R.string.error_invalid_credentials);
+				return getString(R.string.error_invalid_credentials);
 			case INVALID_NETWORK_NAME:
-				return getResources().getString(R.string.error_invalid_network_name);
+				return getString(R.string.error_invalid_network_name);
 			case NETWORK_SUSPENDED:
-				return getResources().getString(R.string.error_network_suspended);
+				return getString(R.string.error_network_suspended);
 			case SERVER_SECURE_CONNECT_FAILED:
-				return getResources().getString(R.string.error_secure_connect_failed);
+				return getString(R.string.error_secure_connect_failed);
 			case SERVER_SIGNIN_FAILED:
-				return getResources().getString(R.string.error_server_signin_failed);
+				return getString(R.string.error_server_signin_failed);
 			case NETWORK_SIGNIN_FAILED:
-				return getResources().getString(R.string.error_network_signin_failed);
+				return getString(R.string.error_network_signin_failed);
 			case KICKED:
-				return getResources().getString(R.string.error_kicked);
+				return getString(R.string.error_kicked);
 			case APP_UPDATE_REQUIRED:
-				return getResources().getString(R.string.error_update_required);
+				return getString(R.string.error_update_required);
 			case NO_INTERNET_CONNECTION:
-				return getResources().getString(R.string.error_no_internet);
+				return getString(R.string.error_no_internet);
 			case INTERNET_CONNECTION_RESTRICTED:
-				return getResources().getString(R.string.error_internet_restricted);
+				return getString(R.string.error_internet_restricted);
 			case SERVER_LICENSE_PROBLEM:
-				return getResources().getString(R.string.error_server_license);
+				return getString(R.string.error_server_license);
 			case TOO_MANY_SIGNIN_ATTEMPTS:
-				return getResources().getString(R.string.error_brute_force_protection);
+				return getString(R.string.error_brute_force_protection);
 			case DEVICE_ID_MISMATCH:
-				return getResources().getString(R.string.error_device_id_mismatch);
+				return getString(R.string.error_device_id_mismatch);
 			default:
 				return null;
 		}
 	}
 
 	private void hideKeyboard() {
-		View view = getCurrentFocus();
-		if (view != null) {
-			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		View view = this.getCurrentFocus();
+		if (view == null) {
+			return;
 		}
+		InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		if (imm == null) {
+			return;
+		}
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 
 }

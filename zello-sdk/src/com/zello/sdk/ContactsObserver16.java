@@ -3,7 +3,7 @@ package com.zello.sdk;
 import android.net.Uri;
 import android.os.Handler;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings("unused")
 class ContactsObserver16 extends ContactsObserver {
 
 	ContactsObserver16(Contacts contacts, Handler handler) {

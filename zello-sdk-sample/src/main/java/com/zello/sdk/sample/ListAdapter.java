@@ -78,7 +78,7 @@ public class ListAdapter extends BaseAdapter {
 		if (convertView != null) {
 			view = convertView;
 		} else {
-			view = ((LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.contact, null);
+			view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact, null);
 		}
 		Contact contact = null;
 		if (position >= 0 && position < _contacts.size()) {
@@ -115,7 +115,7 @@ public class ListAdapter extends BaseAdapter {
 				case CHANNEL: {
 					if (status == ContactStatus.AVAILABLE) {
 						String countText = NumberFormat.getInstance().format(contact.getUsersCount());
-						statusText = context.getResources().getString(R.string.status_channel_users_count).replace("%count%", countText);
+						statusText = context.getString(R.string.status_channel_users_count).replace("%count%", countText);
 					} else {
 						statusText = statusToText(context, status);
 					}
@@ -124,14 +124,14 @@ public class ListAdapter extends BaseAdapter {
 				case GROUP: {
 					String countText = NumberFormat.getInstance().format(contact.getUsersCount());
 					String totalText = NumberFormat.getInstance().format(contact.getUsersTotal());
-					statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
+					statusText = view.getContext().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
 					break;
 				}
 				case CONVERSATION: {
 					if (status == ContactStatus.AVAILABLE) {
 						String countText = NumberFormat.getInstance().format(contact.getUsersCount());
 						String totalText = NumberFormat.getInstance().format(contact.getUsersTotal());
-						statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
+						statusText = view.getContext().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
 					} else {
 						statusText = statusToText(context, status);
 					}
@@ -178,7 +178,7 @@ public class ListAdapter extends BaseAdapter {
 				break;
 			default:
 		}
-		return context.getResources().getString(id);
+		return context.getString(id);
 	}
 
 	private static int statusToDrawableId(ContactStatus status, ContactType type) {
@@ -198,12 +198,10 @@ public class ListAdapter extends BaseAdapter {
 			}
 			case CHANNEL: {
 				// Channel
-				switch (status) {
-					case AVAILABLE:
-						return R.drawable.channel_online;
-					default:
-						return R.drawable.channel_offline;
+				if (status == ContactStatus.AVAILABLE) {
+					return R.drawable.channel_online;
 				}
+				return R.drawable.channel_offline;
 			}
 			case GATEWAY: {
 				// Radio gateway
@@ -211,21 +209,17 @@ public class ListAdapter extends BaseAdapter {
 			}
 			case GROUP: {
 				// Group
-				switch (status) {
-					case AVAILABLE:
-						return R.drawable.group_online;
-					default:
-						return R.drawable.channel_offline;
+				if (status == ContactStatus.AVAILABLE) {
+					return R.drawable.group_online;
 				}
+				return R.drawable.channel_offline;
 			}
 			case CONVERSATION: {
 				// Channel
-				switch (status) {
-					case AVAILABLE:
-						return R.drawable.conversation_online;
-					default:
-						return R.drawable.conversation_offline;
+				if (status == ContactStatus.AVAILABLE) {
+					return R.drawable.conversation_online;
 				}
+				return R.drawable.conversation_offline;
 			}
 		}
 		return R.drawable.user_offline;

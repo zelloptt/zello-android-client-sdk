@@ -78,7 +78,7 @@ public class ListAdapter extends BaseAdapter {
 		if (convertView != null) {
 			view = convertView;
 		} else {
-			view = ((LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.contact, null);
+			view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact, null);
 		}
 		Contact contact = null;
 		if (position >= 0 && position < _contacts.size()) {
@@ -115,7 +115,7 @@ public class ListAdapter extends BaseAdapter {
 				case CHANNEL: {
 					if (status == ContactStatus.AVAILABLE) {
 						String countText = NumberFormat.getInstance().format(contact.getUsersCount());
-						statusText = context.getResources().getString(R.string.status_channel_users_count).replace("%count%", countText);
+						statusText = context.getString(R.string.status_channel_users_count).replace("%count%", countText);
 					} else {
 						statusText = statusToText(context, status);
 					}
@@ -124,14 +124,14 @@ public class ListAdapter extends BaseAdapter {
 				case GROUP: {
 					String countText = NumberFormat.getInstance().format(contact.getUsersTotal());
 					String totalText = NumberFormat.getInstance().format(contact.getUsersTotal());
-					statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
+					statusText = view.getContext().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
 					break;
 				}
 				case CONVERSATION: {
 					if (status == ContactStatus.AVAILABLE) {
 						String countText = NumberFormat.getInstance().format(contact.getUsersCount());
 						String totalText = NumberFormat.getInstance().format(contact.getUsersTotal());
-						statusText = view.getContext().getResources().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
+						statusText = view.getContext().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
 					} else {
 						statusText = statusToText(context, status);
 					}
@@ -178,9 +178,10 @@ public class ListAdapter extends BaseAdapter {
 				break;
 			default:
 		}
-		return context.getResources().getString(id);
+		return context.getString(id);
 	}
 
+	@SuppressWarnings("SwitchStatementWithTooFewBranches")
 	private static int statusToDrawableId(ContactStatus status, ContactType type) {
 		switch (type) {
 			case USER: {
