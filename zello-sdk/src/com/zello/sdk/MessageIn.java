@@ -1,5 +1,8 @@
 package com.zello.sdk;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * The <code>MessageIn</code> class represents an incoming voice message.
  * @see Zello#getMessageIn(MessageIn)
@@ -9,8 +12,8 @@ public class MessageIn {
 
 	//region Package Private Variables
 
-	Contact _from = new Contact();
-	Contact _author = new Contact();
+	final Contact _from = new Contact();
+	final Contact _author = new Contact();
 	boolean _active;
 
 	//endregion
@@ -54,7 +57,7 @@ public class MessageIn {
 	 * @return The <code>Contact</code> that is sending the message.
 	 * @see #getAuthor()
      */
-	public Contact getFrom() {
+	public @NonNull Contact getFrom() {
 		return _from;
 	}
 
@@ -67,7 +70,7 @@ public class MessageIn {
 	 * </p>
 	 * @return The <code>Contact</code> that authored the message.
      */
-	public Contact getAuthor() {
+	public @NonNull Contact getAuthor() {
 		return _author;
 	}
 
@@ -85,12 +88,13 @@ public class MessageIn {
 
 	//region Package Private Methods
 
-	void copyTo(MessageIn message) {
-		if (message != null) {
-			_from.copyTo(message._from);
-			_author.copyTo(message._author);
-			message._active = _active;
+	void copyTo(@Nullable MessageIn message) {
+		if (message == null) {
+			return;
 		}
+		_from.copyTo(message._from);
+		_author.copyTo(message._author);
+		message._active = _active;
 	}
 
 	//endregion

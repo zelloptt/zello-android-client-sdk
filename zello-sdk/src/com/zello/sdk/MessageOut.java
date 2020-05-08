@@ -1,5 +1,8 @@
 package com.zello.sdk;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * The <code>MessageOut</code> class represents an outgoing voice message.
  * @see Zello#getMessageOut(MessageOut)
@@ -9,7 +12,7 @@ public class MessageOut {
 
 	//region Package Private Variables
 
-	Contact _to = new Contact();
+	final Contact _to = new Contact();
 	boolean _active;
 	boolean _connecting;
 
@@ -18,7 +21,6 @@ public class MessageOut {
 	//region Public Methods
 
 	public MessageOut() {
-
 	}
 
 	/**
@@ -49,7 +51,7 @@ public class MessageOut {
 	 * </p>
 	 * @return The <code>Contact</code> receiving the message.
      */
-	public Contact getTo() {
+	public @NonNull Contact getTo() {
 		return _to;
 	}
 
@@ -77,12 +79,13 @@ public class MessageOut {
 
 	//region Package Private Methods
 
-	void copyTo(MessageOut message) {
-		if (message != null) {
-			_to.copyTo(message._to);
-			message._active = _active;
-			message._connecting = _connecting;
+	void copyTo(@Nullable MessageOut message) {
+		if (message == null) {
+			return;
 		}
+		_to.copyTo(message._to);
+		message._active = _active;
+		message._connecting = _connecting;
 	}
 
 	//endregion

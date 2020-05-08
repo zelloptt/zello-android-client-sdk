@@ -5,6 +5,9 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * <p>
  * The <code>Zello</code> singleton acts as the primary point of interacting to the Zello SDK.
@@ -33,7 +36,7 @@ public class Zello {
 	 *
 	 * @return Zello singleton instance.
 	 */
-	public static Zello getInstance() {
+	public static @NonNull Zello getInstance() {
 		if (_instance == null) {
 			synchronized (Zello.class) {
 				if (_instance == null) {
@@ -60,11 +63,11 @@ public class Zello {
 	 * </p>
 	 *
 	 * @param packageName The package name of the ZelloWork app.
-	 * @param context     The context for the app.
+	 * @param context The context for the app.
 	 * @see #configure(String, Context, Events)
 	 * @see #unconfigure()
 	 */
-	public void configure(String packageName, Context context) {
+	public void configure(@Nullable String packageName, @Nullable Context context) {
 		doConfigure(packageName, context);
 	}
 
@@ -79,13 +82,15 @@ public class Zello {
 	 * </p>
 	 *
 	 * @param packageName The package name of the ZelloWork app.
-	 * @param context     The context for the app.
-	 * @param event       Events handler
+	 * @param context The context for the app.
+	 * @param event Events handler
 	 * @see #configure(String, Context)
 	 * @see #unconfigure()
 	 */
-	public void configure(String packageName, Context context, Events event) {
-		subscribeToEvents(event);
+	public void configure(@Nullable String packageName, @Nullable Context context, @Nullable Events event) {
+		if (event != null) {
+			subscribeToEvents(event);
+		}
 		doConfigure(packageName, context);
 	}
 
@@ -137,7 +142,7 @@ public class Zello {
 	 * @param event Events handler.
 	 * @see Events
 	 */
-	public void subscribeToEvents(Events event) {
+	public void subscribeToEvents(@NonNull Events event) {
 		if (!events.contains(event)) {
 			events.add(event);
 		}
@@ -149,10 +154,8 @@ public class Zello {
 	 * @param event Events handler.
 	 * @see Events
 	 */
-	public void unsubscribeFromEvents(Events event) {
-		if (events.contains(event)) {
-			events.remove(event);
-		}
+	public void unsubscribeFromEvents(@NonNull Events event) {
+		events.remove(event);
 	}
 
 	//endregion
@@ -205,7 +208,7 @@ public class Zello {
 	 * @see Zello#showMicrophonePermissionDialog()
 	 * @see Events#onMicrophonePermissionNotGranted()
 	 */
-	public void requestVitalPermissions(Activity activity) {
+	public void requestVitalPermissions(@Nullable Activity activity) {
 		checkConfiguration();
 		_sdk.requestVitalPermissions(activity);
 	}
@@ -260,7 +263,7 @@ public class Zello {
 	 * @see Events#onMicrophonePermissionNotGranted()
 	 * @see Zello#requestVitalPermissions()
 	 */
-	public void showMicrophonePermissionDialog(Activity activity) {
+	public void showMicrophonePermissionDialog(@Nullable Activity activity) {
 		checkConfiguration();
 		_sdk.showMicrophonePermissionDialog(activity);
 	}
@@ -280,17 +283,17 @@ public class Zello {
 	 * Use this method when you don't have an activity on the screen (ex. from a service).
 	 * </p>
 	 *
-	 * @param title     Activity title. Can be <code>null</code>.
-	 * @param tabs      Set of displayed tabs.
+	 * @param title Activity title. Can be <code>null</code>.
+	 * @param tabs Set of displayed tabs.
 	 * @param activeTab Initially active tab.
-	 * @param theme     Visual theme for activity.
+	 * @param theme Visual theme for activity.
 	 * @see #selectContact(String, Tab[], Tab, Theme, Activity)
 	 * @see #setSelectedContact(Contact)
 	 * @see #getSelectedContact(Contact)
 	 * @see Events#onSelectedContactChanged()
 	 * @see Events#onLastContactsTabChanged(Tab)
 	 */
-	public void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme) {
+	public void selectContact(@Nullable String title, @Nullable Tab[] tabs, @Nullable Tab activeTab, @Nullable Theme theme) {
 		checkConfiguration();
 		_sdk.selectContact(title, tabs, activeTab, theme);
 	}
@@ -306,18 +309,18 @@ public class Zello {
 	 * Use this method to open a contact selection UI from an existing activity.
 	 * </p>
 	 *
-	 * @param title     Activity title. Can be <code>null</code>.
-	 * @param tabs      Set of displayed tabs.
+	 * @param title Activity title. Can be <code>null</code>.
+	 * @param tabs Set of displayed tabs.
 	 * @param activeTab Initially active tab.
-	 * @param theme     Visual theme for activity.
-	 * @param activity  Caller activity.
+	 * @param theme Visual theme for activity.
+	 * @param activity Caller activity.
 	 * @see #selectContact(String, Tab[], Tab, Theme)
 	 * @see #setSelectedContact(Contact)
 	 * @see #getSelectedContact(Contact)
 	 * @see Events#onSelectedContactChanged()
 	 * @see Events#onLastContactsTabChanged(Tab)
 	 */
-	public void selectContact(String title, Tab[] tabs, Tab activeTab, Theme theme, Activity activity) {
+	public void selectContact(@Nullable String title, @Nullable Tab[] tabs, @Nullable Tab activeTab, @Nullable Theme theme, @Nullable Activity activity) {
 		checkConfiguration();
 		_sdk.selectContact(title, tabs, activeTab, theme, activity);
 	}
@@ -426,7 +429,7 @@ public class Zello {
 	 * @see #setAutoConnectChannels(boolean)
 	 * @see Events#onContactsChanged()
 	 */
-	public void connectChannel(String channel) {
+	public void connectChannel(@Nullable String channel) {
 		checkConfiguration();
 		_sdk.connectChannel(channel);
 	}
@@ -443,7 +446,7 @@ public class Zello {
 	 * @see #setAutoConnectChannels(boolean)
 	 * @see Events#onContactsChanged()
 	 */
-	public void disconnectChannel(String channel) {
+	public void disconnectChannel(@Nullable String channel) {
 		checkConfiguration();
 		_sdk.disconnectChannel(channel);
 	}
@@ -456,9 +459,9 @@ public class Zello {
 	 * Mutes or unmutes a contact.
 	 *
 	 * @param contact The contact to mute or unmute.
-	 * @param mute    Whether the contact should be muted or not.
+	 * @param mute Whether the contact should be muted or not.
 	 */
-	public void muteContact(Contact contact, boolean mute) {
+	public void muteContact(@Nullable Contact contact, boolean mute) {
 		checkConfiguration();
 		_sdk.muteContact(contact, mute);
 	}
@@ -473,7 +476,7 @@ public class Zello {
 	 * See <code>signIn(String, String, String, Boolean)</code> for more details.
 	 * </p>
 	 *
-	 * @param network  The network name or URL.
+	 * @param network The network name or URL.
 	 * @param username The username to authenticate.
 	 * @param password The password for the username.
 	 * @return Indicates whether a sign in was initiated or not.
@@ -482,7 +485,7 @@ public class Zello {
 	 * @see #signOut()
 	 * @see Events#onAppStateChanged()
 	 */
-	public boolean signIn(String network, String username, String password) {
+	public boolean signIn(@Nullable String network, @Nullable String username, @Nullable String password) {
 		checkConfiguration();
 		return _sdk.signIn(network, username, password);
 	}
@@ -506,9 +509,9 @@ public class Zello {
 	 * To cancel the sign in process, use the <code>cancelSignIn()</code> method.
 	 * </p>
 	 *
-	 * @param network    The network name or URL.
-	 * @param username   The username to authenticate.
-	 * @param password   The password for the username.
+	 * @param network The network name or URL.
+	 * @param username The username to authenticate.
+	 * @param password The password for the username.
 	 * @param perishable Whether or not the authentication information should be saved.
 	 * @return boolean indicating whether a sign in was initiated or not.
 	 * @see #signIn(String, String, String)
@@ -516,7 +519,7 @@ public class Zello {
 	 * @see #signOut()
 	 * @see Events#onAppStateChanged()
 	 */
-	public boolean signIn(String network, String username, String password, boolean perishable) {
+	public boolean signIn(@Nullable String network, @Nullable String username, @Nullable String password, boolean perishable) {
 		checkConfiguration();
 		return _sdk.signIn(network, username, password, perishable);
 	}
@@ -569,10 +572,10 @@ public class Zello {
 	 * </p>
 	 *
 	 * @param applicationName The name of your application.
-	 * @param packageName     The package name of your application.
+	 * @param packageName The package name of your application.
 	 * @see #unlock()
 	 */
-	public void lock(String applicationName, String packageName) {
+	public void lock(@Nullable String applicationName, @Nullable String packageName) {
 		checkConfiguration();
 		_sdk.lock(applicationName, packageName);
 	}
@@ -599,7 +602,7 @@ public class Zello {
 	 * @see AppState#getStatus()
 	 * @see Events#onAppStateChanged()
 	 */
-	public void setStatus(Status status) {
+	public void setStatus(@NonNull Status status) {
 		checkConfiguration();
 		_sdk.setStatus(status);
 	}
@@ -611,7 +614,7 @@ public class Zello {
 	 * @see #setStatus(Status)
 	 * @see AppState#getStatusMessage()
 	 */
-	public void setStatusMessage(String message) {
+	public void setStatusMessage(@Nullable String message) {
 		checkConfiguration();
 		_sdk.setStatusMessage(message);
 	}
@@ -637,7 +640,7 @@ public class Zello {
 	 *
 	 * @param activity Nullable, Caller activity.
 	 */
-	public void showPttButtonsScreen(Activity activity) {
+	public void showPttButtonsScreen(@Nullable Activity activity) {
 		checkConfiguration();
 		_sdk.showPttButtonsScreen(activity);
 	}
@@ -658,7 +661,7 @@ public class Zello {
 	 * @see MessageIn
 	 * @see Events#onMessageStateChanged()
 	 */
-	public void getMessageIn(MessageIn message) {
+	public void getMessageIn(@Nullable MessageIn message) {
 		checkConfiguration();
 		_sdk.getMessageIn(message);
 	}
@@ -675,7 +678,7 @@ public class Zello {
 	 * @see MessageOut
 	 * @see Events#onMessageStateChanged()
 	 */
-	public void getMessageOut(MessageOut message) {
+	public void getMessageOut(@Nullable MessageOut message) {
 		checkConfiguration();
 		_sdk.getMessageOut(message);
 	}
@@ -692,7 +695,7 @@ public class Zello {
 	 * @see AppState
 	 * @see Events#onAppStateChanged()
 	 */
-	public void getAppState(AppState state) {
+	public void getAppState(@Nullable AppState state) {
 		checkConfiguration();
 		_sdk.getAppState(state);
 	}
@@ -710,7 +713,7 @@ public class Zello {
 	 * @see #setSelectedContact(Contact)
 	 * @see Events#onSelectedContactChanged()
 	 */
-	public void getSelectedContact(Contact contact) {
+	public void getSelectedContact(@Nullable Contact contact) {
 		checkConfiguration();
 		_sdk.getSelectedContact(contact);
 	}
@@ -743,7 +746,7 @@ public class Zello {
 	 * @see Audio
 	 * @see Events#onAudioStateChanged()
 	 */
-	public Audio getAudio() {
+	public @NonNull Audio getAudio() {
 		checkConfiguration();
 		return _sdk.getAudio();
 	}
@@ -805,7 +808,7 @@ public class Zello {
 	 * @param id Nullable; String indicating the external id.
 	 * @see AppState#getExternalId()
 	 */
-	public void setExternalId(String id) {
+	public void setExternalId(@Nullable String id) {
 		checkConfiguration();
 		_sdk.setExternalId(id);
 	}
@@ -825,7 +828,7 @@ public class Zello {
 	 * @see Events#onSelectedContactChanged()
 	 * @see #getContacts()
 	 */
-	public void setSelectedContact(Contact contact) {
+	public void setSelectedContact(@Nullable Contact contact) {
 		checkConfiguration();
 		_sdk.setSelectedContact(contact);
 	}
@@ -844,7 +847,7 @@ public class Zello {
 	 * @see Events#onSelectedContactChanged()
 	 * @see #getContacts()
 	 */
-	public void setSelectedUserOrGateway(String name) {
+	public void setSelectedUserOrGateway(@Nullable String name) {
 		checkConfiguration();
 		_sdk.setSelectedUserOrGateway(name);
 	}
@@ -862,7 +865,7 @@ public class Zello {
 	 * @see #selectContact(String, Tab[], Tab, Theme, Activity)
 	 * @see Events#onSelectedContactChanged()
 	 */
-	public void setSelectedChannelOrGroup(String name) {
+	public void setSelectedChannelOrGroup(@Nullable String name) {
 		checkConfiguration();
 		_sdk.setSelectedChannelOrGroup(name);
 	}
@@ -890,16 +893,17 @@ public class Zello {
 
 	}
 
-	private synchronized void doConfigure(String packageName, Context context) {
-		if (!_configured) {
-			_configured = true;
-
-			_sdk = new Sdk();
-			_sdk.onCreate(packageName, context);
-
-			// Updates should be on by default
-			leavePowerSavingMode();
+	private synchronized void doConfigure(@Nullable String packageName, @Nullable Context context) {
+		if (_configured) {
+			return;
 		}
+		_configured = true;
+
+		_sdk = new Sdk();
+		_sdk.onCreate(packageName, context);
+
+		// Updates should be on by default
+		leavePowerSavingMode();
 	}
 
 	private synchronized void doUnconfigure() {

@@ -1,5 +1,8 @@
 package com.zello.sdk;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * The <code>Contact</code> class represents a contact of the current user.
  * A Contact can be another user, a radio gateway, a group channel or a dynamic channel (see {@link ContactType}).
@@ -46,7 +49,7 @@ public class Contact {
 	}
 
 	@Override
-	public Contact clone() {
+	public @NonNull Contact clone() {
 		Contact contact = new Contact();
 		copyTo(contact);
 		return contact;
@@ -71,7 +74,7 @@ public class Contact {
 	 * </p>
 	 * @return Name of the <code>Contact</code>.
      */
-	public String getName() {
+	public @Nullable String getName() {
 		return _name;
 	}
 
@@ -79,7 +82,7 @@ public class Contact {
 	 * Returns the full name of the <code>Contact</code>.
 	 * @return Nullable; Full name of the <code>Contact</code>.
      */
-	public String getFullName() {
+	public @Nullable String getFullName() {
 		return _fullName;
 	}
 
@@ -93,7 +96,7 @@ public class Contact {
 	 * </p>
 	 * @return Nullable; Display Name for the <code>Contact</code>.
      */
-	public String getDisplayName() {
+	public @Nullable String getDisplayName() {
 		return _displayName;
 	}
 
@@ -101,7 +104,7 @@ public class Contact {
 	 * Returns the <code>ContactType</code> for the <code>Contact</code>.
 	 * @return <code>ContactType</code> for the <code>Contact</code>.
      */
-	public ContactType getType() {
+	public @NonNull ContactType getType() {
 		return _type;
 	}
 
@@ -109,7 +112,7 @@ public class Contact {
 	 * Returns the <code>ContactStatus</code> for the <code>Contact</code>.
 	 * @return <code>ContactStatus</code> for the <code>Contact</code>.
      */
-	public ContactStatus getStatus() {
+	public @NonNull ContactStatus getStatus() {
 		return _status;
 	}
 
@@ -117,7 +120,7 @@ public class Contact {
 	 * Returns the custom status message for the <code>Contact</code>.
 	 * @return Nullable; The status message for the <code>Contact</code>.
      */
-	public String getStatusMessage() {
+	public @Nullable String getStatusMessage() {
 		return _statusMessage;
 	}
 
@@ -159,7 +162,7 @@ public class Contact {
 	 *
 	 * @return Nullable; The title for the <code>Contact</code>.
      */
-	public String getTitle() {
+	public @Nullable String getTitle() {
 		return _title;
 	}
 
@@ -185,19 +188,20 @@ public class Contact {
 	//region Package Private Methods
 
 	void copyTo(Contact contact) {
-		if (contact != null) {
-			contact._name = _name;
-			contact._fullName = _fullName;
-			contact._displayName = _displayName;
-			contact._type = _type;
-			contact._status = _status;
-			contact._statusMessage = _statusMessage;
-			contact._usersCount = _usersCount;
-			contact._usersTotal = _usersTotal;
-			contact._title = _title;
-			contact._muted = _muted;
-			contact._noDisconnect = _noDisconnect;
+		if (contact == null) {
+			return;
 		}
+		contact._name = _name;
+		contact._fullName = _fullName;
+		contact._displayName = _displayName;
+		contact._type = _type;
+		contact._status = _status;
+		contact._statusMessage = _statusMessage;
+		contact._usersCount = _usersCount;
+		contact._usersTotal = _usersTotal;
+		contact._title = _title;
+		contact._muted = _muted;
+		contact._noDisconnect = _noDisconnect;
 	}
 
 	//endregion

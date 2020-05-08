@@ -2,13 +2,15 @@ package com.zello.sdk;
 
 import android.os.Build;
 
-import java.lang.reflect.Field;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.UUID;
 
 @SuppressWarnings({"WeakerAccess", "unused"})
 class Util {
 
-	static String toLowerCaseLexicographically(CharSequence s) {
+	static @Nullable String toLowerCaseLexicographically(@Nullable CharSequence s) {
 		if (s != null) {
 			char[] c = new char[s.length()];
 			for (int i = 0; i < s.length(); ++i) {
@@ -19,7 +21,7 @@ class Util {
 		return null;
 	}
 
-	static String toUpperCaseLexicographically(CharSequence s) {
+	static @Nullable String toUpperCaseLexicographically(@Nullable CharSequence s) {
 		if (s != null) {
 			char[] c = new char[s.length()];
 			for (int i = 0; i < s.length(); ++i) {
@@ -30,29 +32,16 @@ class Util {
 		return null;
 	}
 
-	static String emptyIfNull(String s) {
+	static @NonNull String emptyIfNull(@Nullable String s) {
 		return s == null ? "" : s;
 	}
 
-	static String generateUuid() {
-		String s = UUID.randomUUID().toString().replace("-", "");
-		return s;
+	static @NonNull String generateUuid() {
+		return UUID.randomUUID().toString().replace("-", "");
 	}
 
-	static int _version = -1;
-
 	public static int getApiLevel() {
-		int version = _version;
-		if (version < 0) {
-			try {
-				Field SDK_INT_field = Build.VERSION.class.getField("SDK_INT");
-				version = (Integer) SDK_INT_field.get(null);
-			} catch (Exception e) {
-				version = 3;
-			}
-			_version = version;
-		}
-		return version;
+		return Build.VERSION.SDK_INT;
 	}
 
 }

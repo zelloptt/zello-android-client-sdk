@@ -8,7 +8,7 @@ package com.zello.sdk;
  *     For the status of the current user, see the {@link Status} enum.
  * </p>
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings("unused")
 public enum ContactStatus {
 
 	/**

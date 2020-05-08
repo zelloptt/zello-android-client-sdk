@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
+        classpath "com.android.tools.build:gradle:3.6.3"
     }
 }
 
@@ -14,78 +14,79 @@ repositories {
     google()
 }
 
-apply plugin: 'com.android.library'
+apply plugin: "com.android.library"
 
 dependencies {
-    implementation fileTree(include: '*.jar', dir: 'libs')
+    implementation fileTree(include: "*.jar", dir: "libs")
+    implementation "androidx.appcompat:appcompat:1.1.0"
 }
 
 task zelloSdkJarDeleteFromRoot(type: Delete) {
     description "Deletes SDK jar from the root folder of the project"
-    delete '../zello-sdk.jar'
+    delete "../zello-sdk.jar"
 }
 
 task zelloSdkJarDeployReleaseToRoot() {
     description "Copies a release build of the SDK jar to the root folder of the project"
     delete {
-        delete '../zello-sdk.jar'
+        delete "../zello-sdk.jar"
     }
     copy {
-        from "build/intermediates/packaged-classes/release/classes.jar"
-        into '../'
-        rename('classes.jar', 'zello-sdk.jar')
+        from "build/intermediates/aar_main_jar/release/classes.jar"
+        into "../"
+        rename("classes.jar", "zello-sdk.jar")
     }
 }
 
 task zelloSdkJarDeleteFromSamples(type: Delete) {
     description "Deletes SDK jars from all sample projects"
-    delete '../zello-sdk-sample/libs/zello-sdk.jar', '../zello-sdk-sample-contacts/libs/zello-sdk.jar', '../zello-sdk-sample-misc/libs/zello-sdk.jar', '../zello-sdk-sample-ptt/libs/zello-sdk.jar', '../zello-sdk-sample-signin/libs/zello-sdk.jar'
+    delete "../zello-sdk-sample/libs/zello-sdk.jar", "../zello-sdk-sample-contacts/libs/zello-sdk.jar", "../zello-sdk-sample-misc/libs/zello-sdk.jar", "../zello-sdk-sample-ptt/libs/zello-sdk.jar", "../zello-sdk-sample-signin/libs/zello-sdk.jar"
 }
 
 // This add a task that deploys a release build of the library to the sample projects /lib folders.
 android.libraryVariants.all { variant ->
-    if (variant.name.equals('release')) {
+    if (variant.name.equals("release")) {
         task("zelloSdkJarDeploy${variant.name.capitalize()}ToSamples") {
             description "Copies a ${variant.name} build of the SDK jar to all sample projects"
             delete {
-                delete '../zello-sdk-sample/libs/zello-sdk.jar'
+                delete "../zello-sdk-sample/libs/zello-sdk.jar"
             }
             delete {
-                delete '../zello-sdk-sample-contacts/libs/zello-sdk.jar'
+                delete "../zello-sdk-sample-contacts/libs/zello-sdk.jar"
             }
             delete {
-                delete '../zello-sdk-sample-misc/libs/zello-sdk.jar'
+                delete "../zello-sdk-sample-misc/libs/zello-sdk.jar"
             }
             delete {
-                delete '../zello-sdk-sample-ptt/libs/zello-sdk.jar'
+                delete "../zello-sdk-sample-ptt/libs/zello-sdk.jar"
             }
             delete {
-                delete '../zello-sdk-sample-signin/libs/zello-sdk.jar'
+                delete "../zello-sdk-sample-signin/libs/zello-sdk.jar"
             }
             copy {
-                from "build/intermediates/packaged-classes/${variant.name}/classes.jar"
-                into '../zello-sdk-sample/libs'
-                rename('classes.jar', 'zello-sdk.jar')
+                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
+                into "../zello-sdk-sample/libs"
+                rename("classes.jar", "zello-sdk.jar")
             }
             copy {
-                from "build/intermediates/packaged-classes/${variant.name}/classes.jar"
-                into '../zello-sdk-sample-contacts/libs'
-                rename('classes.jar', 'zello-sdk.jar')
+                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
+                into "../zello-sdk-sample-contacts/libs"
+                rename("classes.jar", "zello-sdk.jar")
             }
             copy {
-                from "build/intermediates/packaged-classes/${variant.name}/classes.jar"
-                into '../zello-sdk-sample-misc/libs'
-                rename('classes.jar', 'zello-sdk.jar')
+                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
+                into "../zello-sdk-sample-misc/libs"
+                rename("classes.jar", "zello-sdk.jar")
             }
             copy {
-                from "build/intermediates/packaged-classes/${variant.name}/classes.jar"
-                into '../zello-sdk-sample-ptt/libs'
-                rename('classes.jar', 'zello-sdk.jar')
+                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
+                into "../zello-sdk-sample-ptt/libs"
+                rename("classes.jar", "zello-sdk.jar")
             }
             copy {
-                from "build/intermediates/packaged-classes/${variant.name}/classes.jar"
-                into '../zello-sdk-sample-signin/libs'
-                rename('classes.jar', 'zello-sdk.jar')
+                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
+                into "../zello-sdk-sample-signin/libs"
+                rename("classes.jar", "zello-sdk.jar")
             }
         }
     }
@@ -93,19 +94,19 @@ android.libraryVariants.all { variant ->
 
 task zelloSdkDocDelete(type: Delete) {
     description "Deletes Zello SDK Javadoc from the project root folder"
-    delete '../docs/zello-sdk-documentation'
+    delete "../docs/zello-sdk-documentation"
 }
 
 android.libraryVariants.all { variant ->
-    if (variant.name.equals('release')) {
+    if (variant.name == "release") {
         task("zelloSdkDocCreate", type: Javadoc, dependsOn: "zelloSdkDocDelete") {
             title ""
             description "Creates Zello SDK Javadoc in the project root folder"
             destinationDir = new File("${project.getProjectDir()}/../docs", "zello-sdk-documentation")
             source = android.sourceSets.main.java.srcDirs
             classpath = files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
-            exclude '**/Constants.java'
-            exclude '**/ContactObserver*.java'
+            exclude "**/Constants.java"
+            exclude "**/ContactObserver*.java"
             options.memberLevel = JavadocMemberLevel.PUBLIC
             options.noTree = false
             options.noNavBar = false
@@ -122,46 +123,29 @@ android.libraryVariants.all { variant ->
 }
 
 tasks.whenTaskAdded { task ->
-    if (task.name == 'assembleRelease') {
-        task.finalizedBy 'zelloSdkDocCreate'
-        task.finalizedBy 'zelloSdkJarDeployReleaseToRoot'
-        task.finalizedBy 'zelloSdkJarDeployReleaseToSamples'
-    }
-    if (task.name == 'assembleDebug') {
-        task.finalizedBy 'zelloSdkJarDeployDebugToSamples'
+    if (task.name == "assembleRelease") {
+        task.finalizedBy "zelloSdkDocCreate"
+        task.finalizedBy "zelloSdkJarDeployReleaseToRoot"
+        task.finalizedBy "zelloSdkJarDeployReleaseToSamples"
     }
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
-        targetSdkVersion 28
+        targetSdkVersion 29
         minSdkVersion 16
     }
 
     sourceSets {
         main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            //resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
+            manifest.srcFile "AndroidManifest.xml"
+            java.srcDirs = ["src"]
         }
 
-        // Move the tests to tests/java, tests/res, etc...
-        //instrumentTest.setRoot('tests')
-
-        // Move the build types to build-types/<type>
-        // For instance, build-types/debug/java, build-types/debug/AndroidManifest.xml, ...
-        // This moves them out of them default location under src/<type>/... which would
-        // conflict with src/ being used by the main source set.
-        // Adding new build types or product flavors should be accompanied
-        // by a similar customization.
-        debug.setRoot('build-types/debug')
-        release.setRoot('build-types/release')
+        debug.setRoot("build-types/debug")
+        release.setRoot("build-types/release")
     }
     buildTypes {
         release {

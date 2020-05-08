@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
 /**
  * <p>
  *     The <code>Contacts</code> class represents the contacts of the current user.
@@ -14,7 +16,7 @@ import android.util.Log;
  *     To use, get the current snapshot of <code>Contacts</code> using the {@link Zello#getContacts()} method. For specific usage, please see the sample projects.
  * </p>
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings("unused")
 public class Contacts {
 
 	//region Private Properties
@@ -122,43 +124,44 @@ public class Contacts {
 	 * @param index Index indicating which <code>Contact</code> to retrieve.
 	 * @return <code>Contact</code> at the specified index.
      */
-	public Contact getItem(int index) {
+	public @Nullable Contact getItem(int index) {
 		check();
 		Cursor cursor = _cursor;
-		if (cursor != null) {
-			cursor.moveToPosition(index);
-			Contact contact = new Contact();
-			try {
-				contact._name = cursor.getString(_indexName);
-				contact._fullName = cursor.getString(_indexFullName);
-				contact._displayName = cursor.getString(_indexDisplayName);
-				contact._type = Sdk.intToContactType(cursor.getInt(_indexType));
-				contact._status = Sdk.intToContactStatus(cursor.getInt(_indexStatus));
-				contact._title = cursor.getString(_indexTitle);
-				contact._muted = cursor.getInt(_indexMuted) != 0;
-				switch (contact._type) {
-					case USER:
-					case GATEWAY: {
-						contact._statusMessage = cursor.getString(_indexStatusMessage);
-						break;
-					}
-					case CHANNEL: {
-						contact._usersCount = cursor.getInt(_indexUsersCount);
-						break;
-					}
-					case GROUP:
-					case CONVERSATION: {
-						contact._usersCount = cursor.getInt(_indexUsersCount);
-						contact._usersTotal = cursor.getInt(_indexUsersTotal);
-						break;
-					}
+		if (cursor == null) {
+			return null;
+		}
+		cursor.moveToPosition(index);
+		Contact contact = new Contact();
+		try {
+			contact._name = cursor.getString(_indexName);
+			contact._fullName = cursor.getString(_indexFullName);
+			contact._displayName = cursor.getString(_indexDisplayName);
+			contact._type = Sdk.intToContactType(cursor.getInt(_indexType));
+			contact._status = Sdk.intToContactStatus(cursor.getInt(_indexStatus));
+			contact._title = cursor.getString(_indexTitle);
+			contact._muted = cursor.getInt(_indexMuted) != 0;
+			switch (contact._type) {
+				case USER:
+				case GATEWAY: {
+					contact._statusMessage = cursor.getString(_indexStatusMessage);
+					break;
 				}
-				contact._noDisconnect = (contact._type != ContactType.CHANNEL && contact._type != ContactType.GROUP && contact._type != ContactType.CONVERSATION) ||
-						(_indexNoDisconnect >= 0 && cursor.getInt(_indexNoDisconnect) != 0);
-				return contact;
-			} catch (Throwable t) {
-				Log.i("zello sdk", "Error in Contacts.getItem: " + t.toString());
+				case CHANNEL: {
+					contact._usersCount = cursor.getInt(_indexUsersCount);
+					break;
+				}
+				case GROUP:
+				case CONVERSATION: {
+					contact._usersCount = cursor.getInt(_indexUsersCount);
+					contact._usersTotal = cursor.getInt(_indexUsersTotal);
+					break;
+				}
 			}
+			contact._noDisconnect = (contact._type != ContactType.CHANNEL && contact._type != ContactType.GROUP && contact._type != ContactType.CONVERSATION) ||
+					(_indexNoDisconnect >= 0 && cursor.getInt(_indexNoDisconnect) != 0);
+			return contact;
+		} catch (Throwable t) {
+			Log.i("zello sdk", "Error in Contacts.getItem: " + t.toString());
 		}
 		return null;
 	}
@@ -171,40 +174,41 @@ public class Contacts {
 
 	private void query() {
 		Context context = _context;
-		if (context != null) {
-			Cursor cursor = null;
-			_indexNoDisconnect = -1;
-			try {
-				cursor = context.getContentResolver().query(_uri, null, null, null, null);
-				_indexName = cursor.getColumnIndex(_columnName);
-				_indexFullName = cursor.getColumnIndex(_columnFullName);
-				_indexDisplayName = cursor.getColumnIndex(_columnDisplayName);
-				_indexStatusMessage = cursor.getColumnIndex(_columnStatusMessage);
-				_indexType = cursor.getColumnIndex(_columnType);
-				_indexStatus = cursor.getColumnIndex(_columnStatus);
-				_indexUsersCount = cursor.getColumnIndex(_columnUsersCount);
-				_indexUsersTotal = cursor.getColumnIndex(_columnUsersTotal);
-				_indexTitle = cursor.getColumnIndex(_columnTitle);
-				_indexMuted = cursor.getColumnIndex(_columnMuted);
-				cursor.registerContentObserver(_observer);
-			} catch (Throwable t) {
-				if (cursor != null) {
-					try {
-						cursor.close();
-					} catch (Throwable ignored) {
-					}
-					cursor = null;
-				}
-				Log.i("zello sdk", "Error in Contacts.Contacts: " + t.toString());
-			}
+		if (context == null) {
+			return;
+		}
+		Cursor cursor = null;
+		_indexNoDisconnect = -1;
+		try {
+			cursor = context.getContentResolver().query(_uri, null, null, null, null);
+			_indexName = cursor.getColumnIndex(_columnName);
+			_indexFullName = cursor.getColumnIndex(_columnFullName);
+			_indexDisplayName = cursor.getColumnIndex(_columnDisplayName);
+			_indexStatusMessage = cursor.getColumnIndex(_columnStatusMessage);
+			_indexType = cursor.getColumnIndex(_columnType);
+			_indexStatus = cursor.getColumnIndex(_columnStatus);
+			_indexUsersCount = cursor.getColumnIndex(_columnUsersCount);
+			_indexUsersTotal = cursor.getColumnIndex(_columnUsersTotal);
+			_indexTitle = cursor.getColumnIndex(_columnTitle);
+			_indexMuted = cursor.getColumnIndex(_columnMuted);
+			cursor.registerContentObserver(_observer);
+		} catch (Throwable t) {
 			if (cursor != null) {
 				try {
-					_indexNoDisconnect = cursor.getColumnIndex(_columnNoDisconnect);
-				} catch (Throwable ignore) {
+					cursor.close();
+				} catch (Throwable ignored) {
 				}
+				cursor = null;
 			}
-			_cursor = cursor;
+			Log.i("zello sdk", "Error in Contacts.Contacts: " + t.toString());
 		}
+		if (cursor != null) {
+			try {
+				_indexNoDisconnect = cursor.getColumnIndex(_columnNoDisconnect);
+			} catch (Throwable ignore) {
+			}
+		}
+		_cursor = cursor;
 	}
 
 	private void clean() {

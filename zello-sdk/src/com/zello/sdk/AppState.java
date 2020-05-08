@@ -1,5 +1,8 @@
 package com.zello.sdk;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * <p>
  *     The <code>AppState</code> class represents the current state of the ZelloWork app.
@@ -267,7 +270,7 @@ public class AppState {
 	 * @return The current <code>Status</code> for the user.
 	 * @see Zello#setStatus(Status)
      */
-	public Status getStatus() {
+	public @NonNull Status getStatus() {
 		return _busy ? Status.BUSY : (_solo ? Status.SOLO : Status.AVAILABLE);
 	}
 
@@ -276,7 +279,7 @@ public class AppState {
 	 * @return Nullable; The status message for the user.
 	 * @see Zello#setStatusMessage(String)
      */
-	public String getStatusMessage() {
+	public @Nullable String getStatusMessage() {
 		return _statusMessage;
 	}
 
@@ -286,7 +289,7 @@ public class AppState {
 	 * @see Zello#signIn(String, String, String)
 	 * @see Zello#signIn(String, String, String, boolean)
 	 */
-	public String getNetwork() {
+	public @Nullable String getNetwork() {
 		return _network;
 	}
 
@@ -296,7 +299,7 @@ public class AppState {
 	 * @see Zello#signIn(String, String, String)
 	 * @see Zello#signIn(String, String, String, boolean)
 	 */
-	public String getNetworkUrl() {
+	public @Nullable String getNetworkUrl() {
 		return _networkUrl;
 	}
 
@@ -306,7 +309,7 @@ public class AppState {
 	 * @see Zello#signIn(String, String, String)
 	 * @see Zello#signIn(String, String, String, boolean)
 	 */
-	public String getUsername() {
+	public @Nullable String getUsername() {
 		return _username;
 	}
 
@@ -319,7 +322,7 @@ public class AppState {
 	 * </p>
 	 * @return <code>Error</code> type indicating the latest error.
      */
-	public Error getLastError() {
+	public @NonNull Error getLastError() {
 		return _lastError;
 	}
 
@@ -334,7 +337,7 @@ public class AppState {
 	 * @return Nullable; The external id for the app.
 	 * @see Zello#setExternalId(String)
      */
-	public String getExternalId() {
+	public @Nullable String getExternalId() {
 		return _externalId;
 	}
 
@@ -343,30 +346,31 @@ public class AppState {
 	//region Package Private Methods
 
 	void copyTo(AppState state) {
-		if (state != null) {
-			state._customBuild = _customBuild;
-			state._available = _available;
-			state._error = _error;
-			state._initializing = _initializing;
-			state._configuring = _configuring;
-			state._locked = _locked;
-			state._signedIn = _signedIn;
-			state._signingIn = _signingIn;
-			state._signingOut = _signingOut;
-			state._reconnectTimer = _reconnectTimer;
-			state._waitingForNetwork = _waitingForNetwork;
-			state._showContacts = _showContacts;
-			state._busy = _busy;
-			state._solo = _solo;
-			state._autoRun = _autoRun;
-			state._autoChannels = _autoChannels;
-			state._statusMessage = _statusMessage;
-			state._network = _network;
-			state._networkUrl = _networkUrl;
-			state._username = _username;
-			state._lastError = _lastError;
-			state._externalId = _externalId;
+		if (state == null) {
+			return;
 		}
+		state._customBuild = _customBuild;
+		state._available = _available;
+		state._error = _error;
+		state._initializing = _initializing;
+		state._configuring = _configuring;
+		state._locked = _locked;
+		state._signedIn = _signedIn;
+		state._signingIn = _signingIn;
+		state._signingOut = _signingOut;
+		state._reconnectTimer = _reconnectTimer;
+		state._waitingForNetwork = _waitingForNetwork;
+		state._showContacts = _showContacts;
+		state._busy = _busy;
+		state._solo = _solo;
+		state._autoRun = _autoRun;
+		state._autoChannels = _autoChannels;
+		state._statusMessage = _statusMessage;
+		state._network = _network;
+		state._networkUrl = _networkUrl;
+		state._username = _username;
+		state._lastError = _lastError;
+		state._externalId = _externalId;
 	}
 
 	//endregion

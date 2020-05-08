@@ -3,7 +3,7 @@ package com.zello.sdk;
 /**
  * The <code>ContactType</code> enum represents the type of {@link Contact}.
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings("unused")
 public enum ContactType {
 
 	/**
