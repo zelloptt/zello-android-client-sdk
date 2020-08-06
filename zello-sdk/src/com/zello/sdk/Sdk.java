@@ -915,7 +915,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	private @NonNull Intent getServiceIntentNew() {
 		Intent intent = new Intent();
-		return intent.setClassName(_package, "com.zello.client.ui.Svc");
+		return intent.setClassName(_package, "com.zello.ui.Svc");
 	}
 
 	private @NonNull Intent getServiceIntentOld() {
