@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.6.3"
+        classpath "com.android.tools.build:gradle:4.0.1"
     }
 }
 
@@ -18,7 +18,7 @@ apply plugin: "com.android.library"
 
 dependencies {
     implementation fileTree(include: "*.jar", dir: "libs")
-    implementation "androidx.appcompat:appcompat:1.1.0"
+    implementation 'androidx.appcompat:appcompat:1.2.0'
 }
 
 task zelloSdkJarDeleteFromRoot(type: Delete) {
@@ -131,10 +131,10 @@ tasks.whenTaskAdded { task ->
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
-        targetSdkVersion 29
+        targetSdkVersion 30
         minSdkVersion 16
     }
 

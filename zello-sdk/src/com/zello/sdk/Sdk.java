@@ -23,7 +23,7 @@ import androidx.annotation.Nullable;
  * The Sdk class acts as the implementation of the Zello SDK methods.
  * To use, instantiate an instance of the Sdk class.
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings("WeakerAccess")
 class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Private Variables
@@ -1303,6 +1303,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return buf.toString();
 	}
 
+	@SuppressWarnings("CharsetObjectCanBeUsed")
 	private static @NonNull String md5(String s) {
 		if (s == null || s.isEmpty()) {
 			return "";
