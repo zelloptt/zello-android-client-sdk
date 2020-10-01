@@ -254,7 +254,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		//Zello.getInstance().configure("net.loudtalks", this);
 
 		// Use with an app installed from a generic PTT SDK apk obtained from https://github.com/zelloptt/zello-android-client-sdk/releases
-		Zello.getInstance().configure("com.pttsdk", this);
+		Zello.getInstance().configure("net.loudtalks", this);
 
 		Zello zello = Zello.getInstance();
 		zello.requestVitalPermissions(this);
