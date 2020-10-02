@@ -4,17 +4,17 @@ import androidx.annotation.NonNull;
 
 /**
  * A helper class that stores information about a compatible package name
- * and an optional minimum app version.
+ * and an optional meta data.
  */
-class CompatiblePackageInfo {
+class CompatibleAppInfo {
 
 	public final @NonNull String packageName;
 
-	public final int minVersion;
+	public final boolean requireMetaData;
 
-	public CompatiblePackageInfo(@NonNull String packageName, int minVersion) {
+	public CompatibleAppInfo(@NonNull String packageName, boolean requireMetaData) {
 		this.packageName = packageName;
-		this.minVersion = minVersion;
+		this.requireMetaData = requireMetaData;
 	}
 
 }

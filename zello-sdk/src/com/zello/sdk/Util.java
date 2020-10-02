@@ -1,10 +1,13 @@
 package com.zello.sdk;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.os.Build;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -14,10 +17,10 @@ import androidx.annotation.Nullable;
 class Util {
 
 	// Known compatible Zello app package names sorted in the order or preference
-	private final static CompatiblePackageInfo[] knownCompatiblePackages = {
-			new CompatiblePackageInfo("com.loudtalks", 2600519),
-			new CompatiblePackageInfo("net.loudtalks", 0),
-			new CompatiblePackageInfo("com.pttsdk", 0)
+	private final static CompatibleAppInfo[] knownCompatiblePackages = {
+			new CompatibleAppInfo("com.loudtalks", true),
+			new CompatibleAppInfo("net.loudtalks", false),
+			new CompatibleAppInfo("com.pttsdk", false)
 	};
 
 	// Known Zello app service names sorted in the order or preference
@@ -25,6 +28,8 @@ class Util {
 			"com.zello.ui.Svc",
 			"com.loudtalks.client.ui.Svc"
 	};
+
+	private final static String sdkMetaDataName = "com.zello.SDK";
 
 	public static @Nullable String toLowerCaseLexicographically(@Nullable CharSequence s) {
 		if (s == null) {
@@ -37,17 +42,6 @@ class Util {
 		return new String(c);
 	}
 
-	public static @Nullable String toUpperCaseLexicographically(@Nullable CharSequence s) {
-		if (s == null) {
-			return null;
-		}
-		char[] c = new char[s.length()];
-		for (int i = 0; i < s.length(); ++i) {
-			c[i] = Character.toUpperCase(s.charAt(i));
-		}
-		return new String(c);
-	}
-
 	public static @NonNull String emptyIfNull(@Nullable String s) {
 		return s == null ? "" : s;
 	}
@@ -56,6 +50,7 @@ class Util {
 		return s == null || s.isEmpty() ? null : s;
 	}
 
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public static boolean isNullOrEmpty(@Nullable String s) {
 		return s == null || s.isEmpty();
 	}
@@ -76,7 +71,7 @@ class Util {
 	 * @return True if package names are the same
 	 */
 	public static boolean samePackageNames(@Nullable String packageName1, @Nullable String packageName2) {
-		return emptyIfNull(toLowerCaseLexicographically(packageName1)).equals(emptyIfNull(toLowerCaseLexicographically(packageName2)));
+		return emptyIfNull(packageName1).toLowerCase(Locale.ROOT).equals(emptyIfNull(packageName2).toLowerCase(Locale.ROOT));
 	}
 
 	/**
@@ -85,17 +80,17 @@ class Util {
 	 * @param context App context
 	 * @param packageName Optional package name; null to find the most suitable package
 	 */
-	public static @Nullable PackageInfo findPackageInfo(@Nullable Context context, @Nullable String packageName) {
+	public static @Nullable AppInfo findAppInfo(@Nullable Context context, @Nullable String packageName) {
 		if (context == null) {
 			return null;
 		}
 		// If a preferred package name is supplied, try to look it up
 		if (!Util.isNullOrEmpty(packageName)) {
-			return tryPackageInfo(context, packageName, 0);
+			return tryPackageInfo(context, packageName, false);
 		}
 		// If a preferred package name is not supplied, find the most suitable package
-		for (CompatiblePackageInfo info : knownCompatiblePackages) {
-			PackageInfo packageInfo = tryPackageInfo(context, info.packageName, info.minVersion);
+		for (CompatibleAppInfo info : knownCompatiblePackages) {
+			AppInfo packageInfo = tryPackageInfo(context, info.packageName, info.requireMetaData);
 			if (packageInfo != null) {
 				return packageInfo;
 			}
@@ -110,21 +105,36 @@ class Util {
 	 * @param packageName Package name
 	 * @return Package info or null if unavailable or incompatible
 	 */
-	private static @Nullable PackageInfo tryPackageInfo(@NonNull Context context, @NonNull String packageName, int minVersion) {
-		android.content.pm.PackageInfo pi;
+	private static @Nullable AppInfo tryPackageInfo(@NonNull Context context, @NonNull String packageName, boolean requireMetaData) {
+		PackageInfo pi;
 		try {
 			pi = context.getPackageManager().getPackageInfo(packageName, PackageManager.GET_SERVICES);
 		} catch (PackageManager.NameNotFoundException ignored) {
 			return null;
 		}
-		if (pi == null || pi.versionCode < minVersion) {
+		if (pi == null) {
 			return null;
+		}
+		if (requireMetaData) {
+			ApplicationInfo ai;
+			try {
+				ai = context.getPackageManager().getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+			} catch (PackageManager.NameNotFoundException ignored) {
+				return null;
+			}
+			if (ai.metaData == null) {
+				return null;
+			}
+			Object metaData = ai.metaData.get(sdkMetaDataName);
+			if (!(metaData instanceof Boolean) || !((Boolean) metaData)) {
+				return null;
+			}
 		}
 		String serviceClassName = findServiceClassName(pi);
 		if (serviceClassName == null) {
 			return null;
 		}
-		return new PackageInfo(packageName, serviceClassName);
+		return new AppInfo(packageName, serviceClassName);
 	}
 
 	/**
@@ -133,7 +143,7 @@ class Util {
 	 * @param pi Package info that includes information about services
 	 * @return Service class name or null
 	 */
-	private static @Nullable String findServiceClassName(@NonNull android.content.pm.PackageInfo pi) {
+	private static @Nullable String findServiceClassName(@NonNull PackageInfo pi) {
 		if (pi.services == null) {
 			return null;
 		}

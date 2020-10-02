@@ -15,6 +15,7 @@ import android.os.Message;
 import android.util.Log;
 
 import java.security.MessageDigest;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -81,8 +82,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			return;
 		}
 		_context = context.getApplicationContext();
-		_preferredPackage = Util.nullIfEmpty(Util.toLowerCaseLexicographically(packageName));
-		_handler = new SafeHandler<>(this);
+		_preferredPackage = !Util.isNullOrEmpty(packageName) ? packageName.toLowerCase(Locale.ROOT) : null;
+		_handler = new SafeHandler<>(this, context);
 		_appState._available = isAppAvailable();
 		// Spin up the main app
 		connect();
@@ -740,20 +741,16 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				if (action == null) {
 					return;
 				}
+				// Reconnect any time when currently connected package is affected or
+				// when the best package is automatically selected and a package with a higher preference is affected
+				boolean reconnect = false;
 				if (action.equals(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE) || action.equals(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE)) {
 					String[] pkgs = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
 					if (pkgs == null) {
 						return;
 					}
 					for (String pkg : pkgs) {
-						// Reconnect any time when currently connected package is affected or
-						// when the best package is automatically selected and a package with a higher preference is affected
-						if (pkg.equalsIgnoreCase(_connectedPackage) || checkPreferredAppChanged()) {
-							reconnect();
-							updateSelectedContact(null);
-							updateContacts();
-							return;
-						}
+						reconnect |= pkg != null && (pkg.equalsIgnoreCase(_connectedPackage) || checkPreferredAppChanged());
 					}
 				} else {
 					Uri data = intent.getData();
@@ -761,9 +758,9 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 						return;
 					}
 					String pkg = data.getSchemeSpecificPart();
-					if (pkg == null || !pkg.equalsIgnoreCase(_connectedPackage)) {
-						return;
-					}
+					reconnect = pkg != null && (pkg.equalsIgnoreCase(_connectedPackage) || checkPreferredAppChanged());
+				}
+				if (reconnect) {
 					reconnect();
 					updateSelectedContact(null);
 					updateContacts();
@@ -873,12 +870,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	 * Happens when a package of interest or of potential interest is installed or removed.
 	 */
 	private boolean checkPreferredAppChanged() {
-		if (_preferredPackage != null) {
-			// Don't care - package auto-select is not enabled
-			return false;
-		}
 		// Find preferred package
-		PackageInfo preferredApp = Util.findPackageInfo(_context, null);
+		AppInfo preferredApp = Util.findAppInfo(_context, _preferredPackage);
 		// Check if currently connected package is different from the auto-preferred package
 		return !Util.samePackageNames(_connectedPackage, preferredApp != null ? preferredApp.packageName : null);
 	}
@@ -926,7 +919,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (context == null) {
 			return;
 		}
-		PackageInfo packageInfo = Util.findPackageInfo(_context, _preferredPackage);
+		AppInfo packageInfo = Util.findAppInfo(_context, _preferredPackage);
 		if (packageInfo == null) {
 			// A compatible package wasn't found
 			_appState._initializing = false;
@@ -1190,7 +1183,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		Context context = _context;
 		String connectedPackage = _connectedPackage;
 		if (connectedPackage == null) {
-			PackageInfo packageInfo = Util.findPackageInfo(context, _preferredPackage);
+			AppInfo packageInfo = Util.findAppInfo(context, _preferredPackage);
 			connectedPackage = packageInfo != null ? packageInfo.packageName : null;
 		}
 		if (context == null || connectedPackage == null) {
