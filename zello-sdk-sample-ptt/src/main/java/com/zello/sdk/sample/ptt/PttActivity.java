@@ -69,7 +69,7 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 		// Pass net.loudtalks to connect to an app installed from an apk obtained from https://www.zellowork.com
 		// Pass com.pttsdk to connect to a PTT SDK app obtained from https://github.com/zelloptt/zello-android-client-sdk/releases
 		// Pass com.loudtalks to connect to Zello app installed from the Google Play Store
-		// Or, Pass null to automatically choose the app to connect to in the following order of preference: com.loudtalks, net.loudtalks, com.pttsdk
+		// Or, pass null to automatically choose the app to connect to in the following order of preference: com.loudtalks, net.loudtalks, com.pttsdk
 		Zello.getInstance().configure(null, this);
 
 		Zello.getInstance().requestVitalPermissions(this);
