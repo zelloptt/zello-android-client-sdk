@@ -78,7 +78,7 @@ public class Zello {
 	 * </p>
 	 * <p>
 	 * If the APK was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks".
-	 * If the APK was downloaded from the Android Client SDK GitHub releases, <code>packageName</code> should be "net.loudtalks".
+	 * If the APK was downloaded from Android Client SDK on GitHub, <code>packageName</code> should be "com.pttsdk".
 	 * If the APK was downloaded from Google Play, <code>packageName</code> should be "com.loudtalks".
 	 * To have a the package name chosen automatically, pass in a <code>null</code> <code>packageName</code>.
 	 * </p>
