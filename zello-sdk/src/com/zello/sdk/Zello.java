@@ -14,11 +14,11 @@ import androidx.annotation.Nullable;
  * </p>
  * <p>
  * To get an instance of the object call {@link Zello#getInstance()}.
- * Before using this class, call the {@link Zello#configure(String, Context)} method.
+ * Before using this class, call the {@link Zello#configure(Context)} or {@link Zello#configure(String, Context)} method.
  * For specific usage, see the sample projects.
  * </p>
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings("WeakerAccess")
 public class Zello {
 
 	private static volatile Zello _instance;
@@ -59,7 +59,28 @@ public class Zello {
 	 * In most cases, the <code>Application.onCreate()</code> method is the best place to do this.
 	 * </p>
 	 * <p>
-	 * If the APK was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the APK use "com.pttsdk".
+	 * This method will chose the name of a package to connect to automatically.
+	 * </p>
+	 *
+	 * @param context The context for the app.
+	 * @see #configure(String, Context, Events)
+	 * @see #unconfigure()
+	 */
+	public void configure(@Nullable Context context) {
+		doConfigure(null, context);
+	}
+
+	/**
+	 * Configures the Zello SDK.
+	 * <p>
+	 * You must call <code>configure(String, Context)</code> or <code>configure(String, Context, Events)</code> before using any other SDK methods.
+	 * In most cases, the <code>Application.onCreate()</code> method is the best place to do this.
+	 * </p>
+	 * <p>
+	 * If the APK was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks".
+	 * If the APK was downloaded from the Android Client SDK GitHub releases, <code>packageName</code> should be "net.loudtalks".
+	 * If the APK was downloaded from Google Play, <code>packageName</code> should be "com.loudtalks".
+	 * To have a the package name chosen automatically, pass in a <code>null</code> <code>packageName</code>.
 	 * </p>
 	 *
 	 * @param packageName The package name of the ZelloWork app.
@@ -1014,7 +1035,6 @@ public class Zello {
 	//region Private Methods
 
 	private Zello() {
-
 	}
 
 	private synchronized void doConfigure(@Nullable String packageName, @Nullable Context context) {

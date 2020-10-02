@@ -26,13 +26,15 @@ task zelloSdkJarDeleteFromRoot(type: Delete) {
     delete "../zello-sdk.jar"
 }
 
+def releaseJarPath="build/intermediates/aar_main_jar/release/classes.jar"
+
 task zelloSdkJarDeployReleaseToRoot() {
     description "Copies a release build of the SDK jar to the root folder of the project"
     delete {
         delete "../zello-sdk.jar"
     }
     copy {
-        from "build/intermediates/aar_main_jar/release/classes.jar"
+        from releaseJarPath
         into "../"
         rename("classes.jar", "zello-sdk.jar")
     }
@@ -43,52 +45,49 @@ task zelloSdkJarDeleteFromSamples(type: Delete) {
     delete "../zello-sdk-sample/libs/zello-sdk.jar", "../zello-sdk-sample-contacts/libs/zello-sdk.jar", "../zello-sdk-sample-misc/libs/zello-sdk.jar", "../zello-sdk-sample-ptt/libs/zello-sdk.jar", "../zello-sdk-sample-signin/libs/zello-sdk.jar"
 }
 
+
 // This add a task that deploys a release build of the library to the sample projects /lib folders.
-android.libraryVariants.all { variant ->
-    if (variant.name.equals("release")) {
-        task("zelloSdkJarDeploy${variant.name.capitalize()}ToSamples") {
-            description "Copies a ${variant.name} build of the SDK jar to all sample projects"
-            delete {
-                delete "../zello-sdk-sample/libs/zello-sdk.jar"
-            }
-            delete {
-                delete "../zello-sdk-sample-contacts/libs/zello-sdk.jar"
-            }
-            delete {
-                delete "../zello-sdk-sample-misc/libs/zello-sdk.jar"
-            }
-            delete {
-                delete "../zello-sdk-sample-ptt/libs/zello-sdk.jar"
-            }
-            delete {
-                delete "../zello-sdk-sample-signin/libs/zello-sdk.jar"
-            }
-            copy {
-                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
-                into "../zello-sdk-sample/libs"
-                rename("classes.jar", "zello-sdk.jar")
-            }
-            copy {
-                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
-                into "../zello-sdk-sample-contacts/libs"
-                rename("classes.jar", "zello-sdk.jar")
-            }
-            copy {
-                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
-                into "../zello-sdk-sample-misc/libs"
-                rename("classes.jar", "zello-sdk.jar")
-            }
-            copy {
-                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
-                into "../zello-sdk-sample-ptt/libs"
-                rename("classes.jar", "zello-sdk.jar")
-            }
-            copy {
-                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
-                into "../zello-sdk-sample-signin/libs"
-                rename("classes.jar", "zello-sdk.jar")
-            }
-        }
+task("zelloSdkJarDeployReleaseToSamples") {
+    description "Copies a release build of the SDK jar to all sample projects"
+    delete {
+        delete "../zello-sdk-sample/libs/zello-sdk.jar"
+    }
+    delete {
+        delete "../zello-sdk-sample-contacts/libs/zello-sdk.jar"
+    }
+    delete {
+        delete "../zello-sdk-sample-misc/libs/zello-sdk.jar"
+    }
+    delete {
+        delete "../zello-sdk-sample-ptt/libs/zello-sdk.jar"
+    }
+    delete {
+        delete "../zello-sdk-sample-signin/libs/zello-sdk.jar"
+    }
+    copy {
+        from releaseJarPath
+        into "../zello-sdk-sample/libs"
+        rename("classes.jar", "zello-sdk.jar")
+    }
+    copy {
+        from releaseJarPath
+        into "../zello-sdk-sample-contacts/libs"
+        rename("classes.jar", "zello-sdk.jar")
+    }
+    copy {
+        from releaseJarPath
+        into "../zello-sdk-sample-misc/libs"
+        rename("classes.jar", "zello-sdk.jar")
+    }
+    copy {
+        from releaseJarPath
+        into "../zello-sdk-sample-ptt/libs"
+        rename("classes.jar", "zello-sdk.jar")
+    }
+    copy {
+        from releaseJarPath
+        into "../zello-sdk-sample-signin/libs"
+        rename("classes.jar", "zello-sdk.jar")
     }
 }
 

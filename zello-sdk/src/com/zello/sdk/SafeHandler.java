@@ -14,7 +14,7 @@ class SafeHandler<T extends SafeHandlerEvents> extends Handler {
 	private final @NonNull WeakReference<T> _t;
 
 	public SafeHandler(@NonNull T t, @NonNull Context context) {
-		super(context.getMainLooper(), null);
+		super(context.getMainLooper());
 		_t = new WeakReference<T>(t);
 	}
 

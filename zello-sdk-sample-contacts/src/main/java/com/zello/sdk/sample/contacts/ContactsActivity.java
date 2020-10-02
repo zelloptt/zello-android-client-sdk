@@ -36,11 +36,9 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 		_statusTextView = findViewById(R.id.statusTextView);
 		_selectedContactTextView = findViewById(R.id.selectedContactTextView);
 
-		// Pass net.loudtalks to connect to an app installed from an apk obtained from https://www.zellowork.com
-		// Pass com.pttsdk to connect to a PTT SDK app obtained from https://github.com/zelloptt/zello-android-client-sdk/releases
-		// Pass com.loudtalks to connect to Zello app installed from the Google Play Store
-		// Or, pass null to automatically choose the app to connect to in the following order of preference: com.loudtalks, net.loudtalks, com.pttsdk
-		Zello.getInstance().configure(null, this);
+		// Automatically choose the app to connect to in the following order of preference: com.loudtalks, net.loudtalks, com.pttsdk
+		// Alternatively, connect to a preferred app by supplying a package name, for example: Zello.getInstance().configure("net.loudtalks", this)
+		Zello.getInstance().configure(this);
 
 		// Contact list pick handler
 		_contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
