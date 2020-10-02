@@ -2,6 +2,10 @@ package com.zello.sdk;
 
 import androidx.annotation.NonNull;
 
+/**
+ * A helper class that holds information about an app that was found
+ * to be capab;le of accepting an SDK connection.
+ */
 class AppInfo {
 
 	public final @NonNull String packageName;
