@@ -111,6 +111,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_context = null;
 		}
 		_preferredPackage = null;
+		_connectedPackage = null;
 		_contacts = null;
 		_audio = null;
 	}
