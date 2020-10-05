@@ -124,6 +124,14 @@ android.libraryVariants.all { variant ->
     }
 }
 
+tasks.whenTaskAdded { task ->
+    if (task.name == "assembleRelease") {
+        task.finalizedBy "zelloSdkDocCreate"
+        task.finalizedBy "zelloSdkJarDeployReleaseToRoot"
+        task.finalizedBy "zelloSdkJarDeployReleaseToSamples"
+    }
+}
+
 android {
     compileSdkVersion 30
 
