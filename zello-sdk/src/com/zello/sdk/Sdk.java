@@ -87,7 +87,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_appState._available = isAppAvailable();
 		// Spin up the main app
 		connect();
-		registerReceivers();
+		registerPackageReceivers();
 	}
 
 	void onDestroy() {
@@ -96,7 +96,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 		disconnect();
 		_resumed = false;
-		unregisterReceivers();
+		unregisterPackageEventReceivers();
 		Contacts contacts = _contacts;
 		if (contacts != null) {
 			contacts.close();
@@ -726,8 +726,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//region Private methods
 
-	private void registerReceivers() {
-		if (_context == null) {
+	private void registerPackageReceivers() {
+		if (_context == null || _receiverPackage != null) {
 			return;
 		}
 		// Register to receive package install broadcasts
@@ -778,92 +778,120 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
 		filterPackage.addDataScheme("package");
 		_context.registerReceiver(_receiverPackage, filterPackage);
-		// Register to receive app state broadcasts
-		_receiverAppState = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				updateAppState(intent);
-			}
-		};
-		Intent intentStickyAppState = _context.registerReceiver(_receiverAppState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_APP_STATE));
-		updateAppState(intentStickyAppState);
-		updateContacts();
-		// Register to receive app permissions broadcasts
-		_receiverPermissionErrors = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				handlePermissionError(intent);
-			}
-		};
-		_context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_connectedPackage + "." + Constants.ACTION_PERMISSION_ERRORS));
-		// Register to receive message state broadcasts
-		_receiverMessageState = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				updateMessageState(intent);
-			}
-		};
-		Intent intentStickyMessageState = _context.registerReceiver(_receiverMessageState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_MESSAGE_STATE));
-		updateMessageState(intentStickyMessageState);
-		// Register to receive selected contact broadcasts
-		_receiverContactSelected = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				updateSelectedContact(intent);
-			}
-		};
-		Intent intentStickySelectedContact = _context.registerReceiver(_receiverContactSelected, new IntentFilter(_connectedPackage + "." + Constants.ACTION_CONTACT_SELECTED));
-		updateSelectedContact(intentStickySelectedContact);
-		// Register to receive last selected contact list tab
-		_receiverActiveTab = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				updateSelectedTab(intent);
-			}
-		};
-		_context.registerReceiver(_receiverActiveTab, new IntentFilter(_activeTabAction));
-		// Register to receive bluetooth accessory state broadcasts
-		_receiverBtAccessoryState = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				handleBtAccessoryState(intent);
-			}
-		};
-		_context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_BT_ACCESSORY_STATE));
 	}
 
-	private void unregisterReceivers() {
+	private void unregisterPackageEventReceivers() {
 		if (_context == null) {
 			return;
 		}
 		if (_receiverPackage != null) {
 			_context.unregisterReceiver(_receiverPackage);
+			_receiverPackage = null;
+		}
+	}
+
+	private void registerAppStateReceivers() {
+		if (_context == null) {
+			return;
+		}
+		if (_receiverAppState == null) {
+			// Register to receive app state broadcasts
+			_receiverAppState = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					updateAppState(intent);
+				}
+			};
+			Intent intentStickyAppState = _context.registerReceiver(_receiverAppState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_APP_STATE));
+			updateAppState(intentStickyAppState);
+			updateContacts();
+		}
+		if (_receiverPermissionErrors == null) {
+			// Register to receive app permissions broadcasts
+			_receiverPermissionErrors = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					handlePermissionError(intent);
+				}
+			};
+			_context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_connectedPackage + "." + Constants.ACTION_PERMISSION_ERRORS));
+		}
+		if (_receiverMessageState == null) {
+			// Register to receive message state broadcasts
+			_receiverMessageState = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					updateMessageState(intent);
+				}
+			};
+			Intent intentStickyMessageState = _context.registerReceiver(_receiverMessageState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_MESSAGE_STATE));
+			updateMessageState(intentStickyMessageState);
+		}
+		if (_receiverContactSelected == null) {
+			// Register to receive selected contact broadcasts
+			_receiverContactSelected = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					updateSelectedContact(intent);
+				}
+			};
+			Intent intentStickySelectedContact = _context.registerReceiver(_receiverContactSelected, new IntentFilter(_connectedPackage + "." + Constants.ACTION_CONTACT_SELECTED));
+			updateSelectedContact(intentStickySelectedContact);
+		}
+		if (_receiverActiveTab == null) {
+			// Register to receive last selected contact list tab
+			_receiverActiveTab = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					updateSelectedTab(intent);
+				}
+			};
+			_context.registerReceiver(_receiverActiveTab, new IntentFilter(_activeTabAction));
+		}
+		if (_receiverBtAccessoryState == null) {
+			// Register to receive bluetooth accessory state broadcasts
+			_receiverBtAccessoryState = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					handleBtAccessoryState(intent);
+				}
+			};
+			_context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_BT_ACCESSORY_STATE));
+		}
+	}
+
+	private void unregisterAppStateReceivers() {
+		if (_context == null) {
+			return;
+		}
+		if (_receiverPackage != null) {
+			_context.unregisterReceiver(_receiverPackage);
+			_receiverPackage = null;
 		}
 		if (_receiverAppState != null) {
 			_context.unregisterReceiver(_receiverAppState);
+			_receiverAppState = null;
 		}
 		if (_receiverPermissionErrors != null) {
 			_context.unregisterReceiver(_receiverPermissionErrors);
+			_receiverPermissionErrors = null;
 		}
 		if (_receiverMessageState != null) {
 			_context.unregisterReceiver(_receiverMessageState);
+			_receiverMessageState = null;
 		}
 		if (_receiverContactSelected != null) {
 			_context.unregisterReceiver(_receiverContactSelected);
+			_receiverContactSelected = null;
 		}
 		if (_receiverActiveTab != null) {
 			_context.unregisterReceiver(_receiverActiveTab);
+			_receiverActiveTab = null;
 		}
 		if (_receiverBtAccessoryState != null) {
 			_context.unregisterReceiver(_receiverBtAccessoryState);
+			_receiverBtAccessoryState = null;
 		}
-		_receiverPackage = null;
-		_receiverAppState = null;
-		_receiverPermissionErrors = null;
-		_receiverMessageState = null;
-		_receiverContactSelected = null;
-		_receiverActiveTab = null;
-		_receiverBtAccessoryState = null;
 	}
 
 	/**
@@ -957,10 +985,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_appState._initializing = false;
 			fireAppStateChanged();
 		}
+		registerAppStateReceivers();
 	}
 
 	private void disconnect() {
-		unregisterReceivers();
+		unregisterAppStateReceivers();
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
 		_delayedPerishable = false;
 		if (!_serviceBound) {
