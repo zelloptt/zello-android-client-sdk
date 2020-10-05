@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
  *     To use, get the current snapshot of <code>Contacts</code> using the {@link Zello#getContacts()} method. For specific usage, please see the sample projects.
  * </p>
  */
-@SuppressWarnings("unused")
 public class Contacts {
 
 	//region Private Properties

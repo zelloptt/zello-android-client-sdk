@@ -15,6 +15,7 @@ import android.os.Message;
 import android.util.Log;
 
 import java.security.MessageDigest;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,12 +24,16 @@ import androidx.annotation.Nullable;
  * The Sdk class acts as the implementation of the Zello SDK methods.
  * To use, instantiate an instance of the Sdk class.
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings("WeakerAccess")
 class Sdk implements SafeHandlerEvents, ServiceConnection {
 
-	//region Private Variables
+	//region Private variables
 
-	private @NonNull String _package = "";
+	// Package name of the preferred Zello app, null for auto-select
+	private @Nullable String _preferredPackage;
+	// Package name of the app that we are currently connected to, null when not connected
+	private @Nullable String _connectedPackage;
+
 	private @Nullable Context _context;
 	private @Nullable SafeHandler<Sdk> _handler;
 	private boolean _resumed;
@@ -69,153 +74,29 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//endregion
 
-	//region Lifecycle Methods
+	//region Lifecycle methods
 
 	@SuppressLint("InlinedApi")
-	@SuppressWarnings("deprecation")
 	void onCreate(@Nullable String packageName, @Nullable Context context) {
 		if (context == null) {
 			return;
 		}
-		context = context.getApplicationContext();
-		_package = Util.emptyIfNull(Util.toLowerCaseLexicographically(packageName));
-		_context = context;
-		_handler = new SafeHandler<>(this);
+		_context = context.getApplicationContext();
+		_preferredPackage = !Util.isNullOrEmpty(packageName) ? packageName.toLowerCase(Locale.ROOT) : null;
+		_handler = new SafeHandler<>(this, context);
 		_appState._available = isAppAvailable();
 		// Spin up the main app
 		connect();
-		// Register to receive package install broadcasts
-		_receiverPackage = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				updateAppAvailable();
-				if (intent == null || _handler == null) {
-					return;
-				}
-				String action = intent.getAction();
-				if (action == null) {
-					return;
-				}
-				if (action.equals(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE) || action.equals(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE)) {
-					String[] pkgs = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
-					if (pkgs == null) {
-						return;
-					}
-					for (String pkg : pkgs) {
-						if (pkg.equalsIgnoreCase(_package)) {
-							reconnect();
-							updateSelectedContact(null);
-							updateContacts();
-							return;
-						}
-					}
-				} else {
-					Uri data = intent.getData();
-					if (data == null) {
-						return;
-					}
-					String pkg = data.getSchemeSpecificPart();
-					if (pkg == null || !pkg.equalsIgnoreCase(_package)) {
-						return;
-					}
-					reconnect();
-					updateSelectedContact(null);
-					updateContacts();
-				}
-			}
-		};
-		IntentFilter filterPackage = new IntentFilter();
-		filterPackage.addAction(Intent.ACTION_PACKAGE_ADDED);
-		filterPackage.addAction(Intent.ACTION_PACKAGE_INSTALL);
-		filterPackage.addAction(Intent.ACTION_PACKAGE_REMOVED);
-		filterPackage.addAction(Intent.ACTION_PACKAGE_REPLACED);
-		filterPackage.addAction(Intent.ACTION_PACKAGE_CHANGED);
-		filterPackage.addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED);
-		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
-		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
-		filterPackage.addDataScheme("package");
-		context.registerReceiver(_receiverPackage, filterPackage);
-		// Register to receive app state broadcasts
-		_receiverAppState = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				updateAppState(intent);
-			}
-		};
-		Intent intentStickyAppState = context.registerReceiver(_receiverAppState, new IntentFilter(_package + "." + Constants.ACTION_APP_STATE));
-		updateAppState(intentStickyAppState);
-		updateContacts();
-		// Register to receive app permissions broadcasts
-		_receiverPermissionErrors = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				handlePermissionError(intent);
-			}
-		};
-		context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_package + "." + Constants.ACTION_PERMISSION_ERRORS));
-		// Register to receive message state broadcasts
-		_receiverMessageState = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				updateMessageState(intent);
-			}
-		};
-		Intent intentStickyMessageState = context.registerReceiver(_receiverMessageState, new IntentFilter(_package + "." + Constants.ACTION_MESSAGE_STATE));
-		updateMessageState(intentStickyMessageState);
-		// Register to receive selected contact broadcasts
-		_receiverContactSelected = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				updateSelectedContact(intent);
-			}
-		};
-		Intent intentStickySelectedContact = context.registerReceiver(_receiverContactSelected, new IntentFilter(_package + "." + Constants.ACTION_CONTACT_SELECTED));
-		updateSelectedContact(intentStickySelectedContact);
-		// Register to receive last selected contact list tab
-		_receiverActiveTab = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				updateSelectedTab(intent);
-			}
-		};
-		context.registerReceiver(_receiverActiveTab, new IntentFilter(_activeTabAction));
-		// Register to receive bluetooth accessory state broadcasts
-		_receiverBtAccessoryState = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				handleBtAccessoryState(intent);
-			}
-		};
-		context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_package + "." + Constants.ACTION_BT_ACCESSORY_STATE));
+		registerPackageReceivers();
 	}
 
 	void onDestroy() {
+		if (_context == null) {
+			return;
+		}
 		disconnect();
 		_resumed = false;
-		Context context = _context;
-		if (context != null) {
-			if (_receiverPackage != null) {
-				context.unregisterReceiver(_receiverPackage);
-			}
-			if (_receiverAppState != null) {
-				context.unregisterReceiver(_receiverAppState);
-			}
-			if (_receiverPermissionErrors != null) {
-				context.unregisterReceiver(_receiverPermissionErrors);
-			}
-			if (_receiverMessageState != null) {
-				context.unregisterReceiver(_receiverMessageState);
-			}
-			if (_receiverContactSelected != null) {
-				context.unregisterReceiver(_receiverContactSelected);
-			}
-			if (_receiverActiveTab != null) {
-				context.unregisterReceiver(_receiverActiveTab);
-			}
-			if (_receiverBtAccessoryState != null) {
-				context.unregisterReceiver(_receiverBtAccessoryState);
-			}
-		}
+		unregisterPackageEventReceivers();
 		Contacts contacts = _contacts;
 		if (contacts != null) {
 			contacts.close();
@@ -224,19 +105,13 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (audio != null) {
 			audio.close();
 		}
-		_receiverPackage = null;
-		_receiverAppState = null;
-		_receiverPermissionErrors = null;
-		_receiverMessageState = null;
-		_receiverContactSelected = null;
-		_receiverActiveTab = null;
-		_receiverBtAccessoryState = null;
 		stopAwakeTimer();
 		_handler = null;
 		if (!_serviceConnecting) {
 			_context = null;
 		}
-		_package = "";
+		_preferredPackage = null;
+		_connectedPackage = null;
 		_contacts = null;
 		_audio = null;
 	}
@@ -263,13 +138,14 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	void requestVitalPermissions() {
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
 		try {
 			Intent intent = new Intent();
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
+			intent.setComponent(new ComponentName(connectedPackage, _pttPermissionsActivityClass));
 			intent.putExtra(Constants.EXTRA_REQUEST_VITAL_PERMISSIONS, true);
 			context.startActivity(intent);
 		} catch (Throwable ignored) {
@@ -277,12 +153,13 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	void requestVitalPermissions(@Nullable Activity activity) {
-		if (activity == null) {
+		String connectedPackage = _connectedPackage;
+		if (activity == null || connectedPackage == null) {
 			return;
 		}
 		try {
 			Intent intent = new Intent();
-			intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
+			intent.setComponent(new ComponentName(connectedPackage, _pttPermissionsActivityClass));
 			intent.putExtra(Constants.EXTRA_REQUEST_VITAL_PERMISSIONS, true);
 			activity.startActivity(intent);
 		} catch (Throwable ignored) {
@@ -291,13 +168,14 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	void showMicrophonePermissionDialog() {
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
 		try {
 			Intent intent = new Intent();
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
+			intent.setComponent(new ComponentName(connectedPackage, _pttPermissionsActivityClass));
 			intent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
 			intent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
 			context.startActivity(intent);
@@ -306,12 +184,13 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	void showMicrophonePermissionDialog(@Nullable Activity activity) {
-		if (activity == null) {
+		String connectedPackage = _connectedPackage;
+		if (activity == null || connectedPackage == null) {
 			return;
 		}
 		try {
 			Intent intent = new Intent();
-			intent.setComponent(new ComponentName(_package, _pttPermissionsActivityClass));
+			intent.setComponent(new ComponentName(connectedPackage, _pttPermissionsActivityClass));
 			intent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
 			intent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
 			activity.startActivity(intent);
@@ -321,11 +200,12 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//endregion
 
-	//region Contact Selection
+	//region Contact selection
 
 	void selectContact(@Nullable String title, @Nullable Tab[] tabs, @Nullable Tab activeTab, @Nullable Theme theme) {
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
 		String tabList = tabsToString(tabs);
@@ -335,7 +215,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		try {
 			Intent intent = new Intent();
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intent.setComponent(new ComponentName(_package, _pttActivityClass));
+			intent.setComponent(new ComponentName(connectedPackage, _pttActivityClass));
 			intent.setAction(Intent.ACTION_PICK);
 			intent.putExtra(Intent.EXTRA_TITLE, title); // Activity title; optional
 			intent.putExtra(Constants.EXTRA_TABS, tabList); // Set of displayed tabs; required; any combination of RECENTS, USERS and CHANNELS
@@ -350,7 +230,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	void selectContact(@Nullable String title, @Nullable Tab[] tabs, @Nullable Tab activeTab, @Nullable Theme theme, @Nullable Activity activity) {
-		if (activity == null) {
+		String connectedPackage = _connectedPackage;
+		if (activity == null || connectedPackage == null) {
 			return;
 		}
 		String tabList = tabsToString(tabs);
@@ -359,7 +240,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 		try {
 			Intent intent = new Intent();
-			intent.setComponent(new ComponentName(_package, _pttActivityClass));
+			intent.setComponent(new ComponentName(connectedPackage, _pttActivityClass));
 			intent.setAction(Intent.ACTION_PICK);
 			intent.putExtra(Intent.EXTRA_TITLE, title); // Activity title; optional
 			intent.putExtra(Constants.EXTRA_TABS, tabList); // Set of displayed tabs; required; any combination of RECENTS, USERS and CHANNELS
@@ -375,38 +256,41 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//endregion
 
-	//region Sending Messages
+	//region Sending messages
 
 	void beginMessage() {
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_BEGIN_MESSAGE);
 		context.sendBroadcast(intent);
 	}
 
 	void endMessage() {
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_END_MESSAGE);
 		context.sendBroadcast(intent);
 	}
 
 	//endregion
 
-	//region Replaying Messages
+	//region Replaying messages
 
 	void replayLastIncomingMessage() {
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_REPLAY_MESSAGE);
 		context.sendBroadcast(intent);
 	}
@@ -420,28 +304,30 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Channels
 
 	void connectChannel(@Nullable String channel) {
+		Context context = _context;
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
+			return;
+		}
 		if (channel == null || channel.isEmpty()) {
 			return;
 		}
-		Context context = _context;
-		if (context == null) {
-			return;
-		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_CONNECT);
 		intent.putExtra(Constants.EXTRA_CONTACT_NAME, channel);
 		context.sendBroadcast(intent);
 	}
 
 	void disconnectChannel(@Nullable String channel) {
+		Context context = _context;
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
+			return;
+		}
 		if (channel == null || channel.isEmpty()) {
 			return;
 		}
-		Context context = _context;
-		if (context == null) {
-			return;
-		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_DISCONNECT);
 		intent.putExtra(Constants.EXTRA_CONTACT_NAME, channel);
 		context.sendBroadcast(intent);
@@ -452,15 +338,16 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Contacts
 
 	void muteContact(@Nullable Contact contact, boolean mute) {
+		Context context = _context;
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
+			return;
+		}
 		if (contact == null) {
 			return;
 		}
-		Context context = _context;
-		if (context == null) {
-			return;
-		}
 		ContactType type = contact.getType();
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, mute ? Constants.VALUE_MUTE : Constants.VALUE_UNMUTE);
 		intent.putExtra(Constants.EXTRA_CONTACT_NAME, contact.getName());
 		intent.putExtra(Constants.EXTRA_CONTACT_TYPE, type == ContactType.CHANNEL || type == ContactType.GROUP || type == ContactType.CONVERSATION ? 1 : 0);
@@ -481,17 +368,19 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 		if (isConnected()) {
 			Context context = _context;
-			if (context != null) {
-				Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
-				intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SIGN_IN);
-				intent.putExtra(Constants.EXTRA_NETWORK_URL, network);
-				intent.putExtra(Constants.EXTRA_USERNAME, username);
-				intent.putExtra(Constants.EXTRA_PASSWORD, md5(password));
-				intent.putExtra(Constants.EXTRA_PERISHABLE, perishable);
-				context.sendBroadcast(intent);
-				context.startService(_serviceIntent);
+			String connectedPackage = _connectedPackage;
+			if (context == null || connectedPackage == null) {
+				return false;
 			}
-		} else if (_serviceBound && _serviceConnecting) {
+			Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
+			intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SIGN_IN);
+			intent.putExtra(Constants.EXTRA_NETWORK_URL, network);
+			intent.putExtra(Constants.EXTRA_USERNAME, username);
+			intent.putExtra(Constants.EXTRA_PASSWORD, md5(password));
+			intent.putExtra(Constants.EXTRA_PERISHABLE, perishable);
+			context.sendBroadcast(intent);
+			context.startService(_serviceIntent);
+		} else if (_serviceBound) {
 			_delayedNetwork = network;
 			_delayedUsername = username;
 			_delayedPassword = password;
@@ -507,10 +396,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			return;
 		}
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SIGN_OUT);
 		context.sendBroadcast(intent);
 	}
@@ -522,10 +412,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			return;
 		}
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_CANCEL);
 		context.sendBroadcast(intent);
 	}
@@ -542,10 +433,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			return;
 		}
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_LOCK);
 		intent.putExtra(Constants.EXTRA_APPLICATION, applicationName);
 		intent.putExtra(Constants.EXTRA_PACKAGE, packageName);
@@ -557,10 +449,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			return;
 		}
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_LOCK);
 		context.sendBroadcast(intent);
 	}
@@ -574,10 +467,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			return;
 		}
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_STATUS);
 		intent.putExtra(Constants.EXTRA_STATE_BUSY, status == Status.BUSY);
 		intent.putExtra(Constants.EXTRA_STATE_SOLO, status == Status.SOLO);
@@ -589,10 +483,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			return;
 		}
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_STATUS);
 		intent.putExtra(Constants.EXTRA_STATE_STATUS_MESSAGE, Util.emptyIfNull(message));
 		context.sendBroadcast(intent);
@@ -604,10 +499,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	void openMainScreen() {
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
-		Intent LaunchIntent = context.getPackageManager().getLaunchIntentForPackage(_package);
+		Intent LaunchIntent = context.getPackageManager().getLaunchIntentForPackage(connectedPackage);
 		try {
 			context.startActivity(LaunchIntent);
 		} catch (Throwable ignored) {
@@ -620,14 +516,15 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	void showPttButtonsScreen(@Nullable Activity activity) {
 		Context context = activity != null ? activity : _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
 		Intent intent = new Intent();
 		if (activity == null) {
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		}
-		intent.setComponent(new ComponentName(_package, _pttPttButtonsActivityClass));
+		intent.setComponent(new ComponentName(connectedPackage, _pttPttButtonsActivityClass));
 		try {
 			context.startActivity(intent);
 		} catch (Throwable ignored) {
@@ -659,10 +556,13 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	@Nullable Audio getAudio() {
-		if (_context != null) {
-			if (_audio == null) {
-				_audio = new Audio(_package, _context);
-			}
+		Context context = _context;
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
+			return _audio;
+		}
+		if (_audio == null) {
+			_audio = new Audio(connectedPackage, _context);
 		}
 		return _audio;
 	}
@@ -672,42 +572,45 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Setters
 
 	void setAutoRun(boolean enable) {
+		Context context = _context;
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
+			return;
+		}
 		if (!isConnected()) {
 			return;
 		}
-		Context context = _context;
-		if (context == null) {
-			return;
-		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUTO_RUN);
 		intent.putExtra(Constants.EXTRA_STATE_AUTO_RUN, enable);
 		context.sendBroadcast(intent);
 	}
 
 	void setAutoConnectChannels(boolean connect) {
+		Context context = _context;
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
+			return;
+		}
 		if (!isConnected()) {
 			return;
 		}
-		Context context = _context;
-		if (context == null) {
-			return;
-		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUTO_CHANNELS);
 		intent.putExtra(Constants.EXTRA_STATE_AUTO_CHANNELS, connect);
 		context.sendBroadcast(intent);
 	}
 
 	void setExternalId(@Nullable String id) {
+		Context context = _context;
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
+			return;
+		}
 		if (!isConnected()) {
 			return;
 		}
-		Context context = _context;
-		if (context == null) {
-			return;
-		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_EID);
 		intent.putExtra(Constants.EXTRA_EID, id == null ? "" : id);
 		context.sendBroadcast(intent);
@@ -730,16 +633,17 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		selectContact(1, name);
 	}
 
-	public void setShowBluetoothAccessoriesNotifications(boolean show) {
+	void setShowBluetoothAccessoriesNotifications(boolean show) {
 		if (!isConnected()) {
 			_delayedShowBtAcceccoriesNotifications = show;
 			return;
 		}
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
 			return;
 		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_SHOW_BT_ACCESSORIES_NOTIFICATIONS);
 		intent.putExtra(Constants.EXTRA_VALUE, show);
 		context.sendBroadcast(intent);
@@ -749,7 +653,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//endregion
 
-	//region Overridden Methods
+	//region Overridden methods
 
 	//region SafeHandlerEvents
 
@@ -820,14 +724,197 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	//endregion
 
-	//region Private Methods
+	//region Private methods
+
+	private void registerPackageReceivers() {
+		if (_context == null || _receiverPackage != null) {
+			return;
+		}
+		// Register to receive package install broadcasts
+		_receiverPackage = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				updateAppAvailable();
+				if (intent == null || _handler == null) {
+					return;
+				}
+				String action = intent.getAction();
+				if (action == null) {
+					return;
+				}
+				// Reconnect any time when currently connected package is affected or
+				// when the best package is automatically selected and a package with a higher preference is affected
+				boolean reconnect = false;
+				if (action.equals(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE) || action.equals(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE)) {
+					String[] pkgs = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
+					if (pkgs == null) {
+						return;
+					}
+					for (String pkg : pkgs) {
+						reconnect |= pkg != null && (pkg.equalsIgnoreCase(_connectedPackage) || checkPreferredAppChanged());
+					}
+				} else {
+					Uri data = intent.getData();
+					if (data == null) {
+						return;
+					}
+					String pkg = data.getSchemeSpecificPart();
+					reconnect = pkg != null && (pkg.equalsIgnoreCase(_connectedPackage) || checkPreferredAppChanged());
+				}
+				if (reconnect) {
+					reconnect();
+					updateSelectedContact(null);
+					updateContacts();
+				}
+			}
+		};
+		IntentFilter filterPackage = new IntentFilter();
+		filterPackage.addAction(Intent.ACTION_PACKAGE_ADDED);
+		filterPackage.addAction(Intent.ACTION_PACKAGE_REMOVED);
+		filterPackage.addAction(Intent.ACTION_PACKAGE_REPLACED);
+		filterPackage.addAction(Intent.ACTION_PACKAGE_CHANGED);
+		filterPackage.addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED);
+		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
+		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
+		filterPackage.addDataScheme("package");
+		_context.registerReceiver(_receiverPackage, filterPackage);
+	}
+
+	private void unregisterPackageEventReceivers() {
+		if (_context == null) {
+			return;
+		}
+		if (_receiverPackage != null) {
+			_context.unregisterReceiver(_receiverPackage);
+			_receiverPackage = null;
+		}
+	}
+
+	private void registerAppStateReceivers() {
+		if (_context == null) {
+			return;
+		}
+		if (_receiverAppState == null) {
+			// Register to receive app state broadcasts
+			_receiverAppState = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					updateAppState(intent);
+				}
+			};
+			Intent intentStickyAppState = _context.registerReceiver(_receiverAppState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_APP_STATE));
+			updateAppState(intentStickyAppState);
+			updateContacts();
+		}
+		if (_receiverPermissionErrors == null) {
+			// Register to receive app permissions broadcasts
+			_receiverPermissionErrors = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					handlePermissionError(intent);
+				}
+			};
+			_context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_connectedPackage + "." + Constants.ACTION_PERMISSION_ERRORS));
+		}
+		if (_receiverMessageState == null) {
+			// Register to receive message state broadcasts
+			_receiverMessageState = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					updateMessageState(intent);
+				}
+			};
+			Intent intentStickyMessageState = _context.registerReceiver(_receiverMessageState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_MESSAGE_STATE));
+			updateMessageState(intentStickyMessageState);
+		}
+		if (_receiverContactSelected == null) {
+			// Register to receive selected contact broadcasts
+			_receiverContactSelected = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					updateSelectedContact(intent);
+				}
+			};
+			Intent intentStickySelectedContact = _context.registerReceiver(_receiverContactSelected, new IntentFilter(_connectedPackage + "." + Constants.ACTION_CONTACT_SELECTED));
+			updateSelectedContact(intentStickySelectedContact);
+		}
+		if (_receiverActiveTab == null) {
+			// Register to receive last selected contact list tab
+			_receiverActiveTab = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					updateSelectedTab(intent);
+				}
+			};
+			_context.registerReceiver(_receiverActiveTab, new IntentFilter(_activeTabAction));
+		}
+		if (_receiverBtAccessoryState == null) {
+			// Register to receive bluetooth accessory state broadcasts
+			_receiverBtAccessoryState = new BroadcastReceiver() {
+				@Override
+				public void onReceive(Context context, Intent intent) {
+					handleBtAccessoryState(intent);
+				}
+			};
+			_context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_BT_ACCESSORY_STATE));
+		}
+	}
+
+	private void unregisterAppStateReceivers() {
+		if (_context == null) {
+			return;
+		}
+		if (_receiverPackage != null) {
+			_context.unregisterReceiver(_receiverPackage);
+			_receiverPackage = null;
+		}
+		if (_receiverAppState != null) {
+			_context.unregisterReceiver(_receiverAppState);
+			_receiverAppState = null;
+		}
+		if (_receiverPermissionErrors != null) {
+			_context.unregisterReceiver(_receiverPermissionErrors);
+			_receiverPermissionErrors = null;
+		}
+		if (_receiverMessageState != null) {
+			_context.unregisterReceiver(_receiverMessageState);
+			_receiverMessageState = null;
+		}
+		if (_receiverContactSelected != null) {
+			_context.unregisterReceiver(_receiverContactSelected);
+			_receiverContactSelected = null;
+		}
+		if (_receiverActiveTab != null) {
+			_context.unregisterReceiver(_receiverActiveTab);
+			_receiverActiveTab = null;
+		}
+		if (_receiverBtAccessoryState != null) {
+			_context.unregisterReceiver(_receiverBtAccessoryState);
+			_receiverBtAccessoryState = null;
+		}
+	}
+
+	/**
+	 * Check if a preferred package has changed.
+	 * Happens when a package of interest or of potential interest is installed or removed.
+	 */
+	private boolean checkPreferredAppChanged() {
+		// Find preferred package
+		AppInfo preferredApp = Util.findAppInfo(_context, _preferredPackage);
+		// Check if currently connected package is different from the auto-preferred package
+		return !Util.samePackageNames(_connectedPackage, preferredApp != null ? preferredApp.packageName : null);
+	}
 
 	private void selectContact(int type, @Nullable String name) {
 		Context context = _context;
 		if (context == null) {
 			return;
 		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		String connectedPackage = _connectedPackage;
+		if (connectedPackage == null) {
+			return;
+		}
+		Intent intent = new Intent(_connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SELECT_CONTACT);
 		if (name != null && name.length() > 0) {
 			intent.putExtra(Constants.EXTRA_CONTACT_NAME, name);
@@ -844,7 +931,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (context == null) {
 			return;
 		}
-		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
+		String connectedPackage = _connectedPackage;
+		if (connectedPackage == null) {
+			return;
+		}
+		Intent intent = new Intent(_connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_STAY_AWAKE);
 		context.sendBroadcast(intent);
 	}
@@ -857,31 +948,34 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (context == null) {
 			return;
 		}
+		AppInfo packageInfo = Util.findAppInfo(_context, _preferredPackage);
+		if (packageInfo == null) {
+			// A compatible package wasn't found
+			_appState._initializing = false;
+			_appState._error = true;
+			fireAppStateChanged();
+			return;
+		}
+
 		_serviceConnecting = true;
 		_appState._initializing = true;
 		_appState._error = false;
+		_connectedPackage = packageInfo.packageName;
 		fireAppStateChanged();
 
-		if (!_serviceBound) {
-			_serviceIntent = getServiceIntentNew();
-			try {
-				_serviceBound = context.bindService(_serviceIntent, this, Context.BIND_AUTO_CREATE);
-			} catch (Throwable t) {
-				_serviceConnecting = false;
-				Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
-			}
+		_serviceIntent = new Intent();
+		_serviceIntent.setClassName(packageInfo.packageName, packageInfo.serviceClassName);
+
+		try {
+			_serviceBound = context.bindService(_serviceIntent, this, Context.BIND_AUTO_CREATE);
+		} catch (Throwable t) {
+			_serviceConnecting = false;
+			Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
 		}
-		if (!_serviceBound) {
-			_serviceIntent = getServiceIntentOld();
-			try {
-				_serviceBound = context.bindService(_serviceIntent, this, Context.BIND_AUTO_CREATE);
-			} catch (Throwable t) {
-				_serviceConnecting = false;
-				Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
-			}
-		}
+
 		if (!_serviceBound) {
 			_appState._error = true;
+			_connectedPackage = null;
 			try {
 				context.unbindService(this);
 			} catch (Throwable ignored) {
@@ -891,9 +985,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_appState._initializing = false;
 			fireAppStateChanged();
 		}
+		registerAppStateReceivers();
 	}
 
 	private void disconnect() {
+		unregisterAppStateReceivers();
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
 		_delayedPerishable = false;
 		if (!_serviceBound) {
@@ -911,16 +1007,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		} else {
 			Log.i("zello sdk", "Early Sdk.disconnect");
 		}
-	}
-
-	private @NonNull Intent getServiceIntentNew() {
-		Intent intent = new Intent();
-		return intent.setClassName(_package, "com.zello.ui.Svc");
-	}
-
-	private @NonNull Intent getServiceIntentOld() {
-		Intent intent = new Intent();
-		return intent.setClassName(_package, "com.loudtalks.client.ui.Svc");
 	}
 
 	private void reconnect() {
@@ -1048,9 +1134,14 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			contacts.close();
 		}
 		Context context = _context;
-		if (context != null) {
-			_contacts = new Contacts(_package, context, _handler);
+		if (context == null) {
+			return;
 		}
+		String connectedPackage = _connectedPackage;
+		if (connectedPackage == null) {
+			return;
+		}
+		_contacts = new Contacts(connectedPackage, context, _handler);
 	}
 
 	private void updateSelectedContact(@Nullable Intent intent) {
@@ -1120,11 +1211,16 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	private boolean isAppAvailable() {
 		Context context = _context;
-		if (context == null) {
+		String connectedPackage = _connectedPackage;
+		if (connectedPackage == null) {
+			AppInfo packageInfo = Util.findAppInfo(context, _preferredPackage);
+			connectedPackage = packageInfo != null ? packageInfo.packageName : null;
+		}
+		if (context == null || connectedPackage == null) {
 			return false;
 		}
 		try {
-			return null != context.getPackageManager().getLaunchIntentForPackage(_package);
+			return null != context.getPackageManager().getLaunchIntentForPackage(connectedPackage);
 		} catch (Throwable ignored) {
 			// PackageManager.NameNotFoundException
 		}
@@ -1292,7 +1388,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			int halfbyte = (c >>> 4) & 0x0F;
 			int two_halfs = 0;
 			do {
-				if ((0 <= halfbyte) && (halfbyte <= 9)) {
+				if (halfbyte <= 9) {
 					buf.append((char) ('0' + halfbyte));
 				} else {
 					buf.append((char) ('a' + (halfbyte - 10)));
@@ -1303,6 +1399,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		return buf.toString();
 	}
 
+	@SuppressWarnings("CharsetObjectCanBeUsed")
 	private static @NonNull String md5(String s) {
 		if (s == null || s.isEmpty()) {
 			return "";

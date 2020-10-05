@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.6.3"
+        classpath "com.android.tools.build:gradle:4.0.1"
     }
 }
 
@@ -18,77 +18,79 @@ apply plugin: "com.android.library"
 
 dependencies {
     implementation fileTree(include: "*.jar", dir: "libs")
-    implementation "androidx.appcompat:appcompat:1.1.0"
+    implementation "androidx.appcompat:appcompat:1.2.0"
 }
+
+def sourceJarName="classes.jar"
+def targetJarName="zello-sdk.jar"
+def sourceJarPath="build/intermediates/aar_main_jar/release/${sourceJarName}"
 
 task zelloSdkJarDeleteFromRoot(type: Delete) {
     description "Deletes SDK jar from the root folder of the project"
-    delete "../zello-sdk.jar"
+    delete {
+        "../${targetJarName}"
+    }
 }
 
 task zelloSdkJarDeployReleaseToRoot() {
     description "Copies a release build of the SDK jar to the root folder of the project"
     delete {
-        delete "../zello-sdk.jar"
+        "../${targetJarName}"
     }
     copy {
-        from "build/intermediates/aar_main_jar/release/classes.jar"
+        from "${sourceJarPath}"
         into "../"
-        rename("classes.jar", "zello-sdk.jar")
+        rename("${sourceJarName}", "${targetJarName}")
     }
 }
 
 task zelloSdkJarDeleteFromSamples(type: Delete) {
     description "Deletes SDK jars from all sample projects"
-    delete "../zello-sdk-sample/libs/zello-sdk.jar", "../zello-sdk-sample-contacts/libs/zello-sdk.jar", "../zello-sdk-sample-misc/libs/zello-sdk.jar", "../zello-sdk-sample-ptt/libs/zello-sdk.jar", "../zello-sdk-sample-signin/libs/zello-sdk.jar"
+    delete {
+        "../zello-sdk-sample/libs/${targetJarName}"
+    }
+    delete {
+        "../zello-sdk-sample-contacts/libs/${targetJarName}"
+    }
+    delete {
+        "../zello-sdk-sample-misc/libs/${targetJarName}"
+    }
+    delete {
+        "../zello-sdk-sample-ptt/libs/${targetJarName}"
+    }
+    delete {
+        "../zello-sdk-sample-signin/libs/${targetJarName}"
+    }
 }
 
+
 // This add a task that deploys a release build of the library to the sample projects /lib folders.
-android.libraryVariants.all { variant ->
-    if (variant.name.equals("release")) {
-        task("zelloSdkJarDeploy${variant.name.capitalize()}ToSamples") {
-            description "Copies a ${variant.name} build of the SDK jar to all sample projects"
-            delete {
-                delete "../zello-sdk-sample/libs/zello-sdk.jar"
-            }
-            delete {
-                delete "../zello-sdk-sample-contacts/libs/zello-sdk.jar"
-            }
-            delete {
-                delete "../zello-sdk-sample-misc/libs/zello-sdk.jar"
-            }
-            delete {
-                delete "../zello-sdk-sample-ptt/libs/zello-sdk.jar"
-            }
-            delete {
-                delete "../zello-sdk-sample-signin/libs/zello-sdk.jar"
-            }
-            copy {
-                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
-                into "../zello-sdk-sample/libs"
-                rename("classes.jar", "zello-sdk.jar")
-            }
-            copy {
-                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
-                into "../zello-sdk-sample-contacts/libs"
-                rename("classes.jar", "zello-sdk.jar")
-            }
-            copy {
-                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
-                into "../zello-sdk-sample-misc/libs"
-                rename("classes.jar", "zello-sdk.jar")
-            }
-            copy {
-                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
-                into "../zello-sdk-sample-ptt/libs"
-                rename("classes.jar", "zello-sdk.jar")
-            }
-            copy {
-                from "build/intermediates/aar_main_jar/${variant.name}/classes.jar"
-                into "../zello-sdk-sample-signin/libs"
-                rename("classes.jar", "zello-sdk.jar")
-            }
-        }
+task("zelloSdkJarDeployReleaseToSamples", dependsOn: "zelloSdkJarDeleteFromSamples") {
+    description "Copies a release build of the SDK jar to all sample projects"
+    copy {
+        from "${sourceJarPath}"
+        into "../zello-sdk-sample/libs"
+        rename("${sourceJarName}", "${targetJarName}")
+    }
+    copy {
+        from "${sourceJarPath}"
+        into "../zello-sdk-sample-contacts/libs"
+        rename("${sourceJarName}", "${targetJarName}")
+    }
+    copy {
+        from "${sourceJarPath}"
+        into "../zello-sdk-sample-misc/libs"
+        rename("${sourceJarName}", "${targetJarName}")
+    }
+    copy {
+        from "${sourceJarPath}"
+        into "../zello-sdk-sample-ptt/libs"
+        rename("${sourceJarName}", "${targetJarName}")
+    }
+    copy {
+        from "${sourceJarPath}"
+        into "../zello-sdk-sample-signin/libs"
+        rename("${sourceJarName}", "${targetJarName}")
     }
 }
 
@@ -99,10 +101,10 @@ task zelloSdkDocDelete(type: Delete) {
 
 android.libraryVariants.all { variant ->
     if (variant.name == "release") {
-        task("zelloSdkDocCreate", type: Javadoc, dependsOn: "zelloSdkDocDelete") {
+        task zelloSdkDocCreate(type: Javadoc, dependsOn: "zelloSdkDocDelete") {
             title ""
             description "Creates Zello SDK Javadoc in the project root folder"
-            destinationDir = new File("${project.getProjectDir()}/../docs", "zello-sdk-documentation")
+            destinationDir = new File("${projectDir}/../docs", "zello-sdk-documentation")
             source = android.sourceSets.main.java.srcDirs
             classpath = files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
             exclude "**/Constants.java"
@@ -131,10 +133,10 @@ tasks.whenTaskAdded { task ->
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
-        targetSdkVersion 29
+        targetSdkVersion 30
         minSdkVersion 16
     }
 
