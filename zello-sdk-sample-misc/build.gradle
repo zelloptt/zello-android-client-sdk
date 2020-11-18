@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: "*.jar", dir: "libs")
+    implementation files("libs/zello-sdk.aar")
     implementation "androidx.appcompat:appcompat:1.2.0"
 }
 

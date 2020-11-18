@@ -17,80 +17,67 @@ repositories {
 apply plugin: "com.android.library"
 
 dependencies {
-    implementation fileTree(include: "*.jar", dir: "libs")
     implementation "androidx.appcompat:appcompat:1.2.0"
 }
 
-def sourceJarName="classes.jar"
-def targetJarName="zello-sdk.jar"
-def sourceJarPath="build/intermediates/aar_main_jar/release/${sourceJarName}"
+def sourceAarName="zello-sdk-release.aar"
+def targetAarName="zello-sdk.aar"
+def sourceAarPath="build/outputs/aar/${sourceAarName}"
 
-task zelloSdkJarDeleteFromRoot(type: Delete) {
-    description "Deletes SDK jar from the root folder of the project"
+task zelloSdkAarDeployReleaseToRoot() {
+    description "Copies SDK AAR to the root folder of the project"
     delete {
-        "../${targetJarName}"
-    }
-}
-
-task zelloSdkJarDeployReleaseToRoot() {
-    description "Copies a release build of the SDK jar to the root folder of the project"
-    delete {
-        "../${targetJarName}"
+        "../${targetAarName}"
     }
     copy {
-        from "${sourceJarPath}"
+        from "${sourceAarPath}"
         into "../"
-        rename("${sourceJarName}", "${targetJarName}")
+        rename("${sourceAarName}", "${targetAarName}")
     }
 }
-
-task zelloSdkJarDeleteFromSamples(type: Delete) {
-    description "Deletes SDK jars from all sample projects"
-    delete {
-        "../zello-sdk-sample/libs/${targetJarName}"
-    }
-    delete {
-        "../zello-sdk-sample-contacts/libs/${targetJarName}"
-    }
-    delete {
-        "../zello-sdk-sample-misc/libs/${targetJarName}"
-    }
-    delete {
-        "../zello-sdk-sample-ptt/libs/${targetJarName}"
-    }
-    delete {
-        "../zello-sdk-sample-signin/libs/${targetJarName}"
-    }
-}
-
 
 // This add a task that deploys a release build of the library to the sample projects /lib folders.
-task("zelloSdkJarDeployReleaseToSamples", dependsOn: "zelloSdkJarDeleteFromSamples") {
-    description "Copies a release build of the SDK jar to all sample projects"
-    copy {
-        from "${sourceJarPath}"
-        into "../zello-sdk-sample/libs"
-        rename("${sourceJarName}", "${targetJarName}")
+task zelloSdkAarDeployReleaseToSamples {
+    description "Copies SDK AAR to all sample projects"
+    delete {
+        "../zello-sdk-sample/libs/${targetAarName}"
     }
     copy {
-        from "${sourceJarPath}"
-        into "../zello-sdk-sample-contacts/libs"
-        rename("${sourceJarName}", "${targetJarName}")
+        from "${sourceAarPath}"
+        into "../zello-sdk-sample/libs/"
+        rename("${sourceAarName}", "${targetAarName}")
+    }
+    delete {
+        "../zello-sdk-sample-contacts/libs/${targetAarName}"
     }
     copy {
-        from "${sourceJarPath}"
-        into "../zello-sdk-sample-misc/libs"
-        rename("${sourceJarName}", "${targetJarName}")
+        from "${sourceAarPath}"
+        into "../zello-sdk-sample-contacts/libs/"
+        rename("${sourceAarName}", "${targetAarName}")
+    }
+    delete {
+        "../zello-sdk-sample-misc/libs/${targetAarName}"
     }
     copy {
-        from "${sourceJarPath}"
-        into "../zello-sdk-sample-ptt/libs"
-        rename("${sourceJarName}", "${targetJarName}")
+        from "${sourceAarPath}"
+        into "../zello-sdk-sample-misc/libs/"
+        rename("${sourceAarName}", "${targetAarName}")
+    }
+    delete {
+        "../zello-sdk-sample-ptt/libs/${targetAarName}"
     }
     copy {
-        from "${sourceJarPath}"
-        into "../zello-sdk-sample-signin/libs"
-        rename("${sourceJarName}", "${targetJarName}")
+        from "${sourceAarPath}"
+        into "../zello-sdk-sample-ptt/libs/"
+        rename("${sourceAarName}", "${targetAarName}")
+    }
+    delete {
+        "../zello-sdk-sample-signin/libs/${targetAarName}"
+    }
+    copy {
+        from "${sourceAarPath}"
+        into "../zello-sdk-sample-signin/libs/"
+        rename("${sourceAarName}", "${targetAarName}")
     }
 }
 
@@ -127,8 +114,8 @@ android.libraryVariants.all { variant ->
 tasks.whenTaskAdded { task ->
     if (task.name == "assembleRelease") {
         task.finalizedBy "zelloSdkDocCreate"
-        task.finalizedBy "zelloSdkJarDeployReleaseToRoot"
-        task.finalizedBy "zelloSdkJarDeployReleaseToSamples"
+        task.finalizedBy "zelloSdkAarDeployReleaseToRoot"
+        task.finalizedBy "zelloSdkAarDeployReleaseToSamples"
     }
 }
 

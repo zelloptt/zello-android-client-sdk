@@ -18,14 +18,4 @@
             </intent-filter>
         </activity>
     </application>
-
-    <!-- Declare intents and packages that the app would like to have access to on Android R+ -->
-    <queries>
-
-        <package android:name="com.loudtalks" />
-
-        <package android:name="net.loudtalks" />
-
-        <package android:name="com.pttsdk" />
-    </queries>
 </manifest>
