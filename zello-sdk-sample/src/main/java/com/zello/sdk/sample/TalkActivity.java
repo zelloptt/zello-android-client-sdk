@@ -89,9 +89,9 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	private final Contact _selectedContact = new Contact();
 	private Tab _activeTab = Tab.RECENTS;
 
-	private static String _keyUsername = "username";
-	private static String _keyPassword = "password";
-	private static String _keyNetwork = "network";
+	private static final String _keyUsername = "username";
+	private static final String _keyPassword = "password";
+	private static final String _keyNetwork = "network";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
