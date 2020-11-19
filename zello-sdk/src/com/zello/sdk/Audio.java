@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
 
 /**
  * <p>
- *     Manages {@link AudioMode} used by ZelloWork app.
+ *     Manages {@link AudioMode} used by Zello Work app.
  * </p>
  * <p>
  *     To use, retrieve the current <code>Audio</code> instance using the {@link Zello#getAudio()} method. For specific usage, please see the sample projects.

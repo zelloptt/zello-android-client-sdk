@@ -5,7 +5,7 @@ import androidx.annotation.Nullable;
 
 /**
  * <p>
- *     The <code>AppState</code> class represents the current state of the ZelloWork app.
+ *     The <code>AppState</code> class represents the current state of the Zello Work app.
  * </p>
  * <p>
  *     To use, retrieve the current <code>AppState</code> values using the <code>Zello.getAppState(AppState)</code> method. For specific usage, please see the sample projects.
@@ -85,10 +85,10 @@ public class AppState {
 
 	/**
 	 * <p>
-	 *     Determines if the ZelloWork app is available on the device.
+	 *     Determines if the Zello Work app is available on the device.
 	 * </p>
 	 * <p>
-	 *     This method returns <code>false</code> if the ZelloWork app is not installed on the device
+	 *     This method returns <code>false</code> if the Zello Work app is not installed on the device
 	 *     or if the app is in a state of error.
 	 * </p>
 	 * @return boolean indicating if the app is available to communicate with.
@@ -98,7 +98,7 @@ public class AppState {
 	}
 
 	/**
-	 * Determines if the ZelloWork app is initializing.
+	 * Determines if the Zello Work app is initializing.
 	 * @return boolean indicating if the app is initializing.
 	 */
 	public boolean isInitializing() {
@@ -107,7 +107,7 @@ public class AppState {
 
 	/**
 	 * <p>
-	 *     Determines if the ZelloWork app is a custom build.
+	 *     Determines if the Zello Work app is a custom build.
 	 * </p>
 	 * <p>
 	 *     This method returns true if the PTT APK was downloaded from zellowork.com.
@@ -119,7 +119,7 @@ public class AppState {
 	}
 
 	/**
-	 * Determines if the ZelloWork app is currently configuring.
+	 * Determines if the Zello Work app is currently configuring.
 	 * @return boolean indicating if the app is currently configuring.
 	 */
 	public boolean isConfiguring() {
@@ -128,11 +128,11 @@ public class AppState {
 
 	/**
 	 * <p>
-	 *     Determines if the ZelloWork app is currently locked.
+	 *     Determines if the Zello Work app is currently locked.
 	 * </p>
 	 * <p>
-	 *     If the ZelloWork app is locked, the UI only displays an information screen with the name of your app that can be clicked to open the main activity.
-	 *     Being locked does NOT interfere with the sending and receiving of messages through the ZelloWork app.
+	 *     If the Zello Work app is locked, the UI only displays an information screen with the name of your app that can be clicked to open the main activity.
+	 *     Being locked does NOT interfere with the sending and receiving of messages through the Zello Work app.
 	 * </p>
 	 * @return boolean indicating if the app is currently locked.
 	 * @see Zello#lock(String, String)
@@ -142,7 +142,7 @@ public class AppState {
 	}
 
 	/**
-	 * Determines if the user is currently signed into a ZelloWork network.
+	 * Determines if the user is currently signed into a Zello Work network.
 	 * @return boolean indicating if the user is signed in.
 	 * @see Zello#signIn(String, String, String)
 	 * @see Zello#signIn(String, String, String, boolean)
@@ -186,7 +186,7 @@ public class AppState {
 	}
 
 	/**
-	 * Determines if the ZelloWork app is trying to reconnect the user to the network.
+	 * Determines if the Zello Work app is trying to reconnect the user to the network.
 	 * @return boolean indicating if the app is trying to reconnect the user.
      */
 	public boolean isReconnecting() {
@@ -195,12 +195,12 @@ public class AppState {
 
 	/**
 	 * <p>
-	 * 		Determines if the ZelloWork app is waiting for the network to be available.
+	 * 		Determines if the Zello Work app is waiting for the network to be available.
 	 * </p>
 	 * <p>
-	 *     If the Android OS reports that there is no internet connection, the ZelloWork app waits for the connection
+	 *     If the Android OS reports that there is no internet connection, the Zello Work app waits for the connection
 	 *     to become available and this method returns <code>true</code>. When internet connection is restored,
-	 *     the ZelloWork app signs in automatically.
+	 *     the Zello Work app signs in automatically.
 	 * </p>
 	 * @return boolean indicating if the app is waiting for the network.
      */
@@ -213,7 +213,7 @@ public class AppState {
 	 *     Determines if the auto run setting is enabled.
 	 * </p>
 	 * <p>
-	 *     The auto run feature determines if ZelloWork app should be launched on the start of the OS or not.
+	 *     The auto run feature determines if Zello Work app should be launched on the start of the OS or not.
 	 *     This feature can be enabled or disabled using the <code>Zello.setAutoRun(boolean)</code> method.
 	 * </p>
 	 * @return boolean indicating whether or not auto run is enabled.
@@ -315,7 +315,7 @@ public class AppState {
 
 	/**
 	 * <p>
-	 * 		Returns the most recent <code>Error</code> encountered by the ZelloWork app.
+	 * 		Returns the most recent <code>Error</code> encountered by the Zello Work app.
 	 * </p>
 	 * <p>
 	 *     {@link Error#NONE} is returned if there were no errors.
@@ -328,10 +328,10 @@ public class AppState {
 
 	/**
 	 * <p>
-	 * 	   Returns an optional external id tag used by ZelloWork Server Recording.
+	 * 	   Returns an optional external id tag used by Zello Work Server Recording.
 	 * </p>
 	 * <p>
-	 *     This method returns null unless the ZelloWork Server Recording feature is turned on for the
+	 *     This method returns null unless the Zello Work Server Recording feature is turned on for the
 	 *     current network.
 	 * </p>
 	 * @return Nullable; The external id for the app.
