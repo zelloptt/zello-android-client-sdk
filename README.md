@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Zello Android client SDK allows you to integrate [ZelloWork](https://zellowork.com/) push-to-talk into your own application. The SDK uses cross-process communication to let your app connect to the ZelloWork app installed on the device and remotely control it. Supported features include:
+The Zello Android client SDK allows you to integrate [Zello Work](https://zellowork.com/) push-to-talk into your own application. The SDK uses cross-process communication to let your app connect to the Zello Work app installed on the device and remotely control it. Supported features include:
 
 * Send voice messages
 * Get notifications about incoming voice messages
@@ -16,25 +16,23 @@ The Zello Android client SDK allows you to integrate [ZelloWork](https://zellowo
 
 ## Current Version
 
-The stable release for the ZelloWork Android SDK is v3.80.
+The stable release for the Zello Work Android SDK is v4.100.3.
 
 ## Installation
 
-### Sign up for ZelloWork account
+### Sign up for Zello Work account
 
-Go to http://zellowork.com/ and click __Start your network__ button. If you already have a network, click __Sign In__. A free ZelloWork account supports up to five users and has no time limit.
+Go to http://zellowork.com/ and click __Start your network__ button. If you already have a network, click __Sign In__. A free Zello Work account supports up to five users and has no time limit.
 
-### Get ZelloWork app
+### Get Zello Work app
 
-Before you can use the SDK, you must install the ZelloWork app on your phone. You can do this from the __Get app__ section of the web console or by navigating to `http://<network name>.zellowork.com/app` on your phone. 
-
->__NB__: The Zello app downloaded from Google Play is not supported by the SDK.
+Before you can use the SDK, you must install the Zello app on your phone. You can do this by getting the Zello app from Google Play, by downloading the Zello Work app from the __Get app__ section of the web console or by navigating to `http://<network name>.zellowork.com/app` on your phone. 
 
 ### Install Android Studio and configure your project
 
 [Download Android Studio](https://developer.android.com/studio/index.html) and install it. Open your existing project or create a new one. The minimum API level supported by the SDK is 15 (Ice Cream Sandwich).
 
-Place [zello-sdk.jar](https://github.com/zelloptt/zello-android-client-sdk/blob/master/zello-sdk.jar?raw=true) file into `libs` folder of your project, then right-click the file in Android Studio and select “Add as Library…”.
+Place [zello-sdk.aar](https://github.com/zelloptt/zello-android-client-sdk/blob/master/zello-sdk.aar?raw=true) file into `libs` folder of your project, then edit the gradle.build file to include the new AAR dependency: `implementation files("libs/zello-sdk.aar")`.
 
 ![Adding as a library in Android Studio](https://zellowork.com/img/github/add-zello-sdk-lib.png)
 
@@ -51,12 +49,27 @@ public class App extends Application {
    public void onCreate() {
        super.onCreate();
 
-       Zello.getInstance().configure("net.loudtalks", this);
+       Zello.getInstance().configure(this);
    }
 
 }
 ```
-Here `net.loudtalks` is the package name of ZelloWork app.
+
+This will automatically select the Zello app to connect to. Alternatively, you can provide a specific package name:  
+
+```java
+public class App extends Application {
+
+   @Override
+   public void onCreate() {
+       super.onCreate();
+
+       Zello.getInstance().configure("com.loudtalks", this);
+   }
+
+}
+```
+Here `com.loudtalks` is the package name of Zello app. `net.loudtalks` can be used to connect to Zello Work app instead.
 
 ### Sending voice messages
 
@@ -138,7 +151,7 @@ public class MyActivity extends Activity implements com.zello.sdk.Events {
 
 ### Switching user accounts
 
-If the ZelloWork app already has a user account configured and signed in, the SDK will connect to the existing user session so no repeat sign in is necessary. When needed, you can programmatically sign in Zello to the desired user account or sign out to stop the active session:
+If the Zello Work app already has a user account configured and signed in, the SDK will connect to the existing user session so no repeat sign in is necessary. When needed, you can programmatically sign in Zello to the desired user account or sign out to stop the active session:
 
 ```java
 Zello.getInstance().signOut(); // Signs out the current user
@@ -157,11 +170,11 @@ void onAppStateChanged(){
    boolean showCancel = false, cancelEnable = true;
 	   
    if (!_appState.isAvailable()) {
-		state = "ZelloWork app is not installed";
+		state = "Zello Work app is not installed";
    } else if (_appState.isInitializing()) {
-		state = "Connecting to the ZelloWork app...";
+		state = "Connecting to the Zello Work app...";
    } else if (_appState.isConfiguring()) {
-		state = "Configuring ZelloWork app...";
+		state = "Configuring Zello Work app...";
    } else if (!_appState.isSignedIn()) {
 		if (_appState.isSigningIn()) {
 			state = "Signing in...";
@@ -187,7 +200,7 @@ void onAppStateChanged(){
 
 ### Battery life optimization
 
-You can improve your apps power efficiency and reduce data usage by telling the Zello SDK when your app switches to the background or the user leaves the screen showing the Zello UI. You can do this by calling `Zello.getInstance().enterPowerSavingMode()`. When in power saving mode, the ZelloWork app limits communication to the server  and postpones any non-critical updates. It doesn't affect your ability to send or receive messages. Make sure to call `Zello.getInstance().leavePowerSavingMode()` when the Zello UI reappears on the screen.
+You can improve your apps power efficiency and reduce data usage by telling the Zello SDK when your app switches to the background or the user leaves the screen showing the Zello UI. You can do this by calling `Zello.getInstance().enterPowerSavingMode()`. When in power saving mode, the Zello Work app limits communication to the server  and postpones any non-critical updates. It doesn't affect your ability to send or receive messages. Make sure to call `Zello.getInstance().leavePowerSavingMode()` when the Zello UI reappears on the screen.
 
 `Activity.onPause()` and `Activity.onResume()` are good places to call these methods:
 
@@ -232,8 +245,8 @@ Sample | Description
 
 * [Zello SDK reference](http://zelloptt.github.io/zello-android-client-sdk/zello-sdk-documentation/)
 * [Zello SDK migration guide (for legacy SDK users)](https://github.com/zelloptt/zello-android-client-sdk/blob/master/MIGRATION.md)
-* [ZelloWork server API](http://zellowork.com/api/)
+* [Zello Work server API](http://zellowork.com/api/)
 
 ### See also
 
-* [ZelloWork server API libraries](https://github.com/zelloptt/zello-for-work-server-api-libs)
+* [Zello Work server API libraries](https://github.com/zelloptt/zello-for-work-server-api-libs)
