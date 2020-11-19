@@ -31,7 +31,7 @@ public enum Status {
 	 * </p>
 	 * <p>
 	 *      Messages are not delivered to the Zello SDK and do not play live.
-	 *      However, they are delivered to the ZelloWork app and save in history.
+	 *      However, they are delivered to the Zello Work app and save in history.
 	 * </p>
 	 * */
 	BUSY,
@@ -46,7 +46,7 @@ public enum Status {
 	 * </p>
 	 * <p>
 	 *     Messages from a non-selected <code>Contact</code> are not delivered to the Zello SDK and do not play live.
-	 *     However, they are delivered to the ZelloWork app and save in history.
+	 *     However, they are delivered to the Zello Work app and save in history.
 	 * </p>
 	 * @see Zello#getSelectedContact(Contact)
 	 * @see Zello#selectContact(String, Tab[], Tab, Theme)

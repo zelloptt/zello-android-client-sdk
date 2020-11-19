@@ -83,7 +83,7 @@ public class Zello {
 	 * To have a the package name chosen automatically, pass in a <code>null</code> <code>packageName</code>.
 	 * </p>
 	 *
-	 * @param packageName The package name of the ZelloWork app.
+	 * @param packageName The package name of the Zello Work app.
 	 * @param context The context for the app.
 	 * @see #configure(String, Context, Events)
 	 * @see #unconfigure()
@@ -102,7 +102,7 @@ public class Zello {
 	 * If the APK was downloaded from zellowork.com, <code>packageName</code> should be "net.loudtalks". If you are using a standalone version of the apk use "com.pttsdk".
 	 * </p>
 	 *
-	 * @param packageName The package name of the ZelloWork app.
+	 * @param packageName The package name of the Zello Work app.
 	 * @param context The context for the app.
 	 * @param event Events handler
 	 * @see #configure(String, Context)
@@ -120,7 +120,7 @@ public class Zello {
 	//region Lifecycle Methods
 
 	/**
-	 * Limits communication between the ZelloWork app and the server to optimize power and data consumption.
+	 * Limits communication between the Zello Work app and the server to optimize power and data consumption.
 	 * <p>
 	 * Call this method when the Zello UI is not visible to minimize app power and data use. When in power saving mode, the app won't receive non-essential status updates.
 	 * Call <code>leavePowerSavingMode</code> to resume status updates when the Zello UI is back on the screen.
@@ -137,7 +137,7 @@ public class Zello {
 	}
 
 	/**
-	 * Resumes full communication between the ZelloWork app and the server.
+	 * Resumes full communication between the Zello Work app and the server.
 	 *
 	 * @see #enterPowerSavingMode()
 	 */
@@ -150,7 +150,7 @@ public class Zello {
 	}
 
 	/**
-	 * Disconnects the SDK from ZelloWork app and unsubscribes all <code>Events</code> handlers.
+	 * Disconnects the SDK from Zello Work app and unsubscribes all <code>Events</code> handlers.
 	 *
 	 * @see #configure(String, Context)
 	 */
@@ -192,7 +192,7 @@ public class Zello {
 	//region Permissions
 
 	/**
-	 * Opens a dialog that requests all of the vital run time permissions needed by the ZelloWork app to function properly.
+	 * Opens a dialog that requests all of the vital run time permissions needed by the Zello Work app to function properly.
 	 * <p>
 	 * This method is only necessary for Android devices running 6.0 (API 23) and above.
 	 * This method requests run time permissions for the microphone, phone, and external storage.
@@ -219,7 +219,7 @@ public class Zello {
 	}
 
 	/**
-	 * Opens a dialog that requests all of the vital run time permissions needed by the ZelloWork app to function properly.
+	 * Opens a dialog that requests all of the vital run time permissions needed by the Zello Work app to function properly.
 	 * <p>
 	 * This method is only necessary for Android devices running 6.0 (API 23) and above.
 	 * This method requests run time permissions for the microphone, phone, and external storage.
@@ -644,15 +644,15 @@ public class Zello {
 	//region Locking
 
 	/**
-	 * Locks the default ZelloWork app UI to prevent users from accessing it.
+	 * Locks the default Zello Work app UI to prevent users from accessing it.
 	 * <p>
-	 * In this locked state, the ZelloWork app, when accessed by user, only displays an
+	 * In this locked state, the Zello Work app, when accessed by user, only displays an
 	 * information screen with the name of your app that can be clicked to open the main activity.
 	 * This does NOT interfere with the sending and receiving of messages through the SDK.
 	 * </p>
 	 * <p>
 	 * This method is useful when you implement a fully custom UI in your app and want
-	 * to prevent users from accidentally accessing the standard ZelloWork UI.
+	 * to prevent users from accidentally accessing the standard Zello Work UI.
 	 * </p>
 	 *
 	 * @param applicationName The name of your application.
@@ -668,7 +668,7 @@ public class Zello {
 	}
 
 	/**
-	 * Unlocks the default ZelloWork app UI.
+	 * Unlocks the default Zello Work app UI.
 	 *
 	 * @see #lock(String, String)
 	 */
@@ -717,10 +717,10 @@ public class Zello {
 
 	//endregion
 
-	//region Opening ZelloWork app
+	//region Opening Zello Work app
 
 	/**
-	 * Opens the main screen of the ZelloWork app.
+	 * Opens the main screen of the Zello Work app.
 	 */
 	public void openMainScreen() {
 		checkConfiguration();
@@ -796,7 +796,7 @@ public class Zello {
 	 * <p>
 	 * This method updates the provided instance of the <code>AppState</code> object with the current data.
 	 * The object does not update automatically, so call this method every time you need to get the
-	 * current info about ZelloWork app and Zello SDK state.
+	 * current info about Zello Work app and Zello SDK state.
 	 * </p>
 	 *
 	 * @param state The object to copy data to.
@@ -880,7 +880,7 @@ public class Zello {
 	//region Setters
 
 	/**
-	 * Specifies whether the ZelloWork app should be launched on the start of the OS.
+	 * Specifies whether the Zello Work app should be launched on the start of the OS.
 	 * <p>
 	 * Configured autorun behavior persists between app launches.
 	 * </p>
@@ -925,13 +925,13 @@ public class Zello {
 	}
 
 	/**
-	 * Sets an optional external id tag used by ZelloWork Server Recording.
+	 * Sets an optional external id tag used by Zello Work Server Recording.
 	 * <p>
 	 * When set, the provided <code>id</code> is included in the metadata of all messages sent by
-	 * Zello and can be accessed using the ZelloWork server API to query recordings metadata.
+	 * Zello and can be accessed using the Zello Work server API to query recordings metadata.
 	 * </p>
 	 * <p>
-	 * This method has no effect unless the ZelloWork Server Recording feature is turned on for the
+	 * This method has no effect unless the Zello Work Server Recording feature is turned on for the
 	 * current network.
 	 * </p>
 	 *
