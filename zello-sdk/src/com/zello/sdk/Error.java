@@ -67,7 +67,7 @@ public enum Error {
 	 */
 	UNRELIABLE_CONNECTION,
 	/**
-	 * The device identifier provided does not match the one from the ZelloWork console.
+	 * The device identifier provided does not match the one from the Zello Work console.
 	 */
 	DEVICE_ID_MISMATCH
 

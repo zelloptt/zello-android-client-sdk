@@ -380,13 +380,16 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			intent.putExtra(Constants.EXTRA_PERISHABLE, perishable);
 			context.sendBroadcast(intent);
 			context.startService(_serviceIntent);
-		} else if (_serviceBound) {
+			return true;
+		}
+		if (_serviceBound) {
 			_delayedNetwork = network;
 			_delayedUsername = username;
 			_delayedPassword = password;
 			_delayedPerishable = perishable;
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	void signOut() {
@@ -1160,7 +1163,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_selectedContact._title = intent.getStringExtra(Constants.EXTRA_CONTACT_TITLE);
 			_selectedContact._muted = intent.getIntExtra(Constants.EXTRA_CONTACT_MUTED, 0) != 0;
 			_selectedContact._noDisconnect = intent.getIntExtra(Constants.EXTRA_CHANNEL_NO_DISCONNECT,
-					_selectedContact._type != ContactType.CHANNEL && _selectedContact._type != ContactType.GROUP && _selectedContact._type != ContactType.CONVERSATION ? 1 : 0) != 0;
+				_selectedContact._type != ContactType.CHANNEL && _selectedContact._type != ContactType.GROUP && _selectedContact._type != ContactType.CONVERSATION ? 1 : 0) != 0;
 		} else {
 			_selectedContact.reset();
 		}
