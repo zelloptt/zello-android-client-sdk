@@ -7,7 +7,6 @@ import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
 abstract class ContactsObserver extends ContentObserver {
 
 	private @Nullable Contacts _contacts;
@@ -30,10 +29,10 @@ abstract class ContactsObserver extends ContentObserver {
 
 	static @NonNull ContactsObserver create(Contacts contacts, Handler handler) {
 		int api = Util.getApiLevel();
-		if (api >= Build.VERSION_CODES.JELLY_BEAN) {
+		if (api < Build.VERSION_CODES.R) {
 			return new ContactsObserver16(contacts, handler);
 		} else {
-			return new ContactsObserver03(contacts, handler);
+			return new ContactsObserver30(contacts, handler);
 		}
 	}
 
