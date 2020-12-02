@@ -16,6 +16,7 @@ class ContactsObserver30 extends ContactsObserver16 {
 		invalidate();
 	}
 
+	@Override
 	public void onChange(boolean selfChange, Collection<Uri> uris, int flags) {
 		invalidate();
 	}
