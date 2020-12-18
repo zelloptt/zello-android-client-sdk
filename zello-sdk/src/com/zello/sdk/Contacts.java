@@ -10,10 +10,10 @@ import androidx.annotation.Nullable;
 
 /**
  * <p>
- *     The <code>Contacts</code> class represents the contacts of the current user.
+ * The <code>Contacts</code> class represents the contacts of the current user.
  * </p>
  * <p>
- *     To use, get the current snapshot of <code>Contacts</code> using the {@link Zello#getContacts()} method. For specific usage, please see the sample projects.
+ * To use, get the current snapshot of <code>Contacts</code> using the {@link Zello#getContacts()} method. For specific usage, please see the sample projects.
  * </p>
  */
 public class Contacts {
@@ -37,6 +37,7 @@ public class Contacts {
 	private @Nullable ContactsObserver _observer;
 	private @Nullable Cursor _cursor;
 	private @Nullable Context _context;
+	private final @Nullable Uri _uri;
 	private boolean _invalid;
 	private int _indexName;
 	private int _indexFullName;
@@ -50,8 +51,6 @@ public class Contacts {
 	private int _indexMuted;
 	private int _indexNoDisconnect; // Not available if the client app is old - has to be at least 3.19
 
-	private static Uri _uri;
-
 	//endregion
 
 	//region Package Private Methods
@@ -59,11 +58,7 @@ public class Contacts {
 	Contacts(@Nullable String packageName, @Nullable Context context, @Nullable Handler handler) {
 		_context = context;
 		_observer = ContactsObserver.create(this, handler);
-		Uri uri = _uri;
-		if (uri == null) {
-			uri = Uri.parse("content://" + packageName + _authoritySuffix + _contactsPath);
-			_uri = uri;
-		}
+		_uri = Uri.parse("content://" + packageName + _authoritySuffix + _contactsPath);
 		query();
 	}
 
@@ -93,13 +88,14 @@ public class Contacts {
 
 	/**
 	 * <p>
-	 *     Returns the number of contacts in the list.
+	 * Returns the number of contacts in the list.
 	 * </p>
 	 * <p>
-	 *     NB: This method may take nontrivial time to execute, so do not call it from the UI thread.
+	 * NB: This method may take nontrivial time to execute, so do not call it from the UI thread.
 	 * </p>
+	 *
 	 * @return the number of contacts for the user.
-     */
+	 */
 	public int getCount() {
 		check();
 		Cursor cursor = _cursor;
@@ -115,14 +111,15 @@ public class Contacts {
 
 	/**
 	 * <p>
-	 *     Returns the <code>Contact</code> at the specified index.
+	 * Returns the <code>Contact</code> at the specified index.
 	 * </p>
 	 * <p>
-	 *     NB: This method may take nontrivial time to execute, so do not call it from the UI thread.
+	 * NB: This method may take nontrivial time to execute, so do not call it from the UI thread.
 	 * </p>
+	 *
 	 * @param index Index indicating which <code>Contact</code> to retrieve.
 	 * @return <code>Contact</code> at the specified index.
-     */
+	 */
 	public @Nullable Contact getItem(int index) {
 		check();
 		Cursor cursor = _cursor;
