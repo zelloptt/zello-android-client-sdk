@@ -22,19 +22,33 @@ The stable release for the Zello Work Android SDK is v4.100.3.
 
 ### Sign up for Zello Work account
 
-Go to http://zellowork.com/ and click __Start your network__ button. If you already have a network, click __Sign In__. A free Zello Work account supports up to five users and has no time limit.
+Go to [http://zellowork.com/](http://zellowork.com/) and click __Start your network__ button. If you already have a network, click __Sign In__. A free Zello Work account supports up to five users and has no time limit.
 
 ### Get Zello Work app
 
-Before you can use the SDK, you must install the Zello app on your phone. You can do this by getting the Zello app from Google Play, by downloading the Zello Work app from the __Get app__ section of the web console or by navigating to `http://<network name>.zellowork.com/app` on your phone. 
+Before you can use the SDK, you must install the Zello app on your phone. You can do this by getting the Zello app from Google Play, by downloading the Zello Work app from the __Get app__ section of the web console or by navigating to http://___network___.zellowork.com/app on your phone. 
 
 ### Install Android Studio and configure your project
 
-[Download Android Studio](https://developer.android.com/studio/index.html) and install it. Open your existing project or create a new one. The minimum API level supported by the SDK is 15 (Ice Cream Sandwich).
+[Download Android Studio](https://developer.android.com/studio/index.html) and install it. Open your existing project or create a new one. The minimum API level supported by the SDK is 16 (Jelly Bean).
 
-Place [zello-sdk.aar](https://github.com/zelloptt/zello-android-client-sdk/blob/master/zello-sdk.aar?raw=true) file into `libs` folder of your project, then edit the gradle.build file to include the new AAR dependency: `implementation files("libs/zello-sdk.aar")`.
+Place [zello-sdk.aar](https://github.com/zelloptt/zello-android-client-sdk/blob/master/zello-sdk.aar?raw=true) file into `libs` folder of your project, then edit the __gradle.build__ file of the application module to include the new AAR dependency:
+
+`implementation files("libs/zello-sdk.aar")`
 
 ![Adding as a library in Android Studio](https://zellowork.com/img/github/add-zello-sdk-lib.png)
+
+To add the SDK to a library project, add the following lines to __build.gradle__:
+
+```
+configurations.maybeCreate("default")
+artifacts.add("default", file("libs/zello-sdk.aar"))
+
+dependencies {
+	api files("libs/zello-sdk.aar")
+}
+```
+Alternatively, use the __Import Module from Library__ screen to add the AAR to the project: __Menu__ > __File__ > __New__ > __New Module...__ > __Import .JAR/.AAR Package__.
 
 ## Using the SDK
 
