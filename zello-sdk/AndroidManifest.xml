@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.zello.sdk">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.zello.sdk">
 
-    <!-- Declare intents and packages that the library code would like to have access to on Android R+ -->
-    <queries>
-        <package android:name="com.loudtalks" />
-        <package android:name="net.loudtalks" />
-        <package android:name="com.pttsdk" />
-    </queries>
+	<!-- Declare intents and packages that the library code would like to have access to on Android R+ -->
+	<queries>
+		<package android:name="com.loudtalks" />
+		<package android:name="net.loudtalks" />
+		<package android:name="com.pttsdk" />
+	</queries>
+
 </manifest>

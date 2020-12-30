@@ -1,23 +1,31 @@
 buildscript {
+    ext.kotlin_version = '1.4.21'
+    ext.kotlin_version = "1.4.21"
     repositories {
         jcenter()
         google()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
     }
 
     dependencies {
         classpath "com.android.tools.build:gradle:4.1.1"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
 repositories {
     jcenter()
     google()
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
 }
 
 apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
 
 dependencies {
     implementation "androidx.appcompat:appcompat:1.2.0"
+    implementation "androidx.core:core-ktx:1.3.2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 def sourceAarName="zello-sdk-release.aar"
@@ -96,6 +104,7 @@ android.libraryVariants.all { variant ->
             classpath = files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
             exclude "**/Constants.java"
             exclude "**/ContactObserver*.java"
+            exclude "**/*.kt"
             options.memberLevel = JavadocMemberLevel.PUBLIC
             options.noTree = false
             options.noNavBar = false
@@ -121,7 +130,7 @@ tasks.whenTaskAdded { task ->
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.2"
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         targetSdkVersion 30
