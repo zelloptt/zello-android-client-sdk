@@ -1,154 +1,166 @@
 buildscript {
-    ext.kotlin_version = '1.4.21'
-    ext.kotlin_version = "1.4.21"
-    repositories {
-        jcenter()
-        google()
-        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
-    }
+	ext.kotlin_version = "1.4.21"
 
-    dependencies {
-        classpath "com.android.tools.build:gradle:4.1.1"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
+	repositories {
+		jcenter()
+		google()
+		maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+	}
+
+	dependencies {
+		classpath "com.android.tools.build:gradle:4.1.1"
+		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+	}
 }
 
 repositories {
-    jcenter()
-    google()
-    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+	jcenter()
+	google()
+	maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
 }
 
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:1.2.0"
-    implementation "androidx.core:core-ktx:1.3.2"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+	implementation "androidx.appcompat:appcompat:1.2.0"
+	implementation "androidx.core:core-ktx:1.3.2"
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
-def sourceAarName="zello-sdk-release.aar"
-def targetAarName="zello-sdk.aar"
-def sourceAarPath="build/outputs/aar/${sourceAarName}"
+def sourceAarName = "zello-sdk-release.aar"
+def targetAarName = "zello-sdk.aar"
+def sourceAarPath = "build/outputs/aar/${sourceAarName}"
 
 task zelloSdkAarDeployReleaseToRoot() {
-    description "Copies SDK AAR to the root folder of the project"
-    delete {
-        "../${targetAarName}"
-    }
-    copy {
-        from "${sourceAarPath}"
-        into "../"
-        rename("${sourceAarName}", "${targetAarName}")
-    }
+	description "Copies SDK AAR to the root folder of the project"
+	delete {
+		"../${targetAarName}"
+	}
+	copy {
+		from "${sourceAarPath}"
+		into "../"
+		rename("${sourceAarName}", "${targetAarName}")
+	}
 }
 
 // This add a task that deploys a release build of the library to the sample projects /lib folders.
 task zelloSdkAarDeployReleaseToSamples {
-    description "Copies SDK AAR to all sample projects"
-    delete {
-        "../zello-sdk-sample/libs/${targetAarName}"
-    }
-    copy {
-        from "${sourceAarPath}"
-        into "../zello-sdk-sample/libs/"
-        rename("${sourceAarName}", "${targetAarName}")
-    }
-    delete {
-        "../zello-sdk-sample-contacts/libs/${targetAarName}"
-    }
-    copy {
-        from "${sourceAarPath}"
-        into "../zello-sdk-sample-contacts/libs/"
-        rename("${sourceAarName}", "${targetAarName}")
-    }
-    delete {
-        "../zello-sdk-sample-misc/libs/${targetAarName}"
-    }
-    copy {
-        from "${sourceAarPath}"
-        into "../zello-sdk-sample-misc/libs/"
-        rename("${sourceAarName}", "${targetAarName}")
-    }
-    delete {
-        "../zello-sdk-sample-ptt/libs/${targetAarName}"
-    }
-    copy {
-        from "${sourceAarPath}"
-        into "../zello-sdk-sample-ptt/libs/"
-        rename("${sourceAarName}", "${targetAarName}")
-    }
-    delete {
-        "../zello-sdk-sample-signin/libs/${targetAarName}"
-    }
-    copy {
-        from "${sourceAarPath}"
-        into "../zello-sdk-sample-signin/libs/"
-        rename("${sourceAarName}", "${targetAarName}")
-    }
+	description "Copies SDK AAR to all sample projects"
+	delete {
+		"../zello-sdk-sample/libs/${targetAarName}"
+	}
+	copy {
+		from "${sourceAarPath}"
+		into "../zello-sdk-sample/libs/"
+		rename("${sourceAarName}", "${targetAarName}")
+	}
+	delete {
+		"../zello-sdk-sample-contacts/libs/${targetAarName}"
+	}
+	copy {
+		from "${sourceAarPath}"
+		into "../zello-sdk-sample-contacts/libs/"
+		rename("${sourceAarName}", "${targetAarName}")
+	}
+	delete {
+		"../zello-sdk-sample-misc/libs/${targetAarName}"
+	}
+	copy {
+		from "${sourceAarPath}"
+		into "../zello-sdk-sample-misc/libs/"
+		rename("${sourceAarName}", "${targetAarName}")
+	}
+	delete {
+		"../zello-sdk-sample-ptt/libs/${targetAarName}"
+	}
+	copy {
+		from "${sourceAarPath}"
+		into "../zello-sdk-sample-ptt/libs/"
+		rename("${sourceAarName}", "${targetAarName}")
+	}
+	delete {
+		"../zello-sdk-sample-signin/libs/${targetAarName}"
+	}
+	copy {
+		from "${sourceAarPath}"
+		into "../zello-sdk-sample-signin/libs/"
+		rename("${sourceAarName}", "${targetAarName}")
+	}
 }
 
 task zelloSdkDocDelete(type: Delete) {
-    description "Deletes Zello SDK Javadoc from the project root folder"
-    delete "../docs/zello-sdk-documentation"
+	description "Deletes Zello SDK Javadoc from the project root folder"
+	delete "../docs/zello-sdk-documentation"
 }
 
 android.libraryVariants.all { variant ->
-    if (variant.name == "release") {
-        task zelloSdkDocCreate(type: Javadoc, dependsOn: "zelloSdkDocDelete") {
-            title ""
-            description "Creates Zello SDK Javadoc in the project root folder"
-            destinationDir = new File("${projectDir}/../docs", "zello-sdk-documentation")
-            source = android.sourceSets.main.java.srcDirs
-            classpath = files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
-            exclude "**/Constants.java"
-            exclude "**/ContactObserver*.java"
-            exclude "**/*.kt"
-            options.memberLevel = JavadocMemberLevel.PUBLIC
-            options.noTree = false
-            options.noNavBar = false
-            options.noIndex = false
-            options.splitIndex = false
-            options.use = false
-            options.version = false
-            options.author = false
-            options.noDeprecated = true
-            options.noDeprecatedList = true
-            options.stylesheetFile = new File(projectDir, "../docs/stylesheet.css")
-        }
-    }
+	if (variant.name == "release") {
+		task zelloSdkDocCreate(type: Javadoc, dependsOn: "zelloSdkDocDelete") {
+			title ""
+			description "Creates Zello SDK Javadoc in the project root folder"
+			destinationDir = new File("${projectDir}/../docs", "zello-sdk-documentation")
+			source = android.sourceSets.main.java.srcDirs
+			classpath = files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
+			exclude "**/Constants.java"
+			exclude "**/ContactObserver*.java"
+			exclude "**/*.kt"
+			options.memberLevel = JavadocMemberLevel.PUBLIC
+			options.noTree = false
+			options.noNavBar = false
+			options.noIndex = false
+			options.splitIndex = false
+			options.use = false
+			options.version = false
+			options.author = false
+			options.noDeprecated = true
+			options.noDeprecatedList = true
+			options.stylesheetFile = new File(projectDir, "../docs/stylesheet.css")
+		}
+	}
 }
 
 tasks.whenTaskAdded { task ->
-    if (task.name == "assembleRelease") {
-        task.finalizedBy "zelloSdkDocCreate"
-        task.finalizedBy "zelloSdkAarDeployReleaseToRoot"
-        task.finalizedBy "zelloSdkAarDeployReleaseToSamples"
-    }
+	if (task.name == "assembleRelease") {
+		task.finalizedBy "zelloSdkDocCreate"
+		task.finalizedBy "zelloSdkAarDeployReleaseToRoot"
+		task.finalizedBy "zelloSdkAarDeployReleaseToSamples"
+	}
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+	compileSdkVersion 30
+	buildToolsVersion "30.0.3"
 
-    defaultConfig {
-        targetSdkVersion 30
-        minSdkVersion 16
-    }
+	defaultConfig {
+		targetSdkVersion 30
+		minSdkVersion 16
+		consumerProguardFiles "consumer-rules.pro"
+	}
 
-    sourceSets {
-        main {
-            manifest.srcFile "AndroidManifest.xml"
-            java.srcDirs = ["src"]
-        }
+	sourceSets {
+		main {
+			manifest.srcFile "AndroidManifest.xml"
+			java.srcDirs = ["src"]
+		}
 
-        debug.setRoot("build-types/debug")
-        release.setRoot("build-types/release")
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
-    }
+		debug.setRoot("build-types/debug")
+		release.setRoot("build-types/release")
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+		}
+	}
+
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+
+	kotlinOptions {
+		jvmTarget = "1.8"
+	}
 }

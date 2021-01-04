@@ -2,7 +2,7 @@ package com.zello.sdk.headset
 
 /**
  * Supported headset types.
- * Headsets differ by the type of pulse sequence that they emit.
+ * Headsets differ by the types of pulse sequences that they emit.
  */
 enum class HeadsetType {
 

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -45,6 +44,8 @@ import com.zello.sdk.Status;
 import com.zello.sdk.Tab;
 import com.zello.sdk.Theme;
 import com.zello.sdk.Zello;
+import com.zello.sdk.headset.Headset;
+import com.zello.sdk.headset.HeadsetType;
 
 import java.text.NumberFormat;
 
@@ -250,10 +251,6 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 		_dirtyContacts = true;
 
-		// Automatically choose the app to connect to in the following order of preference: com.loudtalks, net.loudtalks, com.pttsdk
-		// Alternatively, connect to a preferred app by supplying a package name, for example: Zello.getInstance().configure("net.loudtalks", this)
-		Zello.getInstance().configure(this);
-
 		Zello zello = Zello.getInstance();
 		zello.requestVitalPermissions(this);
 		zello.subscribeToEvents(this);
@@ -283,6 +280,8 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		Zello.getInstance().leavePowerSavingMode();
 		_active = true;
 		updateContactList();
+
+		Headset.start(this, HeadsetType.RegularHeadset, () -> Zello.getInstance().beginMessage(), () -> Zello.getInstance().endMessage());
 	}
 
 	@Override
@@ -290,6 +289,8 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		super.onPause();
 		Zello.getInstance().enterPowerSavingMode();
 		_active = false;
+
+		Headset.stop();
 	}
 
 	@Override
@@ -636,7 +637,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	private void updateMessageState() {
 		Zello.getInstance().getMessageIn(_messageIn);
 		Zello.getInstance().getMessageOut(_messageOut);
-		Log.i("sdk", "incoming active: " + _messageIn.isActive() + " / outgoing active: " + _messageOut.isActive());
+		android.util.Log.i("sdk", "incoming active: " + _messageIn.isActive() + " / outgoing active: " + _messageOut.isActive());
 		boolean incoming = _messageIn.isActive(); // Is incoming message active?
 		boolean outgoing = _messageOut.isActive(); // Is outgoing message active?
 		if (outgoing) {

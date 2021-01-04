@@ -4,13 +4,17 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.view.KeyEvent
+import java.lang.ref.WeakReference
 
 /**
  * Broadcast receiver that is used with the media session
  * and allows to receive headset media key events while the app is running
  * in the background.
+ * Instances of this class are created by Android framework and therefore
+ * can't receive any parameters. A static [onKeyEvent] member should be
+ * used to register an actual recipient of the key events.
  */
-class HeadsetReceiver: BroadcastReceiver() {
+class HeadsetBroadcastReceiver : BroadcastReceiver() {
 
 	override fun onReceive(context: Context, intent: Intent) {
 		if (intent.action != Intent.ACTION_MEDIA_BUTTON) return
@@ -18,7 +22,23 @@ class HeadsetReceiver: BroadcastReceiver() {
 		val action = event.action
 		// Drop the ACTION_MULTIPLE event
 		if (action != KeyEvent.ACTION_DOWN && action != KeyEvent.ACTION_UP) return
-		HeadsetHandler.onKeyEvent(event)
+		onKeyEvent?.invoke(event)
+	}
+
+	companion object {
+		/**
+		 * Register a recipient for the key events.
+		 */
+		var onKeyEvent: ((KeyEvent) -> Unit)?
+			get() {
+				return handler?.get()
+			}
+			set(value) {
+				handler = if (value == null) null else WeakReference(value)
+			}
+
+		// Backing field for [onKeyEvent]
+		private var handler: WeakReference<(KeyEvent) -> Unit>? = null
 	}
 
 }
