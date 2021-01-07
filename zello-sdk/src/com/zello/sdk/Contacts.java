@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -16,6 +15,7 @@ import androidx.annotation.Nullable;
  * To use, get the current snapshot of <code>Contacts</code> using the {@link Zello#getContacts()} method. For specific usage, please see the sample projects.
  * </p>
  */
+@SuppressWarnings({"unused", "RedundantSuppression"})
 public class Contacts {
 
 	//region Private Properties
@@ -103,7 +103,7 @@ public class Contacts {
 			try {
 				return cursor.getCount();
 			} catch (Throwable t) {
-				Log.i("zello sdk", "Error in Contacts.getCount: " + t.toString());
+				Log.writeError("Error in Contacts.getCount", t);
 			}
 		}
 		return 0;
@@ -157,7 +157,7 @@ public class Contacts {
 					(_indexNoDisconnect >= 0 && cursor.getInt(_indexNoDisconnect) != 0);
 			return contact;
 		} catch (Throwable t) {
-			Log.i("zello sdk", "Error in Contacts.getItem: " + t.toString());
+			Log.writeError("Error in Contacts.getItem", t);
 		}
 		return null;
 	}
@@ -196,7 +196,7 @@ public class Contacts {
 				}
 				cursor = null;
 			}
-			Log.i("zello sdk", "Error in Contacts.Contacts: " + t.toString());
+			Log.writeError("Error in Contacts.Contacts", t);
 		}
 		if (cursor != null) {
 			try {
@@ -214,12 +214,12 @@ public class Contacts {
 			try {
 				cursor.unregisterContentObserver(_observer);
 			} catch (Throwable t) {
-				Log.i("zello sdk", "Error in Contacts.close: " + t.toString());
+				Log.writeError("Error in Contacts.close", t);
 			}
 			try {
 				cursor.close();
 			} catch (Throwable t) {
-				Log.i("zello sdk", "Error in Contacts.close: " + t.toString());
+				Log.writeError("Error in Contacts.close", t);
 			}
 		}
 	}

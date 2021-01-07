@@ -23,7 +23,7 @@ class HeadsetMediaSessionImpl21: HeadsetMediaSession {
 		val session = try {
 			MediaSession(context, "media buttons")
 		} catch (t: Throwable) {
-			Log.writeError("Failed to create media session", t)
+			Log.e("Failed to create media session", t)
 			return
 		}
 		val intent = Intent(context.applicationContext, HeadsetBroadcastReceiver::class.java)
@@ -32,9 +32,10 @@ class HeadsetMediaSessionImpl21: HeadsetMediaSession {
 			session.setMediaButtonReceiver(pendingIntent)
 			session.isActive = true
 		} catch (t: Throwable) {
-			Log.writeError("Failed to register media button event receiver", t)
+			Log.e("Failed to register media button event receiver", t)
 			return
 		}
+		this.session = session
 		HeadsetBroadcastReceiver.onKeyEvent = onKeyEvent
 	}
 
@@ -44,7 +45,7 @@ class HeadsetMediaSessionImpl21: HeadsetMediaSession {
 				it.isActive = false
 				it.setMediaButtonReceiver(null)
 			} catch (t: Throwable) {
-				Log.writeError("Failed to unregister media button receiver", t)
+				Log.e("Failed to unregister media button receiver", t)
 			}
 		}
 		session = null

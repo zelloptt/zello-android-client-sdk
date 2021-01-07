@@ -10,4 +10,14 @@
 		<package android:name="com.pttsdk" />
 	</queries>
 
+
+	<application>
+		<receiver android:name="com.zello.sdk.headset.HeadsetBroadcastReceiver">
+
+			<intent-filter android:priority="1001">
+				<action android:name="android.intent.action.MEDIA_BUTTON" />
+			</intent-filter>
+		</receiver>
+	</application>
+
 </manifest>

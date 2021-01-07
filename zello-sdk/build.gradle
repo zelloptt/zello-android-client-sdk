@@ -104,6 +104,7 @@ android.libraryVariants.all { variant ->
 			classpath = files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
 			exclude "**/Constants.java"
 			exclude "**/ContactObserver*.java"
+			exclude "**/SafeHandler*.java"
 			exclude "**/*.kt"
 			options.memberLevel = JavadocMemberLevel.PUBLIC
 			options.noTree = false

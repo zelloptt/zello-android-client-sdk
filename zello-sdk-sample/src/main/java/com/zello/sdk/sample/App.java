@@ -9,7 +9,7 @@ import com.zello.sdk.Zello;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-class App extends Application {
+public class App extends Application {
 
 	@Override
 	public void onCreate() {

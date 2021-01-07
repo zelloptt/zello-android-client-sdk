@@ -263,6 +263,8 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		updateSelectedContact();
 
 		_editUsername.selectAll();
+
+		Headset.start(this, HeadsetType.RegularHeadset, () -> Zello.getInstance().beginMessage(), () -> Zello.getInstance().endMessage());
 	}
 
 	@Override
@@ -272,6 +274,8 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		zello.unsubscribeFromEvents(this);
 		zello.unconfigure();
 		_audio = null;
+
+		Headset.stop();
 	}
 
 	@Override
@@ -280,8 +284,6 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		Zello.getInstance().leavePowerSavingMode();
 		_active = true;
 		updateContactList();
-
-		Headset.start(this, HeadsetType.RegularHeadset, () -> Zello.getInstance().beginMessage(), () -> Zello.getInstance().endMessage());
 	}
 
 	@Override
@@ -289,8 +291,6 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		super.onPause();
 		Zello.getInstance().enterPowerSavingMode();
 		_active = false;
-
-		Headset.stop();
 	}
 
 	@Override

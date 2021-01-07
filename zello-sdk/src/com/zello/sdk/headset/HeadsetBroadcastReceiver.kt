@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.view.KeyEvent
+import com.zello.sdk.headset.HeadsetBroadcastReceiver.Companion.onKeyEvent
 import java.lang.ref.WeakReference
 
 /**
@@ -17,15 +18,21 @@ import java.lang.ref.WeakReference
 class HeadsetBroadcastReceiver : BroadcastReceiver() {
 
 	override fun onReceive(context: Context, intent: Intent) {
-		if (intent.action != Intent.ACTION_MEDIA_BUTTON) return
-		val event = intent.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT) ?: return
-		val action = event.action
-		// Drop the ACTION_MULTIPLE event
-		if (action != KeyEvent.ACTION_DOWN && action != KeyEvent.ACTION_UP) return
-		onKeyEvent?.invoke(event)
+		handleIntent(intent)
 	}
 
 	companion object {
+
+		/**
+		 * Handle a media button intent.
+		 */
+		fun handleIntent(intent: Intent): Boolean {
+			if (intent.action != Intent.ACTION_MEDIA_BUTTON) return false
+			val event = intent.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT) ?: return false
+			onKeyEvent?.invoke(event)
+			return true
+		}
+
 		/**
 		 * Register a recipient for the key events.
 		 */

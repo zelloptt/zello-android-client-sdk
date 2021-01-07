@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.util.Log;
 
 import java.security.MessageDigest;
 import java.util.Locale;
@@ -700,7 +699,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_delayedShowBtAcceccoriesNotifications = null;
 		// If service is not bound, the component was destroyed and the service needs to be disconnected
 		if (!_serviceBound) {
-			Log.i("zello sdk", "disconnecting because sdk was destroyed");
+			Log.writeError("Disconnecting because sdk was destroyed", null);
 			try {
 				context.unbindService(this);
 			} catch (Throwable ignored) {
@@ -973,7 +972,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_serviceBound = context.bindService(_serviceIntent, this, Context.BIND_AUTO_CREATE);
 		} catch (Throwable t) {
 			_serviceConnecting = false;
-			Log.i("zello sdk", "Error in Sdk.connect: " + t.toString());
+			Log.writeError("Error in Sdk.connect", t);
 		}
 
 		if (!_serviceBound) {
@@ -1008,7 +1007,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				}
 			}
 		} else {
-			Log.i("zello sdk", "Early Sdk.disconnect");
+			Log.writeError("Early Sdk.disconnect", null);
 		}
 	}
 
@@ -1417,7 +1416,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				return hex;
 			}
 		} catch (Throwable t) {
-			Log.i("zello sdk", "Error in Sdk.md5: " + t.toString());
+			Log.writeError("Error in Sdk.md5", t);
 		}
 		return "";
 	}

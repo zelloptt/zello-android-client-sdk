@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Build
 import android.view.KeyEvent
 import androidx.annotation.MainThread
+import com.zello.sdk.Log
+import com.zello.sdk.TimeImpl
 
 /**
  * This class contains all headset hook processing logic.
@@ -22,16 +24,14 @@ import androidx.annotation.MainThread
  * </li>
  * </ul>
  */
+@Suppress("unused")
 @MainThread
 object Headset {
 
-	// Current headset type; null value means not started
-	private var headsetType: HeadsetType? = null
-
-	private var onMessageStart: Runnable? = null
-	private var onMessageStop: Runnable? = null
-
+	private var handler: HeadsetHandler? = null
 	private var mediaSession: HeadsetMediaSession? = null
+
+	private const val TAG = "(Headset) "
 
 	/**
 	 * Start handling of the headset hook button.
@@ -39,20 +39,24 @@ object Headset {
 	 * @param headsetType Headset type
 	 * @param onMessageStart Callback to invoke when a headset button press is detected
 	 * @param onMessageStop Callback to invoke when a headset button release is detected
+	 * @param openMicTimeoutMs Optional open microphone timeout to protect against lost key events
+	 *
+	 * [openMicTimeoutMs] can be 0 to disable the open microphone protection.
 	 */
 	@JvmStatic
-	fun start(context: Context, headsetType: HeadsetType, onMessageStart: Runnable, onMessageStop: Runnable) {
-		this.headsetType = headsetType
-		this.onMessageStart = onMessageStart
-		this.onMessageStop = onMessageStop
-		if (mediaSession == null) {
-			mediaSession = when {
-				Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> HeadsetMediaSessionImpl21()
-				else -> HeadsetMediaSessionImpl16()
-			}.also {
-				it.start(context) { event -> processKeyEvent(event, true) }
-			}
+	fun start(context: Context, headsetType: HeadsetType, onMessageStart: Runnable, onMessageStop: Runnable, openMicTimeoutMs: Int) {
+		if (mediaSession != null) {
+			Log.e("$TAG Can't start: already started", null)
+			return
 		}
+		mediaSession = when {
+			Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> HeadsetMediaSessionImpl26()
+			Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> HeadsetMediaSessionImpl21()
+			else -> HeadsetMediaSessionImpl16()
+		}.also {
+			it.start(context) { event -> processKeyEvent(event) }
+		}
+		handler = HeadsetHandler(headsetType, onMessageStart, onMessageStop, openMicTimeoutMs, TimeImpl(context), Log)
 	}
 
 	/**
@@ -60,9 +64,8 @@ object Headset {
 	 */
 	@JvmStatic
 	fun stop() {
-		headsetType = null
-		onMessageStart = null
-		onMessageStop = null
+		handler?.reset()
+		handler = null
 		mediaSession?.stop()
 		mediaSession = null
 	}
@@ -77,12 +80,21 @@ object Headset {
 	 */
 	@JvmStatic
 	fun onKeyEvent(event: KeyEvent): Boolean {
-		return processKeyEvent(event, false)
+		return processKeyEvent(event)
 	}
 
 	@JvmStatic
-	private fun processKeyEvent(event: KeyEvent, fromMediaSession: Boolean): Boolean {
-		return false
+	private fun processKeyEvent(event: KeyEvent): Boolean {
+		// Drop non-headset events
+		if (event.keyCode != KeyEvent.KEYCODE_HEADSETHOOK) return false
+		// Drop cancelled events
+		if ((event.flags and KeyEvent.FLAG_CANCELED) == KeyEvent.FLAG_CANCELED) return false
+		// Drop the ACTION_MULTIPLE event
+		val action = event.action
+		if (action != KeyEvent.ACTION_DOWN && action != KeyEvent.ACTION_UP) return false
+		// Send it down the line
+		handler?.process(HeadsetEvent(event.action == KeyEvent.ACTION_DOWN, event.eventTime))
+		return true
 	}
 
 }

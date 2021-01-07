@@ -24,7 +24,7 @@ class HeadsetMediaSessionImpl16 : HeadsetMediaSession {
 			audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager ?: throw RuntimeException("No audio manager")
 			audioManager.registerMediaButtonEventReceiver(receiver)
 		} catch (t: Throwable) {
-			Log.writeError("Failed to register media button event receiver", t)
+			Log.e("Failed to register media button event receiver", t)
 			return
 		}
 		this.receiver = receiver
@@ -37,7 +37,7 @@ class HeadsetMediaSessionImpl16 : HeadsetMediaSession {
 			try {
 				audioManager?.unregisterMediaButtonEventReceiver(it)
 			} catch (t: Throwable) {
-				Log.writeError("Failed to unregister media button event receiver", t)
+				Log.e("Failed to unregister media button event receiver", t)
 			}
 		}
 		receiver = null
