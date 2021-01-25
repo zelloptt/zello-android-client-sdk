@@ -9,12 +9,17 @@ import kotlin.math.max
 /**
  * A class that helps to simulate a button release after the button help for too long
  * which usually means a missed key up sequence.
+ * @param headsetType Headset type
+ * @param timeoutMs The longest message duration, anything above it is considered an open mic
+ * @param onCancel Callback to be invoked upon detecting an open mic, called on the UI thread
+ * @param time Time dependency
+ * @param logger Logger dependency
  */
 @MainThread
 class HeadsetSafetyTimer(private val headsetType: HeadsetType, private val timeoutMs: Int, onCancel: () -> Unit, private val time: Time, private val logger: Logger?) {
 
 	companion object {
-		private const val TAG = "(HeadsetSafetyTimer) "
+		private const val TAG = "(HeadsetSafetyTimer)"
 
 		/**
 		 * Even if the timeout is set to something very short, don't fire fake key up events until 2 minutes are up
@@ -40,7 +45,7 @@ class HeadsetSafetyTimer(private val headsetType: HeadsetType, private val timeo
 		timer = null
 		if (headsetType == HeadsetType.PttHeadset || headsetType == HeadsetType.LegacyPttHeadset) {
 			val timeout = calculateTimeoutMs()
-			logger?.i("$TAG Starting a $timeout ms fail safe timer for headset")
+			logger?.i("$TAG Starting a $timeout ms headset fail safe timer")
 			timer = time.createTimer().also {
 				it.start(timeout, ::onFailTimer)
 			}
@@ -52,7 +57,7 @@ class HeadsetSafetyTimer(private val headsetType: HeadsetType, private val timeo
 	 */
 	fun onHeadsetRelease() {
 		timer?.let {
-			logger?.i("$TAG Got key release, cancelling fail safe timer")
+			logger?.i("$TAG Got key release, canceling fail safe timer")
 			it.stop()
 		}
 		timer = null

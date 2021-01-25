@@ -5,4 +5,4 @@ package com.zello.sdk.headset
  * @param down Down or up?
  * @param time System uptime at the time of the the event, milliseconds
  */
-class HeadsetEvent(val down: Boolean, val time: Long)
+data class HeadsetEvent(val down: Boolean, val time: Long)

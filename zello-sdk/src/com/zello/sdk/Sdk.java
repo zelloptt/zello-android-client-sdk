@@ -699,7 +699,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_delayedShowBtAcceccoriesNotifications = null;
 		// If service is not bound, the component was destroyed and the service needs to be disconnected
 		if (!_serviceBound) {
-			Log.writeError("Disconnecting because sdk was destroyed", null);
+			Log.INSTANCE.e("Disconnecting because sdk was destroyed", null);
 			try {
 				context.unbindService(this);
 			} catch (Throwable ignored) {
@@ -972,7 +972,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_serviceBound = context.bindService(_serviceIntent, this, Context.BIND_AUTO_CREATE);
 		} catch (Throwable t) {
 			_serviceConnecting = false;
-			Log.writeError("Error in Sdk.connect", t);
+			Log.INSTANCE.e("Error in Sdk.connect", t);
 		}
 
 		if (!_serviceBound) {
@@ -1007,7 +1007,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				}
 			}
 		} else {
-			Log.writeError("Early Sdk.disconnect", null);
+			Log.INSTANCE.e("Early Sdk.disconnect", null);
 		}
 	}
 
@@ -1416,7 +1416,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				return hex;
 			}
 		} catch (Throwable t) {
-			Log.writeError("Error in Sdk.md5", t);
+			Log.INSTANCE.e("Error in Sdk.md5", t);
 		}
 		return "";
 	}

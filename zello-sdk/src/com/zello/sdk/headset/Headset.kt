@@ -31,20 +31,27 @@ object Headset {
 	private var handler: HeadsetHandler? = null
 	private var mediaSession: HeadsetMediaSession? = null
 
-	private const val TAG = "(Headset) "
+	private const val TAG = "(Headset)"
 
 	/**
 	 * Start handling of the headset hook button.
 	 * @param context Android app context
 	 * @param headsetType Headset type
-	 * @param onMessageStart Callback to invoke when a headset button press is detected
-	 * @param onMessageStop Callback to invoke when a headset button release is detected
-	 * @param openMicTimeoutMs Optional open microphone timeout to protect against lost key events
+	 * @param onPress Callback to invoke when a headset button press is detected
+	 * @param onRelease Callback to invoke when a headset button release is detected
+	 * @param onToggle Callback to invoke when a headset button toggle is detected
+	 * @param openMicTimeoutMs Optional timeout to protect against lost key events; use 0 to disable
 	 *
-	 * [openMicTimeoutMs] can be 0 to disable the open microphone protection.
+	 * [onPress] and [onRelease] are only called for [HeadsetType.PttHeadset] and [HeadsetType.LegacyPttHeadset]
+	 * because the pressed state of the button is tracked for those.
+	 *
+	 * [onToggle] is only called for [HeadsetType.RegularHeadsetToggle].
+	 * The app is expected to implement a logic that decides if it treats the event
+	 * as a beginning or an ending of a message, most likely based on whether there's
+	 * a live outgoing message at the time of the event.
 	 */
 	@JvmStatic
-	fun start(context: Context, headsetType: HeadsetType, onMessageStart: Runnable, onMessageStop: Runnable, openMicTimeoutMs: Int) {
+	fun start(context: Context, headsetType: HeadsetType, onPress: Runnable, onRelease: Runnable, onToggle: Runnable, openMicTimeoutMs: Int) {
 		if (mediaSession != null) {
 			Log.e("$TAG Can't start: already started", null)
 			return
@@ -56,7 +63,7 @@ object Headset {
 		}.also {
 			it.start(context) { event -> processKeyEvent(event) }
 		}
-		handler = HeadsetHandler(headsetType, onMessageStart, onMessageStop, openMicTimeoutMs, TimeImpl(context), Log)
+		handler = HeadsetHandler(headsetType, onPress, onRelease, onToggle, openMicTimeoutMs, TimeImpl(context), Log)
 	}
 
 	/**

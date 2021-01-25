@@ -103,7 +103,7 @@ public class Contacts {
 			try {
 				return cursor.getCount();
 			} catch (Throwable t) {
-				Log.writeError("Error in Contacts.getCount", t);
+				Log.INSTANCE.e("Error in Contacts.getCount", t);
 			}
 		}
 		return 0;
@@ -157,7 +157,7 @@ public class Contacts {
 					(_indexNoDisconnect >= 0 && cursor.getInt(_indexNoDisconnect) != 0);
 			return contact;
 		} catch (Throwable t) {
-			Log.writeError("Error in Contacts.getItem", t);
+			Log.INSTANCE.e("Error in Contacts.getItem", t);
 		}
 		return null;
 	}
@@ -196,7 +196,7 @@ public class Contacts {
 				}
 				cursor = null;
 			}
-			Log.writeError("Error in Contacts.Contacts", t);
+			Log.INSTANCE.e("Error in Contacts.Contacts", t);
 		}
 		if (cursor != null) {
 			try {
@@ -214,12 +214,12 @@ public class Contacts {
 			try {
 				cursor.unregisterContentObserver(_observer);
 			} catch (Throwable t) {
-				Log.writeError("Error in Contacts.close", t);
+				Log.INSTANCE.e("Error in Contacts.close", t);
 			}
 			try {
 				cursor.close();
 			} catch (Throwable t) {
-				Log.writeError("Error in Contacts.close", t);
+				Log.INSTANCE.e("Error in Contacts.close", t);
 			}
 		}
 	}

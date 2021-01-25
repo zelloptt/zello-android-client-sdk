@@ -252,6 +252,9 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		_dirtyContacts = true;
 
 		Zello zello = Zello.getInstance();
+		// Automatically choose the app to connect to in the following order of preference: com.loudtalks, net.loudtalks, com.pttsdk
+		// Alternatively, connect to a preferred app by supplying a package name, for example: Zello.getInstance().configure("net.loudtalks", this)
+		Zello.getInstance().configure(this);
 		zello.requestVitalPermissions(this);
 		zello.subscribeToEvents(this);
 		zello.setShowBluetoothAccessoriesNotifications(false);
@@ -264,7 +267,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 		_editUsername.selectAll();
 
-		Headset.start(this, HeadsetType.RegularHeadset, () -> Zello.getInstance().beginMessage(), () -> Zello.getInstance().endMessage());
+		Headset.start(this, HeadsetType.RegularHeadsetToggle, this::onHeadsetPress, this::onHeadsetRelease, this::onHeadsetToggle, 10000);
 	}
 
 	@Override
@@ -403,7 +406,20 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				return true;
 			}
 		}
+		// Pass the event to headset button handler
+		if (Headset.onKeyEvent(event)) {
+			return true;
+		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		// Pass the event to headset button handler
+		if (Headset.onKeyEvent(event)) {
+			return true;
+		}
+		return super.onKeyUp(keyCode, event);
 	}
 
 	@Override
@@ -862,6 +878,22 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				return getString(R.string.error_device_id_mismatch);
 			default:
 				return null;
+		}
+	}
+
+	private void onHeadsetPress() {
+		Zello.getInstance().beginMessage();
+	}
+
+	private void onHeadsetRelease() {
+		Zello.getInstance().endMessage();
+	}
+
+	private void onHeadsetToggle() {
+		if (_messageOut.isActive()) {
+			Zello.getInstance().endMessage();
+		} else {
+			Zello.getInstance().beginMessage();
 		}
 	}
 

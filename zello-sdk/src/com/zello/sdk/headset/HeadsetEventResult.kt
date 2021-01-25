@@ -6,14 +6,25 @@ package com.zello.sdk.headset
 enum class HeadsetEventResult {
 
 	/**
-	 * A beginning of a message was detected.
+	 * A headset down event was detected.
+	 * Used with [HeadsetType.PttHeadset] and [HeadsetType.LegacyPttHeadset]
+	 * but not with [HeadsetType.RegularHeadsetToggle].
 	 */
-	START,
+	PRESS,
 
 	/**
-	 * An end of a message was detected.
+	 * A headset down event was detected.
+	 * Used with [HeadsetType.PttHeadset] and [HeadsetType.LegacyPttHeadset]
+	 * but not with [HeadsetType.RegularHeadsetToggle].
 	 */
-	STOP,
+	RELEASE,
+
+	/**
+	 * A headset click event was detected.
+	 * Used with [HeadsetType.RegularHeadsetToggle] but not with [HeadsetType.PttHeadset]
+	 * but not with [HeadsetType.LegacyPttHeadset].
+	 */
+	TOGGLE,
 
 	/**
 	 * No change.

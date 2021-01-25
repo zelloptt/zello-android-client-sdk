@@ -19,15 +19,19 @@ import com.zello.sdk.Log
  */
 @MainThread
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class HeadsetMediaSessionImpl26: HeadsetMediaSession {
+class HeadsetMediaSessionImpl26 : HeadsetMediaSession {
+
+	companion object {
+		private const val TAG = "(HeadsetMediaSessionImpl26)"
+	}
 
 	private var session: MediaSession? = null
 
 	override fun start(context: Context, onKeyEvent: (KeyEvent) -> Unit) {
 		val session = try {
-			MediaSession(context, "media buttons")
+			MediaSession(context.applicationContext, "media buttons")
 		} catch (t: Throwable) {
-			Log.e("Failed to create media session", t)
+			Log.e("$TAG Failed to create media session", t)
 			return
 		}
 		val intent = Intent(context.applicationContext, HeadsetBroadcastReceiver::class.java)
@@ -51,7 +55,7 @@ class HeadsetMediaSessionImpl26: HeadsetMediaSession {
 				}
 			}, Handler(Looper.getMainLooper()))
 		} catch (t: Throwable) {
-			Log.e("Failed to register media button callback", t)
+			Log.e("$TAG Failed to register media button callback", t)
 			return
 		}
 		this.session = session
@@ -65,7 +69,7 @@ class HeadsetMediaSessionImpl26: HeadsetMediaSession {
 				it.setMediaButtonReceiver(null)
 				it.setCallback(null)
 			} catch (t: Throwable) {
-				Log.e("Failed to unregister media button callback", t)
+				Log.e("$TAG Failed to unregister media button callback", t)
 			}
 		}
 		session = null

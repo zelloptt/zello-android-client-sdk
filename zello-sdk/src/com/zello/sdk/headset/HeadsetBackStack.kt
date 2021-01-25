@@ -14,13 +14,14 @@ class HeadsetBackStack(private val time: Time) {
 
 	companion object {
 		/**
-		 * Max number of key events persisted to identify devices. Currently set to 12 because the max for a single press and release for any supported hardware
-		 * is 6, and this allows us to keep record of up to 2 press and release events from that type of device.
+		 * Max number of key events persisted to identify devices.
+		 * Currently set to 12 because the max for a single press and release for any supported hardware is 6,
+		 * and this allows us to keep record of up to 2 press and release events from that type of device.
 		 */
 		private const val BACKSTACK_MAX_SIZE = 12
 
 		/**
-		 * Time in MS after which the backstack is discarded during normal operation. Note that this does not apply when adding new keys
+		 * Time expressed in ms after which the backstack is discarded.
 		 */
 		private const val BACKSTACK_MAX_AGE_MS = 800L
 	}
@@ -74,6 +75,10 @@ class HeadsetBackStack(private val time: Time) {
 		backStack.clear()
 	}
 
+	/**
+	 * Instead of relying on a timer to clean up the excess events, this method
+	 * is call every time the content of the stack is read.
+	 */
 	private fun clearOldBackStack() {
 		val currentTime = time.tickCount
 		backStack.removeAll { currentTime - it.time > BACKSTACK_MAX_AGE_MS }

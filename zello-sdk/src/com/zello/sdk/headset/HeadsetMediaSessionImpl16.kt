@@ -14,6 +14,10 @@ import com.zello.sdk.Log
 @MainThread
 class HeadsetMediaSessionImpl16 : HeadsetMediaSession {
 
+	companion object {
+		private const val TAG = "(HeadsetMediaSession16)"
+	}
+
 	private var receiver: ComponentName? = null
 	private var audioManager: AudioManager? = null
 
@@ -24,7 +28,7 @@ class HeadsetMediaSessionImpl16 : HeadsetMediaSession {
 			audioManager = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager ?: throw RuntimeException("No audio manager")
 			audioManager.registerMediaButtonEventReceiver(receiver)
 		} catch (t: Throwable) {
-			Log.e("Failed to register media button event receiver", t)
+			Log.e("$TAG Failed to register media button event receiver", t)
 			return
 		}
 		this.receiver = receiver
@@ -37,7 +41,7 @@ class HeadsetMediaSessionImpl16 : HeadsetMediaSession {
 			try {
 				audioManager?.unregisterMediaButtonEventReceiver(it)
 			} catch (t: Throwable) {
-				Log.e("Failed to unregister media button event receiver", t)
+				Log.e("$TAG Failed to unregister media button event receiver", t)
 			}
 		}
 		receiver = null

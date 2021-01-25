@@ -7,8 +7,9 @@ import com.zello.sdk.Time
 /**
  * This class implements the logic behind supported headset types.
  * @param headsetType Headset type
- * @param onMessageStart Callback to invoke when a headset button press is detected
- * @param onMessageStop Callback to invoke when a headset button release is detected
+ * @param onPress Callback to invoke when a headset button press is detected
+ * @param onRelease Callback to invoke when a headset button release is detected
+ * @param onToggle Callback to invoke when a headset button toggle is detected
  * @param openMicTimeoutMs Optional open microphone timeout to protect against lost key events
  * @param time Time dependency
  * @param logger Logger dependency
@@ -16,14 +17,15 @@ import com.zello.sdk.Time
 @MainThread
 class HeadsetHandler(
 		private val headsetType: HeadsetType,
-		onMessageStart: Runnable,
-		onMessageStop: Runnable,
+		onPress: Runnable,
+		onRelease: Runnable,
+		onToggle: Runnable,
 		private val openMicTimeoutMs: Int,
 		private val time: Time,
 		private val logger: Logger?) {
 
 	companion object {
-		private const val TAG = "(HeadsetHandler) "
+		private const val TAG = "(HeadsetHandler)"
 
 		/**
 		 * Two key presses received within this time window for a legacy mic will trigger resetting to a released state and
@@ -38,8 +40,9 @@ class HeadsetHandler(
 		private const val LOCKOUT_DURATION_MS = 1000L
 	}
 
-	private var onMessageStart: Runnable? = onMessageStart
-	private var onMessageStop: Runnable? = onMessageStop
+	private var onPress: Runnable? = onPress
+	private var onRelease: Runnable? = onRelease
+	private var onToggle: Runnable? = onToggle
 
 	private var safetyTimer: HeadsetSafetyTimer?
 	private val backStack = HeadsetBackStack(time)
@@ -67,8 +70,9 @@ class HeadsetHandler(
 			headsetKeyUp()
 		}
 		when (result) {
-			HeadsetEventResult.START -> onMessageStart?.run()
-			HeadsetEventResult.STOP -> onMessageStop?.run()
+			HeadsetEventResult.PRESS -> onPress?.run()
+			HeadsetEventResult.RELEASE -> onRelease?.run()
+			HeadsetEventResult.TOGGLE -> onToggle?.run()
 			else -> {
 			}
 		}
@@ -76,8 +80,8 @@ class HeadsetHandler(
 	}
 
 	fun reset() {
-		onMessageStart = null
-		onMessageStop = null
+		onPress = null
+		onRelease = null
 		backStack.clear()
 		lockoutExpires = -1L
 		lastPress = 0L
@@ -108,7 +112,7 @@ class HeadsetHandler(
 	}
 
 	private fun headsetKeyUp(): HeadsetEventResult? {
-		if (headsetType == HeadsetType.RegularHeadset) {
+		if (headsetType == HeadsetType.RegularHeadsetToggle) {
 			// Standard headset - up means up
 			return release()
 		}
@@ -123,29 +127,39 @@ class HeadsetHandler(
 		return headsetKeyDown()
 	}
 
+	/**
+	 * Called by [HeadsetSafetyTimer] upon detecting an open mic.
+	 */
 	private fun onHeadsetKeyMissed() {
 		if (headsetDown) {
 			backStack.clear()
 			release()
-			onMessageStop?.run()
+			onRelease?.run()
 		}
 	}
 
 	private fun press(): HeadsetEventResult {
 		if (startLockoutIfNeeded()) {
-			return HeadsetEventResult.STOP
+			return HeadsetEventResult.RELEASE
 		}
 		logger?.i("$TAG Headset hook down")
 		headsetDown = true
 		safetyTimer?.onHeadsetPress()
-		return HeadsetEventResult.START
+		if (headsetType == HeadsetType.RegularHeadsetToggle) {
+			// Skip pressing of the button on regular headset - wait for the release
+			return HeadsetEventResult.NONE
+		}
+		return HeadsetEventResult.PRESS
 	}
 
 	private fun release(): HeadsetEventResult {
 		logger?.i("$TAG Headset hook up")
 		headsetDown = false
 		safetyTimer?.onHeadsetRelease()
-		return HeadsetEventResult.STOP
+		return when (headsetType) {
+			HeadsetType.RegularHeadsetToggle -> HeadsetEventResult.TOGGLE
+			else -> HeadsetEventResult.RELEASE
+		}
 	}
 
 	/**
