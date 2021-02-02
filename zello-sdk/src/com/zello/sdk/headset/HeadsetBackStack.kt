@@ -21,7 +21,7 @@ class HeadsetBackStack(private val time: Time) {
 		private const val BACKSTACK_MAX_SIZE = 12
 
 		/**
-		 * Time expressed in ms after which the backstack is discarded.
+		 * Time after which the backstack is discarded.
 		 */
 		private const val BACKSTACK_MAX_AGE_MS = 800L
 	}
@@ -77,7 +77,7 @@ class HeadsetBackStack(private val time: Time) {
 
 	/**
 	 * Instead of relying on a timer to clean up the excess events, this method
-	 * is call every time the content of the stack is read.
+	 * is called every time the content of the stack is read.
 	 */
 	private fun clearOldBackStack() {
 		val currentTime = time.tickCount

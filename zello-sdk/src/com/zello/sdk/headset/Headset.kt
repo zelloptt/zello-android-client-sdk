@@ -8,19 +8,19 @@ import com.zello.sdk.Log
 import com.zello.sdk.TimeImpl
 
 /**
- * This class contains all headset hook processing logic.
+ * This class contains the high level headset hook processing logic.
  * Use it in your app to add a quick way of handling the headset PTT button.
  * All methods of this class are required to be called on the UI thread.
  * Three types of pulse sequences are supported:
  * <ul>
  * <li>
- *    <code>RegularHeadset</code>
+ *    Regular headset
  * </li>
  * <li>
- *    <code>LegacyPttHeadset</code>
+ *    Legacy PTT headset
  * </li>
  * <li>
- *     <code>PttHeadset</code>
+ *    PTT headset
  * </li>
  * </ul>
  */
@@ -49,6 +49,10 @@ object Headset {
 	 * The app is expected to implement a logic that decides if it treats the event
 	 * as a beginning or an ending of a message, most likely based on whether there's
 	 * a live outgoing message at the time of the event.
+	 *
+	 * Open mic timeout should be something reasonably high, typically 2 minutes or even more.
+	 * Short open mic timeouts have an increased chance of a misfire which may "flip" the operation
+	 * of a legacy PTT accessory and start treating presses as releases and vice versa.
 	 */
 	@JvmStatic
 	fun start(context: Context, headsetType: HeadsetType, onPress: Runnable, onRelease: Runnable, onToggle: Runnable, openMicTimeoutMs: Int) {
@@ -100,7 +104,7 @@ object Headset {
 		val action = event.action
 		if (action != KeyEvent.ACTION_DOWN && action != KeyEvent.ACTION_UP) return false
 		// Send it down the line
-		handler?.process(HeadsetEvent(event.action == KeyEvent.ACTION_DOWN, event.eventTime))
+		handler?.process(action == KeyEvent.ACTION_DOWN)
 		return true
 	}
 

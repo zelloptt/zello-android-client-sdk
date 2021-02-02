@@ -63,12 +63,13 @@ class HeadsetHandler(
 	 *
 	 * @return Indicates whether a message should be started, ended, or nothing should be done
 	 */
-	fun process(event: HeadsetEvent) {
-		val result = if (event.down) {
+	fun process(down: Boolean) {
+		val result = if (down) {
 			headsetKeyDown()
 		} else {
 			headsetKeyUp()
 		}
+		val event = HeadsetEvent(down, time.tickCount)
 		when (result) {
 			HeadsetEventResult.PRESS -> onPress?.run()
 			HeadsetEventResult.RELEASE -> onRelease?.run()

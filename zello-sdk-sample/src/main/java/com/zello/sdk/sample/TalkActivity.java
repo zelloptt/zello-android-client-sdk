@@ -38,6 +38,7 @@ import com.zello.sdk.Contact;
 import com.zello.sdk.ContactStatus;
 import com.zello.sdk.ContactType;
 import com.zello.sdk.Error;
+import com.zello.sdk.Log;
 import com.zello.sdk.MessageIn;
 import com.zello.sdk.MessageOut;
 import com.zello.sdk.Status;
@@ -267,7 +268,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 		_editUsername.selectAll();
 
-		Headset.start(this, HeadsetType.RegularHeadsetToggle, this::onHeadsetPress, this::onHeadsetRelease, this::onHeadsetToggle, 10000);
+		Headset.start(this, HeadsetType.RegularHeadsetToggle, this::onHeadsetPress, this::onHeadsetRelease, this::onHeadsetToggle, 120000);
 	}
 
 	@Override
@@ -653,7 +654,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	private void updateMessageState() {
 		Zello.getInstance().getMessageIn(_messageIn);
 		Zello.getInstance().getMessageOut(_messageOut);
-		android.util.Log.i("sdk", "incoming active: " + _messageIn.isActive() + " / outgoing active: " + _messageOut.isActive());
+		Log.INSTANCE.i("Incoming active: " + _messageIn.isActive() + " / outgoing active: " + _messageOut.isActive());
 		boolean incoming = _messageIn.isActive(); // Is incoming message active?
 		boolean outgoing = _messageOut.isActive(); // Is outgoing message active?
 		if (outgoing) {
@@ -882,14 +883,17 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	private void onHeadsetPress() {
+		Log.INSTANCE.i("Headset press");
 		Zello.getInstance().beginMessage();
 	}
 
 	private void onHeadsetRelease() {
+		Log.INSTANCE.i("Headset release");
 		Zello.getInstance().endMessage();
 	}
 
 	private void onHeadsetToggle() {
+		Log.INSTANCE.i("Headset toggle");
 		if (_messageOut.isActive()) {
 			Zello.getInstance().endMessage();
 		} else {

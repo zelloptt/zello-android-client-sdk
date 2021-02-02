@@ -18,12 +18,12 @@ public class App extends Application {
 		Log.setLogger(new Logger() {
 			@Override
 			public void i(@NotNull String s) {
-				android.util.Log.i("zellosdk", s);
+				android.util.Log.i("zello-sdk", s);
 			}
 
 			@Override
 			public void e(@NotNull String s, @Nullable Throwable throwable) {
-				android.util.Log.e("zellosdk", s);
+				android.util.Log.e("zello-sdk", s);
 			}
 		});
 	}

@@ -22,16 +22,9 @@ class HeadsetSafetyTimer(private val headsetType: HeadsetType, private val timeo
 		private const val TAG = "(HeadsetSafetyTimer)"
 
 		/**
-		 * Even if the timeout is set to something very short, don't fire fake key up events until 2 minutes are up
+		 * Even if the timeout is set to something very short, don't fire fake key up events too early
 		 */
-		private const val MIN_TIMEOUT_MS = 120_000L
-
-		/**
-		 * Padding applied to the global message duration cap before simulating a key release. In a typical case, the user would only hit the message cap during an open mic,
-		 * meaning that this padding doesn't do much at all. However, if the user truly was holding the button down, they may release it once the message manager kills the message.
-		 * In that case, this gives a couple extra seconds for the real button release to come through before simulating one.
-		 */
-		private const val BUTTON_RELEASE_THRESHOLD_MS = 2_000L
+		private const val MIN_TIMEOUT_MS = 30_000L
 	}
 
 	private var timer: Timer? = null
@@ -78,7 +71,7 @@ class HeadsetSafetyTimer(private val headsetType: HeadsetType, private val timeo
 	}
 
 	private fun calculateTimeoutMs(): Long {
-		return max(MIN_TIMEOUT_MS, timeoutMs.toLong()) + BUTTON_RELEASE_THRESHOLD_MS
+		return max(MIN_TIMEOUT_MS, timeoutMs.toLong())
 	}
 
 }
