@@ -137,14 +137,20 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	//region Permissions
 
 	void requestVitalPermissions() {
-		Context context = _context;
+		requestVitalPermissions(null);
+	}
+
+	void requestVitalPermissions(@Nullable Activity activity) {
+		Context context = activity != null ? activity : _context;
 		String connectedPackage = _connectedPackage;
 		if (context == null || connectedPackage == null) {
 			return;
 		}
 		try {
 			Intent intent = new Intent();
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			if (activity == null) {
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			}
 			intent.setComponent(new ComponentName(connectedPackage, _pttPermissionsActivityClass));
 			intent.putExtra(Constants.EXTRA_REQUEST_VITAL_PERMISSIONS, true);
 			context.startActivity(intent);
@@ -152,48 +158,47 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
-	void requestVitalPermissions(@Nullable Activity activity) {
+	void requestLocationPermission() {
+		requestVitalPermissions(null);
+	}
+
+	void requestLocationPermission(@Nullable Activity activity) {
+		Context context = activity != null ? activity : _context;
 		String connectedPackage = _connectedPackage;
-		if (activity == null || connectedPackage == null) {
+		if (context == null || connectedPackage == null) {
 			return;
 		}
 		try {
 			Intent intent = new Intent();
+			if (activity == null) {
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			}
 			intent.setComponent(new ComponentName(connectedPackage, _pttPermissionsActivityClass));
-			intent.putExtra(Constants.EXTRA_REQUEST_VITAL_PERMISSIONS, true);
-			activity.startActivity(intent);
+			intent.putExtra(Constants.EXTRA_PERMISSION_LOCATION, true);
+			context.startActivity(intent);
 		} catch (Throwable ignored) {
 		}
 	}
 
 	void showMicrophonePermissionDialog() {
-		Context context = _context;
+		showMicrophonePermissionDialog(null);
+	}
+
+	void showMicrophonePermissionDialog(@Nullable Activity activity) {
+		Context context = activity != null ? activity : _context;
 		String connectedPackage = _connectedPackage;
 		if (context == null || connectedPackage == null) {
 			return;
 		}
 		try {
 			Intent intent = new Intent();
-			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			if (activity == null) {
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			}
 			intent.setComponent(new ComponentName(connectedPackage, _pttPermissionsActivityClass));
 			intent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
 			intent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
 			context.startActivity(intent);
-		} catch (Throwable ignored) {
-		}
-	}
-
-	void showMicrophonePermissionDialog(@Nullable Activity activity) {
-		String connectedPackage = _connectedPackage;
-		if (activity == null || connectedPackage == null) {
-			return;
-		}
-		try {
-			Intent intent = new Intent();
-			intent.setComponent(new ComponentName(connectedPackage, _pttPermissionsActivityClass));
-			intent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
-			intent.putExtra(Constants.EXTRA_PERMISSION_MICROPHONE, true);
-			activity.startActivity(intent);
 		} catch (Throwable ignored) {
 		}
 	}
