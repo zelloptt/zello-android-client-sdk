@@ -247,7 +247,7 @@ public class Zello {
 	}
 
 	/**
-	 * Opens a dialog that request the location permission needed by the Zello Work app to function properly.
+	 * Opens a dialog that requests the location permission needed by the Zello Work app to function properly.
 	 * <p>
 	 * This method is only necessary for Android devices running 6.0 (API 23) and above.
 	 * This method requests run time permissions for the microphone, phone, and external storage.
@@ -274,7 +274,7 @@ public class Zello {
 	}
 
 	/**
-	 * Opens a dialog that request the location permission needed by the Zello Work app to function properly.
+	 * Opens a dialog that requests the location permission needed by the Zello Work app to function properly.
 	 * <p>
 	 * This method is only necessary for Android devices running 6.0 (API 23) and above.
 	 * This method requests run time permissions for the microphone, phone, and external storage.
