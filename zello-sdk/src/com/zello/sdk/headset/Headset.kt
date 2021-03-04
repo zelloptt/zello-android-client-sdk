@@ -1,7 +1,6 @@
 package com.zello.sdk.headset
 
 import android.content.Context
-import android.os.Build
 import android.view.KeyEvent
 import androidx.annotation.MainThread
 import com.zello.sdk.Log
@@ -60,11 +59,7 @@ object Headset {
 			Log.e("$TAG Can't start: already started", null)
 			return
 		}
-		mediaSession = when {
-			Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> HeadsetMediaSessionImpl26()
-			Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> HeadsetMediaSessionImpl21()
-			else -> HeadsetMediaSessionImpl16()
-		}.also {
+		mediaSession = HeadsetMediaSessionImpl().also {
 			it.start(context) { event -> processKeyEvent(event) }
 		}
 		handler = HeadsetHandler(headsetType, onPress, onRelease, onToggle, openMicTimeoutMs, TimeImpl(context), Log)
