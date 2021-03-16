@@ -214,7 +214,7 @@ public class Zello {
 		checkConfiguration();
 		Sdk sdk = _sdk;
 		if (sdk != null) {
-			sdk.requestVitalPermissions();
+			sdk.requestPermissions(null, false, Constants.EXTRA_REQUEST_VITAL_PERMISSIONS);
 		}
 	}
 
@@ -242,7 +242,62 @@ public class Zello {
 		checkConfiguration();
 		Sdk sdk = _sdk;
 		if (sdk != null) {
-			sdk.requestVitalPermissions(activity);
+			sdk.requestPermissions(activity, false, Constants.EXTRA_REQUEST_VITAL_PERMISSIONS);
+		}
+	}
+
+	/**
+	 * Opens a dialog that requests the location permission needed by the Zello Work app to function properly.
+	 * <p>
+	 * This method is only necessary for Android devices running 6.0 (API 23) and above.
+	 * This method requests run time permissions for the microphone, phone, and external storage.
+	 * </p>
+	 * <p>
+	 * If these permissions have already been granted, this method has no effect.
+	 * In addition, if the device is running Android 5.1 (API 22) or less, this method has no effect.
+	 * </p>
+	 * <p>
+	 * Use this method when you don't have an activity on the screen (ex. from a service).
+	 * </p>
+	 *
+	 * @see Zello#requestVitalPermissions(Activity)
+	 * @see Zello#beginMessage()
+	 * @see Zello#showMicrophonePermissionDialog()
+	 * @see Events#onMicrophonePermissionNotGranted()
+	 */
+	public void requestLocationPermission() {
+		checkConfiguration();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.requestPermissions(null, false, Constants.EXTRA_PERMISSION_LOCATION);
+		}
+	}
+
+	/**
+	 * Opens a dialog that requests the location permission needed by the Zello Work app to function properly.
+	 * <p>
+	 * This method is only necessary for Android devices running 6.0 (API 23) and above.
+	 * This method requests run time permissions for the microphone, phone, and external storage.
+	 * </p>
+	 * <p>
+	 * If these permissions have already been granted, this method has no effect.
+	 * In addition, if the device is running Android 5.1 (API 22) or less, this method has no effect.
+	 * </p>
+	 * <p>
+	 * Use this method to open the permissions UI from an existing activity.
+	 * </p>
+	 *
+	 * @param activity Caller activity.
+	 * @see Zello#requestVitalPermissions()
+	 * @see Zello#beginMessage()
+	 * @see Zello#showMicrophonePermissionDialog()
+	 * @see Events#onMicrophonePermissionNotGranted()
+	 */
+	public void requestLocationPermission(@Nullable Activity activity) {
+		checkConfiguration();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.requestPermissions(activity, false, Constants.EXTRA_PERMISSION_LOCATION);
 		}
 	}
 
@@ -272,7 +327,7 @@ public class Zello {
 		checkConfiguration();
 		Sdk sdk = _sdk;
 		if (sdk != null) {
-			sdk.showMicrophonePermissionDialog();
+			sdk.requestPermissions(null, true, Constants.EXTRA_PERMISSION_MICROPHONE);
 		}
 	}
 
@@ -303,7 +358,7 @@ public class Zello {
 		checkConfiguration();
 		Sdk sdk = _sdk;
 		if (sdk != null) {
-			sdk.showMicrophonePermissionDialog(activity);
+			sdk.requestPermissions(activity, true, Constants.EXTRA_PERMISSION_MICROPHONE);
 		}
 	}
 
