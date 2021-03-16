@@ -214,7 +214,7 @@ public class Zello {
 		checkConfiguration();
 		Sdk sdk = _sdk;
 		if (sdk != null) {
-			sdk.requestVitalPermissions();
+			sdk.requestPermissions(null, false, Constants.EXTRA_REQUEST_VITAL_PERMISSIONS);
 		}
 	}
 
@@ -242,7 +242,7 @@ public class Zello {
 		checkConfiguration();
 		Sdk sdk = _sdk;
 		if (sdk != null) {
-			sdk.requestVitalPermissions(activity);
+			sdk.requestPermissions(activity, false, Constants.EXTRA_REQUEST_VITAL_PERMISSIONS);
 		}
 	}
 
@@ -269,7 +269,7 @@ public class Zello {
 		checkConfiguration();
 		Sdk sdk = _sdk;
 		if (sdk != null) {
-			sdk.requestLocationPermission();
+			sdk.requestPermissions(null, false, Constants.EXTRA_PERMISSION_LOCATION);
 		}
 	}
 
@@ -297,7 +297,7 @@ public class Zello {
 		checkConfiguration();
 		Sdk sdk = _sdk;
 		if (sdk != null) {
-			sdk.requestLocationPermission(activity);
+			sdk.requestPermissions(activity, false, Constants.EXTRA_PERMISSION_LOCATION);
 		}
 	}
 
@@ -327,7 +327,7 @@ public class Zello {
 		checkConfiguration();
 		Sdk sdk = _sdk;
 		if (sdk != null) {
-			sdk.showMicrophonePermissionDialog();
+			sdk.requestPermissions(null, true, Constants.EXTRA_PERMISSION_MICROPHONE);
 		}
 	}
 
@@ -358,7 +358,7 @@ public class Zello {
 		checkConfiguration();
 		Sdk sdk = _sdk;
 		if (sdk != null) {
-			sdk.showMicrophonePermissionDialog(activity);
+			sdk.requestPermissions(activity, true, Constants.EXTRA_PERMISSION_MICROPHONE);
 		}
 	}
 
