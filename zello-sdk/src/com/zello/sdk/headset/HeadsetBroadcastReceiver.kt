@@ -4,7 +4,6 @@ import android.content.Intent
 import android.view.KeyEvent
 import androidx.media.session.MediaButtonReceiver
 import com.zello.sdk.headset.HeadsetBroadcastReceiver.Companion.onKeyEvent
-import java.lang.ref.WeakReference
 
 /**
  * Broadcast receiver that is used with the media session
@@ -31,16 +30,8 @@ class HeadsetBroadcastReceiver : MediaButtonReceiver() {
 		/**
 		 * Register a recipient for the key events.
 		 */
-		var onKeyEvent: ((KeyEvent) -> Unit)?
-			get() {
-				return handler?.get()
-			}
-			set(value) {
-				handler = if (value == null) null else WeakReference(value)
-			}
+		var onKeyEvent: ((KeyEvent) -> Unit)? = null
 
-		// Backing field for [onKeyEvent]
-		private var handler: WeakReference<(KeyEvent) -> Unit>? = null
 	}
 
 }
