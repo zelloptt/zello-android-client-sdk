@@ -14,7 +14,7 @@ object Log: Logger {
 	 */
 	@JvmStatic
 	fun setLogger(events: Logger?) {
-		this.logger = events
+		logger = events
 	}
 
 	/**

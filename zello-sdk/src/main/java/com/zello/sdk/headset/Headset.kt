@@ -89,7 +89,6 @@ object Headset {
 		return processKeyEvent(event)
 	}
 
-	@JvmStatic
 	private fun processKeyEvent(event: KeyEvent): Boolean {
 		// Drop non-headset events
 		if (event.keyCode != KeyEvent.KEYCODE_HEADSETHOOK) return false
