@@ -4,8 +4,7 @@ import android.os.Message;
 
 import androidx.annotation.NonNull;
 
-@SuppressWarnings("unused")
-interface SafeHandlerEvents {
+public interface SafeHandlerEvents {
 
 	void handleMessageFromSafeHandler(@NonNull Message message);
 

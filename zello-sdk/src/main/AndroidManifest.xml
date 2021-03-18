@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.zello.sdk">
+
+	<!-- Declare intents and packages that the library code would like to have access to on Android R+ -->
+	<queries>
+		<package android:name="com.loudtalks" />
+		<package android:name="net.loudtalks" />
+		<package android:name="com.pttsdk" />
+	</queries>
+
+	<application>
+		<receiver
+			android:name=".headset.HeadsetBroadcastReceiver"
+			android:priority="999">
+
+			<intent-filter>
+				<action android:name="android.intent.action.MEDIA_BUTTON" />
+			</intent-filter>
+		</receiver>
+	</application>
+</manifest>

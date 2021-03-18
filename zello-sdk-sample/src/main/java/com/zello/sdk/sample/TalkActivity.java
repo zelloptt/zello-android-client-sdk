@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -39,12 +38,15 @@ import com.zello.sdk.Contact;
 import com.zello.sdk.ContactStatus;
 import com.zello.sdk.ContactType;
 import com.zello.sdk.Error;
+import com.zello.sdk.Log;
 import com.zello.sdk.MessageIn;
 import com.zello.sdk.MessageOut;
 import com.zello.sdk.Status;
 import com.zello.sdk.Tab;
 import com.zello.sdk.Theme;
 import com.zello.sdk.Zello;
+import com.zello.sdk.headset.Headset;
+import com.zello.sdk.headset.HeadsetType;
 
 import java.text.NumberFormat;
 
@@ -250,11 +252,10 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 		_dirtyContacts = true;
 
+		Zello zello = Zello.getInstance();
 		// Automatically choose the app to connect to in the following order of preference: com.loudtalks, net.loudtalks, com.pttsdk
 		// Alternatively, connect to a preferred app by supplying a package name, for example: Zello.getInstance().configure("net.loudtalks", this)
 		Zello.getInstance().configure(this);
-
-		Zello zello = Zello.getInstance();
 		zello.requestVitalPermissions(this);
 		zello.subscribeToEvents(this);
 		zello.setShowBluetoothAccessoriesNotifications(false);
@@ -266,6 +267,8 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		updateSelectedContact();
 
 		_editUsername.selectAll();
+
+		Headset.start(this, HeadsetType.RegularHeadsetToggle, this::onHeadsetPress, this::onHeadsetRelease, this::onHeadsetToggle, 120000);
 	}
 
 	@Override
@@ -275,6 +278,8 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		zello.unsubscribeFromEvents(this);
 		zello.unconfigure();
 		_audio = null;
+
+		Headset.stop();
 	}
 
 	@Override
@@ -402,7 +407,20 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				return true;
 			}
 		}
+		// Pass the event to headset button handler
+		if (Headset.onKeyEvent(event)) {
+			return true;
+		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public boolean onKeyUp(int keyCode, KeyEvent event) {
+		// Pass the event to headset button handler
+		if (Headset.onKeyEvent(event)) {
+			return true;
+		}
+		return super.onKeyUp(keyCode, event);
 	}
 
 	@Override
@@ -636,7 +654,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	private void updateMessageState() {
 		Zello.getInstance().getMessageIn(_messageIn);
 		Zello.getInstance().getMessageOut(_messageOut);
-		Log.i("sdk", "incoming active: " + _messageIn.isActive() + " / outgoing active: " + _messageOut.isActive());
+		Log.INSTANCE.i("Incoming active: " + _messageIn.isActive() + " / outgoing active: " + _messageOut.isActive());
 		boolean incoming = _messageIn.isActive(); // Is incoming message active?
 		boolean outgoing = _messageOut.isActive(); // Is outgoing message active?
 		if (outgoing) {
@@ -861,6 +879,25 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 				return getString(R.string.error_device_id_mismatch);
 			default:
 				return null;
+		}
+	}
+
+	private void onHeadsetPress() {
+		Log.INSTANCE.i("Headset press");
+		Zello.getInstance().beginMessage();
+	}
+
+	private void onHeadsetRelease() {
+		Log.INSTANCE.i("Headset release");
+		Zello.getInstance().endMessage();
+	}
+
+	private void onHeadsetToggle() {
+		Log.INSTANCE.i("Headset toggle");
+		if (_messageOut.isActive()) {
+			Zello.getInstance().endMessage();
+		} else {
+			Zello.getInstance().beginMessage();
 		}
 	}
 
