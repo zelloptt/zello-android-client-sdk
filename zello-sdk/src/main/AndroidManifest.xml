@@ -12,13 +12,12 @@
 
 	<application>
 		<receiver
-			android:name="com.zello.sdk.headset.HeadsetBroadcastReceiver"
-			android:priority="99999999">
+			android:name=".headset.HeadsetBroadcastReceiver"
+			android:priority="999">
 
 			<intent-filter>
 				<action android:name="android.intent.action.MEDIA_BUTTON" />
 			</intent-filter>
 		</receiver>
 	</application>
-
 </manifest>
