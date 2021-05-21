@@ -5,6 +5,7 @@ import android.view.KeyEvent
 import androidx.annotation.MainThread
 import com.zello.sdk.Log
 import com.zello.sdk.TimeImpl
+import com.zello.sdk.Zello
 
 /**
  * This class contains the high level headset hook processing logic.
@@ -63,6 +64,7 @@ object Headset {
 			it.start(context) { event -> processKeyEvent(event) }
 		}
 		handler = HeadsetHandler(headsetType, onPress, onRelease, onToggle, openMicTimeoutMs, TimeImpl(context), Log)
+		Zello.getInstance().setMediaSessionCallback { mediaSession?.reacquire() }
 	}
 
 	/**
@@ -74,6 +76,7 @@ object Headset {
 		handler = null
 		mediaSession?.stop()
 		mediaSession = null
+		Zello.getInstance().setMediaSessionCallback(null)
 	}
 
 	/**

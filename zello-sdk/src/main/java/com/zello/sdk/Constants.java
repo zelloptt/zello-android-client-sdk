@@ -104,6 +104,7 @@ public class Constants {
 	public static final String VALUE_CHANNELS = "CHANNELS";
 	public static final String VALUE_RECENTS = "RECENTS";
 	public static final String VALUE_SET_AUDIO = "SET_AUDIO";
+	public static final String VALUE_SET_MEDIA_SESSION_ACTIVE = "SET_MEDIA_SESSION";
 
 	public static final String ACTION_COMMAND = "COMMAND";
 	public static final String ACTION_APP_STATE = "APP_STATE";
@@ -112,5 +113,6 @@ public class Constants {
 	public static final String ACTION_AUDIO_STATE = "AUDIO_STATE";
 	public static final String ACTION_PERMISSION_ERRORS = "PERMISSION_ERRORS";
 	public static final String ACTION_BT_ACCESSORY_STATE = "BT_ACCESSORY_STATE";
+	public static final String ACTION_MEDIA_SESSION_CHANGED = "MEDIA_SESSION_CHANGED";
 
 }

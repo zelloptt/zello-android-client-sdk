@@ -12,6 +12,11 @@ package com.zello.sdk.headset
 interface SilencePlayer {
 
 	/**
+	 * Replay
+	 */
+	fun replay()
+
+	/**
 	 * Release the resources associated with the player.
 	 */
 	fun release()

@@ -64,6 +64,13 @@ class HeadsetMediaSessionImpl : HeadsetMediaSession {
 		callback = null
 	}
 
+	/**
+	 * Re-acquire media session after it's been taken away.
+	 */
+	override fun reacquire() {
+		silencePlayer?.replay()
+	}
+
 	private fun startSilencePlayer(context: Context) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
 		silencePlayer = SilencePlayerImpl21(context)

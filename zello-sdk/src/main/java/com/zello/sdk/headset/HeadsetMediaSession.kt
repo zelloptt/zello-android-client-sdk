@@ -18,4 +18,9 @@ interface HeadsetMediaSession {
 	 */
 	fun stop()
 
+	/**
+	 * Re-acquire media session after it's been taken away.
+	 */
+	fun reacquire()
+
 }
