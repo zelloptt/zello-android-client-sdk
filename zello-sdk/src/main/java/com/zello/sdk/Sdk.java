@@ -48,7 +48,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private boolean _serviceConnecting; // Service is bound but is still connecting
 	private @Nullable String _delayedNetwork, _delayedUsername, _delayedPassword;
 	private boolean _delayedPerishable;
-	private @Nullable Boolean _delayedShowBtAcceccoriesNotifications;
+	private @Nullable Boolean _delayedShowBtAccessoriesNotifications;
 	private @Nullable Runnable _mediaSessionCallback;
 	private boolean _lastMessageReplayAvailable;
 	private @Nullable BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
@@ -604,7 +604,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	void setShowBluetoothAccessoriesNotifications(boolean show) {
 		if (!isConnected()) {
-			_delayedShowBtAcceccoriesNotifications = show;
+			_delayedShowBtAccessoriesNotifications = show;
 			return;
 		}
 		Context context = _context;
@@ -676,15 +676,15 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 		_serviceConnecting = false;
 		context.startService(_serviceIntent);
-		if (_delayedShowBtAcceccoriesNotifications != null) {
-			setShowBluetoothAccessoriesNotifications(_delayedShowBtAcceccoriesNotifications);
+		if (_delayedShowBtAccessoriesNotifications != null) {
+			setShowBluetoothAccessoriesNotifications(_delayedShowBtAccessoriesNotifications);
 		}
 		if (_delayedNetwork != null) {
 			signIn(_delayedNetwork, _delayedUsername, _delayedPassword, _delayedPerishable);
 		}
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
 		_delayedPerishable = false;
-		_delayedShowBtAcceccoriesNotifications = null;
+		_delayedShowBtAccessoriesNotifications = null;
 		// If service is not bound, the component was destroyed and the service needs to be disconnected
 		if (!_serviceBound) {
 			Log.INSTANCE.e("Disconnecting because sdk was destroyed", null);

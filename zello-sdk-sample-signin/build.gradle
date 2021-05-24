@@ -1,12 +1,17 @@
 buildscript {
     repositories {
-        jcenter()
         google()
+        mavenCentral()
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:4.1.3"
+        classpath "com.android.tools.build:gradle:4.2.1"
     }
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
 
 apply plugin: "com.android.application"
@@ -38,9 +43,5 @@ android {
 
 dependencies {
     implementation files("libs/zello-sdk.aar")
-    implementation "androidx.appcompat:appcompat:1.2.0"
-}
-
-repositories {
-    google()
+    implementation "androidx.appcompat:appcompat:1.3.0"
 }

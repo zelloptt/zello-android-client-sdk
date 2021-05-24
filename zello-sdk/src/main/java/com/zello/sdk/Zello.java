@@ -1086,8 +1086,11 @@ public class Zello {
 	/**
 	 * Ask the host app to notify about media session changes caused by it performing audio playback.
 	 * <p>
-	 * When set, makes the host app send notification broadcasts intercepted by the headset code.
+	 * When set, makes the host app notify the instance of {@link com.zello.sdk.headset.Headset}
+	 * that it needs to re-acquire the media session.
 	 * </p>
+	 *
+	 * @param callback {@link Runnable} callback
 	 */
 	public void setMediaSessionCallback(@Nullable Runnable callback) {
 		checkConfiguration();

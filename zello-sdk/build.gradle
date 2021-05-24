@@ -1,31 +1,30 @@
 buildscript {
-	ext.kotlin_version = "1.4.31"
+	ext.kotlin_version = "1.5.0"
 
 	repositories {
-		jcenter()
 		google()
-		maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+		mavenCentral()
 	}
 
 	dependencies {
-		classpath "com.android.tools.build:gradle:4.1.2"
+		classpath "com.android.tools.build:gradle:4.2.1"
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 }
 
 repositories {
-	jcenter()
 	google()
-	maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
+	mavenCentral()
 }
 
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
 dependencies {
-	implementation "androidx.appcompat:appcompat:1.2.0"
-	implementation "androidx.core:core-ktx:1.3.2"
-	implementation "androidx.media:media:1.2.1"
+	implementation "androidx.appcompat:appcompat:1.3.0"
+	implementation "androidx.core:core-ktx:1.5.0"
+	implementation "androidx.media:media:1.3.1"
+	implementation "androidx.annotation:annotation:1.2.0"
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
@@ -88,6 +87,9 @@ task zelloSdkAarDeployReleaseToSamples {
 		into "../zello-sdk-sample-signin/libs/"
 		rename("${sourceAarName}", "${targetAarName}")
 	}
+	dependencies {
+		implementation "androidx.annotation:annotation:1.2.0"
+	}
 }
 
 task zelloSdkDocDelete(type: Delete) {
@@ -101,11 +103,9 @@ android.libraryVariants.all { variant ->
 			title ""
 			description "Creates Zello SDK Javadoc in the project root folder"
 			destinationDir = new File("${projectDir}/../docs", "zello-sdk-documentation")
-			source = android.sourceSets.main.java.srcDirs
-			classpath = files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
+			source = variant.javaCompiler.source
+			classpath = variant.javaCompiler.classpath + files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
 			exclude "**/Constants.java"
-			exclude "**/ContactObserver*.java"
-			exclude "**/SafeHandler*.java"
 			exclude "**/*.kt"
 			options.memberLevel = JavadocMemberLevel.PUBLIC
 			options.noTree = false
@@ -146,7 +146,7 @@ android {
 	}
 
 	buildTypes {
-		redug {
+		debug {
 			minifyEnabled false
 			proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
 		}
