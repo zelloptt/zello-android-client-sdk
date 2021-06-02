@@ -42,6 +42,7 @@ task zelloSdkAarDeployReleaseToRoot() {
 		into "../"
 		rename("${sourceAarName}", "${targetAarName}")
 	}
+	shouldRunAfter "assembleRelease"
 }
 
 // This add a task that deploys a release build of the library to the sample projects /lib folders.
@@ -90,6 +91,7 @@ task zelloSdkAarDeployReleaseToSamples {
 	dependencies {
 		implementation "androidx.annotation:annotation:1.2.0"
 	}
+	shouldRunAfter "assembleRelease"
 }
 
 task zelloSdkDocDelete(type: Delete) {
@@ -118,6 +120,7 @@ android.libraryVariants.all { variant ->
 			options.noDeprecated = true
 			options.noDeprecatedList = true
 			options.stylesheetFile = new File(projectDir, "../docs/stylesheet.css")
+			shouldRunAfter "assembleRelease"
 		}
 	}
 }
@@ -134,9 +137,13 @@ android {
 	compileSdkVersion 30
 	buildToolsVersion "30.0.3"
 
+	ext.sdkVersion = "4.111.0"
+
 	defaultConfig {
 		targetSdkVersion 30
 		minSdkVersion 16
+		manifestPlaceholders = [sdkVersion: "$sdkVersion"]
+		buildConfigField "String", "SDK_VERSION", "\"$sdkVersion\""
 		consumerProguardFiles "consumer-rules.pro"
 	}
 

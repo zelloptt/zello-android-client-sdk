@@ -49,7 +49,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private @Nullable String _delayedNetwork, _delayedUsername, _delayedPassword;
 	private boolean _delayedPerishable;
 	private @Nullable Boolean _delayedShowBtAccessoriesNotifications;
-	private @Nullable Runnable _mediaSessionCallback;
+	private boolean _headsetActive;
 	private boolean _lastMessageReplayAvailable;
 	private @Nullable BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
 	private @Nullable BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
@@ -58,7 +58,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private @Nullable BroadcastReceiver _receiverActiveTab; // Broadcast receiver for last selected contact list tab
 	private @Nullable BroadcastReceiver _receiverPermissionErrors; // Broadcast receiver for permissions errors
 	private @Nullable BroadcastReceiver _receiverBtAccessoryState; // Broadcast receiver for bluetooth accessory state broadcasts
-	private @Nullable BroadcastReceiver _receiverMediaSessionChanged; // Broadcast receiver for media session changes
 
 	private static final int AWAKE_TIMER = 1;
 
@@ -115,7 +114,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_connectedPackage = null;
 		_contacts = null;
 		_audio = null;
-		_mediaSessionCallback = null;
 	}
 
 	void onResume() {
@@ -125,16 +123,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_resumed = true;
 		sendStayAwake();
 		startAwakeTimer();
-		// Media session monitoring is not needed when the app is in the foreground
-		applyMediaSessionCallback();
 	}
 
 	void onPause() {
 		_resumed = false;
 		stopAwakeTimer();
-		// Media session monitoring is beneficial when the app is in the background
-		applyMediaSessionCallback();
-		handleMediaSessionChanged();
 	}
 
 	//endregion
@@ -618,24 +611,23 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		context.sendBroadcast(intent);
 	}
 
-	void setMediaSessionCallback(@Nullable Runnable callback) {
-		if (!isConnected()) {
-			_mediaSessionCallback = callback;
-			return;
+	void setHeadsetActive(boolean active) {
+		_headsetActive = active;
+		if (isConnected()) {
+			applyHeadsetActive();
 		}
-		applyMediaSessionCallback();
 	}
 
-	private void applyMediaSessionCallback() {
+	private void applyHeadsetActive() {
 		Context context = _context;
 		String connectedPackage = _connectedPackage;
 		if (context == null || connectedPackage == null) {
 			return;
 		}
 		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
-		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_MEDIA_SESSION_ACTIVE);
+		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_HEADSET_ACTIVE);
 		intent.putExtra(Constants.EXTRA_PACKAGE, _context.getPackageName());
-		intent.putExtra(Constants.EXTRA_VALUE, !_resumed && _mediaSessionCallback != null);
+		intent.putExtra(Constants.EXTRA_VALUE, _headsetActive);
 		context.sendBroadcast(intent);
 	}
 
@@ -698,9 +690,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_appState._initializing = false;
 		fireAppStateChanged();
 		// Initial media session state
-		if (_mediaSessionCallback != null) {
-			setMediaSessionCallback(_mediaSessionCallback);
-		}
+		applyHeadsetActive();
 	}
 
 	@Override
@@ -852,16 +842,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			};
 			_context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_BT_ACCESSORY_STATE));
 		}
-		if (_receiverMediaSessionChanged == null) {
-			// Register to receive media session change broadcasts
-			_receiverMediaSessionChanged = new BroadcastReceiver() {
-				@Override
-				public void onReceive(Context context, Intent intent) {
-					handleMediaSessionChanged();
-				}
-			};
-			_context.registerReceiver(_receiverMediaSessionChanged, new IntentFilter(_connectedPackage + "." + Constants.ACTION_MEDIA_SESSION_CHANGED));
-		}
 	}
 
 	private void unregisterAppStateReceivers() {
@@ -895,10 +875,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (_receiverBtAccessoryState != null) {
 			_context.unregisterReceiver(_receiverBtAccessoryState);
 			_receiverBtAccessoryState = null;
-		}
-		if (_receiverMediaSessionChanged != null) {
-			_context.unregisterReceiver(_receiverMediaSessionChanged);
-			_receiverMediaSessionChanged = null;
 		}
 	}
 
@@ -1210,13 +1186,6 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		String description = intent.getStringExtra(Constants.EXTRA_DESCRIPTION);
 		for (Events event : Zello.getInstance().events) {
 			event.onBluetoothAccessoryStateChanged(type, state, name, description);
-		}
-	}
-
-	private void handleMediaSessionChanged() {
-		Runnable callback = _mediaSessionCallback;
-		if (callback != null) {
-			callback.run();
 		}
 	}
 

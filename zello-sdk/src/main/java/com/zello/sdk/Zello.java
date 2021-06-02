@@ -1084,19 +1084,18 @@ public class Zello {
 	}
 
 	/**
-	 * Ask the host app to notify about media session changes caused by it performing audio playback.
+	 * Tell the host app that it doesn't need to handle the headset hook events.
 	 * <p>
-	 * When set, makes the host app notify the instance of {@link com.zello.sdk.headset.Headset}
-	 * that it needs to re-acquire the media session.
+	 * When set, makes the host function as if the headset PTT button did not exist.
 	 * </p>
 	 *
-	 * @param callback {@link Runnable} callback
+	 * @param active True when the headset object is handling the events
 	 */
-	public void setMediaSessionCallback(@Nullable Runnable callback) {
+	public void setHeadsetActive(boolean active) {
 		checkConfiguration();
 		Sdk sdk = _sdk;
 		if (sdk != null) {
-			sdk.setMediaSessionCallback(callback);
+			sdk.setHeadsetActive(active);
 		}
 	}
 

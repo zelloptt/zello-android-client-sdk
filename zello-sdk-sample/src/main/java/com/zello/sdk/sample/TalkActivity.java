@@ -144,36 +144,30 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		});
 
 		// Contact list pick handler
-		_listContacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				ListAdapter adapter = (ListAdapter) _listContacts.getAdapter();
-				if (adapter != null) {
-					Contact contact = (Contact) adapter.getItem(position);
-					if (contact != null) {
-						Zello.getInstance().setSelectedContact(contact);
-					}
+		_listContacts.setOnItemClickListener((parent, view, position, id) -> {
+			ListAdapter adapter = (ListAdapter) _listContacts.getAdapter();
+			if (adapter != null) {
+				Contact contact = (Contact) adapter.getItem(position);
+				if (contact != null) {
+					Zello.getInstance().setSelectedContact(contact);
 				}
 			}
 		});
-		_listContacts.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
-			@Override
-			public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-				if (menuInfo instanceof AdapterView.AdapterContextMenuInfo) {
-					AdapterView.AdapterContextMenuInfo listInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
-					if (listInfo.targetView != null && listInfo.targetView.getParent() == _listContacts) {
-						int position = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
-						android.widget.ListAdapter adapter = _listContacts.getAdapter();
-						if (adapter instanceof ListAdapter) {
-							if (position >= 0 && adapter.getCount() > position) {
-								_contextContact = (Contact) adapter.getItem(position);
-								if (_contextContact != null) {
-									menu.add(0, R.id.menu_talk, 0, getString(R.string.menu_talk));
-									if (!_contextContact.getMuted()) {
-										menu.add(0, R.id.menu_mute, 1, getString(R.string.menu_mute));
-									} else {
-										menu.add(0, R.id.menu_unmute, 1, getString(R.string.menu_unmute));
-									}
+		_listContacts.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
+			if (menuInfo instanceof AdapterView.AdapterContextMenuInfo) {
+				AdapterView.AdapterContextMenuInfo listInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
+				if (listInfo.targetView != null && listInfo.targetView.getParent() == _listContacts) {
+					int position = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
+					android.widget.ListAdapter adapter = _listContacts.getAdapter();
+					if (adapter instanceof ListAdapter) {
+						if (position >= 0 && adapter.getCount() > position) {
+							_contextContact = (Contact) adapter.getItem(position);
+							if (_contextContact != null) {
+								menu.add(0, R.id.menu_talk, 0, getString(R.string.menu_talk));
+								if (!_contextContact.getMuted()) {
+									menu.add(0, R.id.menu_mute, 1, getString(R.string.menu_mute));
+								} else {
+									menu.add(0, R.id.menu_unmute, 1, getString(R.string.menu_unmute));
 								}
 							}
 						}
@@ -183,12 +177,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		});
 
 		// Connect channel
-		_btnConnect.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				connectChannel();
-			}
-		});
+		_btnConnect.setOnClickListener(view -> connectChannel());
 
 		// Login credentials
 		_editUsername.setText(Helper.loadValue(this, _keyUsername));
@@ -196,57 +185,37 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		_editNetwork.setText(Helper.loadValue(this, _keyNetwork));
 		_editPassword = _viewLogin.findViewById(R.id.password);
 		_editNetwork = _viewLogin.findViewById(R.id.network);
-		_btnLogin.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				String username = _editUsername.getText().toString();
-				String password = _editPassword.getText().toString();
-				String network = _editNetwork.getText().toString();
-				boolean perishable = _checkPerishable.isChecked();
-				Helper.saveValue(TalkActivity.this, _keyUsername, username);
-				Helper.saveValue(TalkActivity.this, _keyPassword, password);
-				Helper.saveValue(TalkActivity.this, _keyNetwork, network);
-				Zello.getInstance().signIn(network, username, password, perishable);
+		_btnLogin.setOnClickListener(view -> {
+			String username = _editUsername.getText().toString();
+			String password = _editPassword.getText().toString();
+			String network = _editNetwork.getText().toString();
+			boolean perishable = _checkPerishable.isChecked();
+			Helper.saveValue(TalkActivity.this, _keyUsername, username);
+			Helper.saveValue(TalkActivity.this, _keyPassword, password);
+			Helper.saveValue(TalkActivity.this, _keyNetwork, network);
+			Zello.getInstance().signIn(network, username, password, perishable);
+		});
+		_btnCancel.setOnClickListener(v -> {
+			if (_appState.isReconnecting() || _appState.isWaitingForNetwork() || (_appState.isSigningIn() && !_appState.isCancellingSignin())) {
+				Zello.getInstance().cancelSignIn();
 			}
 		});
-		_btnCancel.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (_appState.isReconnecting() || _appState.isWaitingForNetwork() || (_appState.isSigningIn() && !_appState.isCancellingSignin())) {
-					Zello.getInstance().cancelSignIn();
-				}
-			}
-		});
-		_btnReplay.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Zello.getInstance().replayLastIncomingMessage();
-			}
-		});
+		_btnReplay.setOnClickListener(v -> Zello.getInstance().replayLastIncomingMessage());
 
 		// Audio modes
-		_btnSpeaker.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (_audio != null) {
-					_audio.setMode(AudioMode.SPEAKER);
-				}
+		_btnSpeaker.setOnClickListener(v -> {
+			if (_audio != null) {
+				_audio.setMode(AudioMode.SPEAKER);
 			}
 		});
-		_btnEarpiece.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (_audio != null) {
-					_audio.setMode(AudioMode.EARPIECE);
-				}
+		_btnEarpiece.setOnClickListener(v -> {
+			if (_audio != null) {
+				_audio.setMode(AudioMode.EARPIECE);
 			}
 		});
-		_btnBluetooth.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (_audio != null) {
-					_audio.setMode(AudioMode.BLUETOOTH);
-				}
+		_btnBluetooth.setOnClickListener(v -> {
+			if (_audio != null) {
+				_audio.setMode(AudioMode.BLUETOOTH);
 			}
 		});
 
@@ -274,24 +243,25 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		Headset.stop();
 		Zello zello = Zello.getInstance();
 		zello.unsubscribeFromEvents(this);
 		zello.unconfigure();
 		_audio = null;
-
-		Headset.stop();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		Zello.getInstance().leavePowerSavingMode();
+		//Headset.onForeground();
 		_active = true;
 		updateContactList();
 	}
 
 	@Override
 	protected void onPause() {
+		Headset.onBackground();
 		super.onPause();
 		Zello.getInstance().enterPowerSavingMode();
 		_active = false;

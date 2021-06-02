@@ -10,7 +10,7 @@ import com.zello.sdk.Log
 import com.zello.sdk.R
 
 /**
- * A implementation of [SilencePlayer] suitable for API 21+.
+ * An implementation of [SilencePlayer] suitable for API 21+.
  */
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class SilencePlayerImpl21(context: Context) : SilencePlayer {
@@ -24,27 +24,18 @@ class SilencePlayerImpl21(context: Context) : SilencePlayer {
 
 	init {
 		try {
-			context.resources.openRawResourceFd(R.raw.silence)?.let { descriptor ->
-				asset = descriptor
-				replay()
-			}
+			asset = context.resources.openRawResourceFd(R.raw.silence)
 		} catch (t: Throwable) {
-			Log.e("${TAG} Can't create a player", t)
+			Log.e("$TAG Can't open a resource", t)
 		}
 	}
 
-	override fun replay() {
-		player?.release()
-		asset?.let { descriptor ->
-			player = MediaPlayer().also { player ->
-				player.setAudioAttributes(AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
-				player.setOnPreparedListener {
-					it.start()
-				}
-				player.setDataSource(descriptor.fileDescriptor, descriptor.startOffset, descriptor.length)
-				player.prepareAsync()
-			}
-		}
+	override fun playOnce() {
+		play(false)
+	}
+
+	override fun playForever() {
+		play(true)
 	}
 
 	override fun release() {
@@ -52,6 +43,21 @@ class SilencePlayerImpl21(context: Context) : SilencePlayer {
 		player = null
 		asset?.close()
 		asset = null
+	}
+
+	private fun play(looping: Boolean) {
+		player?.release()
+		asset?.let { descriptor ->
+			player = MediaPlayer().also { player ->
+				player.setAudioAttributes(AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build())
+				player.isLooping = looping
+				player.setOnPreparedListener {
+					it.start()
+				}
+				player.setDataSource(descriptor.fileDescriptor, descriptor.startOffset, descriptor.length)
+				player.prepareAsync()
+			}
+		}
 	}
 
 }

@@ -390,9 +390,9 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i31" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setMediaSessionCallback(java.lang.Runnable)">setMediaSessionCallback</a></span>&#8203;(java.lang.Runnable&nbsp;callback)</code></th>
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#setHeadsetActive(boolean)">setHeadsetActive</a></span>&#8203;(boolean&nbsp;active)</code></th>
 <td class="colLast">
-<div class="block">Ask the host app to notify about media session changes caused by it performing audio playback.</div>
+<div class="block">Tell the host app that it doesn't need to handle the headset hook events.</div>
 </td>
 </tr>
 <tr id="i32" class="altColor">
@@ -1667,22 +1667,20 @@ public&nbsp;<a href="Audio.html" title="class in com.zello.sdk">Audio</a>&nbsp;g
 </dl>
 </li>
 </ul>
-<a id="setMediaSessionCallback(java.lang.Runnable)">
+<a id="setHeadsetActive(boolean)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>setMediaSessionCallback</h4>
-<pre class="methodSignature">public&nbsp;void&nbsp;setMediaSessionCallback&#8203;(@Nullable
-                                    java.lang.Runnable&nbsp;callback)</pre>
-<div class="block">Ask the host app to notify about media session changes caused by it performing audio playback.
+<h4>setHeadsetActive</h4>
+<pre class="methodSignature">public&nbsp;void&nbsp;setHeadsetActive&#8203;(boolean&nbsp;active)</pre>
+<div class="block">Tell the host app that it doesn't need to handle the headset hook events.
  <p>
- When set, makes the host app notify the instance of <code>Headset</code>
- that it needs to re-acquire the media session.
+ When set, makes the host function as if the headset PTT button did not exist.
  </p></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>callback</code> - <code>Runnable</code> callback</dd>
+<dd><code>active</code> - True when the headset object is handling the events</dd>
 </dl>
 </li>
 </ul>
