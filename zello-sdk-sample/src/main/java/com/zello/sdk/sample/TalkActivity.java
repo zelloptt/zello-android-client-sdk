@@ -254,7 +254,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	protected void onResume() {
 		super.onResume();
 		Zello.getInstance().leavePowerSavingMode();
-		//Headset.onForeground();
+		Headset.onForeground();
 		_active = true;
 		updateContactList();
 	}
