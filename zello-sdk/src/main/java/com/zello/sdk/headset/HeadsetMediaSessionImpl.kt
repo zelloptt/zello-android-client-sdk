@@ -48,7 +48,6 @@ class HeadsetMediaSessionImpl : HeadsetMediaSession {
 			}.build()
 			session.setPlaybackState(playbackState)
 		}
-		// While not strictly necessary, playing a dummy sound may help with "stealing" an active media session from another app
 		startSilencePlayer(context)
 	}
 
@@ -64,9 +63,34 @@ class HeadsetMediaSessionImpl : HeadsetMediaSession {
 		callback = null
 	}
 
+	/**
+	 * Re-acquire media session after it's been taken away.
+	 */
+	override fun reacquire() {
+		silencePlayer?.playOnce()
+	}
+
+	/**
+	 * Stop playing the repeating sound.
+	 */
+	override fun onForeground() {
+		// Stop the continuous playback, but also re-acquire the session in case it was lost by playing the sound once
+		silencePlayer?.playOnce()
+	}
+
+	/**
+	 * Start playingthe repeating sound.
+	 */
+	override fun onBackground() {
+		silencePlayer?.playForever()
+	}
+
 	private fun startSilencePlayer(context: Context) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-		silencePlayer = SilencePlayerImpl21(context)
+		silencePlayer = SilencePlayerImpl21(context).also {
+			// Playing a dummy sound should steal an active media session from another app
+			it.playOnce()
+		}
 	}
 
 }

@@ -1083,6 +1083,22 @@ public class Zello {
 		}
 	}
 
+	/**
+	 * Tell the host app that it doesn't need to handle the headset hook events.
+	 * <p>
+	 * When set, makes the host function as if the headset PTT button did not exist.
+	 * </p>
+	 *
+	 * @param active True when the headset object is handling the events
+	 */
+	public void setHeadsetActive(boolean active) {
+		checkConfiguration();
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.setHeadsetActive(active);
+		}
+	}
+
 	//endregion
 
 	//endregion

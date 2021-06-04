@@ -104,6 +104,7 @@ public class Constants {
 	public static final String VALUE_CHANNELS = "CHANNELS";
 	public static final String VALUE_RECENTS = "RECENTS";
 	public static final String VALUE_SET_AUDIO = "SET_AUDIO";
+	public static final String VALUE_SET_HEADSET_ACTIVE = "SET_HEADSET_ACTIVE";
 
 	public static final String ACTION_COMMAND = "COMMAND";
 	public static final String ACTION_APP_STATE = "APP_STATE";

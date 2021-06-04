@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.zello.sdk">
+	package="com.zello.sdk"
+	android:versionName="${sdkVersion}">
 
 	<!-- Declare intents and packages that the library code would like to have access to on Android R+ -->
 	<queries>

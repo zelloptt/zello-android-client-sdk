@@ -12,6 +12,16 @@ package com.zello.sdk.headset
 interface SilencePlayer {
 
 	/**
+	 * Play the silent audio once.
+	 */
+	fun playOnce()
+
+	/**
+	 * Play the sound audio continuously.
+	 */
+	fun playForever()
+
+	/**
 	 * Release the resources associated with the player.
 	 */
 	fun release()

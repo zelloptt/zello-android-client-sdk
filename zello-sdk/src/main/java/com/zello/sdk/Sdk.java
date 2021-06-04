@@ -48,7 +48,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private boolean _serviceConnecting; // Service is bound but is still connecting
 	private @Nullable String _delayedNetwork, _delayedUsername, _delayedPassword;
 	private boolean _delayedPerishable;
-	private @Nullable Boolean _delayedShowBtAcceccoriesNotifications;
+	private @Nullable Boolean _delayedShowBtAccessoriesNotifications;
+	private boolean _headsetActive;
 	private boolean _lastMessageReplayAvailable;
 	private @Nullable BroadcastReceiver _receiverPackage; // Broadcast receiver for package install broadcasts
 	private @Nullable BroadcastReceiver _receiverAppState; // Broadcast receiver for app state broadcasts
@@ -596,7 +597,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 
 	void setShowBluetoothAccessoriesNotifications(boolean show) {
 		if (!isConnected()) {
-			_delayedShowBtAcceccoriesNotifications = show;
+			_delayedShowBtAccessoriesNotifications = show;
 			return;
 		}
 		Context context = _context;
@@ -607,6 +608,26 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_SHOW_BT_ACCESSORIES_NOTIFICATIONS);
 		intent.putExtra(Constants.EXTRA_VALUE, show);
+		context.sendBroadcast(intent);
+	}
+
+	void setHeadsetActive(boolean active) {
+		_headsetActive = active;
+		if (isConnected()) {
+			applyHeadsetActive();
+		}
+	}
+
+	private void applyHeadsetActive() {
+		Context context = _context;
+		String connectedPackage = _connectedPackage;
+		if (context == null || connectedPackage == null) {
+			return;
+		}
+		Intent intent = new Intent(connectedPackage + "." + Constants.ACTION_COMMAND);
+		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_HEADSET_ACTIVE);
+		intent.putExtra(Constants.EXTRA_PACKAGE, _context.getPackageName());
+		intent.putExtra(Constants.EXTRA_VALUE, _headsetActive);
 		context.sendBroadcast(intent);
 	}
 
@@ -647,15 +668,15 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 		_serviceConnecting = false;
 		context.startService(_serviceIntent);
-		if (_delayedShowBtAcceccoriesNotifications != null) {
-			setShowBluetoothAccessoriesNotifications(_delayedShowBtAcceccoriesNotifications);
+		if (_delayedShowBtAccessoriesNotifications != null) {
+			setShowBluetoothAccessoriesNotifications(_delayedShowBtAccessoriesNotifications);
 		}
 		if (_delayedNetwork != null) {
 			signIn(_delayedNetwork, _delayedUsername, _delayedPassword, _delayedPerishable);
 		}
 		_delayedNetwork = _delayedUsername = _delayedPassword = null;
 		_delayedPerishable = false;
-		_delayedShowBtAcceccoriesNotifications = null;
+		_delayedShowBtAccessoriesNotifications = null;
 		// If service is not bound, the component was destroyed and the service needs to be disconnected
 		if (!_serviceBound) {
 			Log.INSTANCE.e("Disconnecting because sdk was destroyed", null);
@@ -668,6 +689,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 		_appState._initializing = false;
 		fireAppStateChanged();
+		// Initial media session state
+		applyHeadsetActive();
 	}
 
 	@Override
@@ -1121,7 +1144,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			_selectedContact._title = intent.getStringExtra(Constants.EXTRA_CONTACT_TITLE);
 			_selectedContact._muted = intent.getIntExtra(Constants.EXTRA_CONTACT_MUTED, 0) != 0;
 			_selectedContact._noDisconnect = intent.getIntExtra(Constants.EXTRA_CHANNEL_NO_DISCONNECT,
-				_selectedContact._type != ContactType.CHANNEL && _selectedContact._type != ContactType.GROUP && _selectedContact._type != ContactType.CONVERSATION ? 1 : 0) != 0;
+					_selectedContact._type != ContactType.CHANNEL && _selectedContact._type != ContactType.GROUP && _selectedContact._type != ContactType.CONVERSATION ? 1 : 0) != 0;
 		} else {
 			_selectedContact.reset();
 		}
@@ -1237,14 +1260,12 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	private static @NonNull PermissionError intToPermissionError(int error) {
-		if (error > PermissionError.NONE.ordinal()) {
-			if (error == PermissionError.MICROPHONE_NOT_GRANTED.ordinal()) {
-				return PermissionError.MICROPHONE_NOT_GRANTED;
-			} else {
-				return PermissionError.UNKNOWN;
-			}
-		} else {
+		if (error == PermissionError.MICROPHONE_NOT_GRANTED.ordinal()) {
+			return PermissionError.MICROPHONE_NOT_GRANTED;
+		} else if (error == PermissionError.NONE.ordinal()) {
 			return PermissionError.NONE;
+		} else {
+			return PermissionError.UNKNOWN;
 		}
 	}
 
