@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Build
 import android.view.KeyEvent
 import androidx.annotation.MainThread
-import com.zello.sdk.BuildConfig
 import com.zello.sdk.Log
 import com.zello.sdk.TimeImpl
 import com.zello.sdk.Zello
@@ -116,7 +115,7 @@ object Headset {
 	 */
 	private fun processKeyEvent(event: KeyEvent): Boolean {
 		// Drop non-headset events
-		if (!isHeadsetEvent(event.keyCode)) return false
+		if (!isHeadsetEvent(event)) return false
 		// Drop cancelled events
 		if ((event.flags and KeyEvent.FLAG_CANCELED) == KeyEvent.FLAG_CANCELED) return false
 		// Drop the ACTION_MULTIPLE event
@@ -131,7 +130,7 @@ object Headset {
 	 * Check if a given event is coming from a hedset button.
 	 * @param event The key event
 	 */
-	private fun isHeadsetEvent(event: KeyEvent) {
+	private fun isHeadsetEvent(event: KeyEvent): Boolean {
 		return when (event.keyCode) {
 			KeyEvent.KEYCODE_HEADSETHOOK -> true
 			KeyEvent.KEYCODE_MEDIA_STOP,
