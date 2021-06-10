@@ -1,8 +1,10 @@
 package com.zello.sdk.headset
 
 import android.content.Context
+import android.os.Build
 import android.view.KeyEvent
 import androidx.annotation.MainThread
+import com.zello.sdk.BuildConfig
 import com.zello.sdk.Log
 import com.zello.sdk.TimeImpl
 import com.zello.sdk.Zello
@@ -108,9 +110,13 @@ object Headset {
 		mediaSession?.onBackground()
 	}
 
+	/**
+	 * Process an event coming from a media session or from the hosting activity.
+	 * @param event The key event
+	 */
 	private fun processKeyEvent(event: KeyEvent): Boolean {
 		// Drop non-headset events
-		if (event.keyCode != KeyEvent.KEYCODE_HEADSETHOOK) return false
+		if (!isHeadsetEvent(event.keyCode)) return false
 		// Drop cancelled events
 		if ((event.flags and KeyEvent.FLAG_CANCELED) == KeyEvent.FLAG_CANCELED) return false
 		// Drop the ACTION_MULTIPLE event
@@ -119,6 +125,21 @@ object Headset {
 		// Send it down the line
 		handler?.process(action == KeyEvent.ACTION_DOWN)
 		return true
+	}
+
+	/**
+	 * Check if a given event is coming from a hedset button.
+	 * @param event The key event
+	 */
+	private fun isHeadsetEvent(event: KeyEvent) {
+		return when (event.keyCode) {
+			KeyEvent.KEYCODE_HEADSETHOOK -> true
+			KeyEvent.KEYCODE_MEDIA_STOP,
+			KeyEvent.KEYCODE_MEDIA_PAUSE,
+			KeyEvent.KEYCODE_MEDIA_PLAY,
+			KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+			else -> false
+		}
 	}
 
 }
