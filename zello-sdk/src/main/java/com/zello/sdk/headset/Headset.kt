@@ -128,6 +128,10 @@ object Headset {
 
 	/**
 	 * Check if a given event is coming from a headset button.
+	 * When a headset button is pressed in the background, most devices
+	 * and up receiving a series of <code>KEYCODE_HEADSETHOOK</code> events from
+	 * the current media session. In some rare cases, which include Samsung S10e running
+	 * Android 11, <code>KEYCODE_MEDIA_PLAY_PAUSE</code> events are received instead.
 	 * @param event The key event
 	 * @return true in case the event is from a headset, or is very likely from a headset
 	 */
