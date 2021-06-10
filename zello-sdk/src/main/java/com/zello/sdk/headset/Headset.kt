@@ -129,6 +129,7 @@ object Headset {
 	/**
 	 * Check if a given event is coming from a headset button.
 	 * @param event The key event
+	 * @return true in case the event is from a headset, or is very likely from a headset
 	 */
 	private fun isHeadsetEvent(event: KeyEvent): Boolean {
 		return when (event.keyCode) {
