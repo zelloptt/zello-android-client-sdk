@@ -1,7 +1,6 @@
 package com.zello.sdk.headset
 
 import android.content.Context
-import android.os.Build
 import android.view.KeyEvent
 import androidx.annotation.MainThread
 import com.zello.sdk.Log
@@ -109,13 +108,9 @@ object Headset {
 		mediaSession?.onBackground()
 	}
 
-	/**
-	 * Process an event coming from a media session or from the hosting activity.
-	 * @param event The key event
-	 */
 	private fun processKeyEvent(event: KeyEvent): Boolean {
 		// Drop non-headset events
-		if (!isHeadsetEvent(event)) return false
+		if (event.keyCode != KeyEvent.KEYCODE_HEADSETHOOK) return false
 		// Drop cancelled events
 		if ((event.flags and KeyEvent.FLAG_CANCELED) == KeyEvent.FLAG_CANCELED) return false
 		// Drop the ACTION_MULTIPLE event
@@ -124,26 +119,6 @@ object Headset {
 		// Send it down the line
 		handler?.process(action == KeyEvent.ACTION_DOWN)
 		return true
-	}
-
-	/**
-	 * Check if a given event is coming from a headset button.
-	 * When a headset button is pressed in the background, most devices
-	 * and up receiving a series of <code>KEYCODE_HEADSETHOOK</code> events from
-	 * the current media session. In some rare cases, which include Samsung S10e running
-	 * Android 11, <code>KEYCODE_MEDIA_PLAY_PAUSE</code> events are received instead.
-	 * @param event The key event
-	 * @return true in case the event is from a headset, or is very likely from a headset
-	 */
-	private fun isHeadsetEvent(event: KeyEvent): Boolean {
-		return when (event.keyCode) {
-			KeyEvent.KEYCODE_HEADSETHOOK -> true
-			KeyEvent.KEYCODE_MEDIA_STOP,
-			KeyEvent.KEYCODE_MEDIA_PAUSE,
-			KeyEvent.KEYCODE_MEDIA_PLAY,
-			KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
-			else -> false
-		}
 	}
 
 }
