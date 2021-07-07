@@ -10,15 +10,4 @@
 		<package android:name="net.loudtalks" />
 		<package android:name="com.pttsdk" />
 	</queries>
-
-	<application>
-		<receiver
-			android:name=".headset.HeadsetBroadcastReceiver"
-			android:priority="999">
-
-			<intent-filter>
-				<action android:name="android.intent.action.MEDIA_BUTTON" />
-			</intent-filter>
-		</receiver>
-	</application>
 </manifest>
