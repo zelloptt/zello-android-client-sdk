@@ -2,6 +2,7 @@ package com.zello.sdk;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -968,6 +970,14 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (_serviceConnecting) {
 			_appState._initializing = false;
 			fireAppStateChanged();
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+				try {
+					PendingIntent.getService(context, 0, _serviceIntent,
+							PendingIntent.FLAG_UPDATE_CURRENT | ((Build.VERSION.SDK_INT > Build.VERSION_CODES.R) ? PendingIntent.FLAG_IMMUTABLE : 0)).send();
+				} catch (Throwable t) {
+					Log.INSTANCE.e("Failed to start service using a pending intent", t);
+				}
+			}
 		}
 		registerAppStateReceivers();
 	}
