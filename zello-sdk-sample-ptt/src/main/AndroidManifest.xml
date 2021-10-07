@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.zello.sdk.sample.ptt.PttActivity">
+        <activity android:name="com.zello.sdk.sample.ptt.PttActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
