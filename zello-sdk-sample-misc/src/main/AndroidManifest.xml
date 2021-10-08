@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.zello.sdk.sample.misc.MiscActivity">
+        <activity android:name="com.zello.sdk.sample.misc.MiscActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 @SuppressWarnings("WeakerAccess")
 public class ListAdapter extends BaseAdapter {
 
-	private ArrayList<Contact> _contacts = new ArrayList<>();
+	private final ArrayList<Contact> _contacts = new ArrayList<>();
 
 	public ListAdapter() {
 		super();
