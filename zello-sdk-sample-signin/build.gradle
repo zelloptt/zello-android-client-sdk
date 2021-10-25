@@ -17,13 +17,13 @@ repositories {
 apply plugin: "com.android.application"
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 30
     buildToolsVersion "31.0.0"
 
     defaultConfig {
         applicationId "com.zello.sdk.sample"
         minSdkVersion 16
-        targetSdkVersion 31
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
     }
