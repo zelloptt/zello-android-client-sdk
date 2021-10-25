@@ -141,13 +141,13 @@ tasks.whenTaskAdded { task ->
 }
 
 android {
-	compileSdkVersion 31
+	compileSdkVersion 30
 	buildToolsVersion "31.0.0"
 
-	ext.sdkVersion = "4.111.0"
+	ext.sdkVersion = "4.116.0"
 
 	defaultConfig {
-		targetSdkVersion 31
+		targetSdkVersion 30
 		minSdkVersion 16
 		manifestPlaceholders = [sdkVersion: "$sdkVersion"]
 		buildConfigField "String", "SDK_VERSION", "\"$sdkVersion\""
