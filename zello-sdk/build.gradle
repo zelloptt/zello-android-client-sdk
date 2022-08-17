@@ -7,7 +7,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:7.2.2'
+		classpath "com.android.tools.build:gradle:7.2.2"
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 }
@@ -142,13 +142,13 @@ tasks.whenTaskAdded { task ->
 
 android {
 	compileSdkVersion 33
-	buildToolsVersion '33.0.0'
+	buildToolsVersion "33.0.0"
 
 	ext.sdkVersion = "4.116.0"
 
 	defaultConfig {
 		targetSdkVersion 33
-		minSdkVersion 16
+		minSdkVersion 23
 		manifestPlaceholders = [sdkVersion: "$sdkVersion"]
 		buildConfigField "String", "SDK_VERSION", "\"$sdkVersion\""
 		consumerProguardFiles "consumer-rules.pro"

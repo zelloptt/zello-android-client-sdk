@@ -7,7 +7,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath 'com.android.tools.build:gradle:7.2.2'
+		classpath "com.android.tools.build:gradle:7.2.2"
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 }
@@ -26,7 +26,7 @@ android {
 
 	defaultConfig {
 		applicationId "com.zello.sdk.sample"
-		minSdkVersion 16
+		minSdkVersion 23
 		targetSdkVersion 33
 		versionCode 1
 		versionName "1.0"
