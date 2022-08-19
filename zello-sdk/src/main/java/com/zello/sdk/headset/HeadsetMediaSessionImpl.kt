@@ -39,8 +39,8 @@ class HeadsetMediaSessionImpl : HeadsetMediaSession {
 			val mediaButtonIntent = Intent(Intent.ACTION_MEDIA_BUTTON).run {
 				setClass(context.applicationContext, MediaButtonReceiver::class.java)
 			}
-			session.setMediaButtonReceiver(PendingIntent.getBroadcast(context.applicationContext, 0, mediaButtonIntent, 0))
-			session.isActive = true;
+			session.setMediaButtonReceiver(PendingIntent.getBroadcast(context.applicationContext, 0, mediaButtonIntent, PendingIntent.FLAG_IMMUTABLE))
+			session.isActive = true
 			// Switch the session to "playing" state
 			val playbackState = PlaybackStateCompat.Builder().run {
 				setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE or PlaybackStateCompat.ACTION_PAUSE)
