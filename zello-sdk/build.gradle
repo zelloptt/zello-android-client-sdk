@@ -1,5 +1,5 @@
 buildscript {
-	ext.kotlin_version = "1.7.10"
+	ext.kotlin_version = "1.8.10"
 
 	repositories {
 		google()
@@ -7,7 +7,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath "com.android.tools.build:gradle:7.2.2"
+		classpath "com.android.tools.build:gradle:8.0.0"
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 }
@@ -22,16 +22,16 @@ apply plugin: "kotlin-android"
 
 java {
 	toolchain {
+		// Upgrading to 17 changes the Javadoc version to an entirely new one
+		// One of the problems with it is that it entirely ignores the style sheet
 		languageVersion.set(JavaLanguageVersion.of(11))
 	}
 }
 
 dependencies {
-	implementation "androidx.appcompat:appcompat:1.5.0"
-	implementation "androidx.core:core-ktx:1.8.0"
+	implementation "androidx.core:core-ktx:1.10.0"
 	implementation "androidx.media:media:1.6.0"
-	implementation "androidx.annotation:annotation:1.4.0"
-	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+	implementation "androidx.annotation:annotation:1.6.0"
 }
 
 def sourceAarName = "zello-sdk-release.aar"
@@ -95,7 +95,7 @@ task zelloSdkAarDeployReleaseToSamples {
 		rename("${sourceAarName}", "${targetAarName}")
 	}
 	dependencies {
-		implementation "androidx.annotation:annotation:1.4.0"
+		implementation "androidx.annotation:annotation:1.6.0"
 	}
 	shouldRunAfter "assembleRelease"
 }
@@ -143,8 +143,13 @@ tasks.whenTaskAdded { task ->
 android {
 	compileSdkVersion 33
 	buildToolsVersion "33.0.0"
+	namespace "com.zello.sdk"
 
-	ext.sdkVersion = "4.116.0"
+	buildFeatures {
+		buildConfig true
+	}
+
+	ext.sdkVersion = "5.21.0"
 
 	defaultConfig {
 		targetSdkVersion 33
@@ -171,11 +176,11 @@ android {
 	}
 
 	compileOptions {
-		sourceCompatibility JavaVersion.VERSION_11
-		targetCompatibility JavaVersion.VERSION_11
+		sourceCompatibility JavaVersion.VERSION_17
+		targetCompatibility JavaVersion.VERSION_17
 	}
 
 	kotlinOptions {
-		jvmTarget = JavaVersion.VERSION_11
+		jvmTarget = "17"
 	}
 }

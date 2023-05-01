@@ -13,7 +13,6 @@ import java.util.UUID;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-@SuppressWarnings("WeakerAccess")
 class Util {
 
 	// Known compatible Zello app package names sorted in the order or preference
@@ -31,23 +30,8 @@ class Util {
 
 	private final static String sdkMetaDataName = "com.zello.SDK";
 
-	public static @Nullable String toLowerCaseLexicographically(@Nullable CharSequence s) {
-		if (s == null) {
-			return null;
-		}
-		char[] c = new char[s.length()];
-		for (int i = 0; i < s.length(); ++i) {
-			c[i] = Character.toLowerCase(Character.toUpperCase(s.charAt(i)));
-		}
-		return new String(c);
-	}
-
 	public static @NonNull String emptyIfNull(@Nullable String s) {
 		return s == null ? "" : s;
-	}
-
-	public static @Nullable String nullIfEmpty(@Nullable String s) {
-		return s == null || s.isEmpty() ? null : s;
 	}
 
 	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
