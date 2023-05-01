@@ -398,7 +398,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/zello/sdk/SafeHandler.html#handleMessage(android.os.Message)" class="member-name-link">handleMessage(Message)</a> - Method in class com.zello.sdk.<a href="com/zello/sdk/SafeHandler.html" title="class in com.zello.sdk">SafeHandler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/zello/sdk/SafeHandlerEvents.html#handleMessageFromSafeHandler(android.os.Message)" class="member-name-link">handleMessageFromSafeHandler(Message)</a> - Method in interface com.zello.sdk.<a href="com/zello/sdk/SafeHandlerEvents.html" title="interface in com.zello.sdk">SafeHandlerEvents</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">
+     Method that's implements handling of a <code>Message</code> routed through an associated <a href="com/zello/sdk/SafeHandler.html" title="class in com.zello.sdk"><code>SafeHandler</code></a>.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:I">I</h2>
 <dl class="index">
@@ -686,11 +689,22 @@ loadScripts(document, 'script');</script>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
 <dt><a href="com/zello/sdk/SafeHandler.html" class="type-name-link" title="class in com.zello.sdk">SafeHandler</a>&lt;<a href="com/zello/sdk/SafeHandler.html" title="type parameter in SafeHandler">T</a> extends <a href="com/zello/sdk/SafeHandlerEvents.html" title="interface in com.zello.sdk">SafeHandlerEvents</a>&gt; - Class in <a href="com/zello/sdk/package-summary.html">com.zello.sdk</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">
+     <code>Handler</code> wrapper that prevents a potential
+     memory leak occurring due to a raw <code>Handler</code>
+     being a member of a service or an activity.</div>
+</dd>
 <dt><a href="com/zello/sdk/SafeHandler.html#%3Cinit%3E(T,android.content.Context)" class="member-name-link">SafeHandler(T, Context)</a> - Constructor for class com.zello.sdk.<a href="com/zello/sdk/SafeHandler.html" title="class in com.zello.sdk">SafeHandler</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">
+     Primary constructor.</div>
+</dd>
 <dt><a href="com/zello/sdk/SafeHandlerEvents.html" class="type-name-link" title="interface in com.zello.sdk">SafeHandlerEvents</a> - Interface in <a href="com/zello/sdk/package-summary.html">com.zello.sdk</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">
+     Callback events used with <a href="com/zello/sdk/SafeHandler.html" title="class in com.zello.sdk"><code>SafeHandler</code></a>.</div>
+</dd>
 <dt><a href="com/zello/sdk/Zello.html#selectContact(java.lang.String,com.zello.sdk.Tab%5B%5D,com.zello.sdk.Tab,com.zello.sdk.Theme)" class="member-name-link">selectContact(String, Tab[], Tab, Theme)</a> - Method in class com.zello.sdk.<a href="com/zello/sdk/Zello.html" title="class in com.zello.sdk">Zello</a></dt>
 <dd>
 <div class="block">Opens an activity, which lets the user select a user or channel to talk to.</div>

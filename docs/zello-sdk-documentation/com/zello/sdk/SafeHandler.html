@@ -78,6 +78,11 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">SafeHandler&lt;T extends <a href="SafeHandlerEvents.html" title="interface in com.zello.sdk">SafeHandlerEvents</a>&gt;</span>
 <span class="extends-implements">extends android.os.Handler</span></div>
+<div class="block"><p>
+     <code>Handler</code> wrapper that prevents a potential
+     memory leak occurring due to a raw <code>Handler</code>
+     being a member of a service or an activity.
+ </p></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -100,7 +105,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(T,android.content.Context)" class="member-name-link">SafeHandler</a><wbr>(<a href="SafeHandler.html" title="type parameter in SafeHandler">T</a>&nbsp;t,
  android.content.Context&nbsp;context)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">
+     Primary constructor.</div>
+</div>
 </div>
 </section>
 </li>
@@ -145,6 +153,14 @@ loadScripts(document, 'script');</script>
  <a href="SafeHandler.html" title="type parameter in SafeHandler">T</a>&nbsp;t,
  @NonNull
  android.content.Context&nbsp;context)</span></div>
+<div class="block"><p>
+     Primary constructor.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>t</code> - Instance of <a href="SafeHandlerEvents.html" title="interface in com.zello.sdk"><code>SafeHandlerEvents</code></a></dd>
+<dd><code>context</code> - Context</dd>
+</dl>
 </section>
 </li>
 </ul>
