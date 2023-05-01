@@ -22,10 +22,12 @@ apply plugin: "kotlin-android"
 
 java {
 	toolchain {
-		// Upgrading to 17 changes the Javadoc version to an entirely new one
-		// One of the problems with it is that it entirely ignores the style sheet
-		languageVersion.set(JavaLanguageVersion.of(11))
+		languageVersion.set(JavaLanguageVersion.of(17))
 	}
+}
+
+kotlin {
+	jvmToolchain(17)
 }
 
 dependencies {
@@ -114,9 +116,10 @@ android.libraryVariants.all { variant ->
 			def javaCompile = variant.javaCompileProvider.get()
 			source = javaCompile.source
 			classpath = javaCompile.classpath + files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
-			exclude "**/Constants.java"
-			exclude "**/*.kt"
 			options.memberLevel = JavadocMemberLevel.PUBLIC
+			exclude "**/Constants.java"
+			exclude "**/BuildConfig.java"
+			exclude "**/*.kt"
 			options.noTree = false
 			options.noNavBar = false
 			options.noIndex = false
@@ -149,7 +152,7 @@ android {
 		buildConfig true
 	}
 
-	ext.sdkVersion = "5.21.0"
+	ext.sdkVersion = "5.22.0"
 
 	defaultConfig {
 		targetSdkVersion 33
