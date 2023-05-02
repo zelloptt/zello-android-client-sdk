@@ -20,6 +20,7 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 /**
  * The Sdk class acts as the implementation of the Zello SDK methods.
@@ -340,7 +341,10 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			intent.putExtra(Constants.EXTRA_PASSWORD, md5(password));
 			intent.putExtra(Constants.EXTRA_PERISHABLE, perishable);
 			context.sendBroadcast(intent);
-			context.startService(_serviceIntent);
+			// Service intent in guaranteed to be non-null at this point
+			if (_serviceIntent != null) {
+				ContextCompat.startForegroundService(context, _serviceIntent);
+			}
 			return true;
 		}
 		if (_serviceBound) {
@@ -669,7 +673,10 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			return;
 		}
 		_serviceConnecting = false;
-		context.startService(_serviceIntent);
+		// Service intent in guaranteed to be non-null at this point
+		if (_serviceIntent != null) {
+			ContextCompat.startForegroundService(context, _serviceIntent);
+		}
 		if (_delayedShowBtAccessoriesNotifications != null) {
 			setShowBluetoothAccessoriesNotifications(_delayedShowBtAccessoriesNotifications);
 		}
@@ -973,7 +980,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 				try {
 					PendingIntent.getService(context, 0, _serviceIntent,
-							PendingIntent.FLAG_UPDATE_CURRENT | ((Build.VERSION.SDK_INT > Build.VERSION_CODES.R) ? PendingIntent.FLAG_IMMUTABLE : 0)).send();
+							PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE).send();
 				} catch (Throwable t) {
 					Log.INSTANCE.e("Failed to start service using a pending intent", t);
 				}

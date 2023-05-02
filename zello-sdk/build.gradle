@@ -137,7 +137,6 @@ android.libraryVariants.all { variant ->
 
 tasks.whenTaskAdded { task ->
 	if (task.name == "assembleRelease") {
-		task.finalizedBy "zelloSdkDocCreate"
 		task.finalizedBy "zelloSdkAarDeployReleaseToRoot"
 		task.finalizedBy "zelloSdkAarDeployReleaseToSamples"
 	}
