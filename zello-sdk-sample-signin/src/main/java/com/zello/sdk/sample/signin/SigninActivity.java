@@ -4,12 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Button;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.zello.sdk.AppState;
 import com.zello.sdk.BluetoothAccessoryState;
@@ -17,6 +15,10 @@ import com.zello.sdk.BluetoothAccessoryType;
 import com.zello.sdk.Error;
 import com.zello.sdk.Tab;
 import com.zello.sdk.Zello;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SigninActivity extends AppCompatActivity implements com.zello.sdk.Events {
 
@@ -32,7 +34,7 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 	private TextView _errorTextView;
 	private boolean _signInAttempted = false;
 
-	private AppState _appState = new AppState();
+	private final AppState _appState = new AppState();
 
 	//region Lifecycle Methods
 
@@ -53,46 +55,35 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 		_errorTextView = findViewById(R.id.incorrectPasswordTextView);
 		_signOutButton = findViewById(R.id.signOutButton);
 
+		Zello zello = Zello.getInstance();
 		// Automatically choose the app to connect to in the following order of preference: com.loudtalks, net.loudtalks, com.pttsdk
 		// Alternatively, connect to a preferred app by supplying a package name, for example: Zello.getInstance().configure("net.loudtalks", this)
-		Zello.getInstance().configure(this);
+		zello.configure(this);
+		zello.subscribeToEvents(this);
 
-		findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				String network = _networkEdit.getText().toString();
-				String username = _usernameEdit.getText().toString();
-				String password = _passwordEdit.getText().toString();
-				boolean perishable = _perishableCheckBox.isChecked();
+		findViewById(R.id.loginButton).setOnClickListener(view -> {
+			String network = _networkEdit.getText().toString();
+			String username = _usernameEdit.getText().toString();
+			String password = _passwordEdit.getText().toString();
+			boolean perishable = _perishableCheckBox.isChecked();
 
-				_signInAttempted = true;
-				Zello.getInstance().signIn(network, username, password, perishable);
+			_signInAttempted = true;
+			Zello.getInstance().signIn(network, username, password, perishable);
 
-				hideKeyboard();
-			}
+			hideKeyboard();
 		});
 
-		_cancelButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Zello.getInstance().cancelSignIn();
-			}
-		});
+		_cancelButton.setOnClickListener(view -> Zello.getInstance().cancelSignIn());
 
-		_signOutButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Zello.getInstance().signOut();
-			}
-		});
+		_signOutButton.setOnClickListener(view -> Zello.getInstance().signOut());
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
-		Zello.getInstance().unsubscribeFromEvents(this);
-		Zello.getInstance().unconfigure();
+		Zello zello = Zello.getInstance();
+		zello.unsubscribeFromEvents(this);
+		zello.unconfigure();
 	}
 
 	@Override
@@ -130,7 +121,7 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 	}
 
 	@Override
-	public void onLastContactsTabChanged(Tab tab) {
+	public void onLastContactsTabChanged(@NonNull Tab tab) {
 	}
 
 	@Override
@@ -144,7 +135,12 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 	}
 
 	@Override
-	public void onBluetoothAccessoryStateChanged(BluetoothAccessoryType bluetoothAccessoryType, BluetoothAccessoryState bluetoothAccessoryState, String s, String s1) {
+	public void onBluetoothAccessoryStateChanged(
+			@NonNull BluetoothAccessoryType bluetoothAccessoryType,
+			@NonNull BluetoothAccessoryState bluetoothAccessoryState,
+			@Nullable String name,
+			@Nullable String description
+	) {
 	}
 
 	//endregion
@@ -175,38 +171,23 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 	}
 
 	private String getErrorText(Error error) {
-		switch (error) {
-			case UNKNOWN:
-				return getString(R.string.error_unknown);
-			case INVALID_CREDENTIALS:
-				return getString(R.string.error_invalid_credentials);
-			case INVALID_NETWORK_NAME:
-				return getString(R.string.error_invalid_network_name);
-			case NETWORK_SUSPENDED:
-				return getString(R.string.error_network_suspended);
-			case SERVER_SECURE_CONNECT_FAILED:
-				return getString(R.string.error_secure_connect_failed);
-			case SERVER_SIGNIN_FAILED:
-				return getString(R.string.error_server_signin_failed);
-			case NETWORK_SIGNIN_FAILED:
-				return getString(R.string.error_network_signin_failed);
-			case KICKED:
-				return getString(R.string.error_kicked);
-			case APP_UPDATE_REQUIRED:
-				return getString(R.string.error_update_required);
-			case NO_INTERNET_CONNECTION:
-				return getString(R.string.error_no_internet);
-			case INTERNET_CONNECTION_RESTRICTED:
-				return getString(R.string.error_internet_restricted);
-			case SERVER_LICENSE_PROBLEM:
-				return getString(R.string.error_server_license);
-			case TOO_MANY_SIGNIN_ATTEMPTS:
-				return getString(R.string.error_brute_force_protection);
-			case DEVICE_ID_MISMATCH:
-				return getString(R.string.error_device_id_mismatch);
-			default:
-				return null;
-		}
+		return switch (error) {
+			case UNKNOWN -> getString(R.string.error_unknown);
+			case INVALID_CREDENTIALS -> getString(R.string.error_invalid_credentials);
+			case INVALID_NETWORK_NAME -> getString(R.string.error_invalid_network_name);
+			case NETWORK_SUSPENDED -> getString(R.string.error_network_suspended);
+			case SERVER_SECURE_CONNECT_FAILED -> getString(R.string.error_secure_connect_failed);
+			case SERVER_SIGNIN_FAILED -> getString(R.string.error_server_signin_failed);
+			case NETWORK_SIGNIN_FAILED -> getString(R.string.error_network_signin_failed);
+			case KICKED -> getString(R.string.error_kicked);
+			case APP_UPDATE_REQUIRED -> getString(R.string.error_update_required);
+			case NO_INTERNET_CONNECTION -> getString(R.string.error_no_internet);
+			case INTERNET_CONNECTION_RESTRICTED -> getString(R.string.error_internet_restricted);
+			case SERVER_LICENSE_PROBLEM -> getString(R.string.error_server_license);
+			case TOO_MANY_SIGNIN_ATTEMPTS -> getString(R.string.error_brute_force_protection);
+			case DEVICE_ID_MISMATCH -> getString(R.string.error_device_id_mismatch);
+			default -> null;
+		};
 	}
 
 	private void hideKeyboard() {
