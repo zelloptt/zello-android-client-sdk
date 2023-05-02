@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:7.2.2"
+        classpath "com.android.tools.build:gradle:8.0.0"
     }
 }
 
@@ -16,9 +16,20 @@ repositories {
 
 apply plugin: "com.android.application"
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
 android {
     compileSdkVersion 33
-    buildToolsVersion "31.0.0"
+    buildToolsVersion "33.0.0"
+    namespace "com.zello.sdk.sample.misc"
+
+    buildFeatures {
+        buildConfig true
+    }
 
     defaultConfig {
         applicationId "com.zello.sdk.sample.miscellaneous"
@@ -36,12 +47,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
 dependencies {
     implementation files("libs/zello-sdk.aar")
-    implementation "androidx.appcompat:appcompat:1.5.0"
+    implementation "androidx.appcompat:appcompat:1.6.1"
 }
