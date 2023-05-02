@@ -1,5 +1,5 @@
 buildscript {
-	ext.kotlin_version = "1.7.10"
+	ext.kotlin_version = "1.8.10"
 
 	repositories {
 		google()
@@ -7,7 +7,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath "com.android.tools.build:gradle:7.2.2"
+		classpath "com.android.tools.build:gradle:8.0.0"
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 }
@@ -20,9 +20,24 @@ repositories {
 apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(17))
+	}
+}
+
+kotlin {
+	jvmToolchain(17)
+}
+
 android {
 	compileSdkVersion 33
-	buildToolsVersion "31.0.0"
+	buildToolsVersion "33.0.0"
+	namespace "com.zello.sdk.sample"
+
+	buildFeatures {
+		buildConfig true
+	}
 
 	defaultConfig {
 		applicationId "com.zello.sdk.sample"
@@ -40,19 +55,19 @@ android {
 	}
 
 	compileOptions {
-		sourceCompatibility JavaVersion.VERSION_11
-		targetCompatibility JavaVersion.VERSION_11
+		sourceCompatibility JavaVersion.VERSION_17
+		targetCompatibility JavaVersion.VERSION_17
 	}
 
 	kotlinOptions {
-		jvmTarget = JavaVersion.VERSION_11
+		jvmTarget = "17"
 	}
 }
 
 dependencies {
 	implementation files("libs/zello-sdk.aar")
-	implementation "androidx.appcompat:appcompat:1.5.0"
-	implementation "androidx.core:core-ktx:1.8.0"
+	implementation "androidx.appcompat:appcompat:1.6.1"
+	implementation "androidx.core:core-ktx:1.10.0"
 	implementation "androidx.media:media:1.6.0"
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

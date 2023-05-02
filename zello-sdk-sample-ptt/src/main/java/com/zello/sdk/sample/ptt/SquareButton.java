@@ -25,24 +25,18 @@ public class SquareButton extends AppCompatButton {
 	@Override
 	public void setMaxWidth(final int maxWidth) {
 		super.setMaxWidth(maxWidth);
-		post(new Runnable() {
-			@Override
-			public void run() {
-				_maxWidth = maxWidth;
-				update();
-			}
+		post(() -> {
+			_maxWidth = maxWidth;
+			update();
 		});
 	}
 
 	@Override
 	public void setMaxHeight(final int maxHeight) {
 		super.setMaxHeight(maxHeight);
-		post(new Runnable() {
-			@Override
-			public void run() {
-				_maxHeight = maxHeight;
-				update();
-			}
+		post(() -> {
+			_maxHeight = maxHeight;
+			update();
 		});
 	}
 
