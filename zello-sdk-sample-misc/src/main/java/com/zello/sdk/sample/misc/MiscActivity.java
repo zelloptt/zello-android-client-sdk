@@ -3,10 +3,8 @@ package com.zello.sdk.sample.misc;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,8 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.zello.sdk.AppState;
 import com.zello.sdk.BluetoothAccessoryState;
 import com.zello.sdk.BluetoothAccessoryType;
@@ -25,9 +21,13 @@ import com.zello.sdk.Status;
 import com.zello.sdk.Tab;
 import com.zello.sdk.Zello;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Events {
 
-	private AppState _appState = new AppState();
+	private final AppState _appState = new AppState();
 
 	private Button _lockButton;
 	private TextView _statusTextView;
@@ -47,37 +47,33 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		_externalIdEditText = findViewById(R.id.externalIdEditText);
 		_externalIdTextView = findViewById(R.id.externalIdTextView);
 
-		_lockButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Zello.getInstance().getAppState(_appState);
+		_lockButton.setOnClickListener(v -> {
+			Zello.getInstance().getAppState(_appState);
 
-				if (_appState.isLocked()) {
-					Zello.getInstance().unlock();
-				} else {
-					Zello.getInstance().lock("Zello SDK Sample Misc", getPackageName());
-				}
+			if (_appState.isLocked()) {
+				Zello.getInstance().unlock();
+			} else {
+				Zello.getInstance().lock("Zello SDK Sample Misc", getPackageName());
 			}
 		});
 
-		_externalIdEditText.setOnEditorActionListener(new EditText.OnEditorActionListener() {
-			@Override
-			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_DONE) {
-					Zello.getInstance().setExternalId(_externalIdEditText.getText().toString());
+		_externalIdEditText.setOnEditorActionListener((v, actionId, event) -> {
+			if (actionId == EditorInfo.IME_ACTION_DONE) {
+				Zello.getInstance().setExternalId(_externalIdEditText.getText().toString());
 
-					hideKeyboard();
+				hideKeyboard();
 
-					return true;
-				}
-
-				return false;
+				return true;
 			}
+
+			return false;
 		});
 
+		Zello zello = Zello.getInstance();
 		// Automatically choose the app to connect to in the following order of preference: com.loudtalks, net.loudtalks, com.pttsdk
 		// Alternatively, connect to a preferred app by supplying a package name, for example: Zello.getInstance().configure("net.loudtalks", this)
-		Zello.getInstance().configure(this);
+		zello.configure(this);
+		zello.subscribeToEvents(this);
 
 		onAppStateChanged();
 	}
@@ -85,9 +81,9 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-
-		Zello.getInstance().unsubscribeFromEvents(this);
-		Zello.getInstance().unconfigure();
+		Zello zello = Zello.getInstance();
+		zello.unsubscribeFromEvents(this);
+		zello.unconfigure();
 	}
 
 	@Override
@@ -144,29 +140,32 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.menu_available:
-			case R.id.menu_solo:
-			case R.id.menu_busy:
-				chooseStatus();
-				break;
-			case R.id.menu_enable_auto_run:
-				Zello.getInstance().setAutoRun(true);
-				break;
-			case R.id.menu_disable_auto_run:
-				Zello.getInstance().setAutoRun(false);
-				break;
-			case R.id.menu_enable_auto_connect_channels:
-				Zello.getInstance().setAutoConnectChannels(true);
-				break;
-			case R.id.menu_disable_auto_connect_channels:
-				Zello.getInstance().setAutoConnectChannels(false);
-				break;
-			case R.id.menu_open_app:
-				Zello.getInstance().openMainScreen();
-				break;
+		int id = item.getItemId();
+		if (id == R.id.menu_available || id == R.id.menu_solo || id == R.id.menu_busy) {
+			chooseStatus();
+			return true;
 		}
-		return true;
+		if (id == R.id.menu_enable_auto_run) {
+			Zello.getInstance().setAutoRun(true);
+			return true;
+		}
+		if (id == R.id.menu_disable_auto_run) {
+			Zello.getInstance().setAutoRun(false);
+			return true;
+		}
+		if (id == R.id.menu_enable_auto_connect_channels) {
+			Zello.getInstance().setAutoConnectChannels(true);
+			return true;
+		}
+		if (id == R.id.menu_disable_auto_connect_channels) {
+			Zello.getInstance().setAutoConnectChannels(false);
+			return true;
+		}
+		if (id == R.id.menu_open_app) {
+			Zello.getInstance().openMainScreen();
+			return true;
+		}
+		return false;
 	}
 
 	//endregion
@@ -190,7 +189,7 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	@Override
-	public void onLastContactsTabChanged(Tab tab) {
+	public void onLastContactsTabChanged(@NonNull Tab tab) {
 	}
 
 	@Override
@@ -212,7 +211,12 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	@Override
-	public void onBluetoothAccessoryStateChanged(BluetoothAccessoryType bluetoothAccessoryType, BluetoothAccessoryState bluetoothAccessoryState, String s, String s1) {
+	public void onBluetoothAccessoryStateChanged(
+			@NonNull BluetoothAccessoryType bluetoothAccessoryType,
+			@NonNull BluetoothAccessoryState bluetoothAccessoryState,
+			@Nullable String name,
+			@Nullable String description
+	) {
 	}
 
 	//endregion
@@ -230,42 +234,24 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		Zello.getInstance().getAppState(_appState);
 
 		Status status = _appState.getStatus();
-		int selection = -1;
-		switch (status) {
-			case AVAILABLE:
-				selection = 0;
-				break;
-			case SOLO:
-				selection = 1;
-				break;
-			case BUSY:
-				selection = 2;
-				break;
-		}
+		int selection = switch (status) {
+			case AVAILABLE -> 0;
+			case SOLO -> 1;
+			case BUSY -> 2;
+		};
 		if (_appState.getStatusMessage() != null && !_appState.getStatusMessage().equals("")) {
 			selection = 3;
 		}
 
 		String[] items = new String[]{res.getString(R.string.menu_available), res.getString(R.string.menu_solo), res.getString(R.string.menu_busy), res.getString(R.string.menu_set_status_message)};
-		builder.setSingleChoiceItems(items, selection, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				switch (which) {
-					case 0:
-						Zello.getInstance().setStatus(Status.AVAILABLE);
-						break;
-					case 1:
-						Zello.getInstance().setStatus(Status.SOLO);
-						break;
-					case 2:
-						Zello.getInstance().setStatus(Status.BUSY);
-						break;
-					case 3:
-						createCustomStatusMessageDialog();
-						break;
-				}
-				dialog.dismiss();
+		builder.setSingleChoiceItems(items, selection, (dialog, which) -> {
+			switch (which) {
+				case 0 -> Zello.getInstance().setStatus(Status.AVAILABLE);
+				case 1 -> Zello.getInstance().setStatus(Status.SOLO);
+				case 2 -> Zello.getInstance().setStatus(Status.BUSY);
+				case 3 -> createCustomStatusMessageDialog();
 			}
+			dialog.dismiss();
 		});
 		builder.setCancelable(true).setTitle(res.getString(R.string.menu_set_status));
 		final AlertDialog dialog = builder.create();
@@ -330,12 +316,7 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		View view = getLayoutInflater().inflate(R.layout.status_dialog, null);
 		final EditText statusEditText = view.findViewById(R.id.editView);
 		statusEditText.setText(previousStatus);
-		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				Zello.getInstance().setStatusMessage(statusEditText.getText().toString());
-			}
-		});
+		builder.setPositiveButton(R.string.ok, (dialog, which) -> Zello.getInstance().setStatusMessage(statusEditText.getText().toString()));
 		builder.setNegativeButton(R.string.cancel, null);
 		builder.setTitle(R.string.menu_set_status_message);
 		builder.setView(view);

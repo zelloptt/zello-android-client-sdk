@@ -20,9 +20,6 @@ public class MessageOut {
 
 	//region Public Methods
 
-	public MessageOut() {
-	}
-
 	/**
 	 * <p>
 	 *     Resets the <code>MessageOut</code> instance back to the default values.

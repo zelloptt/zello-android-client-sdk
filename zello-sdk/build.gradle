@@ -1,5 +1,5 @@
 buildscript {
-	ext.kotlin_version = "1.7.10"
+	ext.kotlin_version = "1.8.10"
 
 	repositories {
 		google()
@@ -7,7 +7,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath "com.android.tools.build:gradle:7.2.2"
+		classpath "com.android.tools.build:gradle:8.0.0"
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 }
@@ -22,16 +22,18 @@ apply plugin: "kotlin-android"
 
 java {
 	toolchain {
-		languageVersion.set(JavaLanguageVersion.of(11))
+		languageVersion.set(JavaLanguageVersion.of(17))
 	}
 }
 
+kotlin {
+	jvmToolchain(17)
+}
+
 dependencies {
-	implementation "androidx.appcompat:appcompat:1.5.0"
-	implementation "androidx.core:core-ktx:1.8.0"
+	implementation "androidx.core:core-ktx:1.10.0"
 	implementation "androidx.media:media:1.6.0"
-	implementation "androidx.annotation:annotation:1.4.0"
-	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+	implementation "androidx.annotation:annotation:1.6.0"
 }
 
 def sourceAarName = "zello-sdk-release.aar"
@@ -95,7 +97,7 @@ task zelloSdkAarDeployReleaseToSamples {
 		rename("${sourceAarName}", "${targetAarName}")
 	}
 	dependencies {
-		implementation "androidx.annotation:annotation:1.4.0"
+		implementation "androidx.annotation:annotation:1.6.0"
 	}
 	shouldRunAfter "assembleRelease"
 }
@@ -114,9 +116,10 @@ android.libraryVariants.all { variant ->
 			def javaCompile = variant.javaCompileProvider.get()
 			source = javaCompile.source
 			classpath = javaCompile.classpath + files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar")
-			exclude "**/Constants.java"
-			exclude "**/*.kt"
 			options.memberLevel = JavadocMemberLevel.PUBLIC
+			exclude "**/Constants.java"
+			exclude "**/BuildConfig.java"
+			exclude "**/*.kt"
 			options.noTree = false
 			options.noNavBar = false
 			options.noIndex = false
@@ -143,8 +146,13 @@ tasks.whenTaskAdded { task ->
 android {
 	compileSdkVersion 33
 	buildToolsVersion "33.0.0"
+	namespace "com.zello.sdk"
 
-	ext.sdkVersion = "4.116.0"
+	buildFeatures {
+		buildConfig true
+	}
+
+	ext.sdkVersion = "5.22.0"
 
 	defaultConfig {
 		targetSdkVersion 33
@@ -171,11 +179,11 @@ android {
 	}
 
 	compileOptions {
-		sourceCompatibility JavaVersion.VERSION_11
-		targetCompatibility JavaVersion.VERSION_11
+		sourceCompatibility JavaVersion.VERSION_17
+		targetCompatibility JavaVersion.VERSION_17
 	}
 
 	kotlinOptions {
-		jvmTarget = JavaVersion.VERSION_11
+		jvmTarget = "17"
 	}
 }

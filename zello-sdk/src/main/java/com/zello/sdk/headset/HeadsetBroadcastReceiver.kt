@@ -3,6 +3,7 @@ package com.zello.sdk.headset
 import android.content.Intent
 import android.view.KeyEvent
 import androidx.media.session.MediaButtonReceiver
+import com.zello.sdk.BundleUtils
 import com.zello.sdk.headset.HeadsetBroadcastReceiver.Companion.onKeyEvent
 
 /**
@@ -22,7 +23,7 @@ class HeadsetBroadcastReceiver : MediaButtonReceiver() {
 		 */
 		fun handleIntent(intent: Intent): Boolean {
 			if (intent.action != Intent.ACTION_MEDIA_BUTTON) return false
-			val event = intent.getParcelableExtra<KeyEvent>(Intent.EXTRA_KEY_EVENT) ?: return false
+			val event = BundleUtils.getParcelableExtra<KeyEvent>(intent, Intent.EXTRA_KEY_EVENT) ?: return false
 			onKeyEvent?.invoke(event)
 			return true
 		}

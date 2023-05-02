@@ -25,10 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.zello.sdk.AppState;
 import com.zello.sdk.Audio;
 import com.zello.sdk.AudioMode;
@@ -49,6 +45,11 @@ import com.zello.sdk.headset.Headset;
 import com.zello.sdk.headset.HeadsetType;
 
 import java.text.NumberFormat;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 @SuppressLint("ClickableViewAccessibility")
 @SuppressWarnings("FieldCanBeLocal")
@@ -154,8 +155,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 			}
 		});
 		_listContacts.setOnCreateContextMenuListener((menu, v, menuInfo) -> {
-			if (menuInfo instanceof AdapterView.AdapterContextMenuInfo) {
-				AdapterView.AdapterContextMenuInfo listInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
+			if (menuInfo instanceof AdapterView.AdapterContextMenuInfo listInfo) {
 				if (listInfo.targetView != null && listInfo.targetView.getParent() == _listContacts) {
 					int position = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
 					android.widget.ListAdapter adapter = _listContacts.getAdapter();
@@ -302,69 +302,66 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.menu_available:
-			case R.id.menu_solo:
-			case R.id.menu_busy: {
-				chooseStatus();
+		int id = item.getItemId();
+		if (id == R.id.menu_available || id == R.id.menu_solo || id == R.id.menu_busy) {
+			chooseStatus();
+			return true;
+		}
+		if (id == R.id.menu_select_contact) {
+			chooseActiveContact();
+			return true;
+		}
+		if (id == R.id.menu_lock_ptt_app) {
+			lockPttApp();
+			return true;
+		}
+		if (id == R.id.menu_unlock_ptt_app) {
+			unlockPttApp();
+			return true;
+		}
+		if (id == R.id.menu_enable_auto_run) {
+			enableAutoRun();
+			return true;
+		}
+		if (id == R.id.menu_disable_auto_run) {
+			disableAutoRun();
+			return true;
+		}
+		if (id == R.id.menu_start_message) {
+			Zello.getInstance().beginMessage();
+			return true;
+		}
+		if (id == R.id.menu_stop_message) {
+			Zello.getInstance().endMessage();
+			return true;
+		}
+		if (id == R.id.menu_enable_auto_connect_channels) {
+			enableAutoConnectChannels();
+			return true;
+		}
+		if (id == R.id.menu_disable_auto_connect_channels) {
+			disableAutoConnectChannels();
+			return true;
+		}
+		if (id == R.id.menu_send_ptt_down_broadcast) {
+			sendBroadcast(new Intent("com.zello.ptt.down"));
+			return true;
+		}
+		if (id == R.id.menu_send_ptt_up_broadcast) {
+			sendBroadcast(new Intent("com.zello.ptt.up"));
+			return true;
+		}
+		if (id == R.id.menu_ptt_buttons) {
+			openPttButtonsScreen();
+			return true;
+		}
+		if (id == R.id.menu_about) {
+			showAbout();
+			return true;
+		}
+		if (id == android.R.id.home) {
+			if (handleBackButton()) {
 				return true;
-			}
-			case R.id.menu_select_contact: {
-				chooseActiveContact();
-				return true;
-			}
-			case R.id.menu_lock_ptt_app: {
-				lockPttApp();
-				return true;
-			}
-			case R.id.menu_unlock_ptt_app: {
-				unlockPttApp();
-				return true;
-			}
-			case R.id.menu_enable_auto_run: {
-				enableAutoRun();
-				return true;
-			}
-			case R.id.menu_disable_auto_run: {
-				disableAutoRun();
-				return true;
-			}
-			case R.id.menu_enable_auto_connect_channels: {
-				enableAutoConnectChannels();
-				return true;
-			}
-			case R.id.menu_disable_auto_connect_channels: {
-				disableAutoConnectChannels();
-				return true;
-			}
-			case R.id.menu_start_message: {
-				Zello.getInstance().beginMessage();
-				return true;
-			}
-			case R.id.menu_stop_message: {
-				Zello.getInstance().endMessage();
-				return true;
-			}
-			case R.id.menu_send_ptt_down_broadcast: {
-				sendBroadcast(new Intent("com.zello.ptt.down"));
-				return true;
-			}
-			case R.id.menu_send_ptt_up_broadcast: {
-				sendBroadcast(new Intent("com.zello.ptt.up"));
-				return true;
-			}
-			case R.id.menu_ptt_buttons: {
-				openPttButtonsScreen();
-				return true;
-			}
-			case R.id.menu_about: {
-				showAbout();
-				return true;
-			}
-			case android.R.id.home: {
-				if (handleBackButton()) {
-					return true;
-				}
 			}
 		}
 		return super.onOptionsItemSelected(item);
@@ -396,22 +393,15 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	@Override
 	public boolean onContextItemSelected(@NonNull MenuItem item) {
 		ContextMenu.ContextMenuInfo menuInfo = item.getMenuInfo();
-		if (menuInfo instanceof AdapterView.AdapterContextMenuInfo) {
-			AdapterView.AdapterContextMenuInfo listInfo = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		if (menuInfo instanceof AdapterView.AdapterContextMenuInfo listInfo) {
 			if (listInfo.targetView != null && listInfo.targetView.getParent() == _listContacts && _contextContact != null) {
-				switch (item.getItemId()) {
-					case R.id.menu_talk: {
-						Zello.getInstance().setSelectedContact(_contextContact);
-						break;
-					}
-					case R.id.menu_mute: {
-						Zello.getInstance().muteContact(_contextContact, true);
-						break;
-					}
-					case R.id.menu_unmute: {
-						Zello.getInstance().muteContact(_contextContact, false);
-						break;
-					}
+				int id = item.getItemId();
+				if (id == R.id.menu_talk) {
+					Zello.getInstance().setSelectedContact(_contextContact);
+				} else if (id == R.id.menu_mute) {
+					Zello.getInstance().muteContact(_contextContact, true);
+				} else if (id == R.id.menu_unmute) {
+					Zello.getInstance().muteContact(_contextContact, false);
 				}
 				return true;
 			}
@@ -459,7 +449,12 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	@Override
-	public void onBluetoothAccessoryStateChanged(@NonNull BluetoothAccessoryType type, @NonNull BluetoothAccessoryState state, String name, String description) {
+	public void onBluetoothAccessoryStateChanged(
+			@NonNull BluetoothAccessoryType bluetoothAccessoryType,
+			@NonNull BluetoothAccessoryState bluetoothAccessoryState,
+			@Nullable String name,
+			@Nullable String description
+	) {
 		Toast.makeText(this, description, Toast.LENGTH_SHORT).show();
 	}
 
@@ -546,22 +541,10 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
-					case 0: {
-						Zello.getInstance().setStatus(Status.AVAILABLE);
-						break;
-					}
-					case 1: {
-						Zello.getInstance().setStatus(Status.SOLO);
-						break;
-					}
-					case 2: {
-						Zello.getInstance().setStatus(Status.BUSY);
-						break;
-					}
-					case 3: {
-						Zello.getInstance().signOut();
-						break;
-					}
+					case 0 -> Zello.getInstance().setStatus(Status.AVAILABLE);
+					case 1 -> Zello.getInstance().setStatus(Status.SOLO);
+					case 2 -> Zello.getInstance().setStatus(Status.BUSY);
+					case 3 -> Zello.getInstance().signOut();
 				}
 				dialog.dismiss();
 			}
@@ -587,15 +570,11 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 			ContactType type = _selectedContact.getType();
 			ContactStatus status = _selectedContact.getStatus();
 			switch (type) {
-				case USER:
-				case GATEWAY: {
+				case USER, GATEWAY -> {
 					// User or radio gateway
 					canTalk = status != ContactStatus.OFFLINE; // Not offline
-					break;
 				}
-				case CHANNEL:
-				case GROUP:
-				case CONVERSATION: {
+				case CHANNEL, GROUP, CONVERSATION -> {
 					showConnect = !_selectedContact.getNoDisconnect();
 					if (_appState.isSignedIn()) {
 						if (status == ContactStatus.AVAILABLE) {
@@ -608,7 +587,6 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 							connected = true;
 						}
 					}
-					break;
 				}
 			}
 		}
@@ -818,38 +796,23 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	private String getErrorText(Error error) {
-		switch (error) {
-			case UNKNOWN:
-				return getString(R.string.error_unknown);
-			case INVALID_CREDENTIALS:
-				return getString(R.string.error_invalid_credentials);
-			case INVALID_NETWORK_NAME:
-				return getString(R.string.error_invalid_network_name);
-			case NETWORK_SUSPENDED:
-				return getString(R.string.error_network_suspended);
-			case SERVER_SECURE_CONNECT_FAILED:
-				return getString(R.string.error_secure_connect_failed);
-			case SERVER_SIGNIN_FAILED:
-				return getString(R.string.error_server_signin_failed);
-			case NETWORK_SIGNIN_FAILED:
-				return getString(R.string.error_network_signin_failed);
-			case KICKED:
-				return getString(R.string.error_kicked);
-			case APP_UPDATE_REQUIRED:
-				return getString(R.string.error_update_required);
-			case NO_INTERNET_CONNECTION:
-				return getString(R.string.error_no_internet);
-			case INTERNET_CONNECTION_RESTRICTED:
-				return getString(R.string.error_internet_restricted);
-			case SERVER_LICENSE_PROBLEM:
-				return getString(R.string.error_server_license);
-			case TOO_MANY_SIGNIN_ATTEMPTS:
-				return getString(R.string.error_brute_force_protection);
-			case DEVICE_ID_MISMATCH:
-				return getString(R.string.error_device_id_mismatch);
-			default:
-				return null;
-		}
+		return switch (error) {
+			case UNKNOWN -> getString(R.string.error_unknown);
+			case INVALID_CREDENTIALS -> getString(R.string.error_invalid_credentials);
+			case INVALID_NETWORK_NAME -> getString(R.string.error_invalid_network_name);
+			case NETWORK_SUSPENDED -> getString(R.string.error_network_suspended);
+			case SERVER_SECURE_CONNECT_FAILED -> getString(R.string.error_secure_connect_failed);
+			case SERVER_SIGNIN_FAILED -> getString(R.string.error_server_signin_failed);
+			case NETWORK_SIGNIN_FAILED -> getString(R.string.error_network_signin_failed);
+			case KICKED -> getString(R.string.error_kicked);
+			case APP_UPDATE_REQUIRED -> getString(R.string.error_update_required);
+			case NO_INTERNET_CONNECTION -> getString(R.string.error_no_internet);
+			case INTERNET_CONNECTION_RESTRICTED -> getString(R.string.error_internet_restricted);
+			case SERVER_LICENSE_PROBLEM -> getString(R.string.error_server_license);
+			case TOO_MANY_SIGNIN_ATTEMPTS -> getString(R.string.error_brute_force_protection);
+			case DEVICE_ID_MISMATCH -> getString(R.string.error_device_id_mismatch);
+			default -> null;
+		};
 	}
 
 	private void onHeadsetPress() {

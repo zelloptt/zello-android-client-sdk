@@ -10,9 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.zello.sdk.AppState;
 import com.zello.sdk.BluetoothAccessoryState;
 import com.zello.sdk.BluetoothAccessoryType;
@@ -23,11 +20,15 @@ import com.zello.sdk.Tab;
 import com.zello.sdk.Theme;
 import com.zello.sdk.Zello;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.Events {
 
-	private AppState _appState = new AppState();
-	private MessageIn _messageIn = new MessageIn();
-	private MessageOut _messageOut = new MessageOut();
+	private final AppState _appState = new AppState();
+	private final MessageIn _messageIn = new MessageIn();
+	private final MessageOut _messageOut = new MessageOut();
 	private Tab _activeTab = Tab.RECENTS;
 
 	private TextView _textMessageInfo;
@@ -112,43 +113,40 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.menu_available:
-			case R.id.menu_solo:
-			case R.id.menu_busy: {
-				chooseStatus();
-				return true;
-			}
-			case R.id.menu_select_contact: {
-				chooseActiveContact();
-				return true;
-			}
-			case R.id.menu_lock_ptt_app: {
-				lockPttApp();
-				return true;
-			}
-			case R.id.menu_unlock_ptt_app: {
-				unlockPttApp();
-				return true;
-			}
-			case R.id.menu_enable_auto_run: {
-				enableAutoRun();
-				return true;
-			}
-			case R.id.menu_disable_auto_run: {
-				disableAutoRun();
-				return true;
-			}
-			case R.id.menu_start_message: {
-				Zello.getInstance().beginMessage();
-				return true;
-			}
-			case R.id.menu_stop_message: {
-				Zello.getInstance().endMessage();
-				return true;
-			}
+		int id = item.getItemId();
+		if (id == R.id.menu_available || id == R.id.menu_solo || id == R.id.menu_busy) {
+			chooseStatus();
+			return true;
 		}
-		return false;
+		if (id == R.id.menu_select_contact) {
+			chooseActiveContact();
+			return true;
+		}
+		if (id == R.id.menu_lock_ptt_app) {
+			lockPttApp();
+			return true;
+		}
+		if (id == R.id.menu_unlock_ptt_app) {
+			unlockPttApp();
+			return true;
+		}
+		if (id == R.id.menu_enable_auto_run) {
+			enableAutoRun();
+			return true;
+		}
+		if (id == R.id.menu_disable_auto_run) {
+			disableAutoRun();
+			return true;
+		}
+		if (id == R.id.menu_start_message) {
+			Zello.getInstance().beginMessage();
+			return true;
+		}
+		if (id == R.id.menu_stop_message) {
+			Zello.getInstance().endMessage();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -184,7 +182,12 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 	}
 
 	@Override
-	public void onBluetoothAccessoryStateChanged(@NonNull BluetoothAccessoryType bluetoothAccessoryType, @NonNull BluetoothAccessoryState bluetoothAccessoryState, String s, String s1) {
+	public void onBluetoothAccessoryStateChanged(
+			@NonNull BluetoothAccessoryType bluetoothAccessoryType,
+			@NonNull BluetoothAccessoryState bluetoothAccessoryState,
+			@Nullable String name,
+			@Nullable String description
+	) {
 	}
 
 	private void chooseActiveContact() {
@@ -230,22 +233,10 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				switch (which) {
-					case 0: {
-						Zello.getInstance().setStatus(Status.AVAILABLE);
-						break;
-					}
-					case 1: {
-						Zello.getInstance().setStatus(Status.SOLO);
-						break;
-					}
-					case 2: {
-						Zello.getInstance().setStatus(Status.BUSY);
-						break;
-					}
-					case 3: {
-						Zello.getInstance().signOut();
-						break;
-					}
+					case 0 -> Zello.getInstance().setStatus(Status.AVAILABLE);
+					case 1 -> Zello.getInstance().setStatus(Status.SOLO);
+					case 2 -> Zello.getInstance().setStatus(Status.BUSY);
+					case 3 -> Zello.getInstance().signOut();
 				}
 				dialog.dismiss();
 			}
