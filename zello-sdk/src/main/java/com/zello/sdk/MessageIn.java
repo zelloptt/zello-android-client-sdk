@@ -20,9 +20,6 @@ public class MessageIn {
 
 	//region Public Methods
 
-	public MessageIn() {
-	}
-
 	/**
 	 * <p>
 	 *     Resets the <code>MessageIn</code> instance back to the default values.
@@ -38,8 +35,9 @@ public class MessageIn {
 		_active = false;
 	}
 
+	@SuppressWarnings("MethodDoesntCallSuperMethod")
 	@Override
-	public MessageIn clone() {
+	public @NonNull MessageIn clone() {
 		MessageIn message = new MessageIn();
 		copyTo(message);
 		return message;
