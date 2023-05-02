@@ -1,20 +1,22 @@
 package com.zello.sdk.sample.contacts;
 
-import android.os.Parcelable;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.zello.sdk.AppState;
 import com.zello.sdk.BluetoothAccessoryState;
 import com.zello.sdk.BluetoothAccessoryType;
 import com.zello.sdk.Tab;
 import com.zello.sdk.Zello;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ContactsActivity extends AppCompatActivity implements com.zello.sdk.Events {
 
@@ -22,7 +24,7 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 	private TextView _statusTextView;
 	private TextView _selectedContactTextView;
 
-	private com.zello.sdk.AppState _appState = new com.zello.sdk.AppState();
+	private final AppState _appState = new AppState();
 
 	//region Lifecycle Methods
 
@@ -36,22 +38,21 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 		_statusTextView = findViewById(R.id.statusTextView);
 		_selectedContactTextView = findViewById(R.id.selectedContactTextView);
 
+		Zello zello = Zello.getInstance();
 		// Automatically choose the app to connect to in the following order of preference: com.loudtalks, net.loudtalks, com.pttsdk
 		// Alternatively, connect to a preferred app by supplying a package name, for example: Zello.getInstance().configure("net.loudtalks", this)
-		Zello.getInstance().configure(this);
+		zello.configure(this);
+		zello.subscribeToEvents(this);
 
 		// Contact list pick handler
-		_contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				ListAdapter adapter = (ListAdapter) _contactsListView.getAdapter();
-				if (adapter == null) {
-					return;
-				}
-				com.zello.sdk.Contact contact = (com.zello.sdk.Contact) adapter.getItem(position);
-				if (contact != null) {
-					Zello.getInstance().setSelectedContact(contact);
-				}
+		_contactsListView.setOnItemClickListener((parent, view, position, id) -> {
+			ListAdapter adapter = (ListAdapter) _contactsListView.getAdapter();
+			if (adapter == null) {
+				return;
+			}
+			com.zello.sdk.Contact contact = (com.zello.sdk.Contact) adapter.getItem(position);
+			if (contact != null) {
+				Zello.getInstance().setSelectedContact(contact);
 			}
 		});
 
@@ -61,8 +62,9 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Zello.getInstance().unsubscribeFromEvents(this);
-		Zello.getInstance().unconfigure();
+		Zello zello = Zello.getInstance();
+		zello.unsubscribeFromEvents(this);
+		zello.unconfigure();
 	}
 
 	@Override
@@ -90,26 +92,24 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 		return true;
 	}
 
-	@SuppressWarnings("SwitchStatementWithTooFewBranches")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.menu_select_contact: {
-				// Activity title; optional
-				String title = getString(R.string.select_contact_title);
-				// Set of displayed tabs; required; any combination of RECENTS, USERS and CHANNELS
-				com.zello.sdk.Tab[] tabs = new com.zello.sdk.Tab[]{com.zello.sdk.Tab.RECENTS, com.zello.sdk.Tab.USERS, com.zello.sdk.Tab.CHANNELS};
-				// Initially active tab; optional; can be RECENTS, USERS or CHANNELS
-				com.zello.sdk.Tab tab = Tab.RECENTS;
-				// Visual theme; optional; can be DARK or LIGHT
-				com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
+		int id = item.getItemId();
+		if (id == R.id.menu_select_contact) {
+			// Activity title; optional
+			String title = getString(R.string.select_contact_title);
+			// Set of displayed tabs; required; any combination of RECENTS, USERS and CHANNELS
+			com.zello.sdk.Tab[] tabs = new com.zello.sdk.Tab[]{com.zello.sdk.Tab.RECENTS, com.zello.sdk.Tab.USERS, com.zello.sdk.Tab.CHANNELS};
+			// Initially active tab; optional; can be RECENTS, USERS or CHANNELS
+			com.zello.sdk.Tab tab = Tab.RECENTS;
+			// Visual theme; optional; can be DARK or LIGHT
+			com.zello.sdk.Theme theme = com.zello.sdk.Theme.DARK;
 
-				// Since Zello was initialized in the Activity, pass in this as Activity parameter
-				Zello.getInstance().selectContact(title, tabs, tab, theme, this);
-				break;
-			}
+			// Since Zello was initialized in the Activity, pass in this as Activity parameter
+			Zello.getInstance().selectContact(title, tabs, tab, theme, this);
+			return true;
 		}
-		return true;
+		return super.onOptionsItemSelected(item);
 	}
 
 	//endregion
@@ -161,7 +161,7 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 	}
 
 	@Override
-	public void onLastContactsTabChanged(Tab tab) {
+	public void onLastContactsTabChanged(@NonNull Tab tab) {
 	}
 
 	@Override
@@ -192,7 +192,12 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 	}
 
 	@Override
-	public void onBluetoothAccessoryStateChanged(BluetoothAccessoryType bluetoothAccessoryType, BluetoothAccessoryState bluetoothAccessoryState, String s, String s1) {
+	public void onBluetoothAccessoryStateChanged(
+			@NonNull BluetoothAccessoryType bluetoothAccessoryType,
+			@NonNull BluetoothAccessoryState bluetoothAccessoryState,
+			@Nullable String name,
+			@Nullable String description
+	) {
 	}
 
 	//endregion

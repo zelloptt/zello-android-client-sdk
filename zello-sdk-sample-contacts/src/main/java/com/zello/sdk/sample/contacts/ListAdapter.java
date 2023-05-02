@@ -105,29 +105,25 @@ public class ListAdapter extends BaseAdapter {
 			Context context = view.getContext();
 
 			switch (type) {
-				case USER:
-				case GATEWAY: {
+				case USER, GATEWAY -> {
 					// User or radio gateway
 					String message = contact.getStatusMessage(); // User-defined status message
 					statusText = message == null || message.length() == 0 ? statusToText(context, status) : message;
-					break;
 				}
-				case CHANNEL: {
+				case CHANNEL -> {
 					if (status == ContactStatus.AVAILABLE) {
 						String countText = NumberFormat.getInstance().format(contact.getUsersCount());
 						statusText = context.getString(R.string.status_channel_users_count).replace("%count%", countText);
 					} else {
 						statusText = statusToText(context, status);
 					}
-					break;
 				}
-				case GROUP: {
+				case GROUP -> {
 					String countText = NumberFormat.getInstance().format(contact.getUsersTotal());
 					String totalText = NumberFormat.getInstance().format(contact.getUsersTotal());
 					statusText = view.getContext().getString(R.string.status_group_users_count).replace("%count%", countText).replace("%total%", totalText);
-					break;
 				}
-				case CONVERSATION: {
+				case CONVERSATION -> {
 					if (status == ContactStatus.AVAILABLE) {
 						String countText = NumberFormat.getInstance().format(contact.getUsersCount());
 						String totalText = NumberFormat.getInstance().format(contact.getUsersTotal());
@@ -135,7 +131,6 @@ public class ListAdapter extends BaseAdapter {
 					} else {
 						statusText = statusToText(context, status);
 					}
-					break;
 				}
 			}
 
@@ -162,21 +157,13 @@ public class ListAdapter extends BaseAdapter {
 	}
 
 	private static String statusToText(Context context, ContactStatus status) {
-		int id = R.string.status_offline;
+		int id;
 		switch (status) {
-			case STANDBY:
-				id = R.string.status_standby;
-				break;
-			case AVAILABLE:
-				id = R.string.status_online;
-				break;
-			case BUSY:
-				id = R.string.status_busy;
-				break;
-			case CONNECTING:
-				id = R.string.status_connecting;
-				break;
-			default:
+			case STANDBY -> id = R.string.status_standby;
+			case AVAILABLE -> id = R.string.status_online;
+			case BUSY -> id = R.string.status_busy;
+			case CONNECTING -> id = R.string.status_connecting;
+			default -> id = R.string.status_offline;
 		}
 		return context.getString(id);
 	}
@@ -184,49 +171,39 @@ public class ListAdapter extends BaseAdapter {
 	@SuppressWarnings("SwitchStatementWithTooFewBranches")
 	private static int statusToDrawableId(ContactStatus status, ContactType type) {
 		switch (type) {
-			case USER: {
+			case USER -> {
 				// User
-				switch (status) {
-					case STANDBY:
-						return R.drawable.user_standby;
-					case AVAILABLE:
-						return R.drawable.user_online;
-					case BUSY:
-						return R.drawable.user_busy;
-					default:
-						return R.drawable.user_offline;
-				}
+				return switch (status) {
+					case STANDBY -> R.drawable.user_standby;
+					case AVAILABLE -> R.drawable.user_online;
+					case BUSY -> R.drawable.user_busy;
+					default -> R.drawable.user_offline;
+				};
 			}
-			case CHANNEL: {
+			case CHANNEL -> {
 				// Channel
-				switch (status) {
-					case AVAILABLE:
-						return R.drawable.channel_online;
-					default:
-						return R.drawable.channel_offline;
-				}
+				return switch (status) {
+					case AVAILABLE -> R.drawable.channel_online;
+					default -> R.drawable.channel_offline;
+				};
 			}
-			case GATEWAY: {
+			case GATEWAY -> {
 				// Radio gateway
 				return R.drawable.gateway_online;
 			}
-			case GROUP: {
+			case GROUP -> {
 				// Group
-				switch (status) {
-					case AVAILABLE:
-						return R.drawable.group_online;
-					default:
-						return R.drawable.channel_offline;
-				}
+				return switch (status) {
+					case AVAILABLE -> R.drawable.group_online;
+					default -> R.drawable.channel_offline;
+				};
 			}
-			case CONVERSATION: {
+			case CONVERSATION -> {
 				// Channel
-				switch (status) {
-					case AVAILABLE:
-						return R.drawable.conversation_online;
-					default:
-						return R.drawable.conversation_offline;
-				}
+				return switch (status) {
+					case AVAILABLE -> R.drawable.conversation_online;
+					default -> R.drawable.conversation_offline;
+				};
 			}
 		}
 		return R.drawable.user_offline;
