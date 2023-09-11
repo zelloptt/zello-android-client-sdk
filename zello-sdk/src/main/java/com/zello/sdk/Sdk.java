@@ -820,8 +820,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				}
 			};
 			IntentFilter filter = new IntentFilter(_connectedPackage + "." + Constants.ACTION_MESSAGE_STATE);
-			Intent intentStickyMessageState = ContextCompat.registerReceiver(_context, _receiverMessageState, filter, ContextCompat.RECEIVER_EXPORTED);
-			updateMessageState(intentStickyMessageState);
+			Intent intent = ContextCompat.registerReceiver(_context, _receiverMessageState, filter, ContextCompat.RECEIVER_EXPORTED);
+			updateMessageState(intent);
 		}
 		if (_receiverContactSelected == null) {
 			// Register to receive selected contact broadcasts
