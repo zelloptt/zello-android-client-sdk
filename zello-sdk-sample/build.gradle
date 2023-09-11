@@ -1,5 +1,5 @@
 buildscript {
-	ext.kotlin_version = "1.8.10"
+	ext.kotlin_version = "1.9.10"
 
 	repositories {
 		google()
@@ -7,7 +7,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath "com.android.tools.build:gradle:8.0.0"
+		classpath "com.android.tools.build:gradle:8.1.1"
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 }
@@ -31,8 +31,8 @@ kotlin {
 }
 
 android {
-	compileSdkVersion 33
-	buildToolsVersion "33.0.0"
+	compileSdk 34
+	setBuildToolsVersion("33.0.1")
 	namespace "com.zello.sdk.sample"
 
 	buildFeatures {
@@ -41,8 +41,8 @@ android {
 
 	defaultConfig {
 		applicationId "com.zello.sdk.sample"
-		minSdkVersion 23
-		targetSdkVersion 33
+		minSdk 23
+		targetSdk 34
 		versionCode 1
 		versionName "1.0"
 	}
@@ -67,7 +67,7 @@ android {
 dependencies {
 	implementation files("libs/zello-sdk.aar")
 	implementation "androidx.appcompat:appcompat:1.6.1"
-	implementation "androidx.core:core-ktx:1.10.0"
+	implementation "androidx.core:core-ktx:1.10.1"
 	implementation "androidx.media:media:1.6.0"
 	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

@@ -97,9 +97,9 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		if (_context == null) {
 			return;
 		}
+		unregisterPackageReceivers();
 		disconnect();
 		_resumed = false;
-		unregisterPackageEventReceivers();
 		Contacts contacts = _contacts;
 		if (contacts != null) {
 			contacts.close();
@@ -761,19 +761,19 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				}
 			}
 		};
-		IntentFilter filterPackage = new IntentFilter();
-		filterPackage.addAction(Intent.ACTION_PACKAGE_ADDED);
-		filterPackage.addAction(Intent.ACTION_PACKAGE_REMOVED);
-		filterPackage.addAction(Intent.ACTION_PACKAGE_REPLACED);
-		filterPackage.addAction(Intent.ACTION_PACKAGE_CHANGED);
-		filterPackage.addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED);
-		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
-		filterPackage.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
-		filterPackage.addDataScheme("package");
-		_context.registerReceiver(_receiverPackage, filterPackage);
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+		filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+		filter.addAction(Intent.ACTION_PACKAGE_REPLACED);
+		filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
+		filter.addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED);
+		filter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
+		filter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
+		filter.addDataScheme("package");
+		ContextCompat.registerReceiver(_context, _receiverPackage, filter, ContextCompat.RECEIVER_EXPORTED);
 	}
 
-	private void unregisterPackageEventReceivers() {
+	private void unregisterPackageReceivers() {
 		if (_context == null) {
 			return;
 		}
@@ -795,8 +795,9 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 					updateAppState(intent);
 				}
 			};
-			Intent intentStickyAppState = _context.registerReceiver(_receiverAppState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_APP_STATE));
-			updateAppState(intentStickyAppState);
+			IntentFilter filter = new IntentFilter(_connectedPackage + "." + Constants.ACTION_APP_STATE);
+			Intent intent = ContextCompat.registerReceiver(_context, _receiverAppState, filter, ContextCompat.RECEIVER_EXPORTED);
+			updateAppState(intent);
 			updateContacts();
 		}
 		if (_receiverPermissionErrors == null) {
@@ -807,7 +808,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 					handlePermissionError(intent);
 				}
 			};
-			_context.registerReceiver(_receiverPermissionErrors, new IntentFilter(_connectedPackage + "." + Constants.ACTION_PERMISSION_ERRORS));
+			IntentFilter filter = new IntentFilter(_connectedPackage + "." + Constants.ACTION_PERMISSION_ERRORS);
+			ContextCompat.registerReceiver(_context, _receiverPermissionErrors, filter, ContextCompat.RECEIVER_EXPORTED);
 		}
 		if (_receiverMessageState == null) {
 			// Register to receive message state broadcasts
@@ -817,7 +819,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 					updateMessageState(intent);
 				}
 			};
-			Intent intentStickyMessageState = _context.registerReceiver(_receiverMessageState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_MESSAGE_STATE));
+			IntentFilter filter = new IntentFilter(_connectedPackage + "." + Constants.ACTION_MESSAGE_STATE);
+			Intent intentStickyMessageState = ContextCompat.registerReceiver(_context, _receiverMessageState, filter, ContextCompat.RECEIVER_EXPORTED);
 			updateMessageState(intentStickyMessageState);
 		}
 		if (_receiverContactSelected == null) {
@@ -828,8 +831,9 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 					updateSelectedContact(intent);
 				}
 			};
-			Intent intentStickySelectedContact = _context.registerReceiver(_receiverContactSelected, new IntentFilter(_connectedPackage + "." + Constants.ACTION_CONTACT_SELECTED));
-			updateSelectedContact(intentStickySelectedContact);
+			IntentFilter filter = new IntentFilter(_connectedPackage + "." + Constants.ACTION_CONTACT_SELECTED);
+			Intent intent = ContextCompat.registerReceiver(_context, _receiverContactSelected, filter, ContextCompat.RECEIVER_EXPORTED);
+			updateSelectedContact(intent);
 		}
 		if (_receiverActiveTab == null) {
 			// Register to receive last selected contact list tab
@@ -839,7 +843,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 					updateSelectedTab(intent);
 				}
 			};
-			_context.registerReceiver(_receiverActiveTab, new IntentFilter(_activeTabAction));
+			IntentFilter filter = new IntentFilter(_activeTabAction);
+			ContextCompat.registerReceiver(_context, _receiverActiveTab, filter, ContextCompat.RECEIVER_EXPORTED);
 		}
 		if (_receiverBtAccessoryState == null) {
 			// Register to receive bluetooth accessory state broadcasts
@@ -849,17 +854,14 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 					handleBtAccessoryState(intent);
 				}
 			};
-			_context.registerReceiver(_receiverBtAccessoryState, new IntentFilter(_connectedPackage + "." + Constants.ACTION_BT_ACCESSORY_STATE));
+			IntentFilter filter = new IntentFilter(_connectedPackage + "." + Constants.ACTION_BT_ACCESSORY_STATE);
+			ContextCompat.registerReceiver(_context, _receiverBtAccessoryState, filter, ContextCompat.RECEIVER_EXPORTED);
 		}
 	}
 
 	private void unregisterAppStateReceivers() {
 		if (_context == null) {
 			return;
-		}
-		if (_receiverPackage != null) {
-			_context.unregisterReceiver(_receiverPackage);
-			_receiverPackage = null;
 		}
 		if (_receiverAppState != null) {
 			_context.unregisterReceiver(_receiverAppState);
@@ -1287,47 +1289,32 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	static @NonNull ContactType intToContactType(int type) {
-		switch (type) {
-			case 1:
-				return ContactType.CHANNEL;
-			case 3:
-				return ContactType.GROUP;
-			case 2:
-				return ContactType.GATEWAY;
-			case 4:
-				return ContactType.CONVERSATION;
-			default:
-				return ContactType.USER;
-		}
+		return switch (type) {
+			case 1 -> ContactType.CHANNEL;
+			case 3 -> ContactType.GROUP;
+			case 2 -> ContactType.GATEWAY;
+			case 4 -> ContactType.CONVERSATION;
+			default -> ContactType.USER;
+		};
 	}
 
 	static @NonNull ContactStatus intToContactStatus(int status) {
-		switch (status) {
-			case 1:
-				return ContactStatus.STANDBY;
-			case 2:
-			case 4:
-			case 5:
-				return ContactStatus.AVAILABLE;
-			case 3:
-				return ContactStatus.BUSY;
-			case 6:
-				return ContactStatus.CONNECTING;
-			default:
-				return ContactStatus.OFFLINE;
-		}
+		return switch (status) {
+			case 1 -> ContactStatus.STANDBY;
+			case 2, 4, 5 -> ContactStatus.AVAILABLE;
+			case 3 -> ContactStatus.BUSY;
+			case 6 -> ContactStatus.CONNECTING;
+			default -> ContactStatus.OFFLINE;
+		};
 	}
 
 	private static @Nullable String tabToString(@Nullable Tab tab) {
 		if (tab != null) {
-			switch (tab) {
-				case RECENTS:
-					return Constants.VALUE_RECENTS;
-				case USERS:
-					return Constants.VALUE_USERS;
-				case CHANNELS:
-					return Constants.VALUE_CHANNELS;
-			}
+			return switch (tab) {
+				case RECENTS -> Constants.VALUE_RECENTS;
+				case USERS -> Constants.VALUE_USERS;
+				case CHANNELS -> Constants.VALUE_CHANNELS;
+			};
 		}
 		return null;
 	}
