@@ -1,58 +1,58 @@
 buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
+	repositories {
+		google()
+		mavenCentral()
+	}
 
-    dependencies {
-        classpath "com.android.tools.build:gradle:8.0.0"
-    }
+	dependencies {
+		classpath "com.android.tools.build:gradle:8.1.1"
+	}
 }
 
 repositories {
-    google()
-    mavenCentral()
+	google()
+	mavenCentral()
 }
 
 apply plugin: "com.android.application"
 
 java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(17))
+	}
 }
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "33.0.0"
-    namespace "com.zello.sdk.sample.ptt"
+	compileSdk 34
+	setBuildToolsVersion("33.0.1")
+	namespace "com.zello.sdk.sample.ptt"
 
-    buildFeatures {
-        buildConfig true
-    }
+	buildFeatures {
+		buildConfig true
+	}
 
-    defaultConfig {
-        applicationId "com.zello.sdk.sample.ptt"
-        minSdkVersion 23
-        targetSdkVersion 33
-        versionCode 1
-        versionName "1.0"
-    }
+	defaultConfig {
+		applicationId "com.zello.sdk.sample.ptt"
+		minSdk 23
+		targetSdk 34
+		versionCode 1
+		versionName "1.0"
+	}
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-        }
-    }
+	buildTypes {
+		release {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+		}
+	}
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_17
+		targetCompatibility JavaVersion.VERSION_17
+	}
 }
 
 dependencies {
-    implementation files("libs/zello-sdk.aar")
-    implementation "androidx.appcompat:appcompat:1.6.1"
+	implementation files("libs/zello-sdk.aar")
+	implementation "androidx.appcompat:appcompat:1.6.1"
 }

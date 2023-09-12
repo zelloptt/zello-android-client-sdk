@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 /**
  * <p>
@@ -22,19 +23,18 @@ public class Audio {
 	//region Private Properties
 
 	private boolean _sp, _ep, _bt; // Speaker, earpiece, bluetooth
-	private int _wearable = -1; // Wearable index
 	private int _wearables; // Wearable device count
 	private boolean _changing;
 	private @NonNull AudioMode _mode = AudioMode.SPEAKER; // Current mode
 	private @Nullable BroadcastReceiver _receiver;
 	private @Nullable Context _context;
-	private @Nullable String _package;
+	private final @Nullable String _package;
 
 	//endregion
 
 	//region Package Private Methods
 
-	Audio(String packageName, Context context) {
+	Audio(@Nullable String packageName, @Nullable Context context) {
 		_package = packageName;
 		_context = context;
 		if (context != null && packageName != null) {
@@ -48,8 +48,9 @@ public class Audio {
 					}
 				}
 			};
-			Intent intentStickyAudioState = context.registerReceiver(_receiver, new IntentFilter(packageName + "." + Constants.ACTION_AUDIO_STATE));
-			updateAudioState(intentStickyAudioState);
+			IntentFilter filter = new IntentFilter(packageName + "." + Constants.ACTION_AUDIO_STATE);
+			Intent intent = ContextCompat.registerReceiver(context, _receiver, filter, ContextCompat.RECEIVER_EXPORTED);
+			updateAudioState(intent);
 		}
 	}
 
@@ -72,18 +73,12 @@ public class Audio {
 	 * @return boolean indicating if the mode is available for the device.
      */
 	public boolean isModeAvailable(@NonNull AudioMode mode) {
-		switch (mode) {
-			case SPEAKER:
-				return _sp;
-			case EARPIECE:
-				return _ep;
-			case BLUETOOTH:
-				return _bt;
-			case WEARABLE:
-				return _wearables > 0;
-			default:
-				return false;
-		}
+		return switch (mode) {
+			case SPEAKER -> _sp;
+			case EARPIECE -> _ep;
+			case BLUETOOTH -> _bt;
+			case WEARABLE -> _wearables > 0;
+		};
 	}
 
 	/**
@@ -154,20 +149,12 @@ public class Audio {
 		}
 		Intent intent = new Intent(_package + "." + Constants.ACTION_COMMAND);
 		intent.putExtra(Constants.EXTRA_COMMAND, Constants.VALUE_SET_AUDIO);
-		final String command;
-		switch (mode) {
-			case BLUETOOTH:
-				command = Constants.EXTRA_BT;
-				break;
-			case EARPIECE:
-				command = Constants.EXTRA_EP;
-				break;
-			case WEARABLE:
-				command = Constants.EXTRA_WA + wearable;
-				break;
-			default:
-				command = Constants.EXTRA_SP;
-		}
+		String command = switch (mode) {
+			case BLUETOOTH -> Constants.EXTRA_BT;
+			case EARPIECE -> Constants.EXTRA_EP;
+			case WEARABLE -> Constants.EXTRA_WA + wearable;
+			default -> Constants.EXTRA_SP;
+		};
 		intent.putExtra(Constants.EXTRA_MODE, command);
 		context.sendBroadcast(intent);
 	}
@@ -179,11 +166,6 @@ public class Audio {
 		String mode = Util.emptyIfNull(intent.getStringExtra(Constants.EXTRA_MODE));
 		if (mode.startsWith(Constants.EXTRA_WA)) {
 			_mode = AudioMode.WEARABLE;
-			try {
-				_wearable = Integer.parseInt(mode.substring(Constants.EXTRA_WA.length()));
-			} catch (NumberFormatException ignore) {
-				_wearable = -1;
-			}
 		} else if (mode.equals(Constants.EXTRA_EP)) {
 			_mode = AudioMode.EARPIECE;
 		} else if (mode.equals(Constants.EXTRA_BT)) {

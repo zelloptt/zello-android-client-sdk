@@ -1,5 +1,5 @@
 buildscript {
-	ext.kotlin_version = "1.8.10"
+	ext.kotlin_version = "1.9.10"
 
 	repositories {
 		google()
@@ -7,7 +7,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath "com.android.tools.build:gradle:8.0.0"
+		classpath "com.android.tools.build:gradle:8.1.1"
 		classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 	}
 }
@@ -31,7 +31,7 @@ kotlin {
 }
 
 dependencies {
-	implementation "androidx.core:core-ktx:1.10.0"
+	implementation "androidx.core:core-ktx:1.10.1"
 	implementation "androidx.media:media:1.6.0"
 	implementation "androidx.annotation:annotation:1.6.0"
 }
@@ -40,7 +40,7 @@ def sourceAarName = "zello-sdk-release.aar"
 def targetAarName = "zello-sdk.aar"
 def sourceAarPath = "build/outputs/aar/${sourceAarName}"
 
-task zelloSdkAarDeployReleaseToRoot() {
+tasks.register("zelloSdkAarDeployReleaseToRoot") {
 	description "Copies SDK AAR to the root folder of the project"
 	delete {
 		"../${targetAarName}"
@@ -54,7 +54,7 @@ task zelloSdkAarDeployReleaseToRoot() {
 }
 
 // This add a task that deploys a release build of the library to the sample projects /lib folders.
-task zelloSdkAarDeployReleaseToSamples {
+tasks.register("zelloSdkAarDeployReleaseToSamples") {
 	description "Copies SDK AAR to all sample projects"
 	delete {
 		"../zello-sdk-sample/libs/${targetAarName}"
@@ -96,20 +96,17 @@ task zelloSdkAarDeployReleaseToSamples {
 		into "../zello-sdk-sample-signin/libs/"
 		rename("${sourceAarName}", "${targetAarName}")
 	}
-	dependencies {
-		implementation "androidx.annotation:annotation:1.6.0"
-	}
 	shouldRunAfter "assembleRelease"
 }
 
-task zelloSdkDocDelete(type: Delete) {
+tasks.register("zelloSdkDocDelete", Delete) {
 	description "Deletes Zello SDK Javadoc from the project root folder"
 	delete "../docs/zello-sdk-documentation"
 }
 
-android.libraryVariants.all { variant ->
+android.libraryVariants.configureEach { variant ->
 	if (variant.name == "release") {
-		task zelloSdkDocCreate(type: Javadoc, dependsOn: "zelloSdkDocDelete") {
+		tasks.register("zelloSdkDocCreate", Javadoc) {
 			title ""
 			description "Creates Zello SDK Javadoc in the project root folder"
 			destinationDir = new File("${projectDir}/../docs", "zello-sdk-documentation")
@@ -131,11 +128,12 @@ android.libraryVariants.all { variant ->
 			options.noDeprecatedList = true
 			options.stylesheetFile = new File(projectDir, "../docs/stylesheet.css")
 			shouldRunAfter "assembleRelease"
+			dependsOn "zelloSdkDocDelete"
 		}
 	}
 }
 
-tasks.whenTaskAdded { task ->
+tasks.configureEach { task ->
 	if (task.name == "assembleRelease") {
 		task.finalizedBy "zelloSdkAarDeployReleaseToRoot"
 		task.finalizedBy "zelloSdkAarDeployReleaseToSamples"
@@ -143,20 +141,20 @@ tasks.whenTaskAdded { task ->
 }
 
 android {
-	compileSdkVersion 33
-	buildToolsVersion "33.0.0"
+	compileSdk 34
+	setBuildToolsVersion("33.0.1")
 	namespace "com.zello.sdk"
 
 	buildFeatures {
 		buildConfig true
 	}
 
-	ext.sdkVersion = "5.22.0"
+	ext.sdkVersion = "5.28.0"
 
 	defaultConfig {
-		targetSdkVersion 33
-		minSdkVersion 23
-		manifestPlaceholders = [sdkVersion: "$sdkVersion"]
+		minSdk 23
+		targetSdk 34
+		manifestPlaceholders.sdkVersion = "$sdkVersion"
 		buildConfigField "String", "SDK_VERSION", "\"$sdkVersion\""
 		consumerProguardFiles "consumer-rules.pro"
 	}
