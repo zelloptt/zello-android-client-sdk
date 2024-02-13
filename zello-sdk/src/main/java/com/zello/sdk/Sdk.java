@@ -343,7 +343,12 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			context.sendBroadcast(intent);
 			// Service intent in guaranteed to be non-null at this point
 			if (_serviceIntent != null) {
-				ContextCompat.startForegroundService(context, _serviceIntent);
+				try {
+					ContextCompat.startForegroundService(context, _serviceIntent);
+				} catch (Throwable t) {
+					// Caller may not be in the right state to start a service
+					Log.INSTANCE.e("Failed to start " + connectedPackage + " service", t);
+				}
 			}
 			return true;
 		}
@@ -675,7 +680,13 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		_serviceConnecting = false;
 		// Service intent in guaranteed to be non-null at this point
 		if (_serviceIntent != null) {
-			ContextCompat.startForegroundService(context, _serviceIntent);
+			try {
+				ContextCompat.startForegroundService(context, _serviceIntent);
+			} catch (Throwable t) {
+				// Caller may not be in the right state to start a service
+				String componentPackageName = name != null ? name.getPackageName() : null;
+				Log.INSTANCE.e("Failed to start " + componentPackageName + " service", t);
+			}
 		}
 		if (_delayedShowBtAccessoriesNotifications != null) {
 			setShowBluetoothAccessoriesNotifications(_delayedShowBtAccessoriesNotifications);
