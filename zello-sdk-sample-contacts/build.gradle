@@ -5,7 +5,7 @@ buildscript {
 	}
 
 	dependencies {
-		classpath "com.android.tools.build:gradle:8.1.1"
+		classpath "com.android.tools.build:gradle:8.2.2"
 	}
 }
 
@@ -24,7 +24,7 @@ java {
 
 android {
 	compileSdk 34
-	setBuildToolsVersion("33.0.1")
+	setBuildToolsVersion("34.0.0")
 	namespace "com.zello.sdk.sample.contacts"
 
 	buildFeatures {
@@ -33,7 +33,7 @@ android {
 
 	defaultConfig {
 		applicationId "com.zello.sdk.sample.contacts"
-		minSdk 23
+		minSdk 24
 		targetSdk 34
 		versionCode 1
 		versionName "1.0"
