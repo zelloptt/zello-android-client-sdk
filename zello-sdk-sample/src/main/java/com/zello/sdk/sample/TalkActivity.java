@@ -449,6 +449,9 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	}
 
 	@Override
+	public void onForegroundServiceStartFailed(@Nullable Throwable throwable) {}
+
+	@Override
 	public void onBluetoothAccessoryStateChanged(
 			@NonNull BluetoothAccessoryType bluetoothAccessoryType,
 			@NonNull BluetoothAccessoryState bluetoothAccessoryState,

@@ -256,6 +256,10 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 	) {
 	}
 
+	@Override
+	public void onForegroundServiceStartFailed(@Nullable Throwable throwable) {
+	}
+
 	//endregion
 
 	private void updateUI() {

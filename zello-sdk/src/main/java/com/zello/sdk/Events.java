@@ -1,6 +1,7 @@
 package com.zello.sdk;
 
 import android.app.Activity;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -137,5 +138,29 @@ public interface Events {
 	void onBluetoothAccessoryStateChanged(
 			@NonNull BluetoothAccessoryType type, @NonNull BluetoothAccessoryState state,
 			@Nullable String name, @Nullable String description);
+
+	/**
+	 * <p>
+	 * Called when an attempt to start the Zello foreground service fails.
+	 * </p>
+	 * <p>
+	 * This method is invoked on the UI thread.
+	 * </p>
+	 * <p>
+	 * It is the responsibility of the app using the SDK to determine if and how to handle this error.
+	 * The most likely cause is that the app connecting to Zello was not displaying any UI at the
+	 * time when the foreground service was started. In this case, the implementing app may call
+	 * {@link Zello#unconfigure()} followed by {@link Zello#configure(Context)}
+	 * (or one of its overloads) once its UI is in the foreground to attempt to start the foreground
+	 * service again.
+	 * </p>
+	 * <p>
+	 * In Android 14 and above, requirements for foreground services have become stricter. For
+	 * the most up-to-date information, please refer to the Android documentation.
+	 * </p>
+	 *
+	 * @param t The exception that caused the failure if available.
+	 */
+	void onForegroundServiceStartFailed(@Nullable Throwable t);
 
 }
