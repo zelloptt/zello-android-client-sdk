@@ -12,13 +12,18 @@ public enum PermissionError {
 	NONE,
 
 	/**
-	 * Unknown perimssion error.
+	 * Unknown permission error.
 	 */
 	UNKNOWN,
 
 	/**
 	 * Microphone permission error.
 	 */
-	MICROPHONE_NOT_GRANTED
+	MICROPHONE_NOT_GRANTED,
+
+	/**
+	 * Foreground service cannot start.
+	 */
+	FOREGROUND_SERVICE_NOT_ALLOWED
 
 }

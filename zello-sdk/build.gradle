@@ -149,7 +149,7 @@ android {
 		buildConfig true
 	}
 
-	ext.sdkVersion = "5.33.3"
+	ext.sdkVersion = "5.40.1"
 
 	defaultConfig {
 		minSdk 24

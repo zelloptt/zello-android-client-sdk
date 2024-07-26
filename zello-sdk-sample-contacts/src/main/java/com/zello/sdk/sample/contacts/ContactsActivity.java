@@ -200,6 +200,10 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 	) {
 	}
 
+	@Override
+	public void onForegroundServiceStartFailed(@Nullable Throwable throwable) {
+	}
+
 	//endregion
 
 	@SuppressWarnings("SameParameterValue")

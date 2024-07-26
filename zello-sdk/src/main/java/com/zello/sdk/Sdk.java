@@ -348,6 +348,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				} catch (Throwable t) {
 					// Caller may not be in the right state to start a service
 					Log.INSTANCE.e("Failed to start " + connectedPackage + " service", t);
+					handleForegroundServiceException(t);
+					return false;
 				}
 			}
 			return true;
@@ -686,6 +688,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				// Caller may not be in the right state to start a service
 				String componentPackageName = name != null ? name.getPackageName() : null;
 				Log.INSTANCE.e("Failed to start " + componentPackageName + " service", t);
+				handleForegroundServiceException(t);
 			}
 		}
 		if (_delayedShowBtAccessoriesNotifications != null) {
@@ -1203,6 +1206,16 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			for (Events event : Zello.getInstance().events) {
 				event.onMicrophonePermissionNotGranted();
 			}
+		} else if (error == PermissionError.FOREGROUND_SERVICE_NOT_ALLOWED) {
+			for (Events event : Zello.getInstance().events) {
+				event.onForegroundServiceStartFailed(null);
+			}
+		}
+	}
+
+	private void handleForegroundServiceException(@Nullable Throwable t) {
+		for (Events event : Zello.getInstance().events) {
+			event.onForegroundServiceStartFailed(t);
 		}
 	}
 
@@ -1294,6 +1307,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			return PermissionError.MICROPHONE_NOT_GRANTED;
 		} else if (error == PermissionError.NONE.ordinal()) {
 			return PermissionError.NONE;
+		} else if (error == PermissionError.FOREGROUND_SERVICE_NOT_ALLOWED.ordinal()) {
+			return PermissionError.FOREGROUND_SERVICE_NOT_ALLOWED;
 		} else {
 			return PermissionError.UNKNOWN;
 		}

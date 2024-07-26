@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="../../../script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="../../../script.js"></script>
-<script type="text/javascript" src="../../../script-dir/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="../../../script-dir/jquery-3.6.1.min.js"></script>
 <script type="text/javascript" src="../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="class-declaration-page">
@@ -115,26 +115,32 @@ loadScripts(document, 'script');</script>
  Called when the <a href="Contacts.html" title="class in com.zello.sdk"><code>Contacts</code></a> for the user changes.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onLastContactsTabChanged(com.zello.sdk.Tab)" class="member-name-link">onLastContactsTabChanged</a><wbr>(<a href="Tab.html" title="enum class in com.zello.sdk">Tab</a>&nbsp;tab)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onForegroundServiceStartFailed(java.lang.Throwable)" class="member-name-link">onForegroundServiceStartFailed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;t)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">
+ Called when an attempt to start the Zello foreground service fails.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onLastContactsTabChanged(com.zello.sdk.Tab)" class="member-name-link">onLastContactsTabChanged</a><wbr>(<a href="Tab.html" title="enum class in com.zello.sdk">Tab</a>&nbsp;tab)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">
  Called when the last <a href="Contacts.html" title="class in com.zello.sdk"><code>Contacts</code></a> <a href="Tab.html" title="enum class in com.zello.sdk"><code>Tab</code></a> changes.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onMessageStateChanged()" class="member-name-link">onMessageStateChanged</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onMessageStateChanged()" class="member-name-link">onMessageStateChanged</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">
  Called when the state of either the <a href="MessageOut.html" title="class in com.zello.sdk"><code>MessageOut</code></a> or <a href="MessageIn.html" title="class in com.zello.sdk"><code>MessageIn</code></a> changes.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onMicrophonePermissionNotGranted()" class="member-name-link">onMicrophonePermissionNotGranted</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onMicrophonePermissionNotGranted()" class="member-name-link">onMicrophonePermissionNotGranted</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">
  Called when an invocation of the <a href="Zello.html#beginMessage()"><code>Zello.beginMessage()</code></a> method fails because the microphone permission hasn't been granted.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onSelectedContactChanged()" class="member-name-link">onSelectedContactChanged</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onSelectedContactChanged()" class="member-name-link">onSelectedContactChanged</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">
  Called when the selected contact changes.</div>
 </div>
@@ -348,6 +354,35 @@ loadScripts(document, 'script');</script>
 <li><a href="BluetoothAccessoryState.html" title="enum class in com.zello.sdk"><code>BluetoothAccessoryState</code></a></li>
 </ul>
 </dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="onForegroundServiceStartFailed(java.lang.Throwable)">
+<h3>onForegroundServiceStartFailed</h3>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">onForegroundServiceStartFailed</span><wbr><span class="parameters">(@Nullable
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;t)</span></div>
+<div class="block"><p>
+ Called when an attempt to start the Zello foreground service fails.
+ </p>
+ <p>
+ This method is invoked on the UI thread.
+ </p>
+ <p>
+ It is the responsibility of the app using the SDK to determine if and how to handle this error.
+ The most likely cause is that the app connecting to Zello was not displaying any UI at the
+ time when the foreground service was started. In this case, the implementing app may call
+ <a href="Zello.html#unconfigure()"><code>Zello.unconfigure()</code></a> followed by <a href="Zello.html#configure(android.content.Context)"><code>Zello.configure(Context)</code></a>
+ (or one of its overloads) once its UI is in the foreground to attempt to start the foreground
+ service again.
+ </p>
+ <p>
+ In Android 14 and above, requirements for foreground services have become stricter. For
+ the most up-to-date information, please refer to the Android documentation.
+ </p></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>t</code> - The exception that caused the failure if available.</dd>
 </dl>
 </section>
 </li>

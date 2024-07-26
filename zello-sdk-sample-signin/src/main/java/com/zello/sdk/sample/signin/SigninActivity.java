@@ -143,6 +143,10 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 	) {
 	}
 
+	@Override
+	public void onForegroundServiceStartFailed(@Nullable Throwable throwable) {
+	}
+
 	//endregion
 
 	private void updateUI() {
