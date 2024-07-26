@@ -11,7 +11,7 @@
 <link rel="stylesheet" type="text/css" href="script-dir/jquery-ui.min.css" title="Style">
 <link rel="stylesheet" type="text/css" href="jquery-ui.overrides.css" title="Style">
 <script type="text/javascript" src="script.js"></script>
-<script type="text/javascript" src="script-dir/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="script-dir/jquery-3.6.1.min.js"></script>
 <script type="text/javascript" src="script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="index-page">
@@ -48,7 +48,7 @@ loadScripts(document, 'script');</script>
 <div class="header">
 <h1>Index</h1>
 </div>
-<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a>
 <h2 class="title" id="I:A">A</h2>
 <dl class="index">
 <dt><a href="com/zello/sdk/Error.html#APP_UPDATE_REQUIRED" class="member-name-link">APP_UPDATE_REQUIRED</a> - Enum constant in enum class com.zello.sdk.<a href="com/zello/sdk/Error.html" title="enum class in com.zello.sdk">Error</a></dt>
@@ -231,6 +231,13 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/zello/sdk/Events.html" class="type-name-link" title="interface in com.zello.sdk">Events</a> - Interface in <a href="com/zello/sdk/package-summary.html">com.zello.sdk</a></dt>
 <dd>
 <div class="block">The <code>Events</code> interface enables monitoring of Zello SDK state and property changes</div>
+</dd>
+</dl>
+<h2 class="title" id="I:F">F</h2>
+<dl class="index">
+<dt><a href="com/zello/sdk/PermissionError.html#FOREGROUND_SERVICE_NOT_ALLOWED" class="member-name-link">FOREGROUND_SERVICE_NOT_ALLOWED</a> - Enum constant in enum class com.zello.sdk.<a href="com/zello/sdk/PermissionError.html" title="enum class in com.zello.sdk">PermissionError</a></dt>
+<dd>
+<div class="block">Foreground service cannot start.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
@@ -607,6 +614,11 @@ loadScripts(document, 'script');</script>
 <div class="block">
  Called when the <a href="com/zello/sdk/Contacts.html" title="class in com.zello.sdk"><code>Contacts</code></a> for the user changes.</div>
 </dd>
+<dt><a href="com/zello/sdk/Events.html#onForegroundServiceStartFailed(java.lang.Throwable)" class="member-name-link">onForegroundServiceStartFailed(Throwable)</a> - Method in interface com.zello.sdk.<a href="com/zello/sdk/Events.html" title="interface in com.zello.sdk">Events</a></dt>
+<dd>
+<div class="block">
+ Called when an attempt to start the Zello foreground service fails.</div>
+</dd>
 <dt><a href="com/zello/sdk/Events.html#onLastContactsTabChanged(com.zello.sdk.Tab)" class="member-name-link">onLastContactsTabChanged(Tab)</a> - Method in interface com.zello.sdk.<a href="com/zello/sdk/Events.html" title="interface in com.zello.sdk">Events</a></dt>
 <dd>
 <div class="block">
@@ -857,7 +869,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/zello/sdk/PermissionError.html#UNKNOWN" class="member-name-link">UNKNOWN</a> - Enum constant in enum class com.zello.sdk.<a href="com/zello/sdk/PermissionError.html" title="enum class in com.zello.sdk">PermissionError</a></dt>
 <dd>
-<div class="block">Unknown perimssion error.</div>
+<div class="block">Unknown permission error.</div>
 </dd>
 <dt><a href="com/zello/sdk/Zello.html#unlock()" class="member-name-link">unlock()</a> - Method in class com.zello.sdk.<a href="com/zello/sdk/Zello.html" title="class in com.zello.sdk">Zello</a></dt>
 <dd>
@@ -989,7 +1001,7 @@ the order they are declared.</div>
  The <code>Zello</code> singleton acts as the primary point of interacting to the Zello SDK.</div>
 </dd>
 </dl>
-<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a></main>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:K">K</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<br><a href="allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="allpackages-index.html">All&nbsp;Packages</a></main>
 </div>
 </div>
 </body>
