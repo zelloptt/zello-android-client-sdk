@@ -1,5 +1,7 @@
 # Zello Android client SDK
 
+NOTE: This SDK is deprecated. We strongly recommend checking out [our new SDK](https://sdk.zello.com/), which no longer requires the Zello Work app to be installed on the device.
+
 ## Overview
 
 The Zello Android client SDK allows you to integrate [Zello Work](https://zellowork.com/) push-to-talk into your own application. The SDK uses cross-process communication to let your app connect to the Zello Work app installed on the device and remotely control it. Supported features include:
@@ -49,6 +51,13 @@ dependencies {
 }
 ```
 Alternatively, use the __Import Module from Library__ screen to add the AAR to the project: __Menu__ > __File__ > __New__ > __New Module...__ > __Import .JAR/.AAR Package__.
+
+If your app is targeting Android 11 or above, you will need to add the following to your `AndroidManifest.xml`:
+```
+<queries>
+	<package android:name="com.loudtalks"/>
+</queries>
+```
 
 ## Using the SDK
 
