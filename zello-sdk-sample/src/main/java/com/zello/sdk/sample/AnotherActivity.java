@@ -78,6 +78,9 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 	}
 
 	@Override
+	public void onForegroundServiceStartFailed(@Nullable Throwable throwable) {}
+
+	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		menu.clear();
 		if (_appState.isAvailable() && !_appState.isInitializing()) {
