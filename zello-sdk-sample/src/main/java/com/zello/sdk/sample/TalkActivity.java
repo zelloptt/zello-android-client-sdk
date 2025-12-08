@@ -225,7 +225,6 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 		// Automatically choose the app to connect to in the following order of preference: com.loudtalks, net.loudtalks, com.pttsdk
 		// Alternatively, connect to a preferred app by supplying a package name, for example: Zello.getInstance().configure("net.loudtalks", this)
 		Zello.getInstance().configure(this);
-		zello.requestVitalPermissions(this);
 		zello.subscribeToEvents(this);
 		zello.setShowBluetoothAccessoriesNotifications(false);
 		_audio = zello.getAudio();
@@ -444,7 +443,7 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	@Override
 	public void onMicrophonePermissionNotGranted() {
 		if (_active) {
-			Zello.getInstance().showMicrophonePermissionDialog(this);
+			Zello.getInstance().requestVitalPermissions(this);
 		}
 	}
 

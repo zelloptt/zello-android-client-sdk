@@ -67,6 +67,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	private static final String _pttActivityClass = "com.zello.sdk.Activity";
 	private static final String _pttPermissionsActivityClass = "com.zello.sdk.PermissionsActivity";
 	private static final String _pttPttButtonsActivityClass = "com.zello.sdk.PttButtonsActivity";
+	private static final String _sdkRequestPermissionsIntentAction = "com.zello.sdk.REQUEST_PERMISSIONS";
 
 	//endregion
 
@@ -155,8 +156,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 				intent.putExtra(Constants.EXTRA_PERMISSION_DIALOG, true);
 			}
 			intent.putExtra(permissionName, true);
+			intent.addCategory(Intent.CATEGORY_DEFAULT);
+			intent.setAction(_sdkRequestPermissionsIntentAction);
 			context.startActivity(intent);
-		} catch (Throwable ignored) {
+		} catch (Throwable exception) {
+			Log.INSTANCE.e("Error requesting permissions" , exception);
 		}
 	}
 

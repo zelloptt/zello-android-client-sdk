@@ -141,8 +141,8 @@ tasks.configureEach { task ->
 }
 
 android {
-	compileSdk 34
-	setBuildToolsVersion("34.0.0")
+	compileSdk 36
+	setBuildToolsVersion("36.1.0")
 	namespace "com.zello.sdk"
 
 	buildFeatures {
@@ -153,7 +153,7 @@ android {
 
 	defaultConfig {
 		minSdk 24
-		targetSdk 34
+		targetSdk 36
 		manifestPlaceholders.sdkVersion = "$sdkVersion"
 		buildConfigField "String", "SDK_VERSION", "\"$sdkVersion\""
 		consumerProguardFiles "consumer-rules.pro"

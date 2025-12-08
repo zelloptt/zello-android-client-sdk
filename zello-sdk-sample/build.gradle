@@ -31,8 +31,8 @@ kotlin {
 }
 
 android {
-	compileSdk 34
-	setBuildToolsVersion("34.0.0")
+	compileSdk 36
+	setBuildToolsVersion("36.1.0")
 	namespace "com.zello.sdk.sample"
 
 	buildFeatures {
@@ -42,7 +42,7 @@ android {
 	defaultConfig {
 		applicationId "com.zello.sdk.sample"
 		minSdk 24
-		targetSdk 34
+		targetSdk 36
 		versionCode 1
 		versionName "1.0"
 	}
