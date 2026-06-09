@@ -223,6 +223,10 @@ public class MiscActivity extends AppCompatActivity implements com.zello.sdk.Eve
 	public void onForegroundServiceStartFailed(@Nullable Throwable throwable) {
 	}
 
+	@Override
+	public void onAudioPlaybackCapabilityNotAvailable() {
+	}
+
 	//endregion
 
 	private void showMenuItem(Menu menu, int itemId, boolean show) {

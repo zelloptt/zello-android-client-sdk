@@ -163,4 +163,22 @@ public interface Events {
 	 */
 	void onForegroundServiceStartFailed(@Nullable Throwable t);
 
+	/**
+	 * <p>
+	 * Called when the Zello Work app is unable to play audio.
+	 * </p>
+	 * <p>
+	 * A typical response is to call {@link Zello#requestAudioPlaybackCapability()}
+	 * to bring the Zello Work app to the foreground so it can restore audio playback.
+	 * As with other error callbacks, it is the responsibility of the app
+	 * using the SDK to decide whether and when to handle this event—for example, only when your
+	 * app is in the foreground.
+	 * </p>
+	 *
+	 * @see Zello#requestAudioPlaybackCapability()
+	 * @see Zello#openMainScreen()
+	 * @see Events#onAudioStateChanged()
+	 */
+	void onAudioPlaybackCapabilityNotAvailable();
+
 }

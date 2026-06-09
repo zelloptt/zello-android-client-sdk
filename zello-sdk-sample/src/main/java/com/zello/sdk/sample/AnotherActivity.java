@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.zello.sdk.AppState;
 import com.zello.sdk.BluetoothAccessoryState;
 import com.zello.sdk.BluetoothAccessoryType;
@@ -19,10 +23,6 @@ import com.zello.sdk.Status;
 import com.zello.sdk.Tab;
 import com.zello.sdk.Theme;
 import com.zello.sdk.Zello;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.Events {
 
@@ -79,6 +79,11 @@ public class AnotherActivity extends AppCompatActivity implements com.zello.sdk.
 
 	@Override
 	public void onForegroundServiceStartFailed(@Nullable Throwable throwable) {}
+
+	@Override
+	public void onAudioPlaybackCapabilityNotAvailable() {
+		Zello.getInstance().requestAudioPlaybackCapability();
+	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {

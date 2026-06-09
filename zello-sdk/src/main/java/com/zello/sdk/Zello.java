@@ -1103,6 +1103,20 @@ public class Zello {
 
 	//endregion
 
+	/**
+	 * Request audio playback capability.
+	 * <p>
+	 * When called this will bring the app to foreground in order to restore the audio playback
+	 * capability.
+	 * </p>
+	 */
+	public void requestAudioPlaybackCapability() {
+		Sdk sdk = _sdk;
+		if (sdk != null) {
+			sdk.requestAudioPlaybackCapability();
+		}
+	}
+
 	//region Private Methods
 
 	private Zello() {

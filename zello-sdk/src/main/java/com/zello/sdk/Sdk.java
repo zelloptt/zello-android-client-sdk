@@ -164,6 +164,11 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 		}
 	}
 
+	void requestAudioPlaybackCapability() {
+		// Bring Zello to the foreground to make sure audio playback works on android 17
+		openMainScreen();
+	}
+
 	//endregion
 
 	//region Contact selection
@@ -1214,6 +1219,10 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			for (Events event : Zello.getInstance().events) {
 				event.onForegroundServiceStartFailed(null);
 			}
+		} else if (error == PermissionError.BACKGROUND_AUDIO_PLAYBACK_CAPABILITY_NOT_AVAILABLE) {
+			for (Events event : Zello.getInstance().events) {
+				event.onAudioPlaybackCapabilityNotAvailable();
+			}
 		}
 	}
 
@@ -1313,6 +1322,8 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 			return PermissionError.NONE;
 		} else if (error == PermissionError.FOREGROUND_SERVICE_NOT_ALLOWED.ordinal()) {
 			return PermissionError.FOREGROUND_SERVICE_NOT_ALLOWED;
+		}  else if (error == PermissionError.BACKGROUND_AUDIO_PLAYBACK_CAPABILITY_NOT_AVAILABLE.ordinal()) {
+			return PermissionError.BACKGROUND_AUDIO_PLAYBACK_CAPABILITY_NOT_AVAILABLE;
 		} else {
 			return PermissionError.UNKNOWN;
 		}

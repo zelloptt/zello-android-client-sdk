@@ -260,6 +260,10 @@ public class PttActivity extends AppCompatActivity implements com.zello.sdk.Even
 	public void onForegroundServiceStartFailed(@Nullable Throwable throwable) {
 	}
 
+	@Override
+	public void onAudioPlaybackCapabilityNotAvailable() {
+	}
+
 	//endregion
 
 	private void updateUI() {
