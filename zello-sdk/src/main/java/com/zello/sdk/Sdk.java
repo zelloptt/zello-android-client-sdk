@@ -165,7 +165,7 @@ class Sdk implements SafeHandlerEvents, ServiceConnection {
 	}
 
 	void requestAudioPlaybackCapability() {
-		// Bring Zello to the foreground to make sure audio playback works on android 17
+		// Bring Zello to the foreground to make sure audio playback works in Android 17+
 		openMainScreen();
 	}
 
