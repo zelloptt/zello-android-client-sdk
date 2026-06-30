@@ -24,6 +24,11 @@ public enum PermissionError {
 	/**
 	 * Foreground service cannot start.
 	 */
-	FOREGROUND_SERVICE_NOT_ALLOWED
+	FOREGROUND_SERVICE_NOT_ALLOWED,
+
+	/**
+	 * Background audio playback is not available.
+	 */
+	BACKGROUND_AUDIO_PLAYBACK_CAPABILITY_NOT_AVAILABLE;
 
 }

@@ -25,6 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.zello.sdk.AppState;
 import com.zello.sdk.Audio;
 import com.zello.sdk.AudioMode;
@@ -45,11 +50,6 @@ import com.zello.sdk.headset.Headset;
 import com.zello.sdk.headset.HeadsetType;
 
 import java.text.NumberFormat;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 
 @SuppressLint("ClickableViewAccessibility")
 @SuppressWarnings("FieldCanBeLocal")
@@ -449,6 +449,11 @@ public class TalkActivity extends AppCompatActivity implements com.zello.sdk.Eve
 
 	@Override
 	public void onForegroundServiceStartFailed(@Nullable Throwable throwable) {}
+
+	@Override
+	public void onAudioPlaybackCapabilityNotAvailable() {
+		Zello.getInstance().requestAudioPlaybackCapability();
+	}
 
 	@Override
 	public void onBluetoothAccessoryStateChanged(

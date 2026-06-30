@@ -204,6 +204,10 @@ public class ContactsActivity extends AppCompatActivity implements com.zello.sdk
 	public void onForegroundServiceStartFailed(@Nullable Throwable throwable) {
 	}
 
+	@Override
+	public void onAudioPlaybackCapabilityNotAvailable() {
+	}
+
 	//endregion
 
 	@SuppressWarnings("SameParameterValue")

@@ -147,6 +147,10 @@ public class SigninActivity extends AppCompatActivity implements com.zello.sdk.E
 	public void onForegroundServiceStartFailed(@Nullable Throwable throwable) {
 	}
 
+	@Override
+	public void onAudioPlaybackCapabilityNotAvailable() {
+	}
+
 	//endregion
 
 	private void updateUI() {
